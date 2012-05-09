@@ -22,7 +22,7 @@ Hippo 1.0所在的基础环境应该是dt6 Sony版本的livecd环境。
 1.0设计比较简单，基本结构是B/S。
 
 + 前端显示是WebView，使用backbone框架编写
-+ 后端采用python的web框架编写，
++ 后端采用python的web.py框架编写，
 用http协议在B/S之间传送JSON数据，为了显示（以后）进度等信息，采用socket.io来做
 双向通讯。
 
