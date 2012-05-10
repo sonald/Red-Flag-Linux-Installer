@@ -50,7 +50,8 @@ def mkpart(args):
     start,end,fstype = args
     start = int(start)
     end = int(end)
-    ty = disk.partitions[0].type
+    #fixedme : it need args when mklabel.type = msdos
+    ty = 0L
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     fs = parted.filesystem.FileSystem(fstype,new_geometry)
     new_partition = parted.partition.Partition(disk,ty,fs,new_geometry)
