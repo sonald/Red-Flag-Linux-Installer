@@ -39,13 +39,41 @@ def print_disk(args):
     print_disk_helper(disk)
 
 def mkpart(args):
-    pass
+    dev = parted.getDevice(args[0])
+    disk = parted.disk.Disk(dev)
+    del args[0]
+    if len(args) < 3:
+        print "ambiguous args %s" % (args)
+        sys.exit(1)
+
+    start,end,fstype = args
+    start = int(start)
+    end = int(end)
+    ty = disk.partitions[0].type
+    new_geometry = parted.geometry.Geometry(dev,start,None,end)
+    fs = parted.filesystem.FileSystem(fstype,new_geometry)
+    new_partition = parted.partition.Partition(disk,ty,fs,new_geometry)
+    disk.addPartition(new_partition)
+    print "hahah"
+
+    print_disk_helper(disk)
 
 def rmpart(args):
-    pass
+    dev = parted.getDevice(args[0])
+    disk = parted.disk.Disk(dev)
+    n = int(args[1])-1;
+    partitions = disk.partitions
+    if n < 0 or n > len(partitions)-1:
+        print "error,there is no such partition"
+        sys.exit(1)
+
+    disk.deletePartition(partitions[n])
+    disk.commit()
+    print_disk_helper(disk)
 
 def mklabel(args):
     pass
+
     
 def usage():
     print "%s: [OPTION]... [DEVICE [CMD [PARAM]...]...]" % (sys.argv[0], )
@@ -70,8 +98,10 @@ def dispatch(cmd, args):
 
 if __name__ == "__main__":
     # check uid
-    try:                                
+    try:
         opts, args = getopt.getopt(sys.argv[1:], "hd:l", ["help", "dev=", "list"]) 
+        print opts
+        print args
     except getopt.GetoptError:           
         usage()                          
         sys.exit(2)         
