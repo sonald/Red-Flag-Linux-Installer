@@ -41,6 +41,7 @@ def print_disk(args):
 def mkpart(args):
     dev = parted.getDevice(args[0])
     disk = parted.disk.Disk(dev)
+    cons = dev.getConstraint()
     del args[0]
     if len(args) < 3:
         print "ambiguous args %s" % (args)
@@ -53,8 +54,8 @@ def mkpart(args):
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     fs = parted.filesystem.FileSystem(fstype,new_geometry)
     new_partition = parted.partition.Partition(disk,ty,fs,new_geometry)
-    disk.addPartition(new_partition)
-    print "hahah"
+    disk.addPartition(new_partition, cons)
+    disk.commit()
 
     print_disk_helper(disk)
 
@@ -62,7 +63,7 @@ def rmpart(args):
     dev = parted.getDevice(args[0])
     disk = parted.disk.Disk(dev)
     number = int(args[1]);
-    parts = disk.parts
+    parts = disk.partitions
     n = 0
     
     for part in parts:
@@ -107,8 +108,6 @@ if __name__ == "__main__":
     # check uid
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hd:l", ["help", "dev=", "list"]) 
-        print opts
-        print args
     except getopt.GetoptError:           
         usage()                          
         sys.exit(2)         
