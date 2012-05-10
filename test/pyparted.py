@@ -81,8 +81,11 @@ def rmpart(args):
     print_disk_helper(disk)
 
 def mklabel(args):
-    pass
+    dev = parted.getDevice(args[0])
+    disk = parted.freshDisk(dev,args[1])
 
+    disk.commit()
+    print_disk_helper(disk)
     
 def usage():
     print "%s: [OPTION]... [DEVICE [CMD [PARAM]...]...]" % (sys.argv[0], )
