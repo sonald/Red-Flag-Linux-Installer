@@ -61,13 +61,20 @@ def mkpart(args):
 def rmpart(args):
     dev = parted.getDevice(args[0])
     disk = parted.disk.Disk(dev)
-    n = int(args[1])-1;
-    partitions = disk.partitions
-    if n < 0 or n > len(partitions)-1:
+    number = int(args[1]);
+    parts = disk.parts
+    n = 0
+    
+    for part in parts:
+        if number == part.number:
+            break;
+        n = n + 1
+
+    if n == len(parts):
         print "error,there is no such partition"
         sys.exit(1)
 
-    disk.deletePartition(partitions[n])
+    disk.deletePartition(parts[n])
     disk.commit()
     print_disk_helper(disk)
 
