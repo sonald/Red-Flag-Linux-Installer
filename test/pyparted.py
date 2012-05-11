@@ -69,8 +69,8 @@ def mkpart(args):
         sys.exit(1)
 
     fs = None
-    start = int(args[0])*1000000/512
-    end = int(args[1])*1000000/512
+    start = int(args[0])*2048
+    end = int(args[1])*2048
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     
     if ty != parted.PARTITION_EXTENDED:
@@ -92,8 +92,8 @@ def rmpart(args):
     parts = disk.partitions
     n = 0
     
-    for part in parts:
-        if number == part.number:
+    for p in parts:
+        if number == p.number:
             break;
         n = n + 1
 
@@ -101,9 +101,17 @@ def rmpart(args):
         print "error,there is no such partition"
         sys.exit(1)
 
-    disk.deletePartition(parts[n])
+    part = parts[n]
+    if disk.type == 'msdos' and part.type == parted.PARTITION_EXTENDED:
+        for p in parts:
+            if p.type == parted.PARTITION_LOGICAL and part.geometry.contains(p.geometry):
+                disk.deletePartition(p)
+
+
+    disk.deletePartition(part)
     disk.commit()
     print_disk_helper(disk)
+
 
 def mklabel(args):
     dev = parted.getDevice(args[0])
