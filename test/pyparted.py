@@ -38,6 +38,11 @@ def print_disk(args):
     disk = parted.disk.Disk(parted.getDevice(args[0]))
     print_disk_helper(disk)
 
+def add_new_partition(args):
+    pass
+    #dev = parted.getDevice(args[0])
+    #disk = parted.disk.Disk(dev)
+
 def mkpart(args):
     dev = parted.getDevice(args[0])
     disk = parted.disk.Disk(dev)
@@ -47,18 +52,38 @@ def mkpart(args):
         print "ambiguous args %s" % (args)
         sys.exit(1)
 
-    start,end,fstype = args
-    start = int(start)
-    end = int(end)
-    #fixedme : it need args when mklabel.type = msdos
-    ty = 0L
+    ty = parted.PARTITION_NORMAL
+    if disk.type == 'msdos':
+        partty = {'primary': parted.PARTITION_NORMAL,
+                  'extended': parted.PARTITION_EXTENDED,
+                  'logical': parted.PARTITION_LOGICAL}
+        ty = partty[args[0]]
+        del args[0]
+        
+    if disk.type == 'msdos' and disk.primaryPartitionCount == 4 and (ty == parted.PARTITION_NORMAL or ty == parted.PARTITION_EXTENDED):
+        print "Too many primary partitions."
+        sys.exit(1)
+
+    if disk.getExtendedPartition() != None and ty == parted.PARTITION_EXTENDED:
+        print "Too many extended partitions."
+        sys.exit(1)
+
+    fs = None
+    start = int(args[0])*1000000/512
+    end = int(args[1])*1000000/512
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
-    fs = parted.filesystem.FileSystem(fstype,new_geometry)
+    
+    if ty != parted.PARTITION_EXTENDED:
+        fstype = args[2]
+        fs = parted.filesystem.FileSystem(fstype,new_geometry)
+
+        
     new_partition = parted.partition.Partition(disk,ty,fs,new_geometry)
     disk.addPartition(new_partition, cons)
     disk.commit()
 
     print_disk_helper(disk)
+
 
 def rmpart(args):
     dev = parted.getDevice(args[0])
