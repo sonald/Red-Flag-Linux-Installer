@@ -72,13 +72,40 @@ def mkpart(args):
     start = int(args[0])*2048
     end = int(args[1])*2048
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
+    new_geo = None
+
+    if disk.type == 'gpt' or ty != parted.PARTITION_LOGICAL:
+        for geo in disk.getFreeSpaceRegions():
+            if disk.type == 'msdos' and disk.getExtendedPartition() and disk.getExtendedPartition().geometry.contains(geo):
+                   continue
+
+            if geo.intersect(new_geometry) != None:
+                new_geo = geo.intersect(new_geometry)
+                break
+
+    elif disk.type == 'msdos' and ty == parted.PARTITION_LOGICAL:
+        new_geo = new_geometry
+       # if disk.getExtendedPartition() == None:
+       #     print "error : create extended partition first"
+       #     sys.exit(1)
+
+       # tmp = disk.getExtendedPartition().geometry
+       # for geo in disk.getFreeSpaceRegions():
+       #     if tmp.contains(geo) and geo.intersect(new_geometry) != None:
+       #         new_geo = geo.intersect(new_geometry)
+       #         break
+
     
+    if new_geo == None:
+        print "error: Can't have overlapping partitions."
+        sys.exit(1)
+
     if ty != parted.PARTITION_EXTENDED:
         fstype = args[2]
-        fs = parted.filesystem.FileSystem(fstype,new_geometry)
+        fs = parted.filesystem.FileSystem(fstype,new_geo)
 
         
-    new_partition = parted.partition.Partition(disk,ty,fs,new_geometry)
+    new_partition = parted.partition.Partition(disk,ty,fs,new_geo)
     disk.addPartition(new_partition, cons)
     disk.commit()
 
