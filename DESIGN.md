@@ -3,11 +3,11 @@
 
 安装环境
 --------
-Hippo 1.0所在的基础环境应该是dt6 Sony版本的livecd环境。
+Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
 
 1.0需求
 -------
-1.0版本的设计根据Sony的安装需求来考虑。具体要求如下：
+1.0版本的设计具体要求如下：
 
 * 需要定制硬盘分区策略
 * 提供安装后脚本执行能力（不再chroot环境下运行）
@@ -22,8 +22,8 @@ Hippo 1.0所在的基础环境应该是dt6 Sony版本的livecd环境。
 1.0设计比较简单，基本结构是B/S。
 
 + 前端显示是WebView，使用backbone框架编写
-+ 后端采用python的web.py框架编写，
-用http协议在B/S之间传送JSON数据，为了显示（以后）进度等信息，采用socket.io来做
++ 后端采用python的tornado框架编写，
+用http协议在B/S之间传送JSON数据，为了显示（以后）进度等信息，采用websocket来做
 双向通讯。
 
 ### 问题
