@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Installer</title>
+
+        <link href="{{ static_url("bootstrap/css/bootstrap.min.css") }}" media="all" rel="stylesheet" type="text/css">
+        <link href="{{ static_url("bootstrap/css/bootstrap-responsive.min.css") }}" media="all" rel="stylesheet" type="text/css">
+        <script src="{{ static_url("js/jquery-1.7.2.js") }}" type="text/javascript"></script>
+        <script src="{{ static_url("bootstrap/js/bootstrap.min.js") }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ static_url("js/websocket.js") }}" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="row-fluid">
+            <div class="span2"></div>
+            <div class="offset2 span8">
+            <div class="hero-unit">
+                <h1>Hippo Installer</h1>
+                <p>
+                Welcome to installer, {{ name }}. click 'start' to begin installation.
+                <img src="{{ static_url("images/favicon.ico") }}"/>
+                </p>
+                <p>
+                <a class="btn btn-primary btn-large" id="install">
+                    start
+                </a>
+                </p>
+                <div id="log">
+                </div>
+            </div>
+
+            <h2>Env:</h2>
+            <ul>
+                {% for k in envs.keys()[:10] %}
+                <li>  {{ escape(k) }} : {{ escape(envs[k]) }} </li>
+                {% end %}
+            </ul>
+        </div>
+        </div>
+    </body>
+</html>
