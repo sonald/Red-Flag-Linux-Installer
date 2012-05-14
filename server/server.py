@@ -3,6 +3,9 @@
 
 import os
 import time
+import sys
+import json
+
 import tornado.web
 import tornado.ioloop
 import tornado.locale
@@ -15,7 +18,8 @@ class IndexHandler(tornado.web.RequestHandler):
 
 class HippoHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("views/index.html", name="Sian Cao", envs=os.environ)
+        self.render("views/index.html", name=(os.getenv('USER') or os.getenv('LOGNAME')), 
+                envs=os.environ)
 
     # request install
     def post(self):
@@ -24,30 +28,48 @@ class HippoHandler(tornado.web.RequestHandler):
         #print self.get_argument('version')
 
     def install(self):
-        time.sleep(5)
+        pack = json.dumps({
+            'stage': 'partitioning', 
+            })
+        # do partitioning service
+        ProgressHandler.clients[0].write_message(pack)
+        time.sleep(2)
+
+        for i in range(1, 101):
+            pack = json.dumps({
+                'stage': 'unpacking', 
+                'progress': i
+                })
+            ProgressHandler.clients[0].write_message(pack)
+            time.sleep(.1)
+
+        pack = json.dumps({
+            'stage': 'postscripting', 
+            })
+        ProgressHandler.clients[0].write_message(pack)
+        time.sleep(2)
         self.finish()
-        pass
 
 class ProgressHandler(tornado.websocket.WebSocketHandler):
     clients = []
 
     def open(self):
+        self.__class__.clients.append(self)
         print "WebSocket opened"
 
     def on_message(self, msg):
+        self.dispatch(msg)
+
+    def on_close(self):
+        self.__class__.clients.remove(self)
+        print "WebSocket closed"
+
+    def dispatch(self, msg):
         print "Got Cmd: ", msg 
         if msg == 'progress':
             # make it async, so front won't busy wait
             self.async_callback(self.report)()
         pass
-
-    def on_close(self):
-        print "WebSocket closed"
-
-    def report(self):
-        for i in range(1, 101):
-            self.write_message(str(i)+u"%")
-            time.sleep(0.2)
 
 settings = {
         "static_path": os.path.join(os.path.dirname(__file__), "static"),
@@ -65,5 +87,8 @@ app = tornado.web.Application([
 if __name__ == "__main__":
     #tornado.locale.load_translations(
             #os.path.join(os.path.dirname(__file__), "translations"))
-    app.listen(8080)
-    tornado.ioloop.IOLoop.instance().start()
+    try:
+        app.listen(8080)
+        tornado.ioloop.IOLoop.instance().start()
+    except:
+        sys.exit(1)

@@ -12,8 +12,7 @@
  *        Company:  Red Flag Linux
  *
  * =====================================================================================
-*/
-
+*/ 
 $(function() {
     console.log('on ready');
     var ws = new WebSocket("ws://localhost:8080/ws");
@@ -22,8 +21,12 @@ $(function() {
     };
 
     ws.onmessage = function(ev) {
-        log = document.getElementById('log');
-        log.innerHTML = ev.data;
+        console.log(ev);
+        var pack = JSON.parse(ev.data);
+        $('#stage').html('<div class="well">' + ev.data + '</div>');
+        switch(ev.data) {
+            case 'progress':
+        }
     };
 
     $('body').on('click', '#install', function() {
