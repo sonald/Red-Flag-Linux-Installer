@@ -46,11 +46,11 @@ def print_disks():
         print_disk_helper(disk)
 
 def msdos_enable_add(ty,disk):
-    if (ty & parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) and disk.primaryPartitionCount == 4:
+    if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) and disk.primaryPartitionCount == 4:
         print "Too many primary partitions."
         sys.exit(1)
 
-    if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition() != None:
+    if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
         print "Too many extended partitions."
         sys.exit(1)
 
@@ -68,7 +68,7 @@ def create_right_geo(disk,ty,new_geometry):
             if geo.overlapsWith(new_geometry):
                 new_geo = geo.intersect(new_geometry)
                 break
-    elif disk.type == 'msdos' and ty & parted.PARTITION_LOGICAL:
+    elif disk.type == 'msdos' and (ty & parted.PARTITION_LOGICAL):
         tmp = disk.getExtendedPartition().geometry
         for geo in disk.getFreeSpaceRegions():
             if tmp.contains(geo) and geo.overlapsWith(new_geometry):
@@ -124,7 +124,7 @@ def rmpart(args, dev, disk):
     part = parts[n]
     if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:
         for p in parts:
-            if p.type == parted.PARTITION_LOGICAL and part.geometry.contains(p.geometry):
+            if (p.type & parted.PARTITION_LOGICAL) and part.geometry.contains(p.geometry):
                 disk.deletePartition(p)
 
     disk.deletePartition(part)
