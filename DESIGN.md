@@ -23,5 +23,38 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
   传输JSON格式的数据。http用来请求服务和发送数据。websocket协议用来推送服务
   信息（比如进度提示等）
 
+### 分区服务的JSON数据格式暂定为：
+
+    [ 
+        { action: "name", args: [] },
+    ]
+
+例如：
+
+    [ 
+        {
+            action: 'mklabel', 
+            args: [ 'msdos' ] 
+        },
+        {
+            action: 'mkpart',
+            args: [ 
+                'primary',
+                'ext3',
+                '0%',
+                '20%' 
+            ] 
+        }
+    ]
+
+即一组操作的序列，如果执行出错要返回一个代表错误的JSON对象，最好能反映出错误
+的原因和语句，例如：
+
+    { 
+        reason: "need root for operation"
+    }
+
+
+
 ### 问题
 1. 找一个backbone或JS的测试框架，前后端都要测试
