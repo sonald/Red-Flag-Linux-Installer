@@ -48,6 +48,7 @@ def mkpart(args):
     disk = parted.disk.Disk(dev)
     cons = dev.getConstraint()
     del args[0]
+
     if len(args) < 3:
         print "ambiguous args %s" % (args)
         sys.exit(1)
@@ -60,11 +61,11 @@ def mkpart(args):
         ty = partty[args[0]]
         del args[0]
         
-    if disk.type == 'msdos' and disk.primaryPartitionCount == 4 and (ty == parted.PARTITION_NORMAL or ty == parted.PARTITION_EXTENDED):
+    if disk.type == 'msdos' and (ty == parted.PARTITION_NORMAL or ty == parted.PARTITION_EXTENDED) and disk.primaryPartitionCount == 4:
         print "Too many primary partitions."
         sys.exit(1)
 
-    if disk.getExtendedPartition() != None and ty == parted.PARTITION_EXTENDED:
+    if disk.type == 'msdos' and ty == parted.PARTITION_EXTENDED and disk.getExtendedPartition() != None:
         print "Too many extended partitions."
         sys.exit(1)
 
@@ -74,26 +75,26 @@ def mkpart(args):
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     new_geo = None
 
-    if disk.type == 'gpt' or ty != parted.PARTITION_LOGICAL:
+    if ty != parted.PARTITION_LOGICAL:
         for geo in disk.getFreeSpaceRegions():
             if disk.type == 'msdos' and disk.getExtendedPartition() and disk.getExtendedPartition().geometry.contains(geo):
-                   continue
+                continue
 
-            if geo.intersect(new_geometry) != None:
+            if geo.overlapsWith(new_geometry):
                 new_geo = geo.intersect(new_geometry)
                 break
 
     elif disk.type == 'msdos' and ty == parted.PARTITION_LOGICAL:
         new_geo = new_geometry
-       # if disk.getExtendedPartition() == None:
-       #     print "error : create extended partition first"
-       #     sys.exit(1)
+        if disk.getExtendedPartition() == None:
+            print "error : create extended partition first"
+            sys.exit(1)
 
-       # tmp = disk.getExtendedPartition().geometry
-       # for geo in disk.getFreeSpaceRegions():
-       #     if tmp.contains(geo) and geo.intersect(new_geometry) != None:
-       #         new_geo = geo.intersect(new_geometry)
-       #         break
+        tmp = disk.getExtendedPartition().geometry
+        for geo in disk.getFreeSpaceRegions():
+            if tmp.contains(geo) and geo.overlapsWith(new_geometry):
+                new_geo = geo.intersect(new_geometry)
+                break
 
     
     if new_geo == None:
@@ -115,7 +116,7 @@ def mkpart(args):
 def rmpart(args):
     dev = parted.getDevice(args[0])
     disk = parted.disk.Disk(dev)
-    number = int(args[1]);
+    number = int(args[1])
     parts = disk.partitions
     n = 0
     
