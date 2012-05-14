@@ -8,13 +8,18 @@ import sys
 from pyparted_function import *
 
 
+trans_from_mb = 2048 #1024*1024/512
+
+partty = {'primary': parted.PARTITION_NORMAL,
+          'extended': parted.PARTITION_EXTENDED,
+          'logical': parted.PARTITION_LOGICAL}
+
 def check_device(devpath):
     try:
         parted.getDevice(devpath)
     except parted.DeviceException:
         return False
     return True
-
     
 def usage():
     print "%s: [OPTION]... [DEVICE [CMD [PARAM]...]...]" % (sys.argv[0], )
