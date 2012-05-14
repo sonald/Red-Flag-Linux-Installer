@@ -7,15 +7,18 @@ import sys
 
 trans_from_mb = 2048 #1024*1024/512
 
-partty = {'primary': parted.PARTITION_NORMAL,
-          'extended': parted.PARTITION_EXTENDED,
-          'logical': parted.PARTITION_LOGICAL}
+partty_map = {
+    'primary': parted.PARTITION_NORMAL,
+    'extended': parted.PARTITION_EXTENDED,
+    'free': parted.PARTITION_FREESPACE,
+    'logical': parted.PARTITION_LOGICAL
+}
 
 def print_disk_helper(disk):
     parts = disk.partitions
-    print "dev model: %s" % (disk.device.model, )
-    print "disk type: %s" % (disk.type, )
-    print "primaries: %d" % (disk.primaryPartitionCount, )
+    print "dev model: %s" % (disk.device.model, ), 
+    print ", type: %s" % (disk.type, ), 
+    print ", primaries: %d" % (disk.primaryPartitionCount, )
     #FIXME: this crashes on gpt device
     #print "maxSupportedPartitionCount: %d" % (disk.maxSupportedPartitionCount, )
     print "No.\tname\tpath\t\ttype  \t  fs\t\tsize"
@@ -45,29 +48,30 @@ def print_disks():
     for disk in disks:
         print_disk_helper(disk)
 
-def msdos_enable_add(ty,disk):
-    if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) and disk.primaryPartitionCount == 4:
-        print "Too many primary partitions."
-        sys.exit(1)
+def msdos_validate_type(ty, disk):
+    if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
+        and disk.primaryPartitionCount == 4:
+        raise "Too many primary partitions."
 
     if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
-        print "Too many extended partitions."
-        sys.exit(1)
+        raise "Too many extended partitions."
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
-        print "error : create extended partition first"
-        sys.exit(1)
+        raise "create extended partition first"
 
-def create_right_geo(disk,ty,new_geometry):
+def adjust_geometry(disk,ty,new_geometry):
     new_geo = None
 
     if not (ty & parted.PARTITION_LOGICAL):
         for geo in disk.getFreeSpaceRegions():
-            if disk.type == 'msdos' and disk.getExtendedPartition() and disk.getExtendedPartition().geometry.contains(geo):
+            if disk.type == 'msdos' and disk.getExtendedPartition() \
+                    and disk.getExtendedPartition().geometry.contains(geo):
                 continue
+
             if geo.overlapsWith(new_geometry):
                 new_geo = geo.intersect(new_geometry)
                 break
+
     elif disk.type == 'msdos' and (ty & parted.PARTITION_LOGICAL):
         tmp = disk.getExtendedPartition().geometry
         for geo in disk.getFreeSpaceRegions():
@@ -76,8 +80,7 @@ def create_right_geo(disk,ty,new_geometry):
                 break
 
     if new_geo == None:
-        print "error: Can't have overlapping partitions."
-        sys.exit(1)
+        raise "error: Can't have overlapping partitions."
 
     return new_geo
 
@@ -89,16 +92,24 @@ def mkpart(args, dev, disk):
     cons = dev.getConstraint()
     ty = parted.PARTITION_NORMAL
     if disk.type == 'msdos':
-        ty = partty[args[0]]
+        ty = partty_map[args[0]]
         del args[0]
-        msdos_enable_add(ty,disk)
+        try:
+            msdos_validate_type(ty, disk)
+        except Exception, e:
+            print e
+            sys.exit(1)
         
     fs = None
-    start = int(args[0]) * trans_from_mb
-    end = int(args[1]) * trans_from_mb
+    start = parted.sizeToSector(int(args[0]), "MiB", 512)
+    end = parted.sizeToSector(int(args[0]), "MiB", 512)
 
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
-    new_geo = create_right_geo(disk,ty,new_geometry)
+    try:
+        new_geo = adjust_geometry(disk,ty,new_geometry)
+    except Exception, e:
+        print e
+        sys.exit(1)
 
     if not (ty & parted.PARTITION_EXTENDED):
         fstype = args[2]

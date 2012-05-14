@@ -2,10 +2,9 @@
 # simple partition tool with purpose on pyparted testing 
 
 import parted  
-import _pedmodule
 import getopt
 import sys
-from pyparted_function import *
+from rfparted import *
 
 
 trans_from_mb = 2048 #1024*1024/512
