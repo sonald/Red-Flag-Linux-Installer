@@ -6,13 +6,6 @@ import getopt
 import sys
 from rfparted import *
 
-
-trans_from_mb = 2048 #1024*1024/512
-
-partty = {'primary': parted.PARTITION_NORMAL,
-          'extended': parted.PARTITION_EXTENDED,
-          'logical': parted.PARTITION_LOGICAL}
-
 def check_device(devpath):
     try:
         parted.getDevice(devpath)
