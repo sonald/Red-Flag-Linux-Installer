@@ -44,9 +44,15 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
             action: 'mkpart',
             args: [ 
                 'primary',
+                '0',
+                '2000',
                 'ext3',
-                '0MB',
-                '2000MB' 
+            ] 
+        },
+        {
+            action: 'rm',
+            args: [ 
+                '1'
             ] 
         }
     ]
