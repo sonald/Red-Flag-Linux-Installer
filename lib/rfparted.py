@@ -101,8 +101,8 @@ def mkpart(args, dev, disk):
             sys.exit(1)
         
     fs = None
-    start = parted.sizeToSector(int(args[0]), "MiB", 512)
-    end = parted.sizeToSector(int(args[0]), "MiB", 512)
+    start = parted.sizeToSectors(int(args[0]), "MiB", 512)
+    end = parted.sizeToSectors(int(args[0]), "MiB", 512)
 
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     try:
