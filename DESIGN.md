@@ -33,6 +33,10 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
 
     [ 
         {
+            action: 'target', 
+            args: [ '/dev/sda' ] 
+        },
+        {
             action: 'mklabel', 
             args: [ 'msdos' ] 
         },
@@ -41,13 +45,14 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
             args: [ 
                 'primary',
                 'ext3',
-                '0%',
-                '20%' 
+                '0MB',
+                '2000MB' 
             ] 
         }
     ]
 
 即一组操作的序列，动作的参数及顺序按照分区库的格式给出。
+第一个动作是target，用来指明之后的所有动作的目标磁盘路径。
 所以根据分区表不同（msdos或者gpt），mkpart的参数会有变化，
 JSON中不会明确给出分区表类型，这个应该是分区库自行判断（
 除非使用了mklabel动作）。
