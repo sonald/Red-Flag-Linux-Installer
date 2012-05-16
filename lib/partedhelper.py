@@ -6,7 +6,7 @@ import json
 import sys
 import rfparted
 
-class Parted_by_json(object):
+class PartedHelper(object):
     def __init__(self,data = None):
         if data:
             self.data = json.loads(data)
