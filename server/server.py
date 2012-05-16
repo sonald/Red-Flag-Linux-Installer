@@ -15,6 +15,7 @@ import tornado.escape
 import tornadio2
 
 import services.partitionservice as partservice
+import services.unpackservice as unpackservice
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -29,15 +30,6 @@ class HippoHandler(tornado.web.RequestHandler):
 
     def post(self):
         print "request install: ", self.request.arguments
-
-class UnpackingHandler(tornado.web.RequestHandler):
-    serviceName = "unpacking"
-    def get(self):
-        self.render("views/index.html", name=(os.getenv('USER') or os.getenv('LOGNAME')), 
-                envs=os.environ, stage=serviceName)
-
-    def post(self):
-        pass
 
 class ProgressHandler(tornado.websocket.WebSocketHandler):
     reporter = None
@@ -63,11 +55,11 @@ settings = {
 app = tornado.web.Application([
     (r"/", IndexHandler),
     (r"/hippo", HippoHandler),
-    (r"/unpacking", UnpackingHandler),
     (r"/(test\.png)", tornado.web.StaticFileHandler,
         dict(path=settings['static_path'])),
 
     (r"/service/partitioning", partservice.PartitionService),
+    (r"/service/unpacking", unpackservice.UnpackingService),
 
     (r"/ws", ProgressHandler),
     ], **settings)
