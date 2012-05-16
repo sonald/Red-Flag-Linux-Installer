@@ -9,4 +9,4 @@ import jsondisk
 if __name__ == "__main__":
     data = sys.stdin.read()
     obj = jsondisk.Parted_by_json(data)
-    obj.parted_by_step()
+    print obj.execute()

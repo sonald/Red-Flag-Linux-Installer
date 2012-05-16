@@ -15,14 +15,6 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
-def result(reason):
-    if reason:
-        result = [{ 'status': 'failure', 'reason': str(reason) }]
-    else:
-        result = [{ 'status': 'success'}]
-
-    print json.dumps(result)
-    sys.exit(1)
 
 def print_disk_helper(disk):
     parts = disk.partitions
@@ -61,13 +53,13 @@ def print_disks():
 def msdos_validate_type(ty, disk):
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
         and disk.primaryPartitionCount == 4:
-        result("Too many primary partitions.")
+        raise Exception, "Too many primary partitions."
 
     if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
-        result("Too many extended partitions.")
+        raise Exception, "Too many extended partitions."
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
-        result("create extended partition first")
+        raise Exception, "create extended partition first"
 
 def adjust_geometry(disk,ty,new_geometry):
     new_geo = None
@@ -90,7 +82,7 @@ def adjust_geometry(disk,ty,new_geometry):
                 break
 
     if new_geo == None:
-        result("Can't have overlapping partitions.")
+        raise Exception, "Can't have overlapping partitions."
 
     return new_geo
 
@@ -107,8 +99,7 @@ def mkpart(args, dev, disk):
         try:
             msdos_validate_type(ty, disk)
         except Exception, e:
-            print e
-            sys.exit(1)
+            raise Exception, e
         
     fs = None
     start = parted.sizeToSectors(int(args[0]), "MiB", 512)
@@ -118,8 +109,7 @@ def mkpart(args, dev, disk):
     try:
         new_geo = adjust_geometry(disk,ty,new_geometry)
     except Exception, e:
-        print e
-        sys.exit(1)
+        raise Exception, e
 
     if not (ty & parted.PARTITION_EXTENDED):
         fstype = args[2]
@@ -139,7 +129,7 @@ def rmpart(args, dev, disk):
         n = n + 1
 
     if n == len(parts):
-        result("there is no such partition")
+        raise Exception, "there is no such partition"
 
     part = parts[n]
     if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:

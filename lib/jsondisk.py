@@ -4,41 +4,57 @@
 import parted  
 import json
 import sys
-from rfparted import *
+import rfparted
 
 class Parted_by_json(object):
     def __init__(self,data = None):
-        if data is None:
-            result("there is no data")
+        if data:
+            self.data = json.loads(data)
+            self.dev = None
+            self.disk = None
+        else:
+            raise Exception, 'no data specified'
 
-        mydata = json.loads(data)
-        self.wrong_step = None
-        self.data = None
-        if mydata[0]['action'] == 'target':
-            args = mydata[0]['args']
+    def check_device(self):
+        cmd = self.data[0]['action']
+        args = self.data[0]['args']
+
+        if cmd == 'target':
             try:
                 self.dev = parted.getDevice(args[0])
-            except Exception, e:
+            except:
                 reason ="Could not stat device " + args[0] + " - No such file or directory."
-                result(reason)
-
-            self.dev = parted.getDevice(args[0])
+                raise Exception, reason
+            
             self.disk = parted.disk.Disk(self.dev)
-            del mydata[0]
-            self.data = mydata
         else:
-            result("stat the disk path first")
+            raise Exception, "no disk specified"
 
-    def steps(self):
-        """Return the number of tasks"""
-        return len(self.data)
+        del self.data[0]
 
-    def parted_by_step(self):
+    def dev_part(self):
         """parted"""
         for step in self.data:
             cmd = step['action']
             args = step['args']
-            self.disk = dispatch(cmd,args,self.dev,self.disk)
-
+            try:
+                self.disk = rfparted.dispatch(cmd,args,self.dev,self.disk)
+            except Exception,e:
+                raise Exception, e
         self.disk.commit()
-        result(None)
+
+    def get_result(self,reason):
+        if reason:
+            result = [{ 'status': 'failure', 'reason': str(reason) }]
+        else:
+            result = [{ 'status': 'success'}]
+        return json.dumps(result)
+
+    def execute(self):
+        try:
+            self.check_device()
+            self.dev_part()
+        except Exception , e:
+            return self.get_result(e)
+
+        return self.get_result(None)
