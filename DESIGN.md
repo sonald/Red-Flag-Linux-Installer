@@ -23,7 +23,8 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
   传输JSON格式的数据。http用来请求服务和发送数据。websocket协议用来推送服务
   信息（比如进度提示等）
 
-### 分区服务的JSON数据格式暂定为：
+### 分区服务
+#### 客户端传递的JSON数据格式暂定为：
 
     [ 
         { action: "name", args: [] },
@@ -78,6 +79,75 @@ JSON中不会明确给出分区表类型，这个应该是分区库自行判断�
         reason: "need root for operation"
     }
 
+
+#### 服务端传给客户端的磁盘数据JSON格式如下：
+
+    [
+        {
+            "model": "ATA HITACHI HTS72321 (scsi)",
+            "path": "/dev/sda",
+            "size": "160GB",
+            "type": "msdos",
+            "table": [
+                [
+                    "1",
+                    "32.3kB",
+                    "32.2GB",
+                    "32.2GB",
+                    "primary",
+                    "ext4"
+                ],
+                [
+                    "2",
+                    "96.7GB",
+                    "160GB",
+                    "63.4GB",
+                    "extended",
+                    ""
+                ],
+                [
+                    "5",
+                    "96.7GB",
+                    "129GB",
+                    "32.2GB",
+                    "logical",
+                    "ext4"
+                ]
+            ]
+        },
+        {
+            "model": "SSK SFD201 (scsi)",
+            "path": "/dev/sdb",
+            "size": "15GB",
+            "type": "gpt",
+            "table": [
+                [
+                    "1",
+                    "32.3kB",
+                    "32.2GB",
+                    "32.2GB",
+                    "part1",
+                    "ext4"
+                ],
+                [
+                    "2",
+                    "96.7GB",
+                    "160GB",
+                    "63.4GB",
+                    "part2",
+                    ""
+                ],
+                [
+                    "3",
+                    "96.7GB",
+                    "129GB",
+                    "32.2GB",
+                    "part3",
+                    "ntfs"
+                ]
+            ]
+        }
+    ]
 
 ### 问题
 1. 找一个backbone或JS的测试框架，前后端都要测试
