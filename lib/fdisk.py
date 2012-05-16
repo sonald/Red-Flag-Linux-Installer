@@ -17,21 +17,6 @@ def usage():
     print "%s: [OPTION]... [DEVICE [CMD [PARAM]...]...]" % (sys.argv[0], )
     print "\t-d,--dev device  operate only on device specified"
 
-_commands = {
-        "print" : print_disk,
-        "mkpart" : mkpart,
-        "rm" : rmpart,
-        "mklabel" : mklabel,
-        }
-
-def dispatch(cmd, args, dev, disk):
-    cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
-    if len(cands) > 1:
-        print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
-        sys.exit(1)
-
-    new_disk = _commands[cands[0]](args, dev, disk)
-    return new_disk
 
 if __name__ == "__main__":
     # check uid

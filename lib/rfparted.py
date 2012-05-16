@@ -4,6 +4,7 @@
 import parted  
 import _pedmodule
 import sys
+import json
 
 trans_from_mb = 2048 #1024*1024/512
 
@@ -13,6 +14,15 @@ partty_map = {
     'free': parted.PARTITION_FREESPACE,
     'logical': parted.PARTITION_LOGICAL
 }
+
+def result(reason):
+    if reason:
+        result = [{ 'status': 'failure', 'reason': str(reason) }]
+    else:
+        result = [{ 'status': 'success'}]
+
+    print json.dumps(result)
+    sys.exit(1)
 
 def print_disk_helper(disk):
     parts = disk.partitions
@@ -51,13 +61,13 @@ def print_disks():
 def msdos_validate_type(ty, disk):
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
         and disk.primaryPartitionCount == 4:
-        raise "Too many primary partitions."
+        result("Too many primary partitions.")
 
     if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
-        raise "Too many extended partitions."
+        result("Too many extended partitions.")
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
-        raise "create extended partition first"
+        result("create extended partition first")
 
 def adjust_geometry(disk,ty,new_geometry):
     new_geo = None
@@ -80,7 +90,7 @@ def adjust_geometry(disk,ty,new_geometry):
                 break
 
     if new_geo == None:
-        raise "error: Can't have overlapping partitions."
+        result("Can't have overlapping partitions.")
 
     return new_geo
 
@@ -102,7 +112,7 @@ def mkpart(args, dev, disk):
         
     fs = None
     start = parted.sizeToSectors(int(args[0]), "MiB", 512)
-    end = parted.sizeToSectors(int(args[0]), "MiB", 512)
+    end = parted.sizeToSectors(int(args[1]), "MiB", 512)
 
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     try:
@@ -129,8 +139,7 @@ def rmpart(args, dev, disk):
         n = n + 1
 
     if n == len(parts):
-        print "error,there is no such partition"
-        sys.exit(1)
+        result("there is no such partition")
 
     part = parts[n]
     if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:
@@ -142,5 +151,22 @@ def rmpart(args, dev, disk):
     return disk
 
 def mklabel(args, dev, disk):
-    return parted.freshDisk(dev,args[0])
+    return parted.freshDisk(dev,str(args[0]))
+
+_commands = {
+        "print" : print_disk,
+        "mkpart" : mkpart,
+        "rm" : rmpart,
+        "mklabel" : mklabel,
+        }
+def dispatch(cmd, args, dev, disk):
+    """args:[part.type,fs,start,end]"""
+    cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
+   # if len(cands) > 1:
+   #     print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
+   #     sys.exit(1)
+
+    new_disk = _commands[cands[0]](args, dev, disk)
+    return new_disk
+
 

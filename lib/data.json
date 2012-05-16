@@ -1,0 +1,26 @@
+[
+    {
+        "action": "target",
+        "args": [
+            "/dev/sdb"
+        ]
+    },
+    {
+        "action": "mkpart",
+        "args": [
+            "primary",
+            0,
+            100,
+            "ext2"
+        ]
+    },
+    {
+        "action": "mkpart",
+        "args": [
+            "extended",
+            100,
+            456,
+            "ext4"
+        ]
+    }
+]
