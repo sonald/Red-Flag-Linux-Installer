@@ -42,6 +42,7 @@ class UnpackingHandler(tornado.web.RequestHandler):
 class ProgressHandler(tornado.websocket.WebSocketHandler):
     reporter = None
     def open(self):
+        print "open websocket"
         self.__class__.reporter = self
         pass
 
@@ -49,12 +50,14 @@ class ProgressHandler(tornado.websocket.WebSocketHandler):
         pass
 
     def on_close(self):
+        print "close websocket"
         self.__class__.reporter = None
         pass
 
 settings = {
         "static_path": os.path.join(os.path.dirname(__file__), "static"),
-        "debug": True # in debug mode, pages autoreload
+        "debug": True, # in debug mode, pages autoreload
+        "reporter": ProgressHandler
         }
 
 app = tornado.web.Application([

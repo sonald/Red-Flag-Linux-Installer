@@ -10,9 +10,9 @@ import tornado.web
 import tornadio2
 
 # used for testing
-_stubDisk = [
+_stubDisks = [
         { 
-            "Model": "ATA HITACHI HTS72321 (scsi)",
+            "model": "ATA HITACHI HTS72321 (scsi)",
             "path": "/dev/sda",
             "size": "160GB",
             "type": "msdos",
@@ -20,6 +20,17 @@ _stubDisk = [
                 (1, "32.3kB", "32.2GB", "32.2GB", "primary", "ext4"),
                 (2, "96.7GB", "160GB", "63.4GB", "extended", ""),
                 (5, "96.7GB", "129GB", "32.2GB", "logical", "ext4"),
+            ]
+        },
+        { 
+            "model": "SSK SFD201 (scsi)",
+            "path": "/dev/sdb",
+            "size": "15GB",
+            "type": "gpt",
+            "table": [
+                (1, "32.3kB", "32.2GB", "32.2GB", "part1", "ext4"),
+                (2, "96.7GB", "160GB", "63.4GB", "part2", ""),
+                (3, "96.7GB", "129GB", "32.2GB", "part3", "ntfs"),
             ]
         },
     ]
@@ -38,31 +49,37 @@ _stubDeviceList = [
             "type": "gpt",
         },
     ]
+
 class PartitionService(tornado.web.RequestHandler):
     """Partitioning Service
     """
     serviceName = "partitioning"
+    reporter = None
 
-    def initialize(self, socket=None):
-        """ socket is socket.io used to report progress """
-        self.report = socket.send if socket else self.write
-        print "initializing PartitionService"
+    def initialize(self):
+        print self.application.settings['reporter']
+        print self.application.settings['reporter'].reporter
+        if self.application.settings['reporter']:
+            self.reporter = self.application.settings['reporter'].reporter
 
-    def setReporter(socket=None):
-        self.report = socket.send if socket else self.write
+    def report(self, data):
+        if self.reporter:
+            self.reporter.write_message(data)
+        else:
+            print "no reporter found, keep silent"
 
     def get(self):
         cmd = self.get_argument('cmd')
         if cmd == "view":
-            self.render("../views/partition.html")
+            self.render("../views/partition.html", disks=_stubDisks)
 
         elif cmd == "getDeviceList":
             print "send: ", json.dumps(_stubDeviceList)
             self.write(json.dumps(_stubDeviceList))
 
         elif cmd == "getAllDisks":
-            print "send: ", json.dumps(_stubDisk)
-            self.write(json.dumps(_stubDisk))
+            print "send: ", json.dumps(_stubDisks)
+            self.write(json.dumps(_stubDisks))
 
     @tornado.web.asynchronous
     def post(self):
@@ -71,7 +88,7 @@ class PartitionService(tornado.web.RequestHandler):
         if cmd == "commit":
             pass
         elif cmd == "partition":
-            for i in range(1, 101):
+            for i in range(0, 101, 2):
                 pack = json.dumps({
                     'progress': i
                     })
