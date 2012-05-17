@@ -21,7 +21,7 @@ def usage():
 if __name__ == "__main__":
     # check uid
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hd:l", ["help", "dev=", "list"]) 
+        opts, args = getopt.getopt(sys.argv[1:], "hd:lj", ["help", "dev=", "list", "json"]) 
     except getopt.GetoptError:           
         usage()                          
         sys.exit(2)         
@@ -31,6 +31,10 @@ if __name__ == "__main__":
         op, arg = opt[0], opt[1]
         if op == '-l' or op == '--list':
             print_disks()
+            sys.exit(0)
+        if op == '-j' or op == '--json':
+            data = print_to_json_format()
+            print data
             sys.exit(0)
             
     if not check_device(args[0]): 
@@ -44,6 +48,7 @@ if __name__ == "__main__":
         del args[0]
 
         new_disk = dispatch(cmd, args, dev, disk)
-        new_disk.commit()
-        print_disk_helper(new_disk)
+        if new_disk:
+            new_disk.commit()
+            print_disk_helper(new_disk)
 

@@ -38,12 +38,63 @@ def print_disk_helper(disk):
             partty += "PROTECTED |"
         if part.type & parted.PARTITION_FREESPACE:
             partty += "FREESPACE |"
-
         print "%d\t%s\t%s\t%s\t%s\t\t%dMB" %  \
             (part.number, part.name, part.path,
                  partty or '[ ]',
                  '  ' + (part.fileSystem and part.fileSystem.type or "[  ]"), part.getSize())
 
+def print_part_to_json_format(part):
+    partty =""
+    if part.type == parted.PARTITION_NORMAL:
+        partty = "normal"
+    elif part.type & parted.PARTITION_LOGICAL:
+        partty = "logical"
+    elif part.type & parted.PARTITION_EXTENDED:
+        partty = "extended"
+    elif part.type & parted.PARTITION_FREESPACE:
+        partty = "freespace"
+    elif part.type & parted.PARTITION_METADATA:
+        partty = "metadata"
+    elif part.type & parted.PARTITION_PROTECTED:
+        partty = "protected"
+
+    start = parted.formatBytes(part.geometry.start,'kB')
+    end = parted.formatBytes(part.geometry.end,'kB')
+    size =  end - start
+    fstype = ""
+    if part.fileSystem:
+        fstype = str(part.fileSystem.type)
+
+    data = [ part.number, start, end, size, partty, fstype]
+
+    return data
+
+
+def print_dev_to_json_format(dev):
+    disk = parted.disk.Disk(dev)
+    size = dev.getSize()
+    data = {
+        "model": dev.model,
+        "path": dev.path,
+        "size":str(size)+'MB',
+        "type":disk.type,
+        "unit":'KB',
+        "table":[],
+        }
+
+    for part in disk.partitions:
+        table = print_part_to_json_format(part)
+        data['table'].append(table)
+
+    return data
+
+def print_to_json_format():
+    data = []
+    for dev in parted.getAllDevices():
+        data.append(print_dev_to_json_format(dev))
+
+    return json.dumps(data)
+    
 def print_disks():
     # list devices
     disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
@@ -88,7 +139,7 @@ def adjust_geometry(disk,ty,new_geometry):
 
 def print_disk(args, dev ,disk):
     print_disk_helper(disk)
-    sys.exit(0)
+    return None
 
 def mkpart(args, dev, disk):
     cons = dev.getConstraint()
