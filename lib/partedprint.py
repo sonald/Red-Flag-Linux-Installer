@@ -50,7 +50,7 @@ def print_disk_to_json_format(disk,free):
             parts.append(part)
             part = part.nextPartition()
     else:
-        parts = disk.partitions:
+        parts = disk.partitions
 
     for part in parts:    
         table = print_disk_helper_to_json_format(part)
@@ -61,7 +61,7 @@ def print_disks_to_json_format(disks,free):
     data = []
     #for dev in parted.getAllDevices():
     for disk in disks:
-        data.append(print_dev_to_json_format(disk,free))
+        data.append(print_disk_to_json_format(disk,free))
 
     return json.dumps(data)
 
@@ -90,8 +90,9 @@ def print_disk_helper(parts):
 def print_disk(disk,free):
     parts = []
     if free == True:
+        part = disk.getFirstPartition()
         while part:
-            parts = part.append(part)
+            parts.append(part)
             part = part.nextPartition()
     else:
         parts = disk.partitions
@@ -109,8 +110,12 @@ def print_disks(disks,free):
         print_disk(disk,free)
 
 def parted_print(disks,isjson = False,free = False):
+    # list devices
+    if disks is None:
+        disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
+
     if isjson:
-        print_disks(disks,free)
+        return  print_disks_to_json_format(disks,free)
     else:
-        return  print_to_json_format(disks,free)
+        print_disks(disks,free)
 

@@ -4,6 +4,7 @@
 import parted  
 import _pedmodule
 import sys
+import partedprint
 
 trans_from_mb = 2048 #1024*1024/512
 partty_map = {

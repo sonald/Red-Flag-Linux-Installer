@@ -24,7 +24,7 @@ def print_handler(opts,args):
     for opt in opts:
         op, arg = opt[0],opt[1]
         if op == '-l' or op == 'list':
-            disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
+            disks = None
 
     for arg in args:
         if arg == 'json':
