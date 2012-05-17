@@ -23,7 +23,8 @@ Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
   传输JSON格式的数据。http用来请求服务和发送数据。websocket协议用来推送服务
   信息（比如进度提示等）
 
-### 分区服务的JSON数据格式暂定为：
+### 分区服务
+#### 客户端传递的JSON数据格式暂定为：
 
     [ 
         { action: "name", args: [] },
@@ -78,6 +79,72 @@ JSON中不会明确给出分区表类型，这个应该是分区库自行判断�
         reason: "need root for operation"
     }
 
+
+#### 服务端传给客户端的磁盘数据JSON格式如下：
+
+    [
+        {
+            "model": "ATA HITACHI HTS72321 (scsi)",
+            "path": "/dev/sda",
+            "size": "160GB",
+            "type": "msdos",
+            "unit": "kb",
+            "table": [
+                [
+                    "1",
+                    "32.3",
+                    "32000000",
+                    "32000000",
+                    "primary",
+                    "ext4"
+                ],
+                [
+                    "2",
+                    "96700000",
+                    "160000000",
+                    "634000000",
+                    "extended",
+                    ""
+                ]
+            ]
+        },
+        {
+            "model": "SSK SFD201 (scsi)",
+            "path": "/dev/sdb",
+            "size": "15GB",
+            "type": "gpt",
+            "unit": "mb",
+            "table": [
+                [
+                    "1",
+                    "0.032",
+                    "32000",
+                    "32200",
+                    "part1",
+                    "ext4"
+                ],
+                [
+                    "2",
+                    "96700",
+                    "160000",
+                    "63400",
+                    "part2",
+                    ""
+                ],
+                [
+                    "3",
+                    "96700",
+                    "129000",
+                    "322000",
+                    "part3",
+                    "ntfs"
+                ]
+            ]
+        }
+    ]
+
+unit域用来指定分区表中的数据的单位。table中没一项分别是：
+Number, Start, End, Size(in unit), type(or name), fs  type
 
 ### 问题
 1. 找一个backbone或JS的测试框架，前后端都要测试
