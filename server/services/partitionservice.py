@@ -50,21 +50,18 @@ _stubDeviceList = [
         },
     ]
 
-class PartitionService(tornado.web.RequestHandler):
+class PartitioningService(tornado.web.RequestHandler):
     """Partitioning Service
     """
     serviceName = "partitioning"
-    reporter = None
 
     def initialize(self):
-        print self.application.settings['reporter']
-        print self.application.settings['reporter'].reporter
-        if self.application.settings['reporter']:
-            self.reporter = self.application.settings['reporter'].reporter
+        if PartitioningSocket.reporter:
+            self.reporter = PartitioningSocket.reporter
 
     def report(self, data):
         if self.reporter:
-            self.reporter.write_message(data)
+            self.reporter.send(data)
         else:
             print "no reporter found, keep silent"
 
@@ -98,6 +95,16 @@ class PartitionService(tornado.web.RequestHandler):
         self.finish()
 
 class PartitioningSocket(tornadio2.SocketConnection):
+    reporter = None
+
+    def on_open(self, info):
+        self.__class__.reporter = self
+        pass
+
     def on_message(self, msg):
+        pass
+
+    def on_close(self):
+        self.__class__.reporter = None
         pass
 

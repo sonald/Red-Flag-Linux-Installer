@@ -13,15 +13,14 @@ class UnpackingService(tornado.web.RequestHandler):
     """Unpacking Service
     """
     serviceName = "unpacking"
-    reporter = None
 
     def initialize(self):
-        if self.application.settings['reporter']:
-            self.reporter = self.application.settings['reporter'].reporter
+        if UnpackingSocket.reporter:
+            self.reporter = UnpackingSocket.reporter
 
     def report(self, data):
         if self.reporter:
-            self.reporter.write_message(data)
+            self.reporter.send(data)
         else:
             print "no reporter found, keep silent"
 
@@ -47,4 +46,18 @@ class UnpackingService(tornado.web.RequestHandler):
                 self.report(pack)
         self.finish()
 
+
+class UnpackingSocket(tornadio2.SocketConnection):
+    reporter = None
+
+    def on_open(self, info):
+        self.__class__.reporter = self
+        pass
+
+    def on_message(self, msg):
+        pass
+
+    def on_close(self):
+        self.__class__.reporter = None
+        pass
 

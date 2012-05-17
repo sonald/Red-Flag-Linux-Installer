@@ -1,9 +1,9 @@
 /*
  * =====================================================================================
  *
- *       Filename:  websocket.js
+ *       Filename:  hippo.js
  *
- *    Description:  ws service
+ *    Description:  Hippo client
  *
  *        Version:  1.0
  *        Created:  2012年05月10日 16时08分43秒
@@ -15,47 +15,116 @@
 */ 
 $(function() {
     console.log('on ready');
-    var ws = new WebSocket("ws://localhost:8080/ws");
-    ws.onopen = function() {
-    };
+    var ws = new io.connect("http://" + location.host);
 
-    ws.onmessage = function(ev) {
-        var pack = JSON.parse(ev.data);
-        //console.log(pack);
-        if (stage === "partitioning") {
-            $('#stage').find('#progress > div').css('width', pack['progress']+'%');
+    function registerServiceSocket(service) {
+        sock = new io.connect("http://" + location.host + "/" + service.name),
+        sock.on('disconnect', $.proxy(service.ondisconnect, service));
+        sock.on('message', $.proxy(service.onmessage, service));
+        service.io = sock;
+    }
 
-        } else {
-            $('#stage').html('<div class="well">' + ev.data + '</div>');
-        }
-    };
+    //TODO: service view may need to delay loading until first display
+    //because it may need load some data (e.g partition table)
+    function loadServiceView(service) {
+        var dfd = new $.Deferred();
+        $.get("/service/" + service.name + "?cmd=view")
+        .then(
+            function(data) { 
+                console.log('view: ', data.slice(1, 20)); 
+                service.$el = $(data);
+                service['onviewload'] && service.onviewload();
+                dfd.resolve();
+            },
+            function() { console.log('get ' + service.name + ' view failed'); }
+        );
+        return dfd.promise();
+    }
 
-    // initial state
-    stage = 'welcome';
-    // stage transmission
-    states = {
-        'welcome': 'partitioning',
-        'partitioning': 'unpacking'
-    };
+    function loadService(service) {
+        registerServiceSocket(service); 
+        return loadServiceView(service);
+    }
 
-    $('#stage').on('click', 'a', function(ev) {
-        if ($(this).text() === 'Commit') {
-            console.log('post commit');
-            $.post("/service/partitioning?cmd=partition", {}, function() {
-                console.log('partition done');
+    //Hippo stuff
+
+    //these objects are kind of backbone Models and Views
+    var partService = {
+        name: "partitioning", 
+        $el: null, // cached view
+        $target: $('#stage'),
+        onmessage: function(msg) {
+            console.log(this);
+            var pack = JSON.parse(msg);
+            this.$el.find('#progress > div').css('width', pack['progress']+'%');
+        }, 
+        ondisconnect: function() {
+            console.log(this.name + ' disconncted');
+        },
+        onviewload: function() {
+            this.$target.on('click', 'a', function(ev) {
+                if ($(this).text() === 'Commit') {
+                    console.log('post commit');
+                    $.post("/service/partitioning?cmd=partition", {}, function() {
+                        console.log('partition done');
+                    });
+                }
             });
-        }
-    });
+        },
 
-    $('body').on('click', '#previous', function() {
-    });
+    };
 
-    $('body').on('click', '#next', function() {
-        var next = states[stage];
-        console.log('fire ' + next);
-        $.get("/service/" + next + "?cmd=view", function(data) {
-            stage = next;
-            $('#stage').html( data );
+    var unpackService = {
+        name: "unpacking",
+        $el: null, 
+        $target: $('#stage'),
+        onmessage: function(msg) {
+            $el.html('<div class="well">' + msg + '</div>');
+        },
+        ondisconnect: function() {
+            console.log(this.name + ' disconncted');
+        },
+    };
+
+    var services = {
+        'partitioning': partService,
+        'unpacking': unpackService,
+    };
+
+    $.when( Object.getOwnPropertyNames(services).map( function(srv) {
+        return loadService(services[srv]);
+    }) )
+    .done(function() { setupStage(); })
+    .fail(function() { console.log('load service failed'); });
+
+    function setupStage() {
+        // initial state
+        var stage = 0;
+        // stage transmission
+        var stages = ['welcome', 'partitioning', 'unpacking', 'finish'];
+
+        $('body').on('click', '#previous', function() {
+            if (stage === 0) {
+                console.log('no prev stage');
+                return;
+            }
+
+            var prev = --stage;
+            console.log('fire ' + stages[prev]);
+            $('#stage').html( services[stages[prev]].$el );
+            stage = prev;
         });
-    });
+
+        $('body').on('click', '#next', function() {
+            if (stage === stages.length-1) {
+                console.log('no next stage');
+                return;
+            }
+
+            var next = ++stage;
+            console.log('fire ' + stages[next]);
+            $('#stage').html( services[stages[next]].$el );
+            stage = next;
+        });
+    }
 });

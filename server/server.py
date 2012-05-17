@@ -14,8 +14,8 @@ import tornado.escape
 
 import tornadio2
 
-import services.partitionservice as partservice
-import services.unpackservice as unpackservice
+from services.partitionservice import *
+from services.unpackservice import *
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -31,42 +31,39 @@ class HippoHandler(tornado.web.RequestHandler):
     def post(self):
         print "request install: ", self.request.arguments
 
-class ProgressHandler(tornado.websocket.WebSocketHandler):
-    reporter = None
-    def open(self):
-        print "open websocket"
-        self.__class__.reporter = self
-        pass
+class RouterConnection(tornadio2.SocketConnection):
+    __endpoints__ = {
+            '/' + PartitioningService.serviceName: PartitioningSocket,
+            '/' + UnpackingService.serviceName: UnpackingSocket
+            }
+    def on_open(self, info):
+        print 'Router: ', repr(info)
 
-    def on_message(self, msg):
-        pass
-
-    def on_close(self):
-        print "close websocket"
-        self.__class__.reporter = None
-        pass
 
 settings = {
         "static_path": os.path.join(os.path.dirname(__file__), "static"),
         "debug": True, # in debug mode, pages autoreload
-        "reporter": ProgressHandler
         }
 
-app = tornado.web.Application([
-    (r"/", IndexHandler),
-    (r"/hippo", HippoHandler),
-    (r"/(test\.png)", tornado.web.StaticFileHandler,
-        dict(path=settings['static_path'])),
+router = tornadio2.TornadioRouter(RouterConnection)
 
-    (r"/service/partitioning", partservice.PartitionService),
-    (r"/service/unpacking", unpackservice.UnpackingService),
+app = tornado.web.Application(
+        router.apply_routes([
+            (r"/", IndexHandler),
+            (r"/hippo", HippoHandler),
+            (r"/(test\.png)", tornado.web.StaticFileHandler,
+                dict(path=settings['static_path'])),
 
-    (r"/ws", ProgressHandler),
-    ], **settings)
+            (r"/service/partitioning", PartitioningService),
+            (r"/service/unpacking", UnpackingService)
+            ]),
+        socket_io_port = 8080,
+        **settings)
 
 if __name__ == "__main__":
     try:
-        app.listen(8080)
-        tornado.ioloop.IOLoop.instance().start()
+        tornadio2.SocketServer(app)
+        #app.listen(8080)
+        #tornado.ioloop.IOLoop.instance().start()
     except:
         sys.exit(1)
