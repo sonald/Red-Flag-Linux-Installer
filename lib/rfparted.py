@@ -4,102 +4,14 @@
 import parted  
 import _pedmodule
 import sys
-import json
 
 trans_from_mb = 2048 #1024*1024/512
-
 partty_map = {
     'primary': parted.PARTITION_NORMAL,
     'extended': parted.PARTITION_EXTENDED,
     'free': parted.PARTITION_FREESPACE,
     'logical': parted.PARTITION_LOGICAL
 }
-
-
-def print_disk_helper(disk):
-    parts = disk.partitions
-    print "dev model: %s" % (disk.device.model, ), 
-    print ", type: %s" % (disk.type, ), 
-    print ", primaries: %d" % (disk.primaryPartitionCount, )
-    #FIXME: this crashes on gpt device
-    #print "maxSupportedPartitionCount: %d" % (disk.maxSupportedPartitionCount, )
-    print "No.\tname\tpath\t\ttype  \t  fs\t\tsize"
-    for part in parts:
-        partty = ""
-        if part.type == parted.PARTITION_NORMAL:
-            partty += "NORMAL |"
-        if part.type & parted.PARTITION_LOGICAL:
-            partty += "LOGICAL |"
-        if part.type & parted.PARTITION_EXTENDED:
-            partty += "EXTENDED |"
-        if part.type & parted.PARTITION_METADATA:
-            partty += "METADATA |"
-        if part.type & parted.PARTITION_PROTECTED:
-            partty += "PROTECTED |"
-        if part.type & parted.PARTITION_FREESPACE:
-            partty += "FREESPACE |"
-        print "%d\t%s\t%s\t%s\t%s\t\t%dMB" %  \
-            (part.number, part.name, part.path,
-                 partty or '[ ]',
-                 '  ' + (part.fileSystem and part.fileSystem.type or "[  ]"), part.getSize())
-
-def print_part_to_json_format(part):
-    partty =""
-    if part.type == parted.PARTITION_NORMAL:
-        partty = "normal"
-    elif part.type & parted.PARTITION_LOGICAL:
-        partty = "logical"
-    elif part.type & parted.PARTITION_EXTENDED:
-        partty = "extended"
-    elif part.type & parted.PARTITION_FREESPACE:
-        partty = "freespace"
-    elif part.type & parted.PARTITION_METADATA:
-        partty = "metadata"
-    elif part.type & parted.PARTITION_PROTECTED:
-        partty = "protected"
-
-    start = parted.formatBytes(part.geometry.start,'kB')
-    end = parted.formatBytes(part.geometry.end,'kB')
-    size =  end - start
-    fstype = ""
-    if part.fileSystem:
-        fstype = str(part.fileSystem.type)
-
-    data = [ part.number, start, end, size, partty, fstype]
-
-    return data
-
-
-def print_dev_to_json_format(dev):
-    disk = parted.disk.Disk(dev)
-    size = dev.getSize()
-    data = {
-        "model": dev.model,
-        "path": dev.path,
-        "size":str(size)+'MB',
-        "type":disk.type,
-        "unit":'KB',
-        "table":[],
-        }
-
-    for part in disk.partitions:
-        table = print_part_to_json_format(part)
-        data['table'].append(table)
-
-    return data
-
-def print_to_json_format():
-    data = []
-    for dev in parted.getAllDevices():
-        data.append(print_dev_to_json_format(dev))
-
-    return json.dumps(data)
-    
-def print_disks():
-    # list devices
-    disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
-    for disk in disks:
-        print_disk_helper(disk)
 
 def msdos_validate_type(ty, disk):
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
@@ -137,10 +49,6 @@ def adjust_geometry(disk,ty,new_geometry):
 
     return new_geo
 
-def print_disk(args, dev ,disk):
-    print_disk_helper(disk)
-    return None
-
 def mkpart(args, dev, disk):
     cons = dev.getConstraint()
     ty = parted.PARTITION_NORMAL
@@ -155,7 +63,6 @@ def mkpart(args, dev, disk):
     fs = None
     start = parted.sizeToSectors(int(args[0]), "MiB", 512)
     end = parted.sizeToSectors(int(args[1]), "MiB", 512)
-
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     try:
         new_geo = adjust_geometry(disk,ty,new_geometry)
@@ -168,7 +75,6 @@ def mkpart(args, dev, disk):
         
     new_partition = parted.partition.Partition(disk,ty,fs,new_geo)
     disk.addPartition(new_partition, cons)
-
     return disk
 
 def rmpart(args, dev, disk):
@@ -195,7 +101,6 @@ def mklabel(args, dev, disk):
     return parted.freshDisk(dev,str(args[0]))
 
 _commands = {
-        "print" : print_disk,
         "mkpart" : mkpart,
         "rm" : rmpart,
         "mklabel" : mklabel,
