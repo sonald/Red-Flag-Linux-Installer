@@ -15,6 +15,9 @@ partty_map = {
 }
 
 def msdos_validate_type(ty, disk):
+    """Given the disk and the partiton type. Raise exception
+    if a wrong partition type is given."""
+
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
         and disk.primaryPartitionCount == 4:
         raise Exception, "Too many primary partitions."
@@ -26,8 +29,11 @@ def msdos_validate_type(ty, disk):
         raise Exception, "create extended partition first"
 
 def adjust_geometry(disk,ty,new_geometry):
-    new_geo = None
+    """Given the disk,partiton type and the geomery,return the suitable
+    geometry for the disk condition.Raise Exception if a valid geometry
+    is given."""
 
+    new_geo = None
     if not (ty & parted.PARTITION_LOGICAL):
         for geo in disk.getFreeSpaceRegions():
             if disk.type == 'msdos' and disk.getExtendedPartition() \
@@ -37,7 +43,6 @@ def adjust_geometry(disk,ty,new_geometry):
             if geo.overlapsWith(new_geometry):
                 new_geo = geo.intersect(new_geometry)
                 break
-
     elif disk.type == 'msdos' and (ty & parted.PARTITION_LOGICAL):
         tmp = disk.getExtendedPartition().geometry
         for geo in disk.getFreeSpaceRegions():
@@ -47,10 +52,13 @@ def adjust_geometry(disk,ty,new_geometry):
 
     if new_geo == None:
         raise Exception, "Can't have overlapping partitions."
-
     return new_geo
 
 def mkpart(args, dev, disk):
+    """Given args, device and disk needed to make parted. The format 
+    of args: args = [part.type, start, end, filesystem.type]. Raise
+    Exception given wrong args."""
+
     cons = dev.getConstraint()
     ty = parted.PARTITION_NORMAL
     if disk.type == 'msdos':
@@ -79,6 +87,10 @@ def mkpart(args, dev, disk):
     return disk
 
 def rmpart(args, dev, disk):
+    """Given args, device and disk needed to remove part specified. The format 
+    of args: args = [partition.number]. Raise Exception given wrong args or 
+    a valid parttiton.number."""
+
     parts = disk.partitions
     n = 0
     for p in parts:
@@ -99,6 +111,10 @@ def rmpart(args, dev, disk):
     return disk
 
 def mklabel(args, dev, disk):
+    """Given args, device and disk needed to remove part specified. The format 
+    of args: args = [disk.type]. Raise Exception given wrong args or a valid 
+    disk.type."""
+
     return parted.freshDisk(dev,str(args[0]))
 
 _commands = {

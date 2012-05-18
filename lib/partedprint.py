@@ -7,6 +7,7 @@ import json
 
 
 def print_disk_helper_to_json_format(part):
+    """Return the stat of part given."""
     partty =""
     if part.type == parted.PARTITION_NORMAL:
         partty = "normal"
@@ -27,13 +28,12 @@ def print_disk_helper_to_json_format(part):
     fstype = ""
     if part.fileSystem:
         fstype = str(part.fileSystem.type)
-
     data = [ part.number, start, end, size, partty, fstype]
-
     return data
 
 
 def print_disk_to_json_format(disk,free):
+    """Return the stat of disk given."""
     size = disk.device.getSize()
     data = {
         "model": disk.device.model,
@@ -58,6 +58,7 @@ def print_disk_to_json_format(disk,free):
     return data
 
 def print_disks_to_json_format(disks,free):
+    """Return the stat of disks given with json."""
     data = []
     #for dev in parted.getAllDevices():
     for disk in disks:
@@ -66,6 +67,7 @@ def print_disks_to_json_format(disks,free):
     return json.dumps(data)
 
 def print_disk_helper(parts):
+    """Print the stat of parts given."""
     print "No.\tname\tpath\t\ttype  \t  fs\t\tsize"
     for part in parts:
         partty = ""
@@ -88,6 +90,7 @@ def print_disk_helper(parts):
                  part.getSize())
     
 def print_disk(disk,free):
+    """Print the stat of disk given."""
     parts = []
     if free == True:
         part = disk.getFirstPartition()
@@ -104,13 +107,14 @@ def print_disk(disk,free):
     print_disk_helper(parts)
 
 def print_disks(disks,free):
-    # list devices
-    #disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
+    """Print the stat of disks given."""
     for disk in disks:
         print_disk(disk,free)
 
 def parted_print(disks,isjson = False,free = False):
-    # list devices
+    """Get all disks,if disks is not given.Return the json data if 
+    isjson is true.Get the stat of freepartition if free is true."""
+    # list devices 
     if disks is None:
         disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
 
