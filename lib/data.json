@@ -6,10 +6,6 @@
         ]
     },
     {
-        "action": "print_to_json",
-        "args":[]
-    },
-    {
         "action": "mkpart",
         "args": [
             "primary",

@@ -4,7 +4,8 @@
 import parted  
 import getopt
 import sys
-from rfparted import *
+import rfparted
+import partedprint
 
 def check_device(devpath):
     try:
@@ -23,7 +24,7 @@ def print_handler(opts,args):
     withfree = False
     for opt in opts:
         op, arg = opt[0],opt[1]
-        if op == '-l' or op == 'list':
+        if op == '-l' or op == '--list':
             disks = None
 
     for arg in args:
@@ -40,9 +41,9 @@ def print_handler(opts,args):
                 disk = parted.disk.Disk(dev)
                 disks.append(disk)
     if isjson:
-        print parted_print(disks,isjson,withfree)
+        print partedprint.parted_print(disks,isjson,withfree)
     else:
-        parted_print(disks,isjson,withfree)
+        partedprint.parted_print(disks,isjson,withfree)
 
 if __name__ == "__main__":
     # check uid
