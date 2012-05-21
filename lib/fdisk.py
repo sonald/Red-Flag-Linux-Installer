@@ -4,9 +4,13 @@
 import parted  
 import getopt
 import sys
-from rfparted import *
+import rfparted
+import partedprint
 
 def check_device(devpath):
+    """Given the operating system level path to a device node, set
+    the value of self.dev and self.disk.  Return false if an 
+    invalid path is given."""
     try:
         parted.getDevice(devpath)
     except parted.DeviceException:
@@ -15,38 +19,64 @@ def check_device(devpath):
     
 def usage():
     print "%s: [OPTION]... [DEVICE [CMD [PARAM]...]...]" % (sys.argv[0], )
-    print "\t-d,--dev device  operate only on device specified"
+    print "Option:"
+    #print "\t-d,--dev device  operate only on device specified"
+    print "\t-h,--help \t\t show help information"
+    print "\t-l,--list[free|json] \t lists partition layout on all block devices"
+    print
+    print "Command:"
+    print "\tmklabel LABEL-TYPE                        create a new disklabel (partition table)"
+    print "\tmkpart PART-TYPE START END [FS-TYPE]      make a partition"
+    print "\trm NUMBER                                 delete partition NUMBER"
+    print "\tprint [free|json]                         display the partition table,free space "
+    print "\t                                          or get the result with json"
 
-_commands = {
-        "print" : print_disk,
-        "mkpart" : mkpart,
-        "rm" : rmpart,
-        "mklabel" : mklabel,
-        }
+def print_handler(opts,args):
+    disks = []
+    isjson = False
+    withfree = False
+    for opt in opts:
+        op, arg = opt[0],opt[1]
+        if op == '-l' or op == '--list':
+            disks = None
+        elif op == '-h' or op == '--help':
+            usage()
+            sys.exit(0)
+        else:
+            usage()
+            sys.exit(1)
 
-def dispatch(cmd, args, dev, disk):
-    cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
-    if len(cands) > 1:
-        print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
-        sys.exit(1)
 
-    new_disk = _commands[cands[0]](args, dev, disk)
-    return new_disk
+    for arg in args:
+        if arg == 'json':
+            isjson = True
+        elif arg == 'free':
+            withfree = True
+        elif arg == 'print' and disks == []:
+            if not check_device(args[0]): 
+                usage()
+                sys.exit(1)
+            else:
+                dev = parted.getDevice(args[0])
+                disk = parted.disk.Disk(dev)
+                disks.append(disk)
+    if isjson:
+        print partedprint.parted_print(disks,isjson,withfree)
+    else:
+        partedprint.parted_print(disks,isjson,withfree)
 
 if __name__ == "__main__":
     # check uid
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hd:l", ["help", "dev=", "list"]) 
+        opts, args = getopt.getopt(sys.argv[1:], "hl", ["help", "list"]) 
     except getopt.GetoptError:           
         usage()                          
         sys.exit(2)         
 
-    #print opts
-    for opt in opts:
-        op, arg = opt[0], opt[1]
-        if op == '-l' or op == '--list':
-            print_disks()
-            sys.exit(0)
+    #print_handler
+    if opts or "print".startswith(args[1]):
+        print_handler(opts,args)
+        sys.exit(0)
             
     if not check_device(args[0]): 
         sys.exit(1)
@@ -59,6 +89,7 @@ if __name__ == "__main__":
         del args[0]
 
         new_disk = dispatch(cmd, args, dev, disk)
-        new_disk.commit()
-        print_disk_helper(new_disk)
+        if new_disk:
+            new_disk.commit()
+            print_disk_helper(new_disk)
 

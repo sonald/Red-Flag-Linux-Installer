@@ -4,9 +4,9 @@
 import parted  
 import _pedmodule
 import sys
+import partedprint
 
 trans_from_mb = 2048 #1024*1024/512
-
 partty_map = {
     'primary': parted.PARTITION_NORMAL,
     'extended': parted.PARTITION_EXTENDED,
@@ -14,54 +14,26 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
-def print_disk_helper(disk):
-    parts = disk.partitions
-    print "dev model: %s" % (disk.device.model, ), 
-    print ", type: %s" % (disk.type, ), 
-    print ", primaries: %d" % (disk.primaryPartitionCount, )
-    #FIXME: this crashes on gpt device
-    #print "maxSupportedPartitionCount: %d" % (disk.maxSupportedPartitionCount, )
-    print "No.\tname\tpath\t\ttype  \t  fs\t\tsize"
-    for part in parts:
-        partty = ""
-        if part.type == parted.PARTITION_NORMAL:
-            partty += "NORMAL |"
-        if part.type & parted.PARTITION_LOGICAL:
-            partty += "LOGICAL |"
-        if part.type & parted.PARTITION_EXTENDED:
-            partty += "EXTENDED |"
-        if part.type & parted.PARTITION_METADATA:
-            partty += "METADATA |"
-        if part.type & parted.PARTITION_PROTECTED:
-            partty += "PROTECTED |"
-        if part.type & parted.PARTITION_FREESPACE:
-            partty += "FREESPACE |"
-
-        print "%d\t%s\t%s\t%s\t%s\t\t%dMB" %  \
-            (part.number, part.name, part.path,
-                 partty or '[ ]',
-                 '  ' + (part.fileSystem and part.fileSystem.type or "[  ]"), part.getSize())
-
-def print_disks():
-    # list devices
-    disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
-    for disk in disks:
-        print_disk_helper(disk)
-
 def msdos_validate_type(ty, disk):
+    """Given the disk and the partiton type. Raise exception
+    if a wrong partition type is given."""
+
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
         and disk.primaryPartitionCount == 4:
-        raise "Too many primary partitions."
+        raise Exception, "Too many primary partitions."
 
     if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
-        raise "Too many extended partitions."
+        raise Exception, "Too many extended partitions."
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
-        raise "create extended partition first"
+        raise Exception, "create extended partition first"
 
 def adjust_geometry(disk,ty,new_geometry):
-    new_geo = None
+    """Given the disk,partiton type and the geomery,return the suitable
+    geometry for the disk condition.Raise Exception if a valid geometry
+    is given."""
 
+    new_geo = None
     if not (ty & parted.PARTITION_LOGICAL):
         for geo in disk.getFreeSpaceRegions():
             if disk.type == 'msdos' and disk.getExtendedPartition() \
@@ -71,7 +43,6 @@ def adjust_geometry(disk,ty,new_geometry):
             if geo.overlapsWith(new_geometry):
                 new_geo = geo.intersect(new_geometry)
                 break
-
     elif disk.type == 'msdos' and (ty & parted.PARTITION_LOGICAL):
         tmp = disk.getExtendedPartition().geometry
         for geo in disk.getFreeSpaceRegions():
@@ -80,15 +51,14 @@ def adjust_geometry(disk,ty,new_geometry):
                 break
 
     if new_geo == None:
-        raise "error: Can't have overlapping partitions."
-
+        raise Exception, "Can't have overlapping partitions."
     return new_geo
 
-def print_disk(args, dev ,disk):
-    print_disk_helper(disk)
-    sys.exit(0)
-
 def mkpart(args, dev, disk):
+    """Given args, device and disk needed to make parted. The format 
+    of args: args = [part.type, start, end, filesystem.type]. Raise
+    Exception given wrong args."""
+
     cons = dev.getConstraint()
     ty = parted.PARTITION_NORMAL
     if disk.type == 'msdos':
@@ -97,19 +67,16 @@ def mkpart(args, dev, disk):
         try:
             msdos_validate_type(ty, disk)
         except Exception, e:
-            print e
-            sys.exit(1)
+            raise Exception, e
         
     fs = None
     start = parted.sizeToSectors(int(args[0]), "MiB", 512)
-    end = parted.sizeToSectors(int(args[0]), "MiB", 512)
-
+    end = parted.sizeToSectors(int(args[1]), "MiB", 512)
     new_geometry = parted.geometry.Geometry(dev,start,None,end)
     try:
         new_geo = adjust_geometry(disk,ty,new_geometry)
     except Exception, e:
-        print e
-        sys.exit(1)
+        raise Exception, e
 
     if not (ty & parted.PARTITION_EXTENDED):
         fstype = args[2]
@@ -117,10 +84,13 @@ def mkpart(args, dev, disk):
         
     new_partition = parted.partition.Partition(disk,ty,fs,new_geo)
     disk.addPartition(new_partition, cons)
-
     return disk
 
 def rmpart(args, dev, disk):
+    """Given args, device and disk needed to remove part specified. The format 
+    of args: args = [partition.number]. Raise Exception given wrong args or 
+    a valid parttiton.number."""
+
     parts = disk.partitions
     n = 0
     for p in parts:
@@ -129,8 +99,7 @@ def rmpart(args, dev, disk):
         n = n + 1
 
     if n == len(parts):
-        print "error,there is no such partition"
-        sys.exit(1)
+        raise Exception, "there is no such partition"
 
     part = parts[n]
     if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:
@@ -142,5 +111,25 @@ def rmpart(args, dev, disk):
     return disk
 
 def mklabel(args, dev, disk):
-    return parted.freshDisk(dev,args[0])
+    """Given args, device and disk needed to remove part specified. The format 
+    of args: args = [disk.type]. Raise Exception given wrong args or a valid 
+    disk.type."""
+
+    return parted.freshDisk(dev,str(args[0]))
+
+_commands = {
+        "mkpart" : mkpart,
+        "rm" : rmpart,
+        "mklabel" : mklabel,
+        }
+def dispatch(cmd, args, dev, disk):
+    """Return the new disk arrording the given data."""
+    cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
+   # if len(cands) > 1:
+   #     print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
+   #     sys.exit(1)
+
+    new_disk = _commands[cands[0]](args, dev, disk)
+    return new_disk
+
 
