@@ -123,7 +123,7 @@ _commands = {
         "mklabel" : mklabel,
         }
 def dispatch(cmd, args, dev, disk):
-    """args:[part.type,fs,start,end]"""
+    """Return the new disk arrording the given data."""
     cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
    # if len(cands) > 1:
    #     print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
