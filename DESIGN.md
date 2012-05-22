@@ -1,150 +1,42 @@
 <center>Hippo 1.0 需求及原型设计</center>
 ==
 
-安装环境
---------
-Hippo 1.0所在的基础环境应该是qomo 4.x的livecd环境。
+简介
+---
+hippo的目标是提供一个web app应用开发框架。hippo 1.0提供的应该是一个类似中间件的服务，
+可以完全分离前后端开发。
 
-1.0需求
--------
-1.0版本的设计具体要求如下：
+ - 后端的开发以python语言编写的服务为开发单位，每个服务有一个描述文件，表明提供了那些功能。
+以及一些可以被监听的消息（socket.io消息），比如说系统安装进度，软件包安装进度等消息。后端
+开发需要理解tornado web框架的设计思路和tornadio2的用法。熟悉python，可以编写python模块。
 
-* UI定制硬盘分区策略（目前支持msdos分区表）
-* 提供安装后脚本执行能力（在chroot环境下运行）
+ - 前端开发应该只需要js，css和html知识。前端开发时看到的所有服务都以javascript API 形式存在，或者是一个统一的调用接口，
 
-基本设计和技术路线
---------
-1.0设计比较简单，基本结构是B/S。
+比如：
 
-+ 前端显示是WebView，使用backbone框架编写
-+ 后端采用python的tornado框架编写，提供分区、添加用户、执行后期脚本以及数据
-  解压功能。
-+ 安装程序中的每一个模块都是一个REST API，B/S之间通讯基于http和websocket协议，
-  传输JSON格式的数据。http用来请求服务和发送数据。websocket协议用来推送服务
-  信息（比如进度提示等）
+    hippo.loadServices();
+    var serv = hippo.getService('partition');
+    console.log(serv.inspect()); // print all functions by service
+    serv.getAllDevices(); // js api form of calling
+    // or stand ajax style of calling
+    serv.get(serv.url, {cmd: 'getAllDevices'}, function(data) {
+        myapp.render(data);
+    });
+    // monitor msg for service's socket.io connection
+    serv.on('progress', function(progress) {
+        myapp.$('div#progress').attr('value', progress);
+    });
 
-### 分区服务
-#### 客户端传递的JSON数据格式暂定为：
+如上描述，hippo可以方便的查找和载入模块，并且自动导出模块提供的所有函数。并且在前端
+有一个简单的hippo.js文件来提供访问这些服务的方法。
 
-    [ 
-        { action: "name", args: [] },
-    ]
+结构设计
+---
+hippo的基础是一个web服务器，目前是基于python的tornado，在此基础上为以上的目标编写一个
+封装层，封装层的工作是加载所有服务，绑定url，绑定socket.io的url，读取服务功能和消息列表。
 
-例如：
+然后还有一个hippo.js作为前端开发的基础。可以用来简化服务查询，消息绑定，建立socket.io
+通道，调用后端服务函数等工作，
 
-    [ 
-        {
-            action: 'target', 
-            args: [ '/dev/sda' ] 
-        },
-        {
-            action: 'mklabel', 
-            args: [ 'msdos' ] 
-        },
-        {
-            action: 'mkpart',
-            args: [ 
-                'primary',
-                '0',
-                '2000',
-                'ext3',
-            ] 
-        },
-        {
-            action: 'rm',
-            args: [ 
-                '1'
-            ] 
-        }
-    ]
-
-即一组操作的序列，动作的参数及顺序按照分区库的格式给出。
-第一个动作是target，用来指明之后的所有动作的目标磁盘路径。
-所以根据分区表不同（msdos或者gpt），mkpart的参数会有变化，
-JSON中不会明确给出分区表类型，这个应该是分区库自行判断（
-除非使用了mklabel动作）。
-
-
-执行结果为JSON对象，表明成功或失败。
-如果成功为：
-   {
-       status: "sucess"
-   }
-
-如果执行出错要返回一个代表错误的JSON对象，最好能反映出错误
-的原因和语句，例如：
-
-    { 
-       status: "failure",
-        reason: "need root for operation"
-    }
-
-
-#### 服务端传给客户端的磁盘数据JSON格式如下：
-
-    [
-        {
-            "model": "ATA HITACHI HTS72321 (scsi)",
-            "path": "/dev/sda",
-            "size": "160GB",
-            "type": "msdos",
-            "unit": "kb",
-            "table": [
-                [
-                    "1",
-                    "32.3",
-                    "32000000",
-                    "32000000",
-                    "primary",
-                    "ext4"
-                ],
-                [
-                    "2",
-                    "96700000",
-                    "160000000",
-                    "634000000",
-                    "extended",
-                    ""
-                ]
-            ]
-        },
-        {
-            "model": "SSK SFD201 (scsi)",
-            "path": "/dev/sdb",
-            "size": "15GB",
-            "type": "gpt",
-            "unit": "mb",
-            "table": [
-                [
-                    "1",
-                    "0.032",
-                    "32000",
-                    "32200",
-                    "part1",
-                    "ext4"
-                ],
-                [
-                    "2",
-                    "96700",
-                    "160000",
-                    "63400",
-                    "part2",
-                    ""
-                ],
-                [
-                    "3",
-                    "96700",
-                    "129000",
-                    "322000",
-                    "part3",
-                    "ntfs"
-                ]
-            ]
-        }
-    ]
-
-unit域用来指定分区表中的数据的单位。table中没一项分别是：
-Number, Start, End, Size(in unit), type(or name), fs  type
-
-### 问题
-1. 找一个backbone或JS的测试框架，前后端都要测试
+并且提供方法可以立即部署（无需安装，自动启动后台web服务和index.html），hippo用
+户可以在此基础上做前端或后端开发。
