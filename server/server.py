@@ -16,6 +16,7 @@ import tornadio2
 
 from services.partitionservice import *
 from services.unpackservice import *
+from services.userservice import *
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -34,7 +35,8 @@ class HippoHandler(tornado.web.RequestHandler):
 class RouterConnection(tornadio2.SocketConnection):
     __endpoints__ = {
             '/' + PartitioningService.serviceName: PartitioningSocket,
-            '/' + UnpackingService.serviceName: UnpackingSocket
+            '/' + UnpackingService.serviceName: UnpackingSocket,
+            '/' + UserService.serviceName: UserSocket
             }
     def on_open(self, info):
         print 'Router: ', repr(info)
@@ -55,7 +57,8 @@ app = tornado.web.Application(
                 dict(path=settings['static_path'])),
 
             (r"/service/partitioning", PartitioningService),
-            (r"/service/unpacking", UnpackingService)
+            (r"/service/unpacking", UnpackingService),
+            (r"/service/user", UserService)
             ]),
         socket_io_port = 8080,
         **settings)
