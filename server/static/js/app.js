@@ -86,7 +86,30 @@ $(function() {
         },
     };
 
+    var userService = {
+        name: "user",
+        $el: null, 
+        $target: $('#stage'),
+        onmessage: function(msg) {
+            this.$target.html('<div class="well">Create User ' + msg + ' Success!</div>')
+        },
+        ondisconnect: function() {
+            console.log(this.name + ' disconncted');
+        },
+        onviewload: function() {
+            this.$target.on('click', 'a', function(ev) {
+                if ($(this).text() === 'Submit') {
+                    var username = $('input[name=username]').attr("value");
+                    $.post("/service/user?cmd=commit&name="+username, {}, function() {
+                        console.log('a new user created');
+                    });
+                }
+            });
+        },
+    };
+
     var services = {
+        'user': userService,
         'partitioning': partService,
         'unpacking': unpackService,
     };
@@ -101,7 +124,7 @@ $(function() {
         // initial state
         var stage = 0;
         // stage transmission
-        var stages = ['welcome', 'partitioning', 'unpacking', 'finish'];
+        var stages = ['welcome', 'user', 'partitioning', 'unpacking', 'finish'];
 
         $('body').on('click', '#previous', function() {
             if (stage === 0) {
