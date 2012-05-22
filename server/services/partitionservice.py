@@ -8,6 +8,8 @@ import json
 
 import tornado.web
 import tornadio2
+import lib.partedprint
+import lib.partedhelper
 
 # used for testing
 _stubDisks = [
@@ -68,7 +70,9 @@ class PartitioningService(tornado.web.RequestHandler):
     def get(self):
         cmd = self.get_argument('cmd')
         if cmd == "view":
-            self.render("../views/partition.html", disks=_stubDisks)
+            datas = json.loads(lib.partedprint.parted_print(None,True,True))
+            self.render("../views/partition.html", disks = datas )
+            #self.render("../views/partition.html", disks=_stubDisks)
 
         elif cmd == "getDeviceList":
             print "send: ", json.dumps(_stubDeviceList)

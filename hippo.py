@@ -57,11 +57,19 @@ if __name__ == "__main__":
         ret = os.fork()
         if ret == 0: 
             # child
-            os.execlp("server/server.py", "hipposerver")
+            #os.execlp("server/server.py","hipposerver")
+            os.system('sudo python server/server.py hipposerver')
         else:
             # fork frontend
+            browsers = ["/usr/bin/chromium-browser","/usr/bin/google-chrome"]
+            for browser in browsers:
+                print browser
+                if os.access(browser, os.R_OK):
+                    os.system(browser + ' --app="http://127.0.0.1:8080/hippo" --incognito')
+                    break
+
             #os.execv("/usr/bin/chromium-browser", ['--app="http://127.0.0.1:8080/hippo"'])
-            os.system('chromium-browser --app="http://127.0.0.1:8080/hippo" --incognito')
+            #os.system('/user/bin/google-chrome --app="http://127.0.0.1:8080/hippo" --incognito')
     except OSError:
         pass
 
