@@ -117,10 +117,16 @@ def mklabel(args, dev, disk):
 
     return parted.freshDisk(dev,str(args[0]))
 
+def reset(args, dev,disk):
+    """
+    """
+    return parted.disk.Disk(dev)
+
 _commands = {
         "mkpart" : mkpart,
         "rm" : rmpart,
         "mklabel" : mklabel,
+        "reset": reset,
         }
 def dispatch(cmd, args, dev, disk):
     """Return the new disk arrording the given data."""
