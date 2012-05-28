@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script src="/dnode.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            window.onload = function () {
+
+                DNode.connect(function (remote) {
+                        remote.services.base.mul(5, 12, function (n) {
+                            document.getElementById('result1').innerHTML = n;
+                            });
+
+                        remote.services.base.mul(6, 12, function (n) {
+                            document.getElementById('result2').innerHTML = n;
+                            });
+                        });
+
+            };
+        </script>
+    </head>
+    <body>
+        <div id="methods">
+        </div>
+
+        <div> 
+            result = <span id="result1">?</span>
+        </div>
+
+        <div> 
+            result = <span id="result2">?</span>
+        </div>
+    </body>
+</html>
