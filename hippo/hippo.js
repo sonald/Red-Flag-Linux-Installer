@@ -20,7 +20,10 @@ var loadDirectory = function(path, ns) {
         var stat = fs.lstatSync(file);
 
         if (stat.isFile() && /\.js$/.test(file)) {
-            ns[fspath.basename(entry, '.js')] = require(file);
+            //ns[fspath.basename(entry, '.js')] = require(file);
+            var intf = require(file);
+            console.dir(intf);
+            ns[fspath.basename(entry, '.js')] = intf;
 
         } else if (stat.isDirectory()) {
             ns[entry] = ns[entry] || {}; // merge existed

@@ -29,6 +29,7 @@ module.exports = function() {
             server = express.createServer()
             .use(express.logger())
             .use(express.static(__dirname))
+            .use(express.static(__dirname + '/static'))
             .listen(opts.port);
 
             console.log(apis);
