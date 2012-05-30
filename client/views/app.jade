@@ -1,0 +1,33 @@
+html
+    head
+        script(src="/dnode.js")
+        script(src="/js/jquery-1.7.2.js")
+        script(src="/bootstrap/js/bootstrap.js")
+        script(src="/js/socket.io.js")
+        script(src="/js/underscore.js")
+
+        link(href='/bootstrap/css/bootstrap-responsive.css',rel='stylesheet',type='text/css')
+        link(href='/bootstrap/css/bootstrap.css',rel='stylesheet',type='text/css')
+        
+        script(src="/app.js")
+
+        title Demo App
+
+    body
+        .well
+            .row
+                .offset2.span8
+                    h1 Welcome To Demo App
+                    p.
+                        this is demo app to sperate app
+                        from framework.
+                    .well
+                        div
+                            a.btn.btn-primary getPartitions
+                            a.btn.btn-primary mul
+                            a.btn.btn-primary listUsers
+                            a.btn.btn-primary expose
+                        div
+                            | result = 
+                            span#result ?
+

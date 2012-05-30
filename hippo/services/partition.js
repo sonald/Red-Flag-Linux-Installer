@@ -11,7 +11,7 @@ module.exports = (function() {
     };
 
     var _stubDisks = [
-        { 
+        {
         "model": "ATA HITACHI HTS72321 (scsi)",
         "path": "/dev/sda",
         "size": "160GB",
@@ -22,7 +22,7 @@ module.exports = (function() {
             [ 5, "96.7GB", "129GB", "32.2GB", "logical", "ext4" ],
         ]
     },
-    { 
+    {
         "model": "SSK SFD201 (scsi)",
         "path": "/dev/sdb",
         "size": "15GB",
@@ -44,11 +44,9 @@ module.exports = (function() {
         if (!disk) {
             cb('invalid disk');
         } else {
-            //cb(JSON.stringify(disk));
             cb(disk);
         }
     };
 
     return PartitionStub;
 }());
-
