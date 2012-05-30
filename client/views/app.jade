@@ -1,33 +1,27 @@
-html
-    head
-        script(src="/dnode.js")
-        script(src="/js/jquery-1.7.2.js")
-        script(src="/bootstrap/js/bootstrap.js")
-        script(src="/js/socket.io.js")
-        script(src="/js/underscore.js")
+extends layout
 
-        link(href='/bootstrap/css/bootstrap-responsive.css',rel='stylesheet',type='text/css')
-        link(href='/bootstrap/css/bootstrap.css',rel='stylesheet',type='text/css')
-        
-        script(src="/app.js")
+block header        
+    script(src="/app.js")
+    title Demo App
 
-        title Demo App
+block content
+    .row
+        .offset2.span8.well
+            h1 Welcome To Demo App
+            p.
+                this is demo app to sperate app
+                from framework.
 
-    body
-        .well
-            .row
-                .offset2.span8
-                    h1 Welcome To Demo App
-                    p.
-                        this is demo app to sperate app
-                        from framework.
-                    .well
-                        div
-                            a.btn.btn-primary getPartitions
-                            a.btn.btn-primary mul
-                            a.btn.btn-primary listUsers
-                            a.btn.btn-primary expose
-                        div
-                            | result = 
-                            span#result ?
+            p.
+                try these functions, which are all remote methods.
+
+            .well
+                div
+                    a.btn.btn-primary getPartitions
+                    a.btn.btn-primary mul
+                    a.btn.btn-primary listUsers
+                    a.btn.btn-primary expose
+                div
+                    | result = 
+                    span#result ?
 

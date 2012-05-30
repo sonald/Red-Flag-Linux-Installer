@@ -56,6 +56,7 @@ module.exports = function() {
             .set('views', client_root + 'views');
 
             server.get('/', function(req, res, next) {
+                // disable express layout, we use jade layout
                 res.render(opts.appView, {layout: false});
                 next();
             });
@@ -78,7 +79,6 @@ module.exports = function() {
             this.__defineGetter__('server', function() { return server; });
             return this;
         },
-
 
         loadServices: function() {
             console.log('do loading services');

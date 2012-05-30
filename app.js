@@ -12,4 +12,3 @@ var options = {
 };
 
 var app = hippo(options).loadServices().start();
-//app.server.set('view engine', 'jade');
