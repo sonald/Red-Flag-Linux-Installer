@@ -1,12 +1,14 @@
-var lib = require('./hippo');
 var fspath = require('path');
 var express = require('express');
 var dnode = require('dnode');
 var _ = require('underscore');
 
+var hippo = require('./hippo');
+var viewManager = require('./view');
+
 module.exports = function() {
     'use strict';
-    var apis = lib.apis;
+
     var server;
     var client_root = fspath.normalize(__dirname + "/../client/");
 
@@ -16,7 +18,10 @@ module.exports = function() {
         // servicePaths: default location to found services
         servicePaths : [__dirname + '/services'],
         appView: 'index.html',
-        assets: [client_root + 'assets'], // static js and css
+        assets: [  // static js and css
+            client_root + 'assets',
+            __dirname + '/static'
+        ],
     };
 
     var opts = arguments[0] && (typeof arguments[0] === 'object') ? arguments[0] : {};
@@ -51,19 +56,24 @@ module.exports = function() {
             server = express.createServer()
             .use(express.logger());
 
-            server.register('.jade', require('jade'));
-            server.set('view engine', 'jade')
-            .set('views', client_root + 'views');
+            server.register('.jade', require('jade'))
+            .set('view engine', 'jade')
+            .set('views', client_root + 'views')
+            .set('view options', {   // disable express layout, we use jade layout
+                layout: false
+            });
 
+            this.__defineGetter__('server', function() { return server; });
+            this.__defineGetter__('options', function() { return opts; });
+
+            // serve web app at root
             server.get('/', function(req, res, next) {
-                // disable express layout, we use jade layout
-                res.render(opts.appView, {layout: false});
-                next();
+                res.render(opts.appView);
             });
             
-            server.use(express.static(__dirname));
-            server.use(express.static(__dirname + '/static'))
-
+            //viewManager.assembleAssets(this, server);
+            //if in production mode, pack
+            //viewManager.packAssets(this, server);
 
             opts.assets.forEach(function(path) {
                 fspath.exists(path, function(exists) {
@@ -75,14 +85,13 @@ module.exports = function() {
             });
 
             server.listen(opts.port);
-            dnode(apis).listen(server);
-            this.__defineGetter__('server', function() { return server; });
+            dnode(hippo.apis).listen(server);
             return this;
         },
 
         loadServices: function() {
             console.log('do loading services');
-            lib.loadServices(opts.servicePaths);
+            hippo.loadServices(opts.servicePaths);
             return this;
         },
     };
