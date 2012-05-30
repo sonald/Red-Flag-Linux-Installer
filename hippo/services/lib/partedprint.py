@@ -6,31 +6,34 @@ import sys
 import json
 
 
-def print_disk_helper_to_json_format(part):
+def print_disk_helper_to_json_format(parts):
     """Return the stat of part given."""
-    partty =""
-    if part.type == parted.PARTITION_NORMAL:
-        partty = "normal"
-    elif part.type & parted.PARTITION_LOGICAL:
-        partty = "logical"
-    elif part.type & parted.PARTITION_EXTENDED:
-        partty = "extended"
-    elif part.type & parted.PARTITION_FREESPACE:
-        partty = "freespace"
-    elif part.type & parted.PARTITION_METADATA:
-        partty = "metadata"
-    elif part.type & parted.PARTITION_PROTECTED:
-        partty = "protected"
+    data = []
+    for part in parts:
+        partty =""
+        tmp = []
+        if part.type == parted.PARTITION_NORMAL:
+            partty = "normal"
+        elif part.type & parted.PARTITION_LOGICAL:
+            partty = "logical"
+        elif part.type & parted.PARTITION_EXTENDED:
+            partty = "extended"
+        elif part.type & parted.PARTITION_FREESPACE:
+            partty = "freespace"
+        elif part.type & parted.PARTITION_METADATA:
+            partty = "metadata"
+        elif part.type & parted.PARTITION_PROTECTED:
+            partty = "protected"
 
-    start = parted.formatBytes(part.geometry.start,'kB')
-    end = parted.formatBytes(part.geometry.end,'kB')
-    size =  end - start
-    fstype = ""
-    if part.fileSystem:
-        fstype = str(part.fileSystem.type)
-    data = [ part.number, start, end, size, partty, fstype]
+        start = parted.formatBytes(part.geometry.start,'kB')
+        end = parted.formatBytes(part.geometry.end,'kB')
+        size =  end - start
+        fstype = ""
+        if part.fileSystem:
+            fstype = str(part.fileSystem.type)
+        tmp = [ part.number, start, end, size, partty, fstype]
+        data.append(tmp)
     return data
-
 
 def print_disk_to_json_format(disk,free):
     """Return the stat of disk given."""
@@ -52,9 +55,7 @@ def print_disk_to_json_format(disk,free):
     else:
         parts = disk.partitions
 
-    for part in parts:    
-        table = print_disk_helper_to_json_format(part)
-        data['table'].append(table)
+    data['table'] = print_disk_helper_to_json_format(parts)
     return data
 
 def print_disks_to_json_format(disks,free):
