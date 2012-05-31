@@ -124,3 +124,10 @@ def parted_print(disks,isjson = False,free = False):
     else:
         print_disks(disks,free)
 
+def DevDisk():
+    disks = {}
+    for dev in parted.getAllDevices():
+        disks[dev.path] = parted.disk.Disk(dev)
+
+    return disks
+
