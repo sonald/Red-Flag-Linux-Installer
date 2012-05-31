@@ -1,4 +1,23 @@
 var _ = require('underscore');
+var util  = require('util'),
+    spawn = require('child_process').spawn,
+    partsever    = spawn('sudo', ['python', __dirname+'/partsever.py']);
+
+partsever.stdout.on('data', function (data) {
+    console.log('stdout: ' + data);
+});
+
+partsever.stderr.on('data', function (data) {
+    console.log('stderr: ' + data);
+});
+
+partsever.on('exit', function (code) {
+    console.log('child process exited with code ' + code);
+});
+
+
+var io = require("socket.io-client");
+var sock = io.connect("http://127.0.0.1:3000");
 
 module.exports = (function() {
     'use strict';
@@ -6,46 +25,39 @@ module.exports = (function() {
     //TODO: stub is adapter bridging alien partitioning service
     var PartitionStub = {};
 
-    PartitionStub.mkpart = function(devpath, cb) {
-        cb("pending")
+    PartitionStub.mkpart = function(devpath, parttype, start, end, fs, cb) {
+        sock.emit('mkpart',devpath, parttype, start, end, fs);
+        sock.on('mkpart',function(data){
+            cb(data);
+        });
     };
 
-    var _stubDisks = [
-        {
-        "model": "ATA HITACHI HTS72321 (scsi)",
-        "path": "/dev/sda",
-        "size": "160GB",
-        "type": "msdos",
-        "table": [
-            [ 1, "32.3kB", "32.2GB", "32.2GB", "primary", "ext4" ],
-            [ 2, "96.7GB", "160GB", "63.4GB", "extended", "" ],
-            [ 5, "96.7GB", "129GB", "32.2GB", "logical", "ext4" ],
-        ]
-    },
-    {
-        "model": "SSK SFD201 (scsi)",
-        "path": "/dev/sdb",
-        "size": "15GB",
-        "type": "gpt",
-        "table": [
-            [ 1, "32.3kB", "32.2GB", "32.2GB", "part1", "ext4" ],
-            [ 2, "96.7GB", "160GB", "63.4GB", "part2", "" ],
-            [ 3, "96.7GB", "129GB", "32.2GB", "part3", "ntfs" ],
-        ]
-    },
-    ];
+    PartitionStub.rmpart = function(devpath, partnumber, cb) {
+        sock.emit('rmpart',devpath, partnumber);
+        sock.on('rmpart',function(data){
+            cb(data);
+        });
+    };
+
+    PartitionStub.mklabel = function(devpath, devtype, cb) {
+        sock.emit('mklabel', devpath, devtype);
+        sock.on('mklabel',function(data){
+            cb(data);
+        });
+    };
+
+    PartitionStub.reset = function(devpath, cb) {
+        sock.emit('reset', devpath);
+        sock.on('reset',function(data){
+            cb(data);
+        });
+    };
 
     PartitionStub.getPartitions = function(devpath, cb) {
-        var disk = _stubDisks.filter(function(disk) {
-            return disk['path'] === devpath;
+        sock.emit('printpart',devpath);
+        sock.on('printpart',function(data){
+            cb(data);
         });
-        disk = disk && disk.length && disk[0] || null;
-
-        if (!disk) {
-            cb('invalid disk');
-        } else {
-            cb(disk);
-        }
     };
 
     return PartitionStub;

@@ -117,7 +117,7 @@ def mklabel(args, dev, disk):
 
     return parted.freshDisk(dev,str(args[0]))
 
-def reset(args, dev,disk):
+def reset(args, dev, disk):
     """
     """
     return parted.disk.Disk(dev)
