@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var util  = require('util'),
     spawn = require('child_process').spawn,
-    partsever = spawn('sudo', [__dirname+'/partsever.py']);
+    partsever = spawn('python', [__dirname+'/partsever.py']);
 
 partsever.stdout.on('data', function (data) {
     console.log('stdout: ' + data);
