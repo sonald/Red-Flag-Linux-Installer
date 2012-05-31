@@ -24,7 +24,6 @@ class PartSocket(tornadio2.SocketConnection):
 
     @tornadio2.event
     def mkpart(self, devpath, parttype, start, end, fs):
-        """args = ['/dev/sda', 'primary',start,end,fs] """
         disk = self.disks[devpath] #need try
         obj = lib.partedcmd.PartedCmd(disk,devpath)
         data = obj.mkpart(parttype, start, end, fs)
@@ -34,7 +33,6 @@ class PartSocket(tornadio2.SocketConnection):
 
     @tornadio2.event
     def rmpart(self, devpath, partnumber):
-        """args = ['/dev/sda', number of partition]"""
         disk = self.disks[devpath] #need try
         obj = lib.partedcmd.PartedCmd(disk,devpath)
         data = obj.rmpart(partnumber)
@@ -57,7 +55,6 @@ class PartSocket(tornadio2.SocketConnection):
         obj = lib.partedcmd.PartedCmd(disk,devpath)
         data = obj.mklabel(devtype)
         self.disks[devpath] = obj.disk
-
         self.emit('mklabel',data)
 
     @tornadio2.event
@@ -67,7 +64,6 @@ class PartSocket(tornadio2.SocketConnection):
         #obj = lib.partedcmd.PartedCmd(disk,devpath)
         #data = obj.printpart()
         print data
-
         self.emit('printpart',data)
 
 if __name__ == "__main__":
