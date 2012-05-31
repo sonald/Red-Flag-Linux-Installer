@@ -31,6 +31,7 @@ $(function() {
             mul: [remote, 'services.base.mul', 5, 12, present],
             expose: [remote, 'expose', present],
             listUsers: [remote, 'services.admin.user.listUsers', presentList],
+            rmpart:[remote, 'services.partition.rmpart', '/dev/sda', 1 , presentList]
         };
 
         $('body').on('click', 'a.btn', function() {

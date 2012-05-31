@@ -6,10 +6,11 @@ import sys
 import json
 import tornadio2
 import tornado
+import parted
 
 import lib.partedprint
 import lib.partedhelper
-import parted
+import lib.partedcmd
 
 class PartSocket(tornadio2.SocketConnection):
     disks = lib.partedprint.DevDisk()

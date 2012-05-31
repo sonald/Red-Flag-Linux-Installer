@@ -4,6 +4,7 @@
 import parted  
 import _pedmodule
 import sys
+import json
 
 import partedprint
 import rfparted
@@ -54,7 +55,8 @@ class PartedCmd(object):
 
         return partedprint.parted_print(disks,True,True)
 
-    def get_result(reason):
+    def get_result(self,reason):
+        result=[]
         if reason:
             result = [{ 'status': 'failure', 'reason': str(reason) }]
         else:
