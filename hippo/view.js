@@ -9,8 +9,11 @@ var exports = module.exports;
 
 var _exts = ['.js', '.coffee', '.css'];
 
+// file content caches
 var assetsCache = {};
 
+// collecting all files with ext in exts recursivling, and 
+// store in a hash map
 function collectFilesSync(absPath, exts) {
     'use strict';
 
@@ -27,27 +30,41 @@ function collectFilesSync(absPath, exts) {
     }
 
     function doCollect(path) {
-            var entries = fs.readdirSync(path);
+        var entries = fs.readdirSync(path);
 
-            entries.forEach(function(entry) {
-                var file = fspath.join(path, entry);
-                var stat = fs.statSync(file);
+        entries.forEach(function(entry) {
+            var file = fspath.join(path, entry);
+            var stat = fs.statSync(file);
 
-                if (stat.isFile() && matchExt(file)) {
-                    var ext = fspath.extname(file);
-                    collection[ext] = collection[ext] || {};
-                    collection[ext][removePrefix(absPath, file)] = file;
+            if (stat.isFile() && matchExt(file)) {
+                var ext = fspath.extname(file);
+                collection[ext] = collection[ext] || {};
+                collection[ext][removePrefix(absPath, file)] = file;
 
-                } else if (stat.isDirectory()) {
-                    doCollect(file);
-                }
-            });
+            } else if (stat.isDirectory()) {
+                doCollect(file);
+            }
+        });
     }
 
     doCollect(absPath);
 
     return collection;
 };
+
+function collectPathsSync(assetPaths, exts) {
+    var files = {}, tmp;
+    assetPaths.forEach(function(assetPath) {
+        tmp = collectFilesSync(assetPath, exts);
+        _.keys(tmp).forEach(function(key) {
+            if (!_.has(files, key)) 
+                files[key] = {};
+            files[key] = mapMerge(files[key], tmp[key]);
+        });
+    });
+
+    return files;
+}
 
 function mapMerge(map1, map2) {
     return _.defaults(map1, map2);
@@ -68,22 +85,12 @@ exports.packAssets = function(app, http, assetPath) {
     'use strict';
 
     var opts = app.options;
-    var files, tmp;
-    //console.log('options:\n ', opts);
+    var files;
 
     if (typeof assetPath === 'string') {
         files = collectFilesSync(assetPath, _exts);
-
     } else {
-        files = {};
-        opts.assets.forEach(function(assetPath) {
-            tmp = collectFilesSync(assetPath, _exts);
-            _.keys(tmp).forEach(function(key) {
-                if (!_.has(files, key)) 
-                    files[key] = {};
-                files[key] = mapMerge(files[key], tmp[key]);
-            });
-        });
+        files = collectPathsSync(opts.assets, _exts);
     }
     //console.log("collected: \n", files);
 
@@ -111,22 +118,12 @@ exports.assembleAssets = function(app, http, assetPath) {
     'use strict';
 
     var opts = app.options;
-    var files, tmp;
-    //console.log('options:\n ', opts);
+    var files;
 
     if (typeof assetPath === 'string') {
         files = collectFilesSync(assetPath, _exts);
-
     } else {
-        files = {};
-        opts.assets.forEach(function(assetPath) {
-            tmp = collectFilesSync(assetPath, _exts);
-            _.keys(tmp).forEach(function(key) {
-                if (!_.has(files, key)) 
-                    files[key] = {};
-                files[key] = mapMerge(files[key], tmp[key]);
-            });
-        });
+        files = collectPathsSync(opts.assets, _exts);
     }
     //console.log("collected: \n", files);
     
@@ -155,4 +152,26 @@ exports.assembleAssets = function(app, http, assetPath) {
         res.send(assetsCache['.css']);
         res.end();
     });
+};
+
+// if cascade === true, means the result can be pipe to another preprocessor
+exports.interpolateAssetsHead = function(assetPaths, view, cascade) {
+    'use strict';
+
+    var files = collectPathsSync(assetPaths, _exts);
+
+    var header = '';
+    header += '<script src="/dnode.js"></script>';
+    files['.js'] && _.keys(files['.js']).forEach(function(assetName) {
+        header += '<script src="' + assetName + '"></script>';
+	});
+
+    files['.css'] && _.keys(files['.css']).forEach(function(assetName) {
+        header += '<link href="' + assetName + '" rel="stylesheet" type="text/css"/>';
+	});
+
+    if (cascade)
+        header += '<!--=require_all-->';
+    var result = view.replace(new RegExp('<!--=require_all-->'), header);
+    return result;
 };

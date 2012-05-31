@@ -22,7 +22,7 @@ $(function() {
         };
 
         var presentList = function (list) {
-            $('#result').text(JSON.stringify(list));
+            $('#result').html('<pre><code>' + JSON.stringify(list) + '</code></pre>');
         };
 
         var stubs = {
@@ -30,6 +30,7 @@ $(function() {
             getPartitions: [remote, 'services.partition.getPartitions', '/dev/sda', presentList],
             mul: [remote, 'services.base.mul', 5, 12, present],
             expose: [remote, 'expose', present],
+            getEnv: [remote, 'services.info.getEnv', presentList],
             listUsers: [remote, 'services.admin.user.listUsers', presentList],
         };
 
