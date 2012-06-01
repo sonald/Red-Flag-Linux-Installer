@@ -92,8 +92,8 @@ module.exports = (function() {
                     if (err) throw err;
                     partical = data;
                     var disks = JSON.parse(result);
-                    var fn = jade.compile(partical,{locals:['disk']});
-                    var str = fn({disk:disks[0]});
+                    var fn = jade.compile(partical,{locals:['disks']});
+                    var str = fn({disks:disks});
 
                     cb(str);
                 });

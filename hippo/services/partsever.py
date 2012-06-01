@@ -79,11 +79,15 @@ class PartSocket(tornadio2.SocketConnection):
     def printpart(self, devpath):
         #obj = lib.partedcmd.PartedCmd(disk,devpath)
         #data = obj.printpart()
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            data = lib.partedprint.parted_print([disk],True,True)
-        else:
-            data = self.error_handle("error arguments,no disk specified")
+
+        #if devpath in self.disks:
+        #    disk = self.disks[devpath] #need try
+        #    data = lib.partedprint.parted_print([disk],True,True)
+        #else:
+        #    data = self.error_handle("error arguments,no disk specified")
+        disks = self.disks.values()
+        print len(disks)
+        data = lib.partedprint.parted_print(disks,True,True)
         self.emit('printpart',data)
 
 if __name__ == "__main__":
