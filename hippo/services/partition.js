@@ -1,4 +1,6 @@
 var _ = require('underscore');
+var jade = require('jade');
+var fs = require('fs');
 var util  = require('util'),
     spawn = require('child_process').spawn,
     partsever = spawn('python', [__dirname+'/partsever.py']);
@@ -39,7 +41,7 @@ module.exports = (function() {
     PartitionStub.mkpart = function(devpath, parttype, start, end, fs, cb) {
         if(sock && sock.socket.connected){
             sock.emit('mkpart',devpath, parttype, start, end, fs);
-            sock.on('mkpart',function(data){
+            sock.once('mkpart',function(data){
                 cb(data);
             });
         }else{
@@ -50,7 +52,7 @@ module.exports = (function() {
     PartitionStub.rmpart = function(devpath, partnumber, cb) {
         if(sock && sock.socket.connected){
             sock.emit('rmpart',devpath, partnumber);
-            sock.on('rmpart',function(data){
+            sock.once('rmpart',function(data){
                 cb(data);
             });
         }else{
@@ -61,7 +63,7 @@ module.exports = (function() {
     PartitionStub.mklabel = function(devpath, devtype, cb) {
         if(sock && sock.socket.connected){
             sock.emit('mklabel', devpath, devtype);
-            sock.on('mklabel',function(data){
+            sock.once('mklabel',function(data){
                 cb(data);
             });
         }else{
@@ -72,7 +74,7 @@ module.exports = (function() {
     PartitionStub.reset = function(devpath, cb) {
         if(sock && sock.socket.connected){
             sock.emit('reset', devpath);
-            sock.on('reset',function(data){
+            sock.once('reset',function(data){
                 cb(data);
             });
         }else{
@@ -81,10 +83,19 @@ module.exports = (function() {
     };
 
     PartitionStub.getPartitions = function(devpath, cb) {
+        var partical = "";
         if(sock && sock.socket.connected){
             sock.emit('printpart',devpath);
-            sock.on('printpart',function(data){
-                cb(data);
+            sock.once('printpart',function(result){
+                fs.readFile(__dirname+'/../../client/views/getpartitions.jade', 'utf8' ,function (err, data) {
+                    if (err) throw err;
+                    partical = data;
+                    var disks = JSON.parse(result);
+                    var fn = jade.compile(partical,{locals:['disk']});
+                    var str = fn({disk:disks[0]});
+
+                    cb(str);
+                });
             });
         }else{
             cb({error:"sever is loading",});

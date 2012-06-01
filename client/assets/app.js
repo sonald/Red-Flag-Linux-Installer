@@ -22,7 +22,7 @@ $(function() {
         };
 
         var presentList = function (list) {
-            $('#result').html('<pre><code>' + JSON.stringify(list) + '</code></pre>');
+            $('#result').html(list); //fixme~~~
         };
 
         var stubs = {

@@ -1,0 +1,18 @@
+div.span8
+    table.table.table-striped
+        thead
+            tr
+                th Number
+                th Start
+                th End
+                th Size
+                th parttype
+                th fs
+        tbody
+            - var parts = disk["table"]
+            - for ( var part in parts )
+                tr
+                    - var p = parts[part]
+                    - for (var x in p )
+                        th #{p[x]}
+
