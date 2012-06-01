@@ -22,7 +22,11 @@ $(function() {
         };
 
         var presentList = function (list) {
-            $('#result').html(list); //fixme~~~
+            if(typeof list === 'string'){
+                $('#result').html(list); //fixme~~~
+            }else{
+                $('#result').html('<pre><code>'+ JSON.stringify(list) +'</code></pre>'); //fixme~~~
+            };
         };
 
         var stubs = {
@@ -32,7 +36,8 @@ $(function() {
             expose: [remote, 'expose', present],
             getEnv: [remote, 'services.info.getEnv', presentList],
             listUsers: [remote, 'services.admin.user.listUsers', presentList],
-            rmpart:[remote, 'services.partition.rmpart', '/dev/sda', 1 , presentList]
+            rmpart:[remote, 'services.partition.rmpart', '/dev/sda', 1 , presentList],
+            reset:[remote, 'services.partition.reset', '/dev/sda', presentList],
         };
 
         $('body').on('click', 'a.btn', function() {

@@ -13,17 +13,18 @@ def print_disk_helper_to_json_format(parts):
         partty =""
         tmp = []
         if part.type == parted.PARTITION_NORMAL:
-            partty = "normal"
+            partty = "primary"
         elif part.type & parted.PARTITION_LOGICAL:
             partty = "logical"
         elif part.type & parted.PARTITION_EXTENDED:
             partty = "extended"
         elif part.type & parted.PARTITION_FREESPACE:
             partty = "freespace"
-        elif part.type & parted.PARTITION_METADATA:
-            partty = "metadata"
         elif part.type & parted.PARTITION_PROTECTED:
             partty = "protected"
+        elif part.type & parted.PARTITION_METADATA:
+            #partty = "metadata"
+            continue
 
         start = parted.formatBytes(part.geometry.start,'kB')
         end = parted.formatBytes(part.geometry.end,'kB')

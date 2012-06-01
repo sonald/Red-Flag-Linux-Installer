@@ -16,7 +16,7 @@
       "express": ">= 2.5.9",
       "jade": ">= 0.26.1",
       "uglify-js": ">= 1.2.6",
-      "markdown": ">= 0.3.*",
+      "markdown": ">= 0.3.0",
       "dnode": ">=0.9.11"
   },
   "devDependencies": {},
