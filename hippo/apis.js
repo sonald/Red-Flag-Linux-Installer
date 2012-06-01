@@ -23,9 +23,14 @@ var loadDirectory = function(path, ns) {
         var stat = fs.lstatSync(file);
 
         if (stat.isFile() && /\.js$/.test(file)) {
-            var intf = require(file);
-            //console.log("intf: ", intf);
-            ns[fspath.basename(entry, '.js')] = intf;
+            try {
+                var intf = require(file);
+                //console.log("intf: ", intf);
+                ns[fspath.basename(entry, '.js')] = intf;
+
+            } catch(e) {
+                console.log(e);
+            }
 
         } else if (stat.isDirectory()) {
             ns[entry] = ns[entry] || {}; // merge existed
@@ -35,8 +40,27 @@ var loadDirectory = function(path, ns) {
 
 };
 
+// accept a path or a group of path as arguments
 var loadServices = module.exports.loadServices = function(paths) {
-    paths.forEach(function(path) {
+    'use strict';
+
+    if ('undefined' === typeof paths) 
+        return;
+    
+    var dest = [];
+
+    if (typeof paths === 'string') {
+        dest = [paths];
+
+    } else if (Array.isArray(paths)) {
+        dest = paths;
+
+    } else {
+        console.log('invalid argument: ', paths);
+        return;
+    }
+
+    dest.forEach(function(path) {
         try {
             var stat = fs.lstatSync(path);
             if (!stat.isDirectory())
