@@ -37,7 +37,7 @@ $(function() {
             getEnv: [remote, 'services.info.getEnv', presentList],
             listUsers: [remote, 'services.admin.user.listUsers', presentList],
             rmpart:[remote, 'services.partition.rmpart', '/dev/sda', 1 , presentList],
-            reset:[remote, 'services.partition.reset', '/dev/sda', presentList],
+            reset:[remote, 'services.partition.reset', '/dev/sdb', presentList],
         };
 
         $('body').on('click', 'a.btn', function() {

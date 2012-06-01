@@ -19,6 +19,7 @@ partsever.on('exit', function (code) {
 
 var io = require("socket.io-client");
 var sock = io.connect("http://127.0.0.1:3000");
+
 function next(){
     sock = io.connect('http://localhost:3000', {'force new connection': true});
     sock.on('error',function(reason){
