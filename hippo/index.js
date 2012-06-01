@@ -3,7 +3,7 @@ var express = require('express');
 var dnode = require('dnode');
 var _ = require('underscore');
 
-var hippo = require('./hippo');
+var apis = require('./apis');
 var viewManager = require('./view');
 
 var exports = module.exports;
@@ -119,13 +119,13 @@ module.exports = function() {
 
 
             server.listen(opts.port);
-            dnode(hippo.apis).listen(server);
+            dnode(apis.apis).listen(server);
             return this;
         },
 
         loadServices: function() {
             console.log('do loading services');
-            hippo.loadServices(opts.servicePaths);
+            apis.loadServices(opts.servicePaths);
             return this;
         },
     };
