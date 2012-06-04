@@ -81,23 +81,30 @@ function minifyCode(code) {
     return uglify.gen_code(ast);
 }
 
-exports.packAssets = function(app, http, assetPath) {
+exports.packAssets = function(http, assetPath) {
     'use strict';
 
-    var opts = app.options;
     var files;
 
+    if ('undefined' === typeof assetPath) 
+        return;
+    
     if (typeof assetPath === 'string') {
         files = collectFilesSync(assetPath, _exts);
+
+    } else if (Array.isArray(assetPath)) {
+        files = collectPathsSync(assetPath, _exts);
+
     } else {
-        files = collectPathsSync(opts.assets, _exts);
+        console.log('packAssets: invalide assetPath');
+        return;
     }
+
     //console.log("collected: \n", files);
 
 	// register all assets using minified
     files['.js'] && _.keys(files['.js']).forEach(function(assetName) {
 	    http.all(assetName, function(req, res, next) {
-			res.header('Content-Type', 'application/x-javascript');
             var code = minifyCode( fs.readFileSync(files['.js'][assetName], 'utf-8') );
 			res.send(code);
 			res.end();
@@ -106,9 +113,7 @@ exports.packAssets = function(app, http, assetPath) {
 
     files['.css'] && _.keys(files['.css']).forEach(function(assetName) {
 	    http.all(assetName, function(req, res, next) {
-			res.header('Content-Type', 'text/css');
 			res.send(fs.readFileSync(files['.css'][assetName], 'utf-8'));
-			res.end();
 		});
 	});
 };

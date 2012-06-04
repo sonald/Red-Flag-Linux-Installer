@@ -3,6 +3,7 @@ var express = require('express');
 var dnode = require('dnode');
 var _ = require('underscore');
 
+var compress = require('./compress');
 var apis = require('./apis');
 var viewManager = require('./view');
 
@@ -80,7 +81,6 @@ module.exports = function() {
                 tmpl = viewManager.interpolateAssetsHead(opts.systemAssets, tmpl, true);
                 tmpl = viewManager.interpolateAssetsHead(opts.assets, tmpl);
                 res.send(tmpl);
-                res.end();
             });
             
             //serving all assets
@@ -102,7 +102,7 @@ module.exports = function() {
             server.configure('production', function() {
                 console.log('configure production');
                 //FIXME: timing is not correct
-                viewManager.packAssets(self, server);
+                //viewManager.packAssets(server, all_assets);
                 
                 var oneYear = 31557600000;
                 all_assets.forEach(function(path) {
@@ -113,6 +113,11 @@ module.exports = function() {
                         server.use(express.static(path), {maxAge: oneYear});
                     });
                 });
+
+                //HACK: connect 2.x is not compatible, so I copied from conntect 1.x
+                //one thing to notice is that *DO NOT* install connect 2.x, cause this
+                //will crash
+                server.use(compress());
             });
 
             //viewManager.assembleAssets(this, server);
