@@ -14,7 +14,7 @@ class PartedCmd(object):
         if devpath is None:
             raise Exception, "no device specified"
         elif disk is None:
-             raise Exception, "no disk specified"
+            raise Exception, "no disk specified"
 
         self.disk = disk;
         self.devpath = devpath

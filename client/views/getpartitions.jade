@@ -1,34 +1,41 @@
-div
+div#accordion2.accordion
     - for (var i in disks)
         - var disk = disks[i];
-        table.table.table-bordered
-            thead
-                tr
-                    th
-                    th path
-                    th model
-                    th type
-                    th unit
-                    th size
-                tr 
-                    th
-                    th #{disk["path"]}
-                    th #{disk["model"]}
-                    th #{disk["type"]}
-                    th #{disk["unit"]}
-                    th #{disk["size"]}
-                tr
-                    th Number
-                    th Start
-                    th End
-                    th Size
-                    th parttype
-                    th fs
-            tbody
-                - var parts = disk["table"]
-                - for ( var part in parts )
-                    tr
-                        - var p = parts[part]
-                        - for (var x in p )
-                            th #{p[x]}
+        div.accordion-group
+            div.accordion-heading
+                a.accordion-toggle(data-toggle="collapse", data-parent="#accordion2", href="#collapse"+i)
+                    #{disk["path"]}
+            div.accordion-body.collapse(id="collapse"+i)
+                div.accordion-inner
+                    table.table.table-bordered
+                        thead
+                            //
+                                tr
+                                    th
+                                    th path
+                                    th model
+                                    th type
+                                    th unit
+                                    th size
+                                tr 
+                                    th
+                                    th #{disk["path"]}
+                                    th #{disk["model"]}
+                                    th #{disk["type"]}
+                                    th #{disk["unit"]}
+                                    th #{disk["size"]}
+                            tr
+                                th Number
+                                th Start
+                                th End
+                                th Size
+                                th parttype
+                                th fs
+                        tbody
+                            - var parts = disk["table"]
+                            - for ( var part in parts )
+                                tr
+                                    - var p = parts[part]
+                                    - for (var x in p )
+                                        th #{p[x]}
     

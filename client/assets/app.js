@@ -29,6 +29,11 @@ $(function() {
             };
         };
 
+        var process = function(data) {
+            var num = data*100/9;
+            $('#process').attr("style", "width:" + num + "%;");
+        };
+
         var stubs = {
             mkpart: [remote, "services.partition.mkpart", present],
             getPartitions: [remote, 'services.partition.getPartitions', '/dev/sda', presentList],
@@ -37,7 +42,8 @@ $(function() {
             getEnv: [remote, 'services.info.getEnv', presentList],
             listUsers: [remote, 'services.admin.user.listUsers', presentList],
             rmpart:[remote, 'services.partition.rmpart', '/dev/sda', 1 , presentList],
-            reset:[remote, 'services.partition.reset', '/dev/sdb', presentList],
+            reset:[remote, 'services.partition.reset', '/dev/sda', presentList],
+            commitdisk:[remote, 'services.partition.commitdisk', process],
         };
 
         $('body').on('click', 'a.btn', function() {
