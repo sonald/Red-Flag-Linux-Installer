@@ -1,6 +1,7 @@
 var fspath = require('path');
 var express = require('express');
 var dnode = require('dnode');
+var fs = require('fs');
 var _ = require('underscore');
 
 var compress = require('./compress');
@@ -8,6 +9,22 @@ var apis = require('./apis');
 var viewManager = require('./view');
 
 var exports = module.exports;
+
+exports.middleware = {};
+
+_.chain(fs.readdirSync(__dirname + '/middleware'))
+    .filter(function(file) {
+        return /\.(js|coffee)$/.test(file);
+    })
+    .value()
+    .forEach(function(file) {
+        var name = file.substr(0, file.lastIndexOf('.'));
+        console.log('middleware %s: %s', name, file);
+        exports.middleware.__defineGetter__(name, function() {
+            return require('./middleware/' + file);
+        });
+    });
+
 
 module.exports = function() {
     'use strict';
@@ -64,27 +81,26 @@ module.exports = function() {
             this.__defineGetter__('server', function() { return server; });
             this.__defineGetter__('options', function() { return opts; });
 
-            // serve web app at root
-            server.get('/', function(req, res, next) {
-                //res.render(opts.appView);
-
-                var jade = require('jade');
-                var fs = require('fs');
-
-                // Compile a function
-                var viewPath = fspath.join(client_root, 'views', opts.appView);
-
-                var tmpl = fs.readFileSync(viewPath);
-                var fn = jade.compile(tmpl, {filename: viewPath});
-
-                tmpl = fn();
-                tmpl = viewManager.interpolateAssetsHead(opts.systemAssets, tmpl, true);
-                tmpl = viewManager.interpolateAssetsHead(opts.assets, tmpl);
-                res.send(tmpl);
-            });
-            
             //serving all assets
             var all_assets = _.union(opts.assets, opts.systemAssets);
+
+            server.configure(function() {
+                server.use(express.bodyParser());
+                server.use(express.cookieParser());
+                //TODO: use redis store at prod env 
+                server.use(express.session(
+                    {
+                    secret: Date.now().toString()
+                }));
+
+            });
+
+            viewManager.registerAssetsHeadHelper(server, 'systemAssets', opts.systemAssets);
+            viewManager.registerAssetsHeadHelper(server, 'assets', opts.assets);
+            server.helpers({
+                'author': '<!-- Author: Sian Cao -->'
+            });
+
             server.configure('development', function() {
                 console.log('configure development');
                 server.use(express.logger());
@@ -101,8 +117,14 @@ module.exports = function() {
 
             server.configure('production', function() {
                 console.log('configure production');
+                server.use(express.csrf());
                 //FIXME: timing is not correct
                 //viewManager.packAssets(server, all_assets);
+
+                //HACK: connect 2.x is not compatible, so I copied from conntect 1.x
+                //one thing to notice is that *DO NOT* install connect 2.x, cause this
+                //will crash
+                server.use(compress());
                 
                 var oneYear = 31557600000;
                 all_assets.forEach(function(path) {
@@ -113,15 +135,14 @@ module.exports = function() {
                         server.use(express.static(path), {maxAge: oneYear});
                     });
                 });
-
-                //HACK: connect 2.x is not compatible, so I copied from conntect 1.x
-                //one thing to notice is that *DO NOT* install connect 2.x, cause this
-                //will crash
-                server.use(compress());
             });
 
             //viewManager.assembleAssets(this, server);
 
+            // serve web app at root
+            server.get('/', function(req, res, next) {
+                res.render(opts.appView);
+            });
 
             server.listen(opts.port);
             dnode(apis.apis).listen(server);
@@ -134,4 +155,5 @@ module.exports = function() {
             return this;
         },
     };
-};
+}; 
+
