@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <script src="/dnode.js" type="text/javascript"></script>
+
+    <script src="/js/jquery-1.7.2.js" type="text/javascript"></script>
+    <script src="/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    <script src="/js/socket.io.js" type="text/javascript"></script>
+    <script src="/js/underscore.js" type="text/javascript"></script>
+
+    <link href='/bootstrap/css/bootstrap-responsive.css' rel='stylesheet' type='text/css'/>
+    <link href='/bootstrap/css/bootstrap.css' rel='stylesheet' type='text/css'/>
+
+    <!--<script src="/app.js" type="text/javascript"></script>-->
+    <script type="text/javascript">
+      $(function() {
+        DNode.connect(function (remote) {
+          function fire(remote, proto) {
+            var func = _.reduce(proto.split('.'), function(memo, item) {
+              console.log('memo: ', memo, 'item', item);
+              if (typeof memo[item] === 'object')
+                return memo[item];
+
+              else if (typeof memo[item] === 'function') {
+                return _.bind(memo[item], memo);
+
+              } else
+                throw { reason: 'memo[item] invalid' };
+
+            }, remote);
+
+            func.apply(null, Array.prototype.slice.call(arguments, 2));
+          }
+
+          var present = function (res) {
+            $('#result').text(res);
+          };
+
+          var presentList = function (list) {
+            $('#result').text(JSON.stringify(list));
+          };
+
+          var stubs = {
+            mkpart: [remote, "services.partition.mkpart", present],
+            getPartitions: [remote, 'services.partition.getPartitions', '/dev/sda', presentList],
+            mul: [remote, 'services.base.mul', 5, 12, present],
+            expose: [remote, 'expose', present],
+            listUsers: [remote, 'services.admin.user.listUsers', presentList],
+          };
+
+          $('body').on('click', 'a.btn', function() {
+            var method = $(this).text();
+            console.log(method);
+            fire.apply(null, stubs[method]);
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+  <div class="row">
+    <div class="well offset3 span6">
+      <h1>Demo apis</h1>
+      <div class="">
+        <a class="btn btn-primary">mkpart</a>
+        <a class="btn btn-primary">getPartitions</a>
+        <a class="btn btn-primary">mul</a>
+        <a class="btn btn-primary">listUsers</a>
+        <a class="btn btn-primary">expose</a>
+      </div>
+
+      <div>
+        result = <span id="result">?</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

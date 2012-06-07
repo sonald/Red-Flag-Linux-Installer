@@ -17,7 +17,9 @@
       "jade": ">= 0.26.1",
       "uglify-js": ">= 1.2.6",
       "markdown": ">= 0.3.0",
-      "dnode": ">=0.9.11"
+      "dnode": ">=0.9.11",
+      "commander": ">=0.6.1 ",
+      "colors": ">=0.6.0 "
   },
   "devDependencies": {},
   "optionalDependencies": {},

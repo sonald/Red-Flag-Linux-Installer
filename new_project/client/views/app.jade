@@ -1,0 +1,29 @@
+extends layout
+
+block header        
+    //-script(src="/app.js")
+    title Demo App
+
+block content
+    .row
+        .offset2.span8.well
+            h1 Welcome To Demo App
+            p
+                include doc
+            .well
+                div
+                    a.btn.btn-primary getPartitions
+                    a.btn.btn-primary mul
+                    a.btn.btn-primary getEnv
+                    a.btn.btn-primary listUsers
+                    a.btn.btn-primary expose
+                    a.btn.btn-primary rmpart
+                    a.btn.btn-primary reset
+                    a.btn.btn-primary commitdisk
+                div
+                    | result = 
+                    span#result ?
+                div.progress.progress-striped.active
+                    div.bar#process
+                    
+

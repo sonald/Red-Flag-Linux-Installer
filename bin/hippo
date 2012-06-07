@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+  .usage('new <name_of_your_project>')
+  .version("0.1")
+  .parse(process.argv);
+
+require(__dirname + '/../lib/bin').process(program);
