@@ -1,15 +1,41 @@
-#!/usr/bin/env node
+$(function() {
+    DNode.connect(function (remote) {
+        function fire(remote, proto) {
+            var func = _.reduce(proto.split('.'), function(memo, item) {
+                console.log('memo: ', memo, 'item', item);
+                if (typeof memo[item] === 'object')
+                    return memo[item];
 
-var hippo = require('./hippo');
+                else if (typeof memo[item] === 'function') {
+                    return _.bind(memo[item], memo);
 
-// optional, all path here are relative to ./client/
-var options = {
-    port: 8080, 
-    servicePaths: ['services'],
-    viewEngine: 'jade', // use jade templating  
-    appView: 'app.jade',
-    assets: ['assets'], // static js and css
-};
+                } else
+                    throw { reason: 'memo[item] invalid' };
 
-var app = hippo(options).loadServices().start();
-console.log('app started at %s', options.port, require.main.id);
+            }, remote);
+
+            func.apply(null, Array.prototype.slice.call(arguments, 2));
+        }
+
+        var result = function (res) {
+            $('#result').text(res);
+        };
+
+        var val1, val2;
+
+        var stubs = {
+            add: [remote, 'services.demo.add', val1, val2, result],
+            minus:[remote, 'services.demo.minus', val1, val2, result],
+            mul:[remote, 'services.demo.mul', val1, val2, result],
+            div:[remote, 'services.demo.div', val1, val2, result],
+        };
+
+        $('body').on('click', 'a.btn', function() {
+            var method = $(this).attr("id");
+            val1 = $('input[name=val1]').attr("value");
+            val2 = $('input[name=val2]').attr("value");
+            console.log(method);
+            fire.apply(null, stubs[method]);
+        });
+    });
+});
