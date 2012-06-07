@@ -30,13 +30,15 @@ module.exports = function() {
     'use strict';
 
     var server;
+    // app's client and server dir
     var client_root = fspath.normalize(fspath.dirname(require.main.filename) + "/client");
+    var server_root = fspath.normalize(fspath.dirname(require.main.filename) + "/server");
 
     var defaults = {
         port: '8080',
         viewEngine: 'jade', // default view template engine
         // servicePaths: default location to found services
-        servicePaths : ['/services'],
+        servicePaths : ['services'],
         appView: 'index.html',
         assets: [ '/assets' ], // static js and css
 
@@ -49,7 +51,7 @@ module.exports = function() {
     opts = _.defaults(opts, defaults);
 
     opts.servicePaths = opts.servicePaths.map(function(path) {
-        return fspath.join(client_root, path);
+        return fspath.join(server_root, path);
     });
     // merge system services
     opts.servicePaths = _.union(opts.servicePaths, defaults.systemServicePaths);
