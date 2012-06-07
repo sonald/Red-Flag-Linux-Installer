@@ -21,21 +21,22 @@ $(function() {
             $('#result').text(res);
         };
 
-        var val1, val2;
 
         var stubs = {
-            add: [remote, 'services.demo.add', val1, val2, result],
-            minus:[remote, 'services.demo.minus', val1, val2, result],
-            mul:[remote, 'services.demo.mul', val1, val2, result],
-            div:[remote, 'services.demo.div', val1, val2, result],
+            add: [remote, 'services.demo.add'],
+            minus:[remote, 'services.demo.minus'],
+            mul:[remote, 'services.demo.mul'],
+            div:[remote, 'services.demo.div'],
         };
 
         $('body').on('click', 'a.btn', function() {
+            var val1, val2;
             var method = $(this).attr("id");
-            val1 = $('input[name=val1]').attr("value");
-            val2 = $('input[name=val2]').attr("value");
-            console.log(method);
-            fire.apply(null, stubs[method]);
+
+            val1 = +$('input[name=val1]').attr("value");
+            val2 = +$('input[name=val2]').attr("value");
+            console.log('%s %s %s', val1, method, val2);
+            fire.apply(null, stubs[method].concat([val1, val2, result]));
         });
     });
 });

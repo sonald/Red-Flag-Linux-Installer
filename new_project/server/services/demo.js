@@ -2,7 +2,7 @@ module.exports = (function(){
     'use strict';
 
     var CalStub = {};
-    CalSub.add = function(val1, val2 ,cb){
+    CalStub.add = function(val1, val2 ,cb){
         cb(val1 + val2);
     };
 
