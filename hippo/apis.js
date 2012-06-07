@@ -11,6 +11,18 @@ var god = {
 
 var apis = module.exports.apis = _.extend(god);
 
+function watchService(file, fn) {
+    'use strict';
+
+    fs.watchFile(file, function(cur, prev) {
+        console.log('cur mtime: ', cur.mtime);
+        //reset require cache
+        require.cache[file] || delete require.cache[file];
+        fn();
+    });
+
+}
+
 //TODO: support coffeescript, make it more efficient
 var loadDirectory = function(path, ns) {
     'use strict';
@@ -29,6 +41,9 @@ var loadDirectory = function(path, ns) {
                     console.log('loading %s', file);
                     //TODO: re-require if service updated
                     return require(file);
+                });
+                watchService(file, function() {
+                    ns[intf]; 
                 });
 
             } catch(e) {
@@ -78,5 +93,5 @@ var loadServices = module.exports.loadServices = function(paths) {
         apis[ns] = apis[ns] || {};
         loadDirectory(path, apis[ns]);
     });
-    console.log('apis: ', util.inspect(apis, false, 3));
+    //console.log('apis: ', util.inspect(apis, false, 3));
 };

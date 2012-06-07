@@ -157,3 +157,10 @@ module.exports = function() {
     };
 }; 
 
+["SIGTERM", "SIGINT", "SIGHUP", "SIGQUIT"].forEach( function(signal) {
+    process.on(signal, function() {
+        console.log('caught signal %s', signal);
+        process.exit();
+    });
+});
+
