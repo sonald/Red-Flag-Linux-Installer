@@ -93,5 +93,5 @@ var loadServices = module.exports.loadServices = function(paths) {
         apis[ns] = apis[ns] || {};
         loadDirectory(path, apis[ns]);
     });
-    //console.log('apis: ', util.inspect(apis, false, 3));
+    console.log('apis: ', util.inspect(apis, false, 3));
 };
