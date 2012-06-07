@@ -159,13 +159,13 @@ exports.assembleAssets = function(app, http, assetPath) {
     });
 };
 
-// if cascade === true, means the result can be pipe to another preprocessor
-exports.interpolateAssetsHead = function(assetPaths, view, cascade) {
+exports.registerAssetsHeadHelper = function(server, name, assetPaths) {
     'use strict';
 
     var files = collectPathsSync(assetPaths, _exts);
 
     var header = '';
+    //FIXME: this is ugly for /dnode
     header += '<script src="/dnode.js"></script>';
     files['.js'] && _.keys(files['.js']).forEach(function(assetName) {
         header += '<script src="' + assetName + '"></script>';
@@ -175,8 +175,10 @@ exports.interpolateAssetsHead = function(assetPaths, view, cascade) {
         header += '<link href="' + assetName + '" rel="stylesheet" type="text/css"/>';
 	});
 
-    if (cascade)
-        header += '<!--=require_all-->';
-    var result = view.replace(new RegExp('<!--=require_all-->'), header);
-    return result;
+    var helper = {};
+    helper[name] = (function() {
+        return header;
+    })();
+    server.helpers(helper);
 };
+
