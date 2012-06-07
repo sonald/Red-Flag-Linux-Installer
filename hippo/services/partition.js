@@ -30,7 +30,6 @@ function next(){
         console.log("connection");
     });
 };
-
 process.nextTick(next);
 
 module.exports = (function() {
@@ -86,6 +85,26 @@ module.exports = (function() {
     PartitionStub.getPartitions = function(devpath, cb) {
         var partical = "";
         if(sock && sock.socket.connected){
+            sock.emit('getpartitions',devpath);
+            sock.once('getpartitions',function(result){
+                fs.readFile(__dirname+'/../../client/views/getpartitions.jade', 'utf8' ,function (err, data) {
+                    if (err) throw err;
+                    partical = data;
+                    var disks = JSON.parse(result);
+                    var fn = jade.compile(partical,{locals:['disks']});
+                    var str = fn({disks:disks});
+
+                    cb(str);
+                });
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
+    PartitionStub.printpart = function(devpath, cb) {
+        var partical = "";
+        if(sock && sock.socket.connected){
             sock.emit('printpart',devpath);
             sock.once('printpart',function(result){
                 fs.readFile(__dirname+'/../../client/views/getpartitions.jade', 'utf8' ,function (err, data) {
@@ -102,6 +121,18 @@ module.exports = (function() {
             cb({error:"sever is loading",});
         }
     };
+
+    PartitionStub.commitdisk = function(cb){
+        if(sock && sock.socket.connected){
+            sock.emit('commitdisk');
+            sock.on('commitdisk',function(data){
+                cb(data);
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
 
     return PartitionStub;
 }());
