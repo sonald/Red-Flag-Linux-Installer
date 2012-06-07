@@ -24,9 +24,12 @@ var loadDirectory = function(path, ns) {
 
         if (stat.isFile() && /\.js$/.test(file)) {
             try {
-                var intf = require(file);
-                //console.log("intf: ", intf);
-                ns[fspath.basename(entry, '.js')] = intf;
+                var intf = fspath.basename(entry, '.js');
+                ns.__defineGetter__(intf, function() {
+                    console.log('loading %s', file);
+                    //TODO: re-require if service updated
+                    return require(file);
+                });
 
             } catch(e) {
                 console.log(e);

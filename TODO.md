@@ -10,6 +10,15 @@ generate app.html template including all static js & css tags
 - ###auto assemble assets of client side js
 - ###client auto connect to dnode, and exports 'remote' object
 make `remote` as a global usable object.
+- use async to rewrite services loading
+- use locals.scripts to populate scripts tag
+- error handling
+  * warn about invalid or unauthorized url access
+- auto reloading when service updated
+- testing
+- scaffolding
+- front-end ui framework
+  
 
 maybe
 - [tablesort](http://tristen.ca/tablesort/demo/)
@@ -17,3 +26,5 @@ maybe
 - [jwerty](http://keithcirkel.co.uk/jwerty/)
 - [knob](http://anthonyterrien.com/knob/)
 - [ansi.js](https://github.com/TooTallNate/ansi.js)
+- debug by node-inspector
+  node --debug/ kill -SIGUSR1
