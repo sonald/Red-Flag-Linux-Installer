@@ -11,11 +11,36 @@ block content
             p here is a simple demo app that you can try 
 
             .well
-                input(type = "text",name = "val1")
-                a#add.btn.btn-primary +
-                a#minus.btn.btn-primary -
-                a#mul.btn.btn-primary *
-                a#div.btn.btn-primary /
-                input(type = "text",name = "val2")
-                | =
-                span#result
+                .row-fluid
+                    .offset2.span8
+                        span.input-xlarge.uneditable-input
+                        br
+                        .btn-toolbar
+                            .btn-group
+                                input.btn(type="button",value=" 1 ")
+                                input.btn(type="button",value=" 2 ")
+                                input.btn(type="button",value=" 3 ")
+                            .btn-group
+                                a#add.btn.btn-primary +
+                            br
+                            .btn-group
+                                input.btn(type="button",value=" 4 ")
+                                input.btn(type="button",value=" 5 ")
+                                input.btn(type="button",value=" 6 ")
+                            .btn-group
+                                a#minus.btn.btn-primary -
+                            br
+                            .btn-group
+                                input.btn(type="button",value=" 7 ")
+                                input.btn(type="button",value=" 8 ")
+                                input.btn(type="button",value=" 9 ")
+                            .btn-group
+                                a#mul.btn.btn-primary *
+                            br
+                            .btn-group
+                                input.btn(type="button",value=" . ")
+                                input.btn(type="button",value=" 0 ")
+                                input.btn(type="button",value=" = ")
+                            .btn-group
+                                a#div.btn.btn-primary /
+                            br

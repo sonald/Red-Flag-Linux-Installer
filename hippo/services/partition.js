@@ -17,6 +17,11 @@ partsever.on('exit', function (code) {
     console.log('child process exited with code ' + code);
 });
 
+process.on('uncaughtException', function(err) {
+    partsever.kill('SIGHUP');
+    console.log(err);
+});
+
 var io = require("socket.io-client");
 var sock = io.connect("http://127.0.0.1:3000");
 
