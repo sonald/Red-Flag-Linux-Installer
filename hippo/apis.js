@@ -15,12 +15,23 @@ function watchService(file, fn) {
     'use strict';
 
     fs.watchFile(file, function(cur, prev) {
-        console.log('cur mtime: ', cur.mtime);
-        //reset require cache
-        require.cache[file] || delete require.cache[file];
-        fn();
+        if (cur.mtime > prev.mtime) {
+            console.log('%s changed', file);
+            //reset require cache
+            require.cache[file] && delete require.cache[file];
+            fn();
+        }
     });
 
+}
+
+function wrapper(prop) {
+    var liveloader = function() {
+        var intf = liveloader.cache;
+        return intf[prop].apply(intf, arguments);
+    };
+
+    return liveloader;
 }
 
 //TODO: support coffeescript, make it more efficient
@@ -37,13 +48,21 @@ var loadDirectory = function(path, ns) {
         if (stat.isFile() && /\.js$/.test(file)) {
             try {
                 var intf = fspath.basename(entry, '.js');
-                ns.__defineGetter__(intf, function() {
-                    console.log('loading %s', file);
-                    //TODO: re-require if service updated
-                    return require(file);
+                ns[intf] = {};
+                var proto = require(file);
+
+                _.functions( proto ).forEach(function(prop) {
+                    ns[intf][prop] = wrapper(prop);
+                    ns[intf][prop].cache = proto;
                 });
+
                 watchService(file, function() {
-                    ns[intf]; 
+                    var proto = require(file);
+
+                    _.functions( proto ).forEach(function(prop) {
+                        var f = ns[intf][prop] || (ns[intf][prop] = wrapper(prop));
+                        f.cache = proto;
+                    });
                 });
 
             } catch(e) {
