@@ -18,7 +18,17 @@ $(function() {
         }
 
         var present = function (res) {
-            $('#result').text(res);
+            if (Array.isArray(res)) {
+                var inner = '<ul>';
+                res.forEach(function(v) {
+                   inner += '<li>' + v + '</li>';
+                });
+                inner += '</ul>';
+                $('#result').html(inner);
+
+            } else {
+                $('#result').text(res);
+            }
         };
 
         var presentList = function (list) {

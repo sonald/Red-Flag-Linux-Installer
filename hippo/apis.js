@@ -5,7 +5,23 @@ var fspath = require('path');
 
 var god = {
     expose: function(cb) {
-        cb(util.inspect(this));
+        try {
+            var traverse = require('traverse');
+            var self = this;
+
+            var hierachy = traverse(self).reduce(function(acc, node) {
+                if (typeof node === 'function') {
+                    acc.push( this.path.join('.') + '()');
+                }
+
+                return acc;
+            }, []);
+
+            cb( hierachy );
+
+        } catch(e) {
+            cb( util.inspect(this) );
+        }
     }
 };
 
