@@ -4,6 +4,7 @@ var program = require('commander');
 
 program
   .usage('new <name_of_your_project>')
+  .option('-b, --bootstrap', 'use Bootstrap')
   .version("0.1")
   .parse(process.argv);
 
