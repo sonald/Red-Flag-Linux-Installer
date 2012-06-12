@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var hippo = require('./hippo');
+var hippo = require('../../hippo');
 
 // optional, all path here are relative to ./client/
 var options = {
