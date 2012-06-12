@@ -1,0 +1,21 @@
+extends layout
+
+block header        
+    //-script(src="/app.js")
+    title Demo App
+
+block content
+    .row
+        .offset2.span8.well
+            h1 Welcome To Hippo 
+            p here is a simple demo app that you can try 
+
+            .well
+                input(type = "text",name = "val1")
+                a#add.btn.btn-primary +
+                a#minus.btn.btn-primary -
+                a#mul.btn.btn-primary *
+                a#div.btn.btn-primary /
+                input(type = "text",name = "val2")
+                | =
+                span#result
