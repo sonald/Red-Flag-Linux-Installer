@@ -12,6 +12,21 @@
 
 var zlib = require('zlib');
 
+//Sian:
+//Hack, override connect 1.x patch
+var http = require('http')
+, _resp = http.OutgoingMessage.prototype;
+
+(function() {
+    if (_resp._compressPatched) return;
+    _resp.__defineGetter__('headerSent', function(){
+        return this._header || this._headerSent;
+    });
+    _resp._compressPatched = true;
+
+}());
+
+
 /**
  * Supported content-encoding methods.
  */

@@ -90,9 +90,8 @@ module.exports = function() {
                 server.use(express.bodyParser());
                 server.use(express.cookieParser());
                 //TODO: use redis store at prod env 
-                server.use(express.session(
-                    {
-                    secret: Date.now().toString()
+                server.use(express.session({
+                    secret: 'hippoRocks'
                 }));
 
             });
@@ -115,6 +114,10 @@ module.exports = function() {
                         server.use(express.static(path));
                     });
                 });
+                server.use(express.errorHandler({
+                    showStack: true,
+                    dumpExceptions: true
+                }));
             });
 
             server.configure('production', function() {
@@ -127,6 +130,7 @@ module.exports = function() {
                 //one thing to notice is that *DO NOT* install connect 2.x, cause this
                 //will crash
                 server.use(compress());
+                server.use(express.errorHandler());
                 
                 var oneYear = 31557600000;
                 all_assets.forEach(function(path) {
