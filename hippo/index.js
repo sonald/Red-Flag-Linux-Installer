@@ -29,10 +29,11 @@ _.chain(fs.readdirSync(__dirname + '/middleware'))
 module.exports = function() {
     'use strict';
 
-    var server;
+    var server; 
     // app's client and server dir
-    var client_root = fspath.normalize(fspath.dirname(require.main.filename) + "/client");
-    var server_root = fspath.normalize(fspath.dirname(require.main.filename) + "/server");
+    var app_root = fspath.normalize(fspath.dirname(require.main.filename));
+    var client_root = app_root + "/client";
+    var server_root = app_root + "/server";
 
     var defaults = {
         port: '8080',
@@ -53,9 +54,10 @@ module.exports = function() {
     opts.servicePaths = opts.servicePaths.map(function(path) {
         return fspath.join(server_root, path);
     });
-    // merge system services
-    opts.servicePaths = _.union(opts.servicePaths, defaults.systemServicePaths);
-    console.log('servicePaths: ', opts.servicePaths);
+
+    //// merge system services
+    //opts.servicePaths = _.union(opts.servicePaths, defaults.systemServicePaths);
+    //console.log('servicePaths: ', opts.servicePaths);
 
     if ( !fspath.existsSync(fspath.join(client_root, 'views', opts.appView)) ) {
         opts.appView = opts.systemAppView;
@@ -156,8 +158,12 @@ module.exports = function() {
         },
 
         loadServices: function() {
-            console.log('do loading services');
+
+            // load system services before user services and disable user to 
+            // override system services for security reason
+            apis.loadServices(opts.systemServicePaths);
             apis.loadServices(opts.servicePaths);
+            console.dir(apis);
             return this;
         },
     };

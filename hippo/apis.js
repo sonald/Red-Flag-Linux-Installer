@@ -4,6 +4,8 @@ var _ = require('underscore');
 var fspath = require('path');
 
 var god = {
+
+    // accumulate all functions of services for introspection
     expose: function(cb) {
         try {
             var traverse = require('traverse');
@@ -64,6 +66,11 @@ var loadDirectory = function(path, ns) {
         if (stat.isFile() && /\.js$/.test(file)) {
             try {
                 var intf = fspath.basename(entry, '.js');
+                if (ns[intf]) {
+                    console.log('%s has been loaded', intf);
+                    return;
+                }
+
                 ns[intf] = {};
                 var proto = require(file);
 
@@ -93,7 +100,7 @@ var loadDirectory = function(path, ns) {
 
 };
 
-// accept a path or a group of path as arguments
+// accept a path or a group of path as root of services
 var loadServices = module.exports.loadServices = function(paths) {
     'use strict';
 
@@ -128,5 +135,4 @@ var loadServices = module.exports.loadServices = function(paths) {
         apis[ns] = apis[ns] || {};
         loadDirectory(path, apis[ns]);
     });
-    console.log('apis: ', util.inspect(apis, false, 3));
 };
