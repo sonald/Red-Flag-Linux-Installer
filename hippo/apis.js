@@ -44,9 +44,28 @@ function watchService(file, fn) {
 }
 
 function wrapper(prop) {
+
+    // check before apply service's function, liveloader.cache is always keep
+    // the lastest copy of service (make sured by watchService)
     var liveloader = function() {
-        var intf = liveloader.cache;
-        return intf[prop].apply(intf, arguments);
+        var intf = liveloader.cache,
+            func = intf[prop],
+            args = Array.prototype.slice.apply(arguments);
+
+        if (func.length > args.length) {
+            var nr_missed = func.length - args.length;
+            for (var i = 0; i < nr_missed; i++)
+                args.unshift(undefined);    
+            console.log('warning: arguments length mis-matched');
+
+        } else if (func.length < args.length) {
+            //TODO: make sure the last arg is a callback
+            var nr_overflow = args.length - func.length;
+            args.splice(func.length, nr_overflow);
+            console.log('warning: arguments length mis-matched');
+        }
+
+        return intf[prop].apply(intf, args);
     };
 
     return liveloader;
