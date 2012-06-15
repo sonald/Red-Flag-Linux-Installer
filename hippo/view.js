@@ -5,38 +5,44 @@ var fs = require('fs');
 var fspath = require('path');
 var _ = require('underscore');
 
-var exports = module.exports;
+var debug = require('./debug')({level: 2});
 
 var _exts = ['.js', '.coffee', '.css'];
+var exports = module.exports;
 
 // file content caches
 var assetsCache = {};
 
+function removePrefix(prefix, aPath) {
+    return aPath.replace(new RegExp('^' + prefix), '');
+}
+
+function matchExt(aPath, exts) {
+    return _.any( exts.map(function(ext) {
+        return RegExp(ext +'$').test(aPath);
+    }) );
+}
+
 // collecting all files with ext in exts recursivling, and 
 // store in a hash map
-function collectFilesSync(absPath, exts) {
+function collectFilesSync(absPath, exts, excludes) {
     'use strict';
 
     var collection = {};
 
-    function removePrefix(prefix, aPath) {
-        return aPath.replace(new RegExp('^' + prefix), '');
-    }
-
-    function matchExt(aPath) {
-        return _.any( exts.map(function(ext) {
-            return RegExp(ext +'$').test(aPath);
-        }) );
-    }
-
     function doCollect(path) {
+        if (excludes.indexOf(path) !== -1) {
+            debug.log('exlude %s', path);
+            return;
+        }
+
         var entries = fs.readdirSync(path);
 
         entries.forEach(function(entry) {
             var file = fspath.join(path, entry);
             var stat = fs.statSync(file);
 
-            if (stat.isFile() && matchExt(file)) {
+            if (stat.isFile() && matchExt(file, exts)) {
                 var ext = fspath.extname(file);
                 collection[ext] = collection[ext] || {};
                 collection[ext][removePrefix(absPath, file)] = file;
@@ -52,10 +58,10 @@ function collectFilesSync(absPath, exts) {
     return collection;
 };
 
-function collectPathsSync(assetPaths, exts) {
+function collectPathsSync(assetPaths, exts, excludes) {
     var files = {}, tmp;
     assetPaths.forEach(function(assetPath) {
-        tmp = collectFilesSync(assetPath, exts);
+        tmp = collectFilesSync(assetPath, exts, excludes);
         _.keys(tmp).forEach(function(key) {
             if (!_.has(files, key)) 
                 files[key] = {};
@@ -159,10 +165,11 @@ exports.assembleAssets = function(app, http, assetPath) {
     });
 };
 
-exports.registerAssetsHeadHelper = function(server, name, assetPaths) {
+exports.registerAssetsHeadHelper = function(server, name, assetPaths, excludes) {
     'use strict';
 
-    var files = collectPathsSync(assetPaths, _exts);
+    excludes = excludes || [];
+    var files = collectPathsSync(assetPaths, _exts, excludes);
 
     var header = '';
     //FIXME: this is ugly for /dnode

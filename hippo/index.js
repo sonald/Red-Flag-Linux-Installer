@@ -4,12 +4,14 @@ var dnode = require('dnode');
 var fs = require('fs');
 var _ = require('underscore');
 
+var debug = require('./debug')({level: 2});
 var compress = require('./compress');
 var apis = require('./apis');
 var viewManager = require('./view');
 
 var exports = module.exports;
 
+// lazily load all middleware under middleware/
 exports.middleware = {};
 
 _.chain(fs.readdirSync(__dirname + '/middleware'))
@@ -42,6 +44,7 @@ module.exports = function() {
         servicePaths : ['services'],
         appView: 'index.html',
         assets: [ '/assets' ], // static js and css
+        excludeAssets: [], // dirs under user client/ is excluded from auto serving
 
         systemAppView: __dirname + '/index.html',
         systemAssets: [ __dirname + '/static' ],
@@ -55,10 +58,6 @@ module.exports = function() {
         return fspath.join(server_root, path);
     });
 
-    //// merge system services
-    //opts.servicePaths = _.union(opts.servicePaths, defaults.systemServicePaths);
-    //console.log('servicePaths: ', opts.servicePaths);
-
     if ( !fspath.existsSync(fspath.join(client_root, 'views', opts.appView)) ) {
         opts.appView = opts.systemAppView;
     }
@@ -67,7 +66,11 @@ module.exports = function() {
         return fspath.join(client_root, path);
     });
 
-    //console.log(opts);
+    opts.excludeAssets = opts.excludeAssets.map(function(path) {
+        return fspath.join(client_root, path);
+    });
+
+    debug.log(opts);
 
     return {
         start: function() {
@@ -99,7 +102,8 @@ module.exports = function() {
             });
 
             viewManager.registerAssetsHeadHelper(server, 'systemAssets', opts.systemAssets);
-            viewManager.registerAssetsHeadHelper(server, 'assets', opts.assets);
+            viewManager.registerAssetsHeadHelper(server, 'assets', opts.assets,
+                                                     opts.excludeAssets);
             server.helpers({
                 'author': '<!-- Author: Sian Cao -->'
             });
