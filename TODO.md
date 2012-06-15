@@ -1,24 +1,26 @@
-- ###autosync static files
-- ###automatically serving all static js & css files
+- autosync static files
+- automatically serving all static js & css files
 generate app.html template including all static js & css tags
-- ###(partial)split dev & product mode
-- ###api arguments validation
+- (done)split dev & product mode
+- api arguments validation
 js is typeless, this is hard
-- ###log to file(dev/prod modes)
-- ###mount /debug url for debugging info
-- ###packing assets in prod
-- ###(done)assets headers auto inserted into head
-- ###auto assemble assets of client side js
-- ###client auto connect to dnode, and exports 'remote' object
+- log to file(dev/prod modes)
+- mount /debug url for debugging info
+- packing assets in prod
+- (done)assets headers auto inserted into head
+- auto assemble assets of client side js
+- client auto connect to dnode, and exports 'remote' object
 make `remote` as a global usable object.
 - use async to rewrite services loading
 - (done)use locals.scripts to populate scripts tag
 - error handling
   * warn about invalid or unauthorized url access
-- auto reloading when service updated
+- (done)auto reloading when service updated
 - testing
 - (almost)scaffolding
 - (delayed)front-end ui framework
+
+- support service config
   
 
 maybe
