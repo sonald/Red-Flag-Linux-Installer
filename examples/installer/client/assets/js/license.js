@@ -33,7 +33,7 @@ define(['jquery', 'system', 'jade'], function($) {
         // compile and return page partial
         loadView: function() {
             if (typeof pageCache === 'undefined') {
-                pageCache = ( jade.compile($(this.view).html()) )();
+                pageCache = ( jade.compile($(this.view)[0].innerHTML.trim()) )();
             }
 
             return pageCache;
