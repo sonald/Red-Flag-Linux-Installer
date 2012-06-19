@@ -32,20 +32,9 @@ class PartSocket(tornadio2.SocketConnection):
             result = [{ 'status': 'success'}]
         return json.dumps(result)
     
-    def updatedisks(self):
-        devs = parted.getAllDevices()
-        new_disks = {}
-        for dev in devs:
-            if dev.path in self.disks:
-                new_disks[dev.path] = self.disks[dev.path]
-            else:
-                new_disks[dev.path] = parted.disk.Disk(dev)
-
-        self.disks = new_disks
 
     @tornadio2.event
     def mkpart(self, devpath, parttype, start, end, fs):
-        self.updatedisks()
         if devpath in self.disks:
             disk = self.disks[devpath] #need try
             obj = lib.partedcmd.PartedCmd(disk,devpath)
@@ -57,7 +46,6 @@ class PartSocket(tornadio2.SocketConnection):
 
     @tornadio2.event
     def rmpart(self, devpath, partnumber):
-        self.updatedisks()
         if devpath in self.disks:
             disk = self.disks[devpath] #need try
             obj = lib.partedcmd.PartedCmd(disk,devpath)
@@ -68,20 +56,14 @@ class PartSocket(tornadio2.SocketConnection):
         self.emit('rmpart',data)
 
     @tornadio2.event
-    def reset(self, devpath):
-        self.updatedisks()
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            obj = lib.partedcmd.PartedCmd(disk, devpath)
-            data = obj.reset()
-            self.disks[devpath] = obj.disk
-        else:
-            data = self.error_handle("error arguments,no disk specified")
+    def reset(self):
+        parted.freeAllDevices()
+        self.disks = lib.partedprint.DevDisk()
+        data = self.error_handle()
         self.emit('reset',data)
 
     @tornadio2.event
     def mklabel(self, devpath, devtype):
-        self.updatedisks()
         if devpath in self.disks:
             disk = self.disks[devpath] #need try
             obj = lib.partedcmd.PartedCmd(disk,devpath)
@@ -95,7 +77,6 @@ class PartSocket(tornadio2.SocketConnection):
     def printpart(self, devpath):
         #obj = lib.partedcmd.PartedCmd(disk,devpath)
         #data = obj.printpart()
-        self.updatedisks()
         if devpath in self.disks:
             disk = self.disks[devpath] #need try
             data = lib.partedprint.parted_print([disk],True,True)
@@ -104,15 +85,13 @@ class PartSocket(tornadio2.SocketConnection):
         self.emit('printpart',data)
 
     @tornadio2.event
-    def getpartitions(self,devpath):
-        self.updatedisks()
+    def getpartitions(self):
         disks = self.disks.values()
         data = lib.partedprint.parted_print(disks,True,True)
         self.emit('getpartitions',data)
 
     @tornadio2.event
     def commitdisk(self):
-        self.updatedisks()
         for i in range(10):
             up = i
             time.sleep(1)

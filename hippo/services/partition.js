@@ -76,7 +76,7 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.reset = function(devpath, cb) {
+    PartitionStub.reset = function(cb) {
         if(sock && sock.socket.connected){
             sock.emit('reset', devpath);
             sock.once('reset',function(data){
