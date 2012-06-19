@@ -34,7 +34,6 @@ define(['jquery', 'system', 'jade'], function($) {
         loadView: function() {
             if (typeof pageCache === 'undefined') {
                 pageCache = ( jade.compile($(this.view).html()) )();
-                console.log(pageCache);
             }
 
             return pageCache;
