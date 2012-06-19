@@ -74,6 +74,17 @@ function wrapper(prop) {
 //TODO: support coffeescript, make it more efficient
 var loadDirectory = function(path, ns) {
     'use strict';
+   
+    function loadModule(file, reinit) {
+        var proto = require(file);
+        // support (re)init of module, but do not export it to user
+        if (proto.initialize && typeof proto.initialize === 'function') {
+            proto.initialize(reinit);
+            delete proto.initialize;
+        }
+
+        return proto;
+    }
 
     console.log('load %s', path);
     var files = fs.readdirSync(path);
@@ -91,7 +102,7 @@ var loadDirectory = function(path, ns) {
                 }
 
                 ns[intf] = {};
-                var proto = require(file);
+                var proto = loadModule(file, false);
 
                 _.functions( proto ).forEach(function(prop) {
                     ns[intf][prop] = wrapper(prop);
@@ -99,7 +110,7 @@ var loadDirectory = function(path, ns) {
                 });
 
                 watchService(file, function() {
-                    var proto = require(file);
+                    var proto = loadModule(file, true);
 
                     _.functions( proto ).forEach(function(prop) {
                         var f = ns[intf][prop] || (ns[intf][prop] = wrapper(prop));
