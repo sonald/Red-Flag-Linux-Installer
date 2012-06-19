@@ -23,7 +23,7 @@ define(['jquery', 'system', 'jade'], function($) {
 
     console.log('load license');
     var page = {
-        view: 'license.jade',
+        view: '#license_tmpl',
 
         // do initialization, called when loading the page
         initialize: function() {
@@ -33,7 +33,8 @@ define(['jquery', 'system', 'jade'], function($) {
         // compile and return page partial
         loadView: function() {
             if (typeof pageCache === 'undefined') {
-                pageCache = '<p>License page stub</p>';
+                pageCache = ( jade.compile($(this.view).html()) )();
+                console.log(pageCache);
             }
 
             return pageCache;
