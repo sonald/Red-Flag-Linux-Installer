@@ -16,7 +16,31 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system'], function($) {
+define(['jquery', 'system', 'jade'], function($) {
+    'use strict';
+
+    var pageCache;
+
     console.log('load license');
+    var page = {
+        view: 'license.jade',
+
+        // do initialization, called when loading the page
+        initialize: function() {
+            console.log('license initialized');
+        },
+
+        // compile and return page partial
+        loadView: function() {
+            if (typeof pageCache === 'undefined') {
+                pageCache = '<p>License page stub</p>';
+            }
+
+            return pageCache;
+        }
+    };
+
+    return page;
 });
+
 
