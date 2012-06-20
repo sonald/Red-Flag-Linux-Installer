@@ -110,7 +110,7 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
         func.apply(null, Array.prototype.slice.call(arguments, 2));
     }
 
-    $('body').on('click', 'button.btn', function(){
+   $('body').on('click', 'button.btn', function(){
         var step = $(this).text();
         if( step === "forward" && !($(this).hasClass("disabled")) ){
             fire.apply(null, stubs["getpartitions"]);
@@ -119,15 +119,15 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
         }else if(step === "commit"){
             var name = $('#name').attr("value");
             var password = $('#password').attr("value");
-            var disk = $(":checked").attr("value");
+            var disk = $("fieldset").find(":checked").attr("value");
         };
     });
-    $('body').on('click', 'a.btn', function(){
-        if($(this).text() === "agree" && $("#next").hasClass("disabled")){
-            $('button#next').toggleClass("disabled");
-        }else if($(this).text() === "disagree" && !$("#next").hasClass("disabled") ){
-            $('button#next').toggleClass("disabled");
-        }
+    $('body').on('click', '#choose', function(){
+        if($("#choose").find(":checked").attr("value")==="agree" && $("#next").hasClass("disabled")){
+            $("#next").toggleClass("disabled");
+        }else if($("#choose").find(":checked").attr("value")==="disagree" && !$("#next").hasClass("disabled")){
+            $("#next").toggleClass("disabled");
+        };
     });
     console.log('load done!');
 });

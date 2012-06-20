@@ -147,11 +147,15 @@ script(type="text/template", id="license_tmpl").
                     software under this Agreement, and return to us immediately. If
                     you have begun to install or use, you are considered fully
                     agree with this Agreement all of its contents.
-    .row
+    .row#choose
         .span4
         .span1
-            a.btn.btn-primary(href="#") agree
+            label.radio
+                input(type="radio",name="choose",value="agree") 
+                b agree
         .span7
-            a.btn(href="#") disagree
+            label.radio
+                input(type="radio",name="choose",value="disagree",checked)
+                b disagree
     .offset7
         button.btn.disabled#next forward
