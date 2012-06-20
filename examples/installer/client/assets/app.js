@@ -40,6 +40,16 @@ var app = {
         };
 
         this.$el.html( page.loadView() );
+        if (pageId === 2){
+            if(data.status === "process"){
+                $(".dial").knob({
+                    width:300,
+                });
+            }
+            else if(data.status === "failure"){
+                this.$el.html( "<p> failure:"+data.reason+" </p>");
+            }
+        };
     },
 
     pageValid: function(pageId) {
@@ -82,11 +92,18 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
         app.forward();
     };
 
+    var process = function(result){
+        data = result;
+        app.forward();
+    };
+
+
     DNode.connect(function (remote) {
         // when DNode is (re)connected, register global apis object.
         window.apis = remote;
         stubs = {
-            getpartitions:[remote, "services.partition.getPartitions", getparts],
+            getpartitions:[remote, "services.partition.getPartitions"],
+            commit:[remote, "services.partition.packAndUnpack"],
         };
 
         $(function() {
@@ -113,13 +130,19 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
    $('body').on('click', 'button.btn', function(){
         var step = $(this).text();
         if( step === "forward" && !($(this).hasClass("disabled")) ){
-            fire.apply(null, stubs["getpartitions"]);
+            fire.apply(null, stubs["getpartitions"].concat([getparts]));
         }else if(step === "backward"){
             app.backward();
         }else if(step === "commit"){
             var name = $('#name').attr("value");
             var password = $('#password').attr("value");
             var disk = $("fieldset").find(":checked").attr("value");
+            var options = {
+                username:name,
+                psword:password,
+                newroot:disk,
+            };
+            fire.apply(null, stubs["commit"].concat([options,process]));
         };
     });
     $('body').on('click', '#choose', function(){

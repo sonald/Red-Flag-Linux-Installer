@@ -3,3 +3,7 @@
     overflow: auto;
     position: relative;
 }
+
+input.dial {
+    height:auto;
+}
