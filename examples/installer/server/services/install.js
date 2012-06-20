@@ -101,7 +101,7 @@ module.exports = (function(){
                     });
                 },
                 // run postscript
-                system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log", cb);
+                system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log", cb),
                 system("umount " + root_dir + "/proc", cb),
                 system("umount " + root_dir + "/dev", cb),
                 system("umount " + root_dir + "/sys", cb),
