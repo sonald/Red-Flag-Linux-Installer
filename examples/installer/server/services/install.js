@@ -4,7 +4,7 @@ var async = require('async');
 
 module.exports = (function(){
     'use strict';
-    errors  = { 
+    var errors  = { 
         ENOROOT: 'no install destination specified',
         ECOPYBASE: 'copy base system failed',
     }
@@ -12,8 +12,8 @@ module.exports = (function(){
     var exec = require('child_process').exec;
 
     function copyBaseSystem(newroot, watcher, next) {
-        var helper = pathlib.join(__dirname, 'copy_base_system.sh') + 
-            ' /dev/mapper/arch_root-image ' + newroot;
+        var helper = pathlib.join(__dirname, 'copy_base_system.sh') +  ' / ' + newroot;
+            //' /dev/mapper/arch_root-image ' + newroot;
         console.log('run %s', helper);
 
         var child = exec(helper);
