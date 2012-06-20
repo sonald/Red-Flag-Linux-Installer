@@ -112,7 +112,7 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
 
     $('body').on('click', 'button.btn', function(){
         var step = $(this).text();
-        if(step === "forward"){
+        if( step === "forward" && !($(this).hasClass("disabled")) ){
             fire.apply(null, stubs["getpartitions"]);
         }else if(step === "backward"){
             app.backward();
@@ -122,7 +122,13 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
             var disk = $(":checked").attr("value");
         };
     });
-
+    $('body').on('click', 'a.btn', function(){
+        if($(this).text() === "agree" && $("#next").hasClass("disabled")){
+            $('button#next').toggleClass("disabled");
+        }else if($(this).text() === "disagree" && !$("#next").hasClass("disabled") ){
+            $('button#next').toggleClass("disabled");
+        }
+    });
     console.log('load done!');
 });
 
