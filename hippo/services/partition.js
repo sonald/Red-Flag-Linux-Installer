@@ -19,7 +19,7 @@ module.exports = (function() {
             return;
         }
 
-        partsever = spawn('python', [__dirname+'/partsever.py']);
+        partsever = spawn('python2', [__dirname+'/partsever.py']);
 
         partsever.stdout.on('data', function (data) {
             console.log('stdout: ' + data);
