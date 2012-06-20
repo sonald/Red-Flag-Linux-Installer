@@ -24,12 +24,19 @@ define(['jquery', 'system', 'jade'], function($) {
     console.log('load partition');
     var page = {
         view: '#part_tmpl',
-        locals:null,
-
+        locals: null,
+        app: null,
+         
         // do initialization, called when loading the page
-        initialize: function(data) {
-            this.locals = data
-            console.log(this.locals);
+        initialize: function(app, reinit, callback) {
+            var self = this;
+            self.app = app;
+
+            window.apis.services.partition.getPartitions(function(disks) {
+                self.locals = disks;
+                callback();
+            });
+
             console.log('part initialized');
         },
 
@@ -37,11 +44,26 @@ define(['jquery', 'system', 'jade'], function($) {
         loadView: function(data) {
             if (typeof pageCache === 'undefined') {
                 this.locals = this.locals || {};
-                pageCache = ( jade.compile($(this.view)[0].innerHTML, {locals:['disks']}) )({disks:this.locals});
-                console.log(pageCache);
+                console.log(this.locals);
+                pageCache = ( jade.compile($(this.view)[0].innerHTML,
+                                           {locals:['disks']})
+                            )( {disks: this.locals} );
+                //console.log(pageCache);
             }
 
             return pageCache;
+        },
+
+        postSetup: function() {
+        },
+
+        validate: function() {
+            this.app.userData['username'] = $('#name').attr('value');
+            this.app.userData['passwd'] = $('#password').attr('value');
+            this.app.userData['newroot'] = $("fieldset").find(":checked").attr("value");
+
+            //TODO: validate selected partition
+            return true;
         }
     };
 

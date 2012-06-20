@@ -2,10 +2,12 @@ require.config({
     baseUrl: 'js',
 });
 
-var data;
 var app = {
     name: 'Pangu Installer',
     $el: null, // where page hosted at
+
+    // collect user configurations
+    userData: {},
 
     // internal, do not change it manually
     _currentPage: 0,
@@ -19,7 +21,7 @@ var app = {
 
         console.log('load page %d', pageId);
         this._currentPage = pageId;
-        this.loadPage(this._currentPage);
+        this.loadPage(this._currentPage, false);
     },
 
     get currentPage() {
@@ -31,25 +33,12 @@ var app = {
         if (!this.pageValid(pageId))
             return;
 
+        var self = this;
         var page = this.stages[pageId];
-        if (reinit) {
-            page.initialize();
-        };
-        if (pageId === 1){
-            page.initialize(data)
-        };
-
-        this.$el.html( page.loadView() );
-        if (pageId === 2){
-            if(data.status === "process"){
-                $(".dial").knob({
-                    width:300,
-                });
-            }
-            else if(data.status === "failure"){
-                this.$el.html( "<p> failure:"+data.reason+" </p>");
-            }
-        };
+        page.initialize(this, reinit, function() { 
+            self.$el.html( page.loadView() );
+            page.postSetup && page.postSetup();
+        });
     },
 
     pageValid: function(pageId) {
@@ -62,21 +51,28 @@ var app = {
     },
 
     forward: function() {
-        this.currentPage += 1;
+        console.log('forward');
+        var page = this.stages[this.currentPage];
+        if (page.validate && page.validate())
+            this.currentPage += 1;
     },
 
     backward: function() {
+        console.log('backward');
         this.currentPage -= 1;
     },
 
     // when app is ready, call this
     init: function() {
         this.$el = $('#stage');
-        this.currentPage = 0;
-        apis.expose(function(apis) {
+        window.apis.expose(function(apis) {
             console.log(apis);
         });
 
+        $('body').on('click', 'button#backward', $.proxy(this.backward, this));
+        $('body').on('click', 'button#forward', $.proxy(this.forward, this));
+
+        this.currentPage = 0;
         console.log('app init');
     },
 };
@@ -86,72 +82,15 @@ require(['jquery','license', 'part', 'process'], function($, pageLicense, pagePa
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
 
-    var stubs;
-    var getparts = function(disks){
-        data = disks;
-        app.forward();
-    };
-
-    var process = function(result){
-        data = result;
-        app.forward();
-    };
-
-
     DNode.connect(function (remote) {
         // when DNode is (re)connected, register global apis object.
         window.apis = remote;
-        stubs = {
-            getpartitions:[remote, "services.partition.getPartitions"],
-            commit:[remote, "services.partition.packAndUnpack"],
-        };
 
         $(function() {
             app.init();
         });
     });
 
-    function fire(remote, proto) {
-        var func = _.reduce(proto.split('.'), function(memo, item) {
-            if (typeof memo[item] === 'object')
-                return memo[item];
-
-            else if (typeof memo[item] === 'function') {
-                return _.bind(memo[item], memo);
-
-            } else
-                throw { reason: 'memo[item] invalid' };
-
-        }, remote);
-
-        func.apply(null, Array.prototype.slice.call(arguments, 2));
-    }
-
-   $('body').on('click', 'button.btn', function(){
-        var step = $(this).text();
-        if( step === "forward" && !($(this).hasClass("disabled")) ){
-            fire.apply(null, stubs["getpartitions"].concat([getparts]));
-        }else if(step === "backward"){
-            app.backward();
-        }else if(step === "commit"){
-            var name = $('#name').attr("value");
-            var password = $('#password').attr("value");
-            var disk = $("fieldset").find(":checked").attr("value");
-            var options = {
-                username:name,
-                psword:password,
-                newroot:disk,
-            };
-            fire.apply(null, stubs["commit"].concat([options,process]));
-        };
-    });
-    $('body').on('click', '#choose', function(){
-        if($("#choose").find(":checked").attr("value")==="agree" && $("#next").hasClass("disabled")){
-            $("#next").toggleClass("disabled");
-        }else if($("#choose").find(":checked").attr("value")==="disagree" && !$("#next").hasClass("disabled")){
-            $("#next").toggleClass("disabled");
-        };
-    });
     console.log('load done!');
 });
 

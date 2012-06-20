@@ -18,13 +18,15 @@ module.exports = (function(){
 
         var child = exec(helper);
         var percentage = 0;
+        var progId;
 
         child.on('exit', function(code, signal) {
-            if (code && code === 0) {
+            progId.stop();
+            if (code === 0) {
                 next();
 
             } else {
-                watcher({status: 'failure', reason: errors[ECOPYBASE]});
+                watcher({status: 'failure', reason: errors['ECOPYBASE']});
             }
         });
 
@@ -33,7 +35,7 @@ module.exports = (function(){
             percentage++;
         }
 
-        process.nextTick(populateProgress);
+        progId = setInterval(populateProgress, 1000);
     }
 
     function generateFstab(root_dir, newroot) {
@@ -53,16 +55,16 @@ module.exports = (function(){
     function system(cmd, cb) {
         var child = exec(cmd);
         child.on('exit', function(code, signal) {
-            if (code && code === 0) {
+            if (code === 0) {
                 cb(null);
 
             } else {
-                cb({status: 'failure', reason: errors[ECOPYBASE]});
+                cb({status: 'failure', reason: errors['ECOPYBASE']});
             }
         });
     }
 
-    function postInstall(opts, watcher, next) {
+    function postInstall(opts, cb, next) {
         var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
         console.log(postscript);
 
@@ -126,7 +128,7 @@ module.exports = (function(){
 
         packAndUnpack: function(options, cb) {
             if (!options.newroot) {
-                this.error(ENOROOT, cb);
+                this.error('ENOROOT', cb);
                 return;
             }
 

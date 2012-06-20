@@ -1,9 +1,13 @@
-#!/bin/env bash 
+#!/usr/bin/env bash 
 # tar  --numeric-owner --one-file-system -C src_dir -cSf /root/fifo1 ./
 # | dd if=fifo1 of=fifo2 bs=1048576 
 # | tar --numeric-owner -C dest_dir -xSf /root/fifo1
 # 
 # Usage: $0 src_dir dest_dev
+
+echo 'fake installing process'
+sleep 10
+exit 0
 
 if [[ $# -ne 2 ]]; then 
     echo "Usage: $0 src_dev dest_dev"

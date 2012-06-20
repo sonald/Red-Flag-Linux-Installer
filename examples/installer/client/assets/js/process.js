@@ -24,9 +24,12 @@ define(['jquery', 'system', 'jade'], function($) {
     console.log('load license');
     var page = {
         view: '#process_tmpl',
+        app: null,
 
         // do initialization, called when loading the page
-        initialize: function() {
+        initialize: function(app, reinit, callback) {
+            this.app = app;
+            callback();
             console.log('process initialized');
         },
 
@@ -34,10 +37,35 @@ define(['jquery', 'system', 'jade'], function($) {
         loadView: function() {
             if (typeof pageCache === 'undefined') {
                 pageCache = ( jade.compile($(this.view).html()) )();
-                console.log(pageCache);
+                //console.log(pageCache);
             }
 
             return pageCache;
+        },
+
+        postSetup: function() {
+            $(".dial").knob({
+                width:300,
+            });
+
+            var self = this;
+            $('body').on('click', '#install', function() {
+                self.onInstall();
+            });
+        },
+
+        onInstall: function() {
+            console.log(this.app.userData);
+            window.apis.services.install.packAndUnpack(this.app.userData, this.onProgress);
+        },
+
+        onProgress: function(respond) {
+            console.log(respond);
+        },
+
+        validate: function() {
+            // check if install finished
+            return true;
         }
     };
 
