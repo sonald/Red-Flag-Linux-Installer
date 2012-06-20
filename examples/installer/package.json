@@ -6,6 +6,7 @@
   "private": true,
   "engines": { "node": ">= 0.6.0" },
   "dependencies": {
-    "hippo": "0.1.x"
+    "hippo": "0.1.x",
+    "async": "0.1.x"
   }
 }

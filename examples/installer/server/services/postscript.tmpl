@@ -1,0 +1,17 @@
+#!/bin/bash
+
+mkdir -p /tmp
+mkdir -p /dev
+mkdir -p /sys
+chmod 1777 /tmp
+
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+# initialize rpm db
+rm /var/lib/rpm/__db.*
+rpm --initdb
+
+# set timezone to CST
+/bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
