@@ -47,14 +47,14 @@ class PartedCmd(object):
         self.disk = parted.disk.Disk(self.dev)
         return self.get_result(None)
 
-    def reset(self):
-        try:
-            self.dev = parted.getDevice(self.devpath)
-        except Exception,e:
-            return self.get_result(e)
+   # def reset(self):
+   #     try:
+   #         self.dev = parted.getDevice(self.devpath)
+   #     except Exception,e:
+   #         return self.get_result(e)
 
-        self.disk = parted.disk.Disk(self.dev)
-        return self.get_result(None)
+   #     self.disk = parted.disk.Disk(self.dev)
+   #     return self.get_result(None)
 
     def printpart(self):
         disks = [self.disk]

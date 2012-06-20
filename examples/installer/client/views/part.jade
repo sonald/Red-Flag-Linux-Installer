@@ -1,0 +1,48 @@
+script(type="text/template", id="part_tmpl").
+    fieldset
+        div.control-group
+            label.control-label(for="name") name
+            .controls
+                input.input-xlarge#name(type="text")
+        div.control-group
+            label.control-label(for="password") password
+            .controls
+                input.input-xlarge#password(type="password")
+        div.control-group
+            div#getpartitions.controls
+                div#accordion2.accordion
+                    - for (var i in disks)
+                        - var disk = disks[i];
+                        div.accordion-group
+                            div.accordion-heading
+                                a.accordion-toggle(data-toggle="collapse", data-parent="#accordion2", href="#collapse"+i)
+                                    = disk["path"]
+                            div.accordion-body.collapse.in(id="collapse"+i)
+                                div.accordion-inner.controls
+                                    table.table.table-bordered
+                                        thead
+                                            tr
+                                                th 
+                                                th Number
+                                                th Start(kb)
+                                                th End(kb)
+                                                th Size(kb)
+                                                th parttype
+                                                th fs
+                                        tbody
+                                            - var parts = disk["table"]
+                                            - for ( var part in parts )
+                                                - var p = parts[part]
+                                                - if(p[0] == -1)
+                                                    - continue
+                                                tr
+                                                    th
+                                                        label.radio
+                                                            input(type='radio', name="parts", value=disk["path"]+p[0])
+                                                    - for (var x in p )
+                                                        th
+                                                            =p[x]
+
+        .form-actions
+            button.btn backward
+            button.btn.btn-primary(type="submit") commit
