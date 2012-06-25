@@ -89,8 +89,9 @@ module.exports = (function() {
 
     PartitionStub.reset = function(cb) {
         if(sock && sock.socket.connected){
-            sock.emit('reset', devpath);
+            sock.emit('reset');
             sock.once('reset',function(data){
+                data = JSON.parse(data);
                 cb(data);
             });
         }else{
@@ -99,7 +100,6 @@ module.exports = (function() {
     };
 
     PartitionStub.getPartitions = function(cb) {
-        var partical = "";
         if(sock && sock.socket.connected){
             sock.emit('getpartitions');
             sock.once('getpartitions',function(result){
@@ -112,19 +112,11 @@ module.exports = (function() {
     };
 
     PartitionStub.printpart = function(devpath, cb) {
-        var partical = "";
         if(sock && sock.socket.connected){
             sock.emit('printpart',devpath);
             sock.once('printpart',function(result){
-                fs.readFile(__dirname+'/../../client/views/getpartitions.jade', 'utf8' ,function (err, data) {
-                    if (err) throw err;
-                    partical = data;
-                    var disks = JSON.parse(result);
-                    var fn = jade.compile(partical,{locals:['disks']});
-                    var str = fn({disks:disks});
-
-                    cb(str);
-                });
+                var disks = JSON.parse(result);
+                cb(disks);
             });
         }else{
             cb({error:"sever is loading",});

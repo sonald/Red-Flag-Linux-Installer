@@ -1,9 +1,9 @@
 /*
  * =====================================================================================
  *
- *       Filename:  license.js
+ *       Filename:  process.js
  *
- *    Description:  license page
+ *    Description:  process page
  *
  *        Version:  1.0
  *        Created:  2012年06月18日 19时07分32秒

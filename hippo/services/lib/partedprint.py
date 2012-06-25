@@ -44,7 +44,7 @@ def print_disk_to_json_format(disk,free):
         "path": disk.device.path,
         "size":str(size)+'MB',
         "type":disk.type,
-        "unit":'KB',
+        "unit":'MB',
         "table":[],
         }
     parts = []

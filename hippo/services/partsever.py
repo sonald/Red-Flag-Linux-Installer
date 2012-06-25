@@ -26,10 +26,10 @@ class PartSocket(tornadio2.SocketConnection):
     
     def error_handle(self,reason):
         result = []
-        if reason:
-            result = [{ 'status': 'failure', 'reason': str(reason) }]
+        if reason is not None:
+            result = { 'status': 'failure', 'reason': str(reason) }
         else:
-            result = [{ 'status': 'success'}]
+            result = { 'status': 'success'}
         return json.dumps(result)
     
 
@@ -59,7 +59,7 @@ class PartSocket(tornadio2.SocketConnection):
     def reset(self):
         parted.freeAllDevices()
         self.disks = lib.partedprint.DevDisk()
-        data = self.error_handle()
+        data = self.error_handle(None)
         self.emit('reset',data)
 
     @tornadio2.event

@@ -32,26 +32,36 @@ define(['jquery', 'system', 'jade'], function($) {
             var self = this;
             self.app = app;
 
-            window.apis.services.partition.getPartitions(function(disks) {
-                self.locals = disks;
-                callback();
+            window.apis.services.partition.reset(function(result) {
+                if(result.status === "success"){
+                    window.apis.services.partition.getPartitions(function(disks) {
+                        self.locals = disks;
+                        console.log("success");
+                        callback();
+                    });
+                }else if(result.status === "failure"){
+                    console.log(result);
+                    //TODO
+                }else{
+                    console.log("data error");
+                    //TODO
+                };
             });
-
             console.log('part initialized');
         },
 
         // compile and return page partial
-        loadView: function(data) {
-            if (typeof pageCache === 'undefined') {
+        loadView: function() {
+            var mypage;
+            if (typeof mypage === 'undefined') {
                 this.locals = this.locals || {};
                 console.log(this.locals);
-                pageCache = ( jade.compile($(this.view)[0].innerHTML,
+                mypage = ( jade.compile($(this.view)[0].innerHTML,
                                            {locals:['disks']})
                             )( {disks: this.locals} );
-                //console.log(pageCache);
             }
 
-            return pageCache;
+            return mypage;
         },
 
         postSetup: function() {
