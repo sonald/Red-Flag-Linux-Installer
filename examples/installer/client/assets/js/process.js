@@ -60,6 +60,11 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         onProgress: function(respond) {
+            if(respond.status === "progress"){
+                $("input.dial").val(respond.data).trigger("change");
+            }else if(respond.status === "failure"){
+                $('div#process_dial').html('<p>'+respond.reason + '</p>');
+            }
             console.log(respond);
         },
 
