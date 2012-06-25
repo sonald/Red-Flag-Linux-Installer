@@ -36,9 +36,11 @@ define(['jquery', 'system', 'jade'], function($) {
                 if(result.status === "success"){
                     window.apis.services.partition.getPartitions(function(disks) {
                         self.locals = disks;
+                        pageCache = undefined;
                         console.log("success");
                         callback();
                     });
+
                 }else if(result.status === "failure"){
                     console.log(result);
                     //TODO
@@ -52,16 +54,15 @@ define(['jquery', 'system', 'jade'], function($) {
 
         // compile and return page partial
         loadView: function() {
-            var mypage;
-            if (typeof mypage === 'undefined') {
+            if (typeof pageCache === 'undefined') {
                 this.locals = this.locals || {};
                 console.log(this.locals);
-                mypage = ( jade.compile($(this.view)[0].innerHTML,
+                pageCache = ( jade.compile($(this.view)[0].innerHTML,
                                            {locals:['disks']})
                             )( {disks: this.locals} );
             }
 
-            return mypage;
+            return pageCache;
         },
 
         postSetup: function() {
