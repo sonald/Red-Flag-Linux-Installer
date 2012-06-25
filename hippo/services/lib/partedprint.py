@@ -26,8 +26,8 @@ def print_disk_helper_to_json_format(parts):
             #partty = "metadata"
             continue
 
-        start = parted.formatBytes(part.geometry.start,'kB')
-        end = parted.formatBytes(part.geometry.end,'kB')
+        start = parted.formatBytes(part.geometry.start*512,'MB')
+        end = parted.formatBytes(part.geometry.end*512,'MB')
         size =  end - start
         fstype = ""
         if part.fileSystem:
