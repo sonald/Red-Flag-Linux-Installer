@@ -1,13 +1,21 @@
 script(type="text/template", id="part_tmpl").
     fieldset
-        div.control-group
+        p Add a new user:
+        div.control-group.form-horizontal
             label.control-label(for="name") name
             .controls
                 input.input-xlarge#name(type="text")
-        div.control-group
+                p.help-block Only letters, numbers, and underscores.
+        hr
+        p Password For Root:
+        div.control-group.form-horizontal
             label.control-label(for="password") password
             .controls
                 input.input-xlarge#password(type="password")
+        div.control-group.form-horizontal
+            label.control-label(for="confirm-password") confirm
+            .controls
+                input.input-xlarge#confirm-password(type="password")
         div.control-group
             div#getpartitions.controls
                 div#accordion2.accordion
