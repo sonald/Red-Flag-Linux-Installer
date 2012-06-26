@@ -67,8 +67,8 @@ module.exports = (function(){
                 //"block size": info[1],
                 //"total blocks": info[2],
                 //"free blocks": info[3]
-                fsutil.getFileSystemInfo(newroot_mnt, '/', function(info) {
-                    var size = info[2] * info[1];
+                fsutil.getFileSystemInfo('/', function(info) {
+                    var size = info['total blocks'] * info['block size'];
                     cb(null, newroot_mnt, size);
                 });
             },
@@ -97,7 +97,7 @@ module.exports = (function(){
                     //"total blocks": info[2],
                     //"free blocks": info[3]
                     fsutil.getFileSystemInfo(newroot_mnt, function(info) {
-                        var installed = (info[3] - info[2]) * info[1];
+                        var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
                         percentage = Math.round((installed % total_size) * 100);
                         
                         watcher({status: 'progress', data: percentage});
