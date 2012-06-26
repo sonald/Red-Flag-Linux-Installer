@@ -3,11 +3,8 @@
 # | dd if=fifo1 of=fifo2 bs=1048576 
 # | tar --numeric-owner -C dest_dir -xSf /root/fifo1
 # 
-# Usage: $0 src_dir dest_dev
-
-echo 'fake installing process'
-sleep 10
-exit 0
+# Usage: $0 src_dir dest_dir
+# precondition: dest_dir is for mounted dest dev
 
 if [[ $# -ne 2 ]]; then 
     echo "Usage: $0 src_dev dest_dev"
@@ -24,20 +21,8 @@ function check_result() {
     fi
 }
 
-dest_dir=`mktemp -d`
-
 src_dir=$1
-dest_dev=$2
-if [ ! -b "$dest_dev" ]; then
-    exit 1
-fi
-
-#parted /dev/sd* mkfs [num] ext3
-mkfs.ext3 -q $dest_dev
-check_result
-
-mount -t ext3 $dest_dev $dest_dir
-check_result
+dest_dir=$2
 
 fifo1=/tmp/cbs_fifo1
 fifo2=/tmp/cbs_fifo2

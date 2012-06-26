@@ -21,6 +21,8 @@ make `remote` as a global usable object.
 - (delayed)front-end ui framework
 
 - support service config
+  e.g install service need to add dry-run option
+  options.set('services.install', 'dry-run', true);
   
 
 maybe

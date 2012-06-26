@@ -1,6 +1,39 @@
 var pathlib = require('path');
 var fs = require('fs');
 var async = require('async');
+var exec = require('child_process').exec;
+
+var fsutil = {
+    getFileSystemInfo: function(path, callback) {
+        exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
+            if (err) {
+                throw err;
+            }
+
+            var re = /(\d+) (\d+) (\d+)/;
+            var info = re.exec(result);
+            if (!info) {
+                throw new Error('stat result is invalid: ' + result);
+            }
+
+            callback({
+                "block size": info[1],
+                "total blocks": info[2],
+                "free blocks": info[3]
+            });
+        });
+    },
+
+    mktempdir: function(callback) {
+        exec('mktemp -d', {encoding: 'utf8'}, function(err, stdout, stderr) {
+            if (err) {
+                throw err;
+            }
+
+            callback(stdout);
+        });
+    }
+};
 
 module.exports = (function(){
     'use strict';
@@ -9,33 +42,70 @@ module.exports = (function(){
         ECOPYBASE: 'copy base system failed',
     }
 
-    var exec = require('child_process').exec;
-
     function copyBaseSystem(newroot, watcher, next) {
-        var helper = pathlib.join(__dirname, 'copy_base_system.sh') +  ' / ' + newroot;
-            //' /dev/mapper/arch_root-image ' + newroot;
-        console.log('run %s', helper);
+        async.waterfall([
+            function(cb) {
+                fsutil.mktempdir(function(dirname) {
+                    exec('mount -t ext4 ' + newroot + ' ' + dirname, {}, function(err) {
+                        if (err) {
+                            cb(err);
 
-        var child = exec(helper);
-        var percentage = 0;
-        var progId;
+                        } else {
+                            cb(null, dirname);
+                        }
+                    });
+                });
+            },
 
-        child.on('exit', function(code, signal) {
-            progId.stop();
-            if (code === 0) {
-                next();
+            function(cb) {
+                //"block size": info[1],
+                //"total blocks": info[2],
+                //"free blocks": info[3]
+                fsutil.getFileSystemInfo(newroot_mnt, '/', function(info) {
+                    var size = info[2] * info[1];
+                    cb(null, newroot_mnt, size);
+                });
+            },
 
-            } else {
+            function(newroot_mnt, total_size, cb) {
+                var helper = pathlib.join(__dirname, 'copy_base_system.sh') +  ' / ' + newroot_mnt;
+                var child = exec(helper);
+
+                var percentage = 0;
+                var progId;
+
+                console.log('run %s', helper);
+                child.on('exit', function(code, signal) {
+                    progId.stop();
+                    if (code === 0) {
+                        next();
+
+                    } else {
+                        watcher({status: 'failure', reason: errors['ECOPYBASE']});
+                    }
+                });
+
+                function populateProgress() {
+
+                    //"block size": info[1],
+                    //"total blocks": info[2],
+                    //"free blocks": info[3]
+                    fsutil.getFileSystemInfo(newroot_mnt, function(info) {
+                        var installed = (info[3] - info[2]) * info[1];
+                        percentage = Math.round((installed % total_size) * 100);
+                        
+                        watcher({status: 'progress', data: percentage});
+                    });
+                }
+
+                progId = setInterval(populateProgress, 1000);
+            },
+        ], 
+        function(err) {
+            if (err) {
                 watcher({status: 'failure', reason: errors['ECOPYBASE']});
             }
         });
-
-        function populateProgress() {
-            watcher({status: 'progress', data: percentage});
-            percentage++;
-        }
-
-        progId = setInterval(populateProgress, 1000);
     }
 
     function generateFstab(root_dir, newroot) {
@@ -52,16 +122,19 @@ module.exports = (function(){
         fs.writeFileSync(fstab, contents, 'utf8');
     }
 
-    function system(cmd, cb) {
-        var child = exec(cmd);
-        child.on('exit', function(code, signal) {
-            if (code === 0) {
-                cb(null);
+    function system(cmd) {
+        return function(err_cb) {
+            var child = exec(cmd);
+            child.on('exit', function(code, signal) {
+                if (code === 0) {
+                    err_cb(null);
 
-            } else {
-                cb({status: 'failure', reason: errors['ECOPYBASE']});
-            }
-        });
+                } else {
+                    err_cb(cmd + ' failed');
+                    cb({status: 'failure', reason: errors['ECOPYBASE']});
+                }
+            });
+        };
     }
 
     function postInstall(opts, cb, next) {
@@ -83,36 +156,46 @@ module.exports = (function(){
         var root_dir = "/tmp/tmproot";
         async.waterfall(
             [
-                system("mkdir -p /tmp/tmproot", cb),
-                system("mount " + opts.newroot + " " + root_dir, cb),
-                function(cb) {
+                system("mkdir -p /tmp/tmproot"),
+                system("mount " + opts.newroot + " " + root_dir),
+                function(err_cb) {
                     generateFstab(root_dir, opts.newroot);
-                    cb(null);
+                    err_cb(null);
                 },
-                function(cb) {
+                function(err_cb) {
                     var post = pathlib.join(root_dir, "/postscript.sh");
                     fs.writeFile(post, postscript, 'utf8', function(err) {
                         if (err) {
-                            cb(err);
+                            err_cb(err);
+                            cb({status: 'failure', reason: errors['ECOPYBASE']});
                             return;
                         }
 
                         fs.chmod(post, 493, function(err) {  // 0755 === 493
-                            cb(err);
+                            if (err) {
+                                err_cb(err);
+                                cb({status: 'failure', reason: errors['ECOPYBASE']});
+                            } else {
+                                err_cb(null);
+                            }
                         }); 
                     });
                 },
                 // run postscript
-                system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log", cb),
-                system("umount " + root_dir + "/proc", cb),
-                system("umount " + root_dir + "/dev", cb),
-                system("umount " + root_dir + "/sys", cb),
+                system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
+                system("umount " + root_dir + "/proc"),
+                system("umount " + root_dir + "/dev"),
+                system("umount " + root_dir + "/sys"),
                 // delete postscript
-                system("rm -rf " + root_dir + "/postscript.sh", cb),
-                system("umount " + root_dir, cb)
+                system("rm -rf " + root_dir + "/postscript.sh"),
+                system("umount " + root_dir)
         ], 
         function(err) {
-            console.log(err?err:'postscript done');
+            if (err) {
+                console.log(err?err:'postscript done');
+            } else {
+                next();
+            }
         });
     }
 
@@ -141,6 +224,7 @@ module.exports = (function(){
                 }
 
                 postInstall(post_opts, cb, function() {
+                    cb({status: 'success'});
                     console.log('install done');
                 });
             });
