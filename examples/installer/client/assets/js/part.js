@@ -82,12 +82,12 @@ define(['jquery', 'system', 'jade'], function($) {
                 $('#password').after('<b>This field is required. </b>');
                 return false;
             };
-            if( typeof this.app.userData['newroot'] === "undefined" ){
-                $('#getpartitions').before('<b>You must choose a disk. </b>');
-                return false;
-            };
             if( this.app.userData['passwd'] !== $('#confirm_password').attr('value') ){
                 $('#confirm_password').after('<b>Please enter the same password again.</b>');
+                return false;
+            };
+            if( typeof this.app.userData['newroot'] === "undefined" ){
+                $('#getpartitions').before('<b>You must choose a disk. </b>');
                 return false;
             };
 
