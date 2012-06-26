@@ -64,6 +64,8 @@ define(['jquery', 'system', 'jade'], function($) {
                 $("input.dial").val(respond.data).trigger("change");
             }else if(respond.status === "failure"){
                 $('div#process_dial').html('<p>'+respond.reason + '</p>');
+            }else if(respond.status === "success"){
+                $('div#process_dial').html('<p>Congratulations~You have finished installing the system.</p>');
             }
             console.log(respond);
         },

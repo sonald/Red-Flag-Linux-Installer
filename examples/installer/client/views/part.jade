@@ -3,11 +3,15 @@ script(type="text/template", id="part_tmpl").
         div.control-group
             label.control-label(for="name") name
             .controls
-                input.input-xlarge#name(type="text")
+                input.required#name(type="text", minlength="2", size="25", name="name")
         div.control-group
             label.control-label(for="password") password
             .controls
-                input.input-xlarge#password(type="password")
+                input.required#password(type="password", size="25", name="password")
+        div.control-group
+            label.control-label(for="confirm_password") confirm_password
+            .controls
+                input.required#confirm_password(type="password", size="25", name="confirm_password")
         div.control-group
             div#getpartitions.controls
                 div#accordion2.accordion
