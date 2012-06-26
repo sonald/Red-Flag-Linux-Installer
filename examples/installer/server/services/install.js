@@ -11,11 +11,12 @@ var fsutil = {
             }
 
             var re = /(\d+) (\d+) (\d+)/;
-            var info = re.exec(result);
+            var info = re.exec(stdout);
             if (!info) {
-                throw new Error('stat result is invalid: ' + result);
+                throw new Error('stat result is invalid: ' + stdout);
             }
 
+            console.log('getFileSystemInfo: %s', info);
             callback({
                 "block size": info[1],
                 "total blocks": info[2],
@@ -30,6 +31,11 @@ var fsutil = {
                 throw err;
             }
 
+            var len = stdout.length;
+            if (stdout[len-1] === '\n') 
+                stdout = stdout.slice(0, len-1);
+
+            console.log('mktemp: %s', stdout);
             callback(stdout);
         });
     }
@@ -57,7 +63,7 @@ module.exports = (function(){
                 });
             },
 
-            function(cb) {
+            function(newroot_mnt, cb) {
                 //"block size": info[1],
                 //"total blocks": info[2],
                 //"free blocks": info[3]
@@ -103,6 +109,7 @@ module.exports = (function(){
         ], 
         function(err) {
             if (err) {
+                console.log(err);
                 watcher({status: 'failure', reason: errors['ECOPYBASE']});
             }
         });
