@@ -34,9 +34,9 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         // compile and return page partial
-        loadView: function() {
+        loadView: function () {
             if (typeof pageCache === 'undefined') {
-                pageCache = ( jade.compile($(this.view)[0].innerHTML.trim()) )();
+                pageCache = (jade.compile($(this.view)[0].innerHTML.trim()))();
             }
 
             return pageCache;
@@ -66,10 +66,9 @@ define(['jquery', 'system', 'jade'], function($) {
 
         validate: function() {
             return $("#forward").hasClass("disabled") === false;
-        }
+        },
     };
 
     return page;
 });
-
 

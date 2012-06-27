@@ -59,7 +59,10 @@ var app = {
 
     backward: function() {
         console.log('backward');
-        this.currentPage -= 1;
+        var page = this.stages[this.currentPage];
+        if( page.rewind && page.rewind()){
+            this.currentPage -= 1;
+        };
     },
 
     // when app is ready, call this

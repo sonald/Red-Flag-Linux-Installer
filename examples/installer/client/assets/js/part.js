@@ -68,6 +68,11 @@ define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, 
         postSetup: function() {
         },
 
+        rewind: function() {
+            //enable backward
+            return true;
+        },
+
         validate: function() {
             $('fieldset').find('b').remove();
             jsvalidate.execu();

@@ -29,6 +29,9 @@ define(['jquery', 'system', 'jade'], function($) {
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
             this.app = app;
+            $("#backward").addClass("disabled");
+            $("#forward").addClass("disabled");
+
             callback();
             console.log('process initialized');
         },
@@ -60,11 +63,11 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         onProgress: function(respond) {
-            if(respond.status === "progress"){
+            if (respond.status === "progress") {
                 $("input.dial").val(respond.data).trigger("change");
-            }else if(respond.status === "failure"){
+            }else if (respond.status === "failure") {
                 $('div#process_dial').html('<p>'+respond.reason + '</p>');
-            }else if(respond.status === "success"){
+            }else if (respond.status === "success") {
                 $('div#process_dial').html('<p>Congratulations~You have finished installing the system.</p>');
             }
             console.log(respond);
@@ -73,7 +76,12 @@ define(['jquery', 'system', 'jade'], function($) {
         validate: function() {
             // check if install finished
             return true;
-        }
+        },
+
+        rewind: function() {
+            // disable backward
+            return false;
+        },
     };
 
     return page;

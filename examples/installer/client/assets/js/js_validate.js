@@ -4,44 +4,44 @@ define(['jquery', 'system', 'jade'], function($) {
     var validate = {
         result : true,
         required: function(){
-            var self = this;
+            var that = this;
             $('.js-required').each( function(){
                 if( $(this).attr('value') === ""){
                     $(this).after('<b>This field is required. </b>');
-                    self.result = false;
+                    that.result = false;
                 };
             });
         },
         alphanum: function(){
-            var self = this;
+            var that = this;
             $('.js-alphanum').each( function(){
                 var str = $(this).attr('value');
                 if( str === ""){
                     $(this).after('<b>This field is required. </b>');
-                    self.result = false;
+                    that.result = false;
                 }else if( str.match(/^[1-9a-zA-Z_]+$/g) === null){
                     $(this).after('<b>Only letters, numbers, and underscores.</b>');
-                    self.result = false;
+                    that.result = false;
                 };
             });
         },
         maxlength: function(){
-            var self = this;
+            var that = this;
             $('.js-required[maxlength]').each( function(){
                 var maxlength = $(this).attr('maxlength') * 1;
                 if( $(this).attr('value') && maxlength < $(this).attr('value').length ){
                     $(this).after('<b>Please enter no more than '+ maxlength +' characters.</b>');
-                    self.result = false;
+                    that.result = false;
                 };
             });
         },
         minlength: function(){
-            var self = this;
+            var that = this;
             $('.js-required[minlength]').each( function(){
                 var minlength = $(this).attr('minlength') * 1;
                 if( $(this).attr('value') && minlength > $(this).attr('value').length ){
                     $(this).after('<b>Please enter at least '+ minlength +' characters.</b>');
-                    self.result = false;
+                    that.result = false;
                 };
             });
         },
