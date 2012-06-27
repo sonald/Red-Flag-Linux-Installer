@@ -65,7 +65,7 @@ module.exports = (function(){
 
             function(newroot_mnt, cb) {
                 fsutil.getFileSystemInfo('/', function(info) {
-                    var size = info['total blocks'] * info['block size'];
+                    var size = (+info['total blocks'] - info['free blocks']) * info['block size'];
                     cb(null, newroot_mnt, size);
                 });
             },
@@ -139,7 +139,6 @@ module.exports = (function(){
 
     function postInstall(opts, cb, next) {
         var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
-        console.log(postscript);
 
         if (opts.username) {
             postscript += '/usr/sbin/useradd -m ' + opts.username + '\n';
@@ -152,6 +151,7 @@ module.exports = (function(){
                     "'; } | passwd root";
             }
         }
+        console.log(postscript);
 
         var root_dir = "/tmp/tmproot";
         async.waterfall(
@@ -216,12 +216,7 @@ module.exports = (function(){
             }
 
             copyBaseSystem(options.newroot, cb, function() {
-                var post_opts = {};
-                if (options.username) {
-                    post_opts.username = options.username;
-                    if (!options.passwd) {
-                    }
-                }
+                var post_opts = Object.create(options);
 
                 postInstall(post_opts, cb, function() {
                     cb({status: 'success'});
