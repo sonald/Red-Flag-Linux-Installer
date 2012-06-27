@@ -124,6 +124,10 @@ module.exports = (function(){
                 err_cb(err);
 
             } else {
+                var len = stdout.length;
+                if (stdout[len-1] === '\n')
+                    stdout.slice(0, len-1);
+
                 //FIXME: ext4 is hardcoded
                 contents += stdout + "      /       ext4        defaults        0       1\n";
                 fs.writeFileSync(fstab, contents, 'utf8');
