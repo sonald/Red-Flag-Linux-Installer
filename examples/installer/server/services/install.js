@@ -113,12 +113,12 @@ module.exports = (function(){
         var fstab = root_dir + "/etc/fstab";
         var contents = '';
 
-        contents += "# /etc/fstab: static file system information.";
-        contents += "# <file system> <mount point>   <type>  <options>       <dump>  <pass>";
-        contents += "/dev/proc       /proc           proc    defaults        0       0";
-        contents += "/dev/sys        /sys            sysfs   rw,noexec,nosuid,nodev      0 0";
-        contents += "/dev/devpts     /dev/pts        devpts  gid=5,mode=620  0 0";
-        contents += newroot + "      /       ext3        defaults        1       1";
+        contents += "# /etc/fstab: static file system information.\n";
+        contents += "# <file system> <mount point>   <type>  <options>       <dump>  <pass>\n";
+        contents += "/dev/proc       /proc           proc    defaults        0       0\n";
+        contents += "/dev/sys        /sys            sysfs   rw,noexec,nosuid,nodev      0 0\n";
+        contents += "/dev/devpts     /dev/pts        devpts  gid=5,mode=620  0 0\n";
+        contents += newroot + "      /       ext3        defaults        1       1\n";
 
         fs.writeFileSync(fstab, contents, 'utf8');
     }
@@ -178,7 +178,7 @@ module.exports = (function(){
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
-                system("umount " + root_dir + "/dev"),
+                //system("umount " + root_dir + "/dev"),
                 system("umount " + root_dir + "/sys"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
