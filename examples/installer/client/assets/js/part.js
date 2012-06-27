@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade'], function($) {
+define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, jsvalidate) {
     'use strict';
 
     var pageCache;
@@ -69,23 +69,21 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         validate: function() {
+            $('fieldset').find('b').remove();
+            jsvalidate.execu();
+
+            if( jsvalidate.result === false ){
+                jsvalidate.result = true;
+                return false;
+            };
             this.app.userData['username'] = $('#name').attr('value');
             this.app.userData['passwd'] = $('#password').attr('value');
             this.app.userData['newroot'] = $("fieldset").find(":checked").attr("value");
-            $('fieldset').find('b').remove();
 
-            if( this.app.userData['username'] === "" ){
-                $('#name').after('<b>This field is required. </b>');
-                return false;
-            };
-            if(this.app.userData['passwd'] === ""){
-                $('#password').after('<b>This field is required. </b>');
-                return false;
-            };
             if( this.app.userData['passwd'] !== $('#confirm-password').attr('value') ){
                 $('#confirm-password').after('<b>Please enter the same password again.</b>');
-                return false;
-            };
+            }
+
             if( typeof this.app.userData['newroot'] === "undefined" ){
                 $('#getpartitions').before('<b>You must choose a disk. </b>');
                 return false;

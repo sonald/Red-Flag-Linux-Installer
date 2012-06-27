@@ -4,18 +4,18 @@ script(type="text/template", id="part_tmpl").
         div.control-group.form-horizontal
             label.control-label(for="name") name
             .controls
-                input.input-xlarge#name(type="text")
+                input.input-xlarge.js-alphanum#name(type="text", minlength="6", maxlength="20")
                 p.help-block Only letters, numbers, and underscores.
         hr
         p Password For Root:
         div.control-group.form-horizontal
             label.control-label(for="password") password
             .controls
-                input.input-xlarge#password(type="password")
+                input.input-xlarge.js-required#password(type="password", minlength="6", maxlength="20")
         div.control-group.form-horizontal
             label.control-label(for="confirm-password") confirm
             .controls
-                input.input-xlarge#confirm-password(type="password")
+                input.input-xlarge.js-required#confirm-password(type="password", minlength="6", maxlength="20")
         div.control-group
             div#getpartitions.controls
                 div#accordion2.accordion
@@ -49,5 +49,8 @@ script(type="text/template", id="part_tmpl").
                                                             input(type='radio', name="parts", value=disk["path"]+p[0])
                                                     - for (var x in p )
                                                         th
-                                                            =p[x]
+                                                            - if( x > 0 && x < 4)
+                                                                = p[x].toFixed(2)
+                                                            -else
+                                                                = p[x]
 

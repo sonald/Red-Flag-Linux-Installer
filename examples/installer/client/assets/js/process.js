@@ -21,7 +21,7 @@ define(['jquery', 'system', 'jade'], function($) {
 
     var pageCache;
 
-    console.log('load license');
+    console.log('load process');
     var page = {
         view: '#process_tmpl',
         app: null,
