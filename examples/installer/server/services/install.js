@@ -52,6 +52,11 @@ module.exports = (function(){
     function copyBaseSystem(newroot, watcher, next) {
         async.waterfall([
             function(cb) {
+                exec('mkfs.ext4 ' + newroot, {}, function(err) {
+                    cb(err);
+                });
+            },
+            function(cb) {
                 fsutil.mktempdir(function(dirname) {
                     exec('mount -t ext4 ' + newroot + ' ' + dirname, {}, function(err) {
                         if (err) {
@@ -82,6 +87,7 @@ module.exports = (function(){
                 child.on('exit', function(code, signal) {
                     progId.stop();
                     if (code === 0) {
+                        watcher({status: 'progress', data: 100});
                         next();
 
                     } else {
@@ -92,7 +98,7 @@ module.exports = (function(){
                 function populateProgress() {
                     fsutil.getFileSystemInfo(newroot_mnt, function(info) {
                         var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
-                        percentage = Math.round((installed / total_size) * 100);
+                        percentage = Math.floor((installed / total_size) * 100);
                         
                         watcher({status: 'progress', data: percentage});
                     });
@@ -126,7 +132,7 @@ module.exports = (function(){
             } else {
                 var len = stdout.length;
                 if (stdout[len-1] === '\n')
-                    stdout.slice(0, len-1);
+                    stdout = stdout.slice(0, len-1);
 
                 //FIXME: ext4 is hardcoded
                 contents += stdout + "      /       ext4        defaults        0       1\n";
