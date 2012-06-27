@@ -46,6 +46,7 @@ module.exports = (function(){
     var errors  = { 
         ENOROOT: 'no install destination specified',
         ECOPYBASE: 'copy base system failed',
+        EPOSTSCRIPT: 'postscript setup failed',
     }
 
     function copyBaseSystem(newroot, watcher, next) {
@@ -131,13 +132,12 @@ module.exports = (function(){
 
                 } else {
                     err_cb(cmd + ' failed');
-                    cb({status: 'failure', reason: errors['ECOPYBASE']});
                 }
             });
         };
     }
 
-    function postInstall(opts, cb, next) {
+    function postInstall(opts, watcher, next) {
         var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
 
         if (opts.username) {
@@ -167,17 +167,11 @@ module.exports = (function(){
                     fs.writeFile(post, postscript, 'utf8', function(err) {
                         if (err) {
                             err_cb(err);
-                            cb({status: 'failure', reason: errors['ECOPYBASE']});
                             return;
                         }
 
                         fs.chmod(post, 493, function(err) {  // 0755 === 493
-                            if (err) {
-                                err_cb(err);
-                                cb({status: 'failure', reason: errors['ECOPYBASE']});
-                            } else {
-                                err_cb(null);
-                            }
+                            err_cb(err);
                         }); 
                     });
                 },
@@ -192,7 +186,8 @@ module.exports = (function(){
         ], 
         function(err) {
             if (err) {
-                console.log(err?err:'postscript done');
+                watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
+                console.log('postInstall failed: ', err);
             } else {
                 next();
             }
