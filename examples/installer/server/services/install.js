@@ -109,18 +109,27 @@ module.exports = (function(){
         });
     }
 
-    function generateFstab(root_dir, newroot) {
+    function generateFstab(root_dir, newroot, err_cb) {
         var fstab = root_dir + "/etc/fstab";
         var contents = '';
 
         contents += "# /etc/fstab: static file system information.\n";
         contents += "# <file system> <mount point>   <type>  <options>       <dump>  <pass>\n";
-        contents += "/dev/proc       /proc           proc    defaults        0       0\n";
-        contents += "/dev/sys        /sys            sysfs   rw,noexec,nosuid,nodev      0 0\n";
-        contents += "/dev/devpts     /dev/pts        devpts  gid=5,mode=620  0 0\n";
-        contents += newroot + "      /       ext3        defaults        1       1\n";
+        contents += "proc            /proc           proc    nodev,noexec,nosuid 0       0\n";
+        //contents += "/dev/sys        /sys            sysfs   rw,noexec,nosuid,nodev      0 0\n";
+        //contents += "/dev/devpts     /dev/pts        devpts  gid=5,mode=620  0 0\n";
 
-        fs.writeFileSync(fstab, contents, 'utf8');
+        exec("blkid " + newroot + " -s UUID | awk -F: '{print $2}'", {}, function(err, stdout) {
+            if (err) {
+                err_cb(err);
+
+            } else {
+                //FIXME: ext4 is hardcoded
+                contents += stdout + "      /       ext4        defaults        0       1\n";
+                fs.writeFileSync(fstab, contents, 'utf8');
+                err_cb(null);
+            }
+        });
     }
 
     function system(cmd) {
@@ -148,19 +157,20 @@ module.exports = (function(){
 
             if (opts.passwd) {
                 postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd + 
-                    "'; } | passwd root";
+                    "'; } | passwd root\n";
             }
         }
         console.log(postscript);
 
         var root_dir = "/tmp/tmproot";
+        var dest_dev = /(\/dev\/[a-z]+)(\d+)/.exec(opts.newroot)[1];
+
         async.waterfall(
             [
                 system("mkdir -p /tmp/tmproot"),
                 system("mount " + opts.newroot + " " + root_dir),
                 function(err_cb) {
-                    generateFstab(root_dir, opts.newroot);
-                    err_cb(null);
+                    generateFstab(root_dir, opts.newroot, err_cb);
                 },
                 function(err_cb) {
                     var post = pathlib.join(root_dir, "/postscript.sh");
@@ -178,10 +188,10 @@ module.exports = (function(){
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
-                //system("umount " + root_dir + "/dev"),
                 system("umount " + root_dir + "/sys"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
+                system('grub-install --recheck --root-directory="' + root_dir + '" ' + dest_dev),
                 system("umount " + root_dir)
         ], 
         function(err) {
