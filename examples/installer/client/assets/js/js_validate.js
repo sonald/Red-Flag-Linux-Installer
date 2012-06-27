@@ -1,6 +1,6 @@
 define(['jquery', 'system', 'jade'], function($) {
+    'use strict';
 
-    console.log("jsvalidate");
     var validate = {
         result : true,
         required: function(){
@@ -26,6 +26,7 @@ define(['jquery', 'system', 'jade'], function($) {
             });
         },
         maxlength: function(){
+            var self = this;
             $('.js-required[maxlength]').each( function(){
                 var maxlength = $(this).attr('maxlength') * 1;
                 if( $(this).attr('value') && maxlength < $(this).attr('value').length ){
@@ -35,6 +36,7 @@ define(['jquery', 'system', 'jade'], function($) {
             });
         },
         minlength: function(){
+            var self = this;
             $('.js-required[minlength]').each( function(){
                 var minlength = $(this).attr('minlength') * 1;
                 if( $(this).attr('value') && minlength > $(this).attr('value').length ){
