@@ -51,9 +51,10 @@ define(['jquery', 'system', 'jade'], function($) {
                 width:300,
             });
 
-            var self = this;
-            $('body').on('click', '#install', function() {
-                self.onInstall();
+            var that = this;
+            $('body').one('click', '#install', function() {
+                $("#install").addClass("disabled");
+                that.onInstall();
             });
         },
 
