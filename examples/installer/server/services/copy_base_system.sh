@@ -36,8 +36,6 @@ check_result
 
 tar --numeric-owner --one-file-system -C $src_dir -cSf $fifo1 ./ | dd if=$fifo1 of=$fifo2 bs=1048576 | tar --numeric-owner -C $dest_dir -xSf $fifo2 ./
 
-#cp -p -r /dev/* $dest_dir/dev/
-
 sync
 check_result
 
