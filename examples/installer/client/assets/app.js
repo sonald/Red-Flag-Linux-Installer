@@ -72,8 +72,8 @@ var app = {
             console.log(apis);
         });
 
-        $('body').on('click', 'button#backward', $.proxy(this.backward, this));
-        $('body').on('click', 'button#forward', $.proxy(this.forward, this));
+        $('body').on('click', 'a#backward', $.proxy(this.backward, this));
+        $('body').on('click', 'a#forward', $.proxy(this.forward, this));
 
         this.currentPage = 0;
         console.log('app init');

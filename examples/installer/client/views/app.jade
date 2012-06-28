@@ -5,16 +5,16 @@ block header
     title Demo App
 
 block content
-    .row
-        .offset1.span10.well
-            h1 Welcome To Use Qomo Installer
+    .well.fullscreen
+        h1 Welcome To Use Qomo Installer
 
-            .row-fluid
-                #stage
+        #stage
 
-            .actions
-                button#backward.btn back
-                button#forward.btn.btn-primary next
+        ul.pager
+            li.previous
+                a#backward(href="#") ← Back
+            li.next
+                a#forward(href="#") Next →
 
 
     include license

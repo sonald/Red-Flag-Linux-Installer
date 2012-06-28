@@ -29,9 +29,6 @@ define(['jquery', 'system', 'jade'], function($) {
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
             this.app = app;
-            $("#backward").addClass("disabled");
-            $("#forward").addClass("disabled");
-
             callback();
             console.log('process initialized');
         },
@@ -50,7 +47,8 @@ define(['jquery', 'system', 'jade'], function($) {
             $(".dial").knob({
                 width:300,
             });
-
+            $("#backward").parent().addClass("disabled");
+            $("#forward").parent().addClass("disabled");
             var that = this;
             $('body').one('click', '#install', function() {
                 $("#install").addClass("disabled");

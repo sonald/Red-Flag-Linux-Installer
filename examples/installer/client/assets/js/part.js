@@ -66,6 +66,8 @@ define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, 
         },
 
         postSetup: function() {
+            $("#backward").parent().removeClass("disabled");
+            $("#forward").parent().removeClass("disabled");
         },
 
         rewind: function() {
