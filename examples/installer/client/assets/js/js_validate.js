@@ -50,7 +50,20 @@ define(['jquery', 'system', 'jade'], function($) {
             this.alphanum();
             this.maxlength();
             this.minlength();
+            this.confirm();
         },
+        confirm: function(){
+            var that = this;
+            $('.js-confirm').each(function () {
+                var id = $(this).attr("confirm-data");
+                var data = $(this).attr("value");
+                if ($("#"+id).attr("value") &&
+                    $("#"+id).attr("value") !== data ){
+                    $(this).after('<b>Please enter the same content again.</b>');
+                    that.result = false;
+                };
+            });
+        }
     };
 
     return validate;

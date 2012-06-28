@@ -87,11 +87,6 @@ define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, 
             this.app.userData['passwd'] = $('#password').attr('value');
             this.app.userData['newroot'] = $("fieldset").find(":checked").attr("value");
 
-            if( this.app.userData['passwd'] !== $('#confirm-password').attr('value') ){
-                $('#confirm-password').after('<b>Please enter the same password again.</b>');
-                return false;
-            }
-
             if( typeof this.app.userData['newroot'] === "undefined" ){
                 $('#getpartitions').before('<b>You must choose a disk. </b>');
                 return false;
