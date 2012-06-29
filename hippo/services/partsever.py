@@ -86,8 +86,7 @@ class PartSocket(tornadio2.SocketConnection):
 
     @tornadio2.event
     def getpartitions(self):
-        disks = self.disks.values()
-        data = lib.partedprint.parted_print(disks,True,True)
+        data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
 
     @tornadio2.event

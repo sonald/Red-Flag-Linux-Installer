@@ -8,7 +8,7 @@ import json
 
 def print_disk_helper_to_json_format(parts):
     """Return the stat of part given."""
-    data = []
+    parts_data = []
     for part in parts:
         partty =""
         tmp = []
@@ -33,20 +33,11 @@ def print_disk_helper_to_json_format(parts):
         if part.fileSystem:
             fstype = str(part.fileSystem.type)
         tmp = [ part.number, start, end, size, partty, fstype]
-        data.append(tmp)
-    return data
+        parts_data.append(tmp)
+    return parts_data
 
 def print_disk_to_json_format(disk,free):
     """Return the stat of disk given."""
-    size = disk.device.getSize()
-    data = {
-        "model": disk.device.model,
-        "path": disk.device.path,
-        "size":str(size)+'MB',
-        "type":disk.type,
-        "unit":'MB',
-        "table":[],
-        }
     parts = []
     if free == True:
         part = disk.getFirstPartition()
@@ -55,16 +46,28 @@ def print_disk_to_json_format(disk,free):
             part = part.nextPartition()
     else:
         parts = disk.partitions
-
-    data['table'] = print_disk_helper_to_json_format(parts)
-    return data
+    disk_data = print_disk_helper_to_json_format(parts)
+    return disk_data
 
 def print_disks_to_json_format(disks,free):
     """Return the stat of disks given with json."""
     data = []
-    #for dev in parted.getAllDevices():
-    for disk in disks:
-        data.append(print_disk_to_json_format(disk,free))
+    devpaths = disks.keys()
+    for devpath in devpaths:
+        dev = parted.getDevice(devpath)
+        dev_data = {
+            "model": dev.model,
+            "path":  dev.path,
+            "size":str(dev.getSize())+'MB',
+            "type":"unknow",
+            "unit":'MB',
+            "table":[],
+            }
+        if(disks[devpath]):
+            disk = disks[devpath]
+            dev_data["type"] = disk.type
+            dev_data["table"] = print_disk_to_json_format(disk,free)
+        data.append(dev_data)
 
     return json.dumps(data)
 
@@ -101,25 +104,37 @@ def print_disk(disk,free):
             part = part.nextPartition()
     else:
         parts = disk.partitions
-    print "dev model: %s" % (disk.device.model, ), 
-    print ", type: %s" % (disk.type, ), 
-    print ", primaries: %d" % (disk.primaryPartitionCount, )
-    #FIXME: this crashes on gpt device
-    #print "maxSupportedPartitionCount: %d" % (disk.maxSupportedPartitionCount, )
     print_disk_helper(parts)
 
 def print_disks(disks,free):
     """Print the stat of disks given."""
-    for disk in disks:
-        print_disk(disk,free)
+    devpaths = disks.keys()
+    for devpath in devpaths:
+        dev = parted.getDevice(devpath)
+        disk = disks[devpath]
+        print "dev model: %s" % (dev.model), 
+        if disk:
+            print ", type: %s" % (disk.type, ),
+            print ", primaries: %d" % (disk.primaryPartitionCount, )
+            #FIXME: this crashes on gpt device
+            #print "maxSupportedPartitionCount: %d" % (disk.maxSupportedPartitionCount, )
+            print_disk(disk, free)
+        else:
+            print ", type: unknown",
+            print ", primaries: 0"
 
 def parted_print(disks,isjson = False,free = False):
     """Get all disks,if disks is not given.Return the json data if 
     isjson is true.Get the stat of freepartition if free is true."""
-    # list devices 
+    # disks = {devpath:disks}
     if disks is None:
-        disks = [ parted.disk.Disk(dev) for dev in parted.getAllDevices() ]
-
+        disks = {}
+        for dev in parted.getAllDevices():
+            try:
+                disks[dev.path] = parted.disk.Disk(dev)
+            except:
+                disks[dev.path] = None
+                continue
     if isjson:
         return  print_disks_to_json_format(disks,free)
     else:
@@ -128,7 +143,10 @@ def parted_print(disks,isjson = False,free = False):
 def DevDisk():
     disks = {}
     for dev in parted.getAllDevices():
-        disks[dev.path] = parted.disk.Disk(dev)
-
+        try:
+            disks[dev.path] = parted.disk.Disk(dev)
+        except:
+            disks[dev.path] = None
+            continue
     return disks
 

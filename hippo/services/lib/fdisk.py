@@ -32,7 +32,8 @@ def usage():
     print "\t                                          or get the result with json"
 
 def print_handler(opts,args):
-    disks = []
+    #disks = {devpath:disks}
+    disks = {}
     isjson = False
     withfree = False
     for opt in opts:
@@ -58,8 +59,10 @@ def print_handler(opts,args):
                 sys.exit(1)
             else:
                 dev = parted.getDevice(args[0])
-                disk = parted.disk.Disk(dev)
-                disks.append(disk)
+                try:
+                    disks[dev.path] = parted.disk.Disk(dev)
+                except:
+                    disks[dev.path] = None
     if isjson:
         print partedprint.parted_print(disks,isjson,withfree)
     else:
@@ -84,7 +87,12 @@ if __name__ == "__main__":
     if len(args) > 1:
         cmd = args[1]
         dev = parted.getDevice(args[0])
-        disk = parted.disk.Disk(dev)
+        try:
+            disk = parted.disk.Disk(dev)
+        except:
+            print "the dev's type is unknow."
+            sys.exit(1)
+
         del args[1]
         del args[0]
 
