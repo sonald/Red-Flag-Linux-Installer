@@ -44,19 +44,20 @@ define(['jquery', 'system', 'jade'], function($) {
 
         updateActions: function() {
             if ( $("#choose").find(":checked").attr("value")==="agree" && 
-                $("#forward").hasClass("disabled") ) {
+                $("#forward").parent().hasClass("disabled") ) {
 
-                $("#forward").toggleClass("disabled");
+                $("#forward").parent().toggleClass("disabled");
 
             } else if ( $("#choose").find(":checked").attr("value")==="disagree" && 
-                       !$("#forward").hasClass("disabled") ) {
-
-                $("#forward").toggleClass("disabled");
+                        !$("#forward").parent().hasClass("disabled") ) {
+                $("#forward").parent().toggleClass("disabled");
             }
         },
 
         postSetup: function() {
             var self = this;
+            $("#backward").parent().addClass("disabled");
+            $("#forward").parent().addClass("disabled");
             $('body').on('click', '#choose', function(){
                 self.updateActions();
             });
@@ -65,7 +66,7 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         validate: function() {
-            return $("#forward").hasClass("disabled") === false;
+            return $("#forward").parent().hasClass("disabled") === false;
         },
     };
 

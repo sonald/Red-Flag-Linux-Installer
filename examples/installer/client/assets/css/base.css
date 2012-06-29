@@ -7,3 +7,11 @@
 input.dial {
     height:auto;
 }
+
+.process_center {
+    text-align: center;
+};
+
+.right {
+    float: left;
+};
