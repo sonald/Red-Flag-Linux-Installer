@@ -33,8 +33,13 @@ module.exports = (function() {
             console.log('child process exited with code ' + code);
         });
 
+        process.on('exit', function(code, signal) {
+            partsever.kill('SIGTERM');
+            console.log(code, signal);
+        });
+
         process.on('uncaughtException', function(err) {
-            partsever.kill('SIGHUP');
+            partsever.kill('SIGTERM');
             console.log(err);
         });
 
