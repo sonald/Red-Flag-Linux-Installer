@@ -5,6 +5,32 @@ require.config({
 var app = {
     name: 'Pangu Installer',
     $el: null, // where page hosted at
+    button_handler:{
+        add:function (button_id, name) {
+            if ( $("#"+button_id ) ) {
+                $("#"+button_id).parent().addClass(name);
+            };
+        },
+        rm:function (button_id, name) {
+            if ($("#"+button_id )) {
+                $("#"+button_id).parent().removeClass(name);
+            };
+        },
+        hasclass:function (button_id, name) {
+            if ($("#"+button_id )) {
+                return $("#"+button_id).parent().hasClass(name) === false;
+            };
+            return false;
+        },
+        change:function (old_id, new_id) {
+            if ($("#"+old_id)){
+                var str = $("#"+old_id).text();
+                str = str.replace(/[a-zA-Z0-9]+/, new_id);
+                $("#"+old_id).text(str);
+                $("#"+old_id).attr("id",new_id);
+            };
+        },
+    },
 
     // collect user configurations
     userData: {},
