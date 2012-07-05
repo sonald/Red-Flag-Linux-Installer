@@ -19,6 +19,6 @@ installer.stdout.on('data', function(data) {
 });
 
 process.on('exit', function() {
-    kill();
+    installer.kill();
 });
 
