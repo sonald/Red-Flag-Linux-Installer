@@ -36,26 +36,32 @@ function testExists(cmd, callback) {
 
 function startServer() {
     'use strict';
-
-    var installer = spawn('gksudo', ['node', 'app.js'], {cwd: __dirname, env: process.env});
-
-    var fe_loaded = false;
-    installer.stdout.on('data', function(data) {
-        var output = data.toString();
-        if (!fe_loaded) {
-            if (output.indexOf('app started at') >= 0) {
-                tryLoadFrontend();
-                fe_loaded = true;
-            }
+    async.filter(['gksudo', 'kdesu'], testExists, function(results) {
+        console.log('found: ', results);
+        if (results.length === 0) {
+            console.log('no appropriate frontend found');
+            process.exit(1);
         }
-        process.stdout.write(output);
-    });
 
-    process.on('exit', function() {
-        console.log('try kill node');
-        installer.kill('SIGTERM');
-    });
+        var installer = spawn(results[0], ['node', 'app.js'], {cwd: __dirname, env: process.env});
 
+        var fe_loaded = false;
+        installer.stdout.on('data', function(data) {
+            var output = data.toString();
+            if (!fe_loaded) {
+                if (output.indexOf('app started at') >= 0) {
+                    tryLoadFrontend();
+                    fe_loaded = true;
+                }
+            }
+            process.stdout.write(output);
+        });
+
+        process.on('exit', function() {
+            console.log('try kill node');
+            installer.kill('SIGTERM');
+        });
+    });
 }
 
 function tryLoadFrontend() {
