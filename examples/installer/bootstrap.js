@@ -43,7 +43,7 @@ function startServer() {
             process.exit(1);
         }
 
-        var installer = spawn(results[0], ['node', 'app.js'], {cwd: __dirname, env: process.env});
+        var installer = spawn(results[0], ['-t', 'node', 'app.js'], {cwd: __dirname, env: process.env});
 
         var fe_loaded = false;
         installer.stdout.on('data', function(data) {
@@ -75,7 +75,7 @@ function tryLoadFrontend() {
     console.log(options);
 
     var args = [ options.url || 'http://127.0.0.1:8080'];
-    var candidates = ['chromium', 'google-chrome', 'firefox'];
+    var candidates = [__dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
 
     async.filter(candidates, testExists, function(results) {
         console.log('found: ', results);
@@ -83,13 +83,11 @@ function tryLoadFrontend() {
             console.log('no appropriate frontend found');
             process.exit(1);
         }
-
         var fe = spawn(results[0], [args], {cwd: __dirname, env: process.env} ); 
 
         process.on('exit', function() {
             fe.kill('SIGTERM');
         });
-
     });
 }
 
