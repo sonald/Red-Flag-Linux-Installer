@@ -9,6 +9,7 @@ var options = {
     viewEngine: 'jade', // use jade templating  
     appView: 'app.jade',
     assets: ['assets'], // static js and css
+    localeDir: 'assets/locales'
 };
 
 var app = hippo(options).loadServices().start();

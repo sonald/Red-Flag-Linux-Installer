@@ -2,6 +2,7 @@ var fspath = require('path');
 var express = require('express');
 var dnode = require('dnode');
 var fs = require('fs');
+var i18n = require('i18n');
 var _ = require('underscore');
 
 var debug = require('./debug')({level: 2});
@@ -45,6 +46,7 @@ module.exports = function() {
         appView: 'index.html',
         assets: [ '/assets' ], // static js and css
         excludeAssets: [], // dirs under user client/ is excluded from auto serving
+        localeDir: 'assets/locales',
 
         systemAppView: __dirname + '/index.html',
         systemAssets: [ __dirname + '/static' ],
@@ -91,21 +93,29 @@ module.exports = function() {
             //serving all assets
             var all_assets = _.union(opts.assets, opts.systemAssets);
 
-            server.configure(function() {
-                server.use(express.bodyParser());
-                server.use(express.cookieParser());
-                //TODO: use redis store at prod env 
-                server.use(express.session({
-                    secret: 'hippoRocks'
-                }));
+            opts.localeDir = fspath.join(client_root, opts.localeDir);
+            i18n.configure({
+                locales: opts.locales || ['en', 'zh'],
+                directory: opts.localeDir,
+                extension: '.json',
+            });
 
+            server.configure(function() {
+                server.use(i18n.init)
+                    .use(express.bodyParser())
+                    .use(express.cookieParser())
+                    .use(express.session({
+                        secret: 'hippoRocks'
+                    }));
             });
 
             viewManager.registerAssetsHeadHelper(server, 'systemAssets', opts.systemAssets);
             viewManager.registerAssetsHeadHelper(server, 'assets', opts.assets,
                                                      opts.excludeAssets);
             server.helpers({
-                'author': '<!-- Author: Sian Cao -->'
+                'author': '<!-- Author: Sian Cao -->',
+                tr: i18n.__,
+                _n: i18n.__n,
             });
 
             server.configure('development', function() {

@@ -2,19 +2,19 @@ extends layout
 
 block header        
     //-script(src="/app.js")
-    title Demo App
+    title= tr('Hippo')
 
 block content
     .well
-        h1 Welcome To Use Qomo Installer
+        h1= tr('Welcome To Use Qomo Installer')
 
         #stage
 
         ul.pager
             li.previous
-                a#backward(href="#") ← Back
+                a#backward(href="#")= tr('← Back')
             li.next
-                a#forward(href="#") Next →
+                a#forward(href="#")= tr('Next →')
 
 
     include license

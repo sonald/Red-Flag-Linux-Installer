@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, jsvalidate) {
+define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system, _jade, jsvalidate, i18n) {
     'use strict';
 
     var pageCache;
@@ -35,7 +35,10 @@ define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, 
             window.apis.services.partition.reset(function(result) {
                 if(result.status === "success"){
                     window.apis.services.partition.getPartitions(function(disks) {
-                        self.locals = disks;
+                        self.locals = { 
+                            'disks': disks,
+                            gettext: function(msgid) { return i18n.gettext(msgid); }
+                        };
                         pageCache = undefined;
                         console.log("success");
                         callback();
@@ -57,9 +60,7 @@ define(['jquery', 'system', 'jade', 'js_validate'], function($, _system, _jade, 
             if (typeof pageCache === 'undefined') {
                 this.locals = this.locals || {};
                 console.log(this.locals);
-                pageCache = ( jade.compile($(this.view)[0].innerHTML,
-                                           {locals:['disks']})
-                            )( {disks: this.locals} );
+                pageCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             }
 
             return pageCache;

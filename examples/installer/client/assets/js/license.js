@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade'], function($) {
+define(['jquery', 'system', 'jade', 'i18n'], function($, nil, nil2, i18n) {
     'use strict';
 
     var pageCache;
@@ -36,7 +36,10 @@ define(['jquery', 'system', 'jade'], function($) {
         // compile and return page partial
         loadView: function () {
             if (typeof pageCache === 'undefined') {
-                pageCache = (jade.compile($(this.view)[0].innerHTML.trim()))();
+                var locals = {
+                    gettext: function(msgid) { return i18n.gettext(msgid); }
+                };
+                pageCache = (jade.compile($(this.view)[0].innerHTML.trim()))(locals);
             }
 
             return pageCache;

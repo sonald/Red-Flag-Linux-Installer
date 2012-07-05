@@ -150,7 +150,7 @@ script(type="text/template", id="license_tmpl").
     ul.pager#choose
         li
             input(type="radio",name="choose",value="agree")
-            b agree
+            b= gettext('agree')
         li
             input(type="radio",name="choose",value="disagree",checked)
-            b disagree
+            b= gettext('disagree')

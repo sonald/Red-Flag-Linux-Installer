@@ -26,6 +26,22 @@ Design
 The installer is completed rewritten with modern web technoledge, powered by [Nodejs][1].
 the whole logical is basically server side javascript. and UI is rendered using HTML.
 
+### L10n
+browser-side pages translation copied idea and tools from [browserid][2]. server-side
+pages translation are using [node-i18n][3] module.
+
+#### howto
+* for server-side jade, after running node, hippo will automatically extract and
+upate all .json translation files. you just need to translate all keys that
+does not translated yet.
+
+
+* for server-side jade, run following scripts sequencially at root of project:
+    - `./scripts/extract_po.sh` to extract translations from jades as well as js files 
+    - `./scripts/merge_po.sh` to merge newly pot file into current translated po files
+    - use translation tool such as linguish to do translation
+    - `./scripts/po2json.sh` to convert po to json files but with suffix '.js' and defined as AMD modules.
+
 Requirement
 ===
 It requires **Hippo** to run, which is a realtime web app framework. It has some other 
@@ -34,3 +50,5 @@ socket.io communication.
 
 
 [1]: nodejs.org
+[2]: https://github.com/mozilla/browserid
+[3]: http://github.com/mashpie/i18n-node

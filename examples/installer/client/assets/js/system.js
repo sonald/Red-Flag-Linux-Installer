@@ -19,12 +19,13 @@
 require.config({
     paths: {
         dnode: '/dnode',
+        'client.zh': '../locales/client.zh'
     },
     shim: {
         'bootstrap': ['jquery'],
         'jquery.knob': {
             deps: ['jquery']
-        }
+        },
     }
 });
 
@@ -33,7 +34,5 @@ require.config({
 // as well as bootstrap
 define(['jquery', 'jquery.knob', 'dnode', 'underscore', 'bootstrap', 'jade'], function($) {
     console.log('load sytem');
-    //console.log(_.any);
-    
 });
 

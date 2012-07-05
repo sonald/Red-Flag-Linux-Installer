@@ -60,6 +60,7 @@ function startServer() {
         process.on('exit', function() {
             console.log('try kill node');
             installer.kill('SIGTERM');
+
         });
     });
 }

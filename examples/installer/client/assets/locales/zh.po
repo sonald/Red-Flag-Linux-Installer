@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-05 16:12+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Language: zh_CN\n"
+"X-Source-Language: C\n"
+
+#: client/views/license.jade:153
+msgid "agree"
+msgstr "同意"
+
+#: client/views/license.jade:156
+msgid "disagree"
+msgstr "不同意"
+
+#: client/views/part.jade:3
+msgid "Add a new user:"
+msgstr "添加新用户："
+
+#: client/views/part.jade:5
+msgid "name"
+msgstr "名字"
+
+#: client/views/part.jade:8
+msgid "Only letters, numbers, and underscores."
+msgstr "只允许填入字母、数字和_"
+
+#: client/views/part.jade:10
+msgid "Password For Root:"
+msgstr "超级用户密码："
+
+#: client/views/part.jade:12
+msgid "password"
+msgstr "密码"
+
+#: client/views/part.jade:16
+msgid "confirm"
+msgstr "确认"
+
+#: client/views/part.jade:34
+msgid "Number"
+msgstr "序号"
+
+#: client/views/part.jade:35
+msgid "Start(MB)"
+msgstr "开始(MB)"
+
+#: client/views/part.jade:36
+msgid "End(MB)"
+msgstr "结束(MB)"
+
+#: client/views/part.jade:37
+msgid "Size(MB)"
+msgstr "大小(MB)"
+
+#: client/views/part.jade:38
+msgid "parttype"
+msgstr "分区类型"
+
+#: client/views/part.jade:39
+msgid "fs"
+msgstr "文件系统"
+
+#: client/assets/js/js_validate.js:5
+msgid "<b>This field is required. </b>"
+msgstr "<b>请填写此项</b>"
+
+#: client/assets/js/js_validate.js:6
+msgid "<b>Only letters, numbers, and underscores.</b>"
+msgstr "<b>只允许填入字母、数字和_</b>"
+
+#: client/assets/js/js_validate.js:7
+#, perl-format
+msgid "<b>Please enter no more than %d characters.</b>"
+msgstr "<b>长度不能超过%d个字母</b>"
+
+#: client/assets/js/js_validate.js:8
+#, perl-format
+msgid "<b>Please enter at least %d characters.</b>"
+msgstr "<b>长度最少为%d个字符</b>"

@@ -1,19 +1,19 @@
 script(type="text/template", id="part_tmpl").
     fieldset
-        p Add a new user:
+        p= gettext('Add a new user:')
         div.control-group.form-horizontal
-            label.control-label(for="name") name
+            label.control-label(for="name")= gettext('name')
             .controls
                 input.input-xlarge.js-alphanum#name(type="text", minlength="6", maxlength="20")
-                p.help-block Only letters, numbers, and underscores.
+                p.help-block= gettext('Only letters, numbers, and underscores.')
         hr
-        p Password For Root:
+        p= gettext('Password For Root:')
         div.control-group.form-horizontal
-            label.control-label(for="password") password
+            label.control-label(for="password")= gettext('password')
             .controls
                 input.input-xlarge.js-required#password(type="password", minlength="6", maxlength="20")
         div.control-group.form-horizontal
-            label.control-label(for="confirm-password") confirm
+            label.control-label(for="confirm-password")= gettext('confirm')
             .controls
                 input.input-xlarge.js-confirm#confirm-password(type="password",confirm-data="password")
         div.control-group
@@ -31,12 +31,12 @@ script(type="text/template", id="part_tmpl").
                                         thead
                                             tr
                                                 th 
-                                                th Number
-                                                th Start(MB)
-                                                th End(MB)
-                                                th Size(MB)
-                                                th parttype
-                                                th fs
+                                                th= gettext('Number')
+                                                th= gettext('Start(MB)')
+                                                th= gettext('End(MB)')
+                                                th= gettext('Size(MB)')
+                                                th= gettext('parttype')
+                                                th= gettext('fs')
                                         tbody
                                             - var parts = disk["table"]
                                             - for ( var part in parts )

@@ -1,0 +1,92 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-05 16:12+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: client/views/license.jade:153
+msgid "agree"
+msgstr ""
+
+#: client/views/license.jade:156
+msgid "disagree"
+msgstr ""
+
+#: client/views/part.jade:3
+msgid "Add a new user:"
+msgstr ""
+
+#: client/views/part.jade:5
+msgid "name"
+msgstr ""
+
+#: client/views/part.jade:8
+msgid "Only letters, numbers, and underscores."
+msgstr ""
+
+#: client/views/part.jade:10
+msgid "Password For Root:"
+msgstr ""
+
+#: client/views/part.jade:12
+msgid "password"
+msgstr ""
+
+#: client/views/part.jade:16
+msgid "confirm"
+msgstr ""
+
+#: client/views/part.jade:34
+msgid "Number"
+msgstr ""
+
+#: client/views/part.jade:35
+msgid "Start(MB)"
+msgstr ""
+
+#: client/views/part.jade:36
+msgid "End(MB)"
+msgstr ""
+
+#: client/views/part.jade:37
+msgid "Size(MB)"
+msgstr ""
+
+#: client/views/part.jade:38
+msgid "parttype"
+msgstr ""
+
+#: client/views/part.jade:39
+msgid "fs"
+msgstr ""
+
+#: client/assets/js/js_validate.js:5
+msgid "<b>This field is required. </b>"
+msgstr ""
+
+#: client/assets/js/js_validate.js:6
+msgid "<b>Only letters, numbers, and underscores.</b>"
+msgstr ""
+
+#: client/assets/js/js_validate.js:7
+#, perl-format
+msgid "<b>Please enter no more than %d characters.</b>"
+msgstr ""
+
+#: client/assets/js/js_validate.js:8
+#, perl-format
+msgid "<b>Please enter at least %d characters.</b>"
+msgstr ""
