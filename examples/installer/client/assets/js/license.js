@@ -43,21 +43,18 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         updateActions: function() {
-            if ( $("#choose").find(":checked").attr("value")==="agree" && 
-                $("#forward").parent().hasClass("disabled") ) {
-
-                $("#forward").parent().toggleClass("disabled");
-
-            } else if ( $("#choose").find(":checked").attr("value")==="disagree" && 
-                        !$("#forward").parent().hasClass("disabled") ) {
-                $("#forward").parent().toggleClass("disabled");
+            if ( $("#choose").find(":checked").attr("value")==="agree" ){ 
+                this.app.button_handler.rm("forward","disabled");
+            } else if ( $("#choose").find(":checked").attr("value")==="disagree"){
+                this.app.button_handler.add("forward","disabled");
             }
         },
 
         postSetup: function() {
             var self = this;
-            $("#backward").parent().addClass("disabled");
-            $("#forward").parent().addClass("disabled");
+            this.app.button_handler.add("forward","disabled");
+            this.app.button_handler.add("backward","disabled");
+
             $('body').on('click', '#choose', function(){
                 self.updateActions();
             });
@@ -66,7 +63,7 @@ define(['jquery', 'system', 'jade'], function($) {
         },
 
         validate: function() {
-            return $("#forward").parent().hasClass("disabled") === false;
+            return this.app.button_handler.hasclass("forward","disabled");
         },
     };
 

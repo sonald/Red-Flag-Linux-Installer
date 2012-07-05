@@ -47,11 +47,14 @@ define(['jquery', 'system', 'jade'], function($) {
             $(".dial").knob({
                 width:300,
             });
-            $("#backward").parent().addClass("disabled");
-            $("#forward").parent().addClass("disabled");
+            
+            this.app.button_handler.rm("forward", "disabled");
+            this.app.button_handler.add("backward", "disabled");
+            this.app.button_handler.change("forward", "install");
+
             var that = this;
             $('body').one('click', '#install', function() {
-                $("#install").addClass("disabled");
+                that.app.button_handler.add("install", "disabled");
                 that.onInstall();
             });
         },
