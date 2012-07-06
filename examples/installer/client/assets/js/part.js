@@ -29,13 +29,13 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
          
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
-            var self = this;
-            self.app = app;
+            var that = this;
+            that.app = app;
 
             window.apis.services.partition.reset(function(result) {
                 if(result.status === "success"){
                     window.apis.services.partition.getPartitions(function(disks) {
-                        self.locals = { 
+                        that.locals = { 
                             'disks': disks,
                             gettext: function(msgid) { return i18n.gettext(msgid); }
                         };
@@ -59,7 +59,6 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
         loadView: function() {
             if (typeof pageCache === 'undefined') {
                 this.locals = this.locals || {};
-                console.log(this.locals);
                 pageCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             }
 
@@ -67,8 +66,39 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
         },
 
         postSetup: function() {
+            $('body').off('click','button.new');
+            $('body').off('click','button.delete');
+            this.locals = this.locals || {};
+            var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
+            $("fieldset").after(pageC);
+
             this.app.button_handler.rm("forward","disabled");
             this.app.button_handler.rm("backward","disabled");
+
+            var that = this;
+            $('body').on('click','button.new',function () {
+                //TODO
+            });
+
+            $('body').on('click','button.delete',function () {
+                var devpath = $(this).attr("devpath");
+                var partnumber = $(this).attr("partnumber");
+                window.apis.services.partition.rmpart(devpath,partnumber,function(result){
+                    if (result.status === "success") {
+                        window.apis.services.partition.getPartitions(function(disks) {
+                            that.locals["disks"] = disks;
+                            var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
+                            $("#part-table").replaceWith(pageC);
+                        });
+                    }else if(result.status === "failure") {
+                        //TODO
+                        console.log(result.reason);
+                    }else {
+                        //TODO
+                        console.log(result);
+                    };
+                });
+            });
         },
 
         rewind: function() {

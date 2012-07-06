@@ -16,7 +16,8 @@ script(type="text/template", id="part_tmpl").
             label.control-label(for="confirm-password")= gettext('confirm')
             .controls
                 input.input-xlarge.js-confirm#confirm-password(type="password",confirm-data="password")
-        div.control-group
+    script(type="text/template",id="part_partial_tmpl").
+        div.control-group#part-table
             div#getpartitions.controls
                 div#accordion2.accordion
                     - for (var i in disks)
@@ -37,12 +38,11 @@ script(type="text/template", id="part_tmpl").
                                                 th= gettext('Size(MB)')
                                                 th= gettext('parttype')
                                                 th= gettext('fs')
+                                                th
                                         tbody
                                             - var parts = disk["table"]
                                             - for ( var part in parts )
                                                 - var p = parts[part]
-                                                - if(p[0] == -1)
-                                                    - continue
                                                 tr
                                                     th
                                                         label.radio
@@ -53,4 +53,10 @@ script(type="text/template", id="part_tmpl").
                                                                 = p[x].toFixed(2)
                                                             -else
                                                                 = p[x]
+                                                    th
+                                                        - if(p[0] == -1)
+                                                            button.btn.new(devpath=disk["path"]) create
+                                                        - else
+                                                            button.btn.delete(devpath=disk["path"],partnumber=p[0]) delete
+
 

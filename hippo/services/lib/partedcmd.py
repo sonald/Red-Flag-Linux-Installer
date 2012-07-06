@@ -64,9 +64,9 @@ class PartedCmd(object):
     def get_result(self,reason):
         result=[]
         if reason:
-            result = [{ 'status': 'failure', 'reason': str(reason) }]
+            result = { 'status': 'failure', 'reason': str(reason) }
         else:
-            result = [{ 'status': 'success'}]
+            result = { 'status': 'success'}
 
         return json.dumps(result)
         

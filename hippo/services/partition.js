@@ -63,6 +63,7 @@ module.exports = (function() {
         if(sock && sock.socket.connected){
             sock.emit('mkpart',devpath, parttype, start, end, fs);
             sock.once('mkpart',function(data){
+                data = JSON.parse(data);
                 cb(data);
             });
         }else{
@@ -74,6 +75,7 @@ module.exports = (function() {
         if(sock && sock.socket.connected){
             sock.emit('rmpart',devpath, partnumber);
             sock.once('rmpart',function(data){
+                data = JSON.parse(data);
                 cb(data);
             });
         }else{
@@ -85,6 +87,7 @@ module.exports = (function() {
         if(sock && sock.socket.connected){
             sock.emit('mklabel', devpath, devtype);
             sock.once('mklabel',function(data){
+                data = JSON.parse(data);
                 cb(data);
             });
         }else{
