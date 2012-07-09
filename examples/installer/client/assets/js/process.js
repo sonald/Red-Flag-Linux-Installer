@@ -75,9 +75,10 @@ define(['jquery', 'system', 'jade'], function($) {
             console.log(respond);
         },
 
-        validate: function() {
+        validate: function(callback) {
             // check if install finished
-            return true;
+            callback();
+            //return true;
         },
 
         rewind: function() {

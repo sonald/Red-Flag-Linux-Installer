@@ -71,6 +71,18 @@ module.exports = (function() {
         }
     };
 
+    PartitionStub.commit = function(cb) {
+        if(sock && sock.socket.connected){
+            sock.emit('commit');
+            sock.once('commit',function(data){
+                data = JSON.parse(data);
+                cb(data);
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
     PartitionStub.rmpart = function(devpath, partnumber, cb) {
         if(sock && sock.socket.connected){
             sock.emit('rmpart',devpath, partnumber);

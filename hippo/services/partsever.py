@@ -63,6 +63,18 @@ class PartSocket(tornadio2.SocketConnection):
         self.emit('reset',data)
 
     @tornadio2.event
+    def commit(self):
+        data = self.error_handle(None)
+        for disk in self.disks.values():
+            if disk is None:
+                continue
+            try:
+                disk.commit()
+            except Exception, e:
+                data = self.error_handle(e)
+        self.emit('commit',data)
+
+    @tornadio2.event
     def mklabel(self, devpath, devtype):
         if devpath in self.disks:
             disk = self.disks[devpath] #need try

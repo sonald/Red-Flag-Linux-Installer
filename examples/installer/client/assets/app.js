@@ -79,8 +79,8 @@ var app = {
     forward: function() {
         console.log('forward');
         var page = this.stages[this.currentPage];
-        if (page.validate && page.validate())
-            this.currentPage += 1;
+        var that = this;
+        page.validate(function(){that.currentPage +=1;});
     },
 
     backward: function() {

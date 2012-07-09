@@ -107,7 +107,6 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
                 path = "/dev/" + id.match(/[a-z]{3}$/g)[0];
                 parttype = args[0];
                 fstype = args[1];
-                console.log(path,parttype,start,end,fstype);
 
                 window.apis.services.partition.mkpart(
                     path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
@@ -119,7 +118,7 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
             return true;
         },
 
-        validate: function() {
+        validate: function(callback) {
             $('fieldset').find('b').remove();
             jsvalidate.execu();
 
@@ -135,10 +134,20 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
                 $('#getpartitions').before('<b>You must choose a disk. </b>');
                 return false;
             };
-            return true;
+            window.apis.services.partition.commit(function(result) {
+                if(result.status === "failure"){
+                    console.log(result.reason);
+                    return false;
+                }else if (result.status === "success") {
+                    callback();
+                    return true;
+                }else{
+                    console.log(result);
+                    return false;
+                }
+            });
         },
         partflesh: function(result){
-            console.log(result);
             var that = this;
             if (result.status === "success") {
                 window.apis.services.partition.getPartitions(function(disks) {

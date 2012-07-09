@@ -65,8 +65,10 @@ define(['jquery', 'system', 'jade', 'i18n'], function($, nil, nil2, i18n) {
             self.updateActions();
         },
 
-        validate: function() {
-            return this.app.button_handler.hasclass("forward","disabled");
+        validate: function(callback) {
+            if (this.app.button_handler.hasclass("forward","disabled")){
+                callback();
+            }
         },
     };
 
