@@ -55,8 +55,42 @@ script(type="text/template", id="part_tmpl").
                                                                 = p[x]
                                                     th
                                                         - if(p[0] == -1)
-                                                            button.btn.new(devpath=disk["path"]) create
+                                                            -var path = disk["path"]
+                                                            -path = path.split('/')[2]
+                                                            .modal.hide.fade(id="create_"+part + path)
+                                                                .modal-header
+                                                                    button.close(type="button", data-dismiss="modal")×
+                                                                    h3 Edit The New Disk
+                                                                .modal-body
+                                                                    div.control-group.form-horizontal
+                                                                        label.control-label(for="size") Size
+                                                                        .controls
+                                                                            input.input-xlarge.js-required#size
+                                                                    div.control-group.form-horizontal
+                                                                        label.control-label(for="parttype") PartType
+                                                                        .controls
+                                                                            select.span3#parttype
+                                                                                option(value="primary") primary
+                                                                                option(value="logical") logical
+                                                                                option(value="extended") extended
+                                                                    div.control-group.form-horizontal
+                                                                        label.control-label(for="fs") FileSystem
+                                                                        .controls
+                                                                            select.span3#fs
+                                                                                option(value="ext3") ext3
+                                                                                option(value="ext4") ext4
+                                                                    div.control-group.form-horizontal
+                                                                        label.control-label
+                                                                        .controls
+                                                                            label.radio
+                                                                                input(type="radio", name="create_"+part+path, id="beginning", value = p[1], checked)
+                                                                                b Alignment To Beginning
+                                                                            label.radio
+                                                                                input(type="radio", name="create_"+part+path, id="end", value = p[2])
+                                                                                b Alignment To End
+                                                                .modal-footer
+                                                                    a.btn(href="#", data-dismiss="modal") Close
+                                                                    a.btn.btn-primary.js-submit(href="#", data-dismiss="modal",for="create_"+part + path) Submit
+                                                            a.btn.new(href="#create_"+part+path,data-toggle="modal") create
                                                         - else
-                                                            button.btn.delete(devpath=disk["path"],partnumber=p[0]) delete
-
-
+                                                            a.btn.delete(devpath=disk["path"],partnumber=p[0],href="#") delete

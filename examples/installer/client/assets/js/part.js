@@ -76,28 +76,41 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
             this.app.button_handler.rm("backward","disabled");
 
             var that = this;
-            $('body').on('click','button.new',function () {
-                //TODO
+            $('body').on('click','a.delete',function () {
+                var path = $(this).attr("devpath");
+                var number = $(this).attr("partnumber");
+                window.apis.services.partition.rmpart(
+                    path, number, $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','button.delete',function () {
-                var devpath = $(this).attr("devpath");
-                var partnumber = $(this).attr("partnumber");
-                window.apis.services.partition.rmpart(devpath,partnumber,function(result){
-                    if (result.status === "success") {
-                        window.apis.services.partition.getPartitions(function(disks) {
-                            that.locals["disks"] = disks;
-                            var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
-                            $("#part-table").replaceWith(pageC);
-                        });
-                    }else if(result.status === "failure") {
-                        //TODO
-                        console.log(result.reason);
-                    }else {
-                        //TODO
-                        console.log(result);
-                    };
+            $('body').on('click','a.js-submit',function () {
+                var size, parttype, fstype, start, end, path;
+                var id = $(this).attr("for");
+                var $content = $("#"+id).find(".modal-body");
+                var args = [];
+
+                size = Number($content.find("#size")[0].value);
+                $content.find(":checked").each(function(){
+                    if (this.id) {
+                        if (this.id === "beginning") {
+                            start = Number(this.value);
+                            end = start + size;
+                        }
+                        else if ( this.id === "end") {
+                            end = Number(this.value);
+                            start = end - size;
+                        };
+                    }else{
+                        args.push(this.value);
+                    }
                 });
+                path = "/dev/" + id.match(/[a-z]{3}$/g)[0];
+                parttype = args[0];
+                fstype = args[1];
+                console.log(path,parttype,start,end,fstype);
+
+                window.apis.services.partition.mkpart(
+                    path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
             });
         },
 
@@ -122,10 +135,25 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
                 $('#getpartitions').before('<b>You must choose a disk. </b>');
                 return false;
             };
-
-            //TODO: validate selected partition
             return true;
-        }
+        },
+        partflesh: function(result){
+            console.log(result);
+            var that = this;
+            if (result.status === "success") {
+                window.apis.services.partition.getPartitions(function(disks) {
+                    that.locals["disks"] = disks;
+                    var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
+                    $("#part-table").replaceWith(pageC);
+                });
+            }else if(result.status === "failure") {
+                //TODO
+                console.log(result.reason);
+            }else {
+                //TODO
+                console.log(result);
+            };
+        },
     };
 
     return page;
