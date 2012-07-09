@@ -18,7 +18,7 @@ var app = {
         },
         hasclass:function (button_id, name) {
             if ($("#"+button_id )) {
-                return $("#"+button_id).parent().hasClass(name) === false;
+                return $("#"+button_id).parent().hasClass(name);
             };
             return false;
         },

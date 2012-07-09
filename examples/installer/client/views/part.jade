@@ -46,7 +46,10 @@ script(type="text/template", id="part_tmpl").
                                                 tr
                                                     th
                                                         label.radio
-                                                            input(type='radio', name="parts", value=disk["path"]+p[0])
+                                                            - if( p[0] == -1)
+                                                                input(type='radio', name="parts", value=disk["path"]+p[0], disabled)
+                                                            -else
+                                                                input(type='radio', name="parts", value=disk["path"]+p[0])
                                                     - for (var x in p )
                                                         th
                                                             - if( x > 0 && x < 4)
