@@ -129,7 +129,7 @@ define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system,
             };
             this.app.userData['username'] = $('#name').attr('value');
             this.app.userData['passwd'] = $('#password').attr('value');
-            this.app.userData['newroot'] = $("fieldset").find(":checked").attr("value");
+            this.app.userData['newroot'] = $("#part-table input[name='parts']:checked").attr("value");
 
             if( typeof this.app.userData['newroot'] === "undefined" ){
                 $('#getpartitions').before('<b>You must choose a disk. </b>');
