@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade'], function($) {
+define(['jquery', 'system', 'jade', 'i18n'], function($, _system, _jade, i18n) {
     'use strict';
 
     var pageCache;
@@ -70,7 +70,7 @@ define(['jquery', 'system', 'jade'], function($) {
             }else if (respond.status === "failure") {
                 $('div#process_dial').html('<p>'+respond.reason + '</p>');
             }else if (respond.status === "success") {
-                $('div#process_dial').html('<p>Congratulations~You have finished installing the system.</p>');
+                $('div#process_dial').html(i18n.gettext('<p>Congratulations~You have finished installing the system.</p>'));
             }
             console.log(respond);
         },

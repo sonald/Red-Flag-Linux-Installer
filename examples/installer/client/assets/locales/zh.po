@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-05 16:12+0800\n"
+"POT-Creation-Date: 2012-07-10 23:24+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,14 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Language: zh_CN\n"
 "X-Source-Language: C\n"
-
-#: client/views/license.jade:153
-msgid "agree"
-msgstr "同意"
-
-#: client/views/license.jade:156
-msgid "disagree"
-msgstr "不同意"
 
 #: client/views/part.jade:3
 msgid "Add a new user:"
@@ -52,29 +44,94 @@ msgstr "密码"
 msgid "confirm"
 msgstr "确认"
 
-#: client/views/part.jade:34
+#: client/views/part.jade:35
 msgid "Number"
 msgstr "序号"
 
-#: client/views/part.jade:35
+#: client/views/part.jade:36
 msgid "Start(MB)"
 msgstr "开始(MB)"
 
-#: client/views/part.jade:36
+#: client/views/part.jade:37
 msgid "End(MB)"
 msgstr "结束(MB)"
 
-#: client/views/part.jade:37
+#: client/views/part.jade:38
 msgid "Size(MB)"
 msgstr "大小(MB)"
 
-#: client/views/part.jade:38
+#: client/views/part.jade:39
 msgid "parttype"
 msgstr "分区类型"
 
-#: client/views/part.jade:39
+#: client/views/part.jade:40
 msgid "fs"
 msgstr "文件系统"
+
+#: client/views/part.jade:66
+msgid "Edit The New Disk"
+msgstr "  编辑新分区"
+
+#: client/views/part.jade:69
+#, fuzzy
+msgid "Size"
+msgstr "大小(MB)"
+
+#: client/views/part.jade:73
+msgid "PartType"
+msgstr "分区类型"
+
+#: client/views/part.jade:76
+msgid "primary"
+msgstr "主分区"
+
+#: client/views/part.jade:77
+msgid "logical"
+msgstr "逻辑分区"
+
+#: client/views/part.jade:78
+msgid "extended"
+msgstr "扩展分区"
+
+#: client/views/part.jade:80
+msgid "FileSystem"
+msgstr "文件系统"
+
+#: client/views/part.jade:90
+msgid "Alignment To Beginning"
+msgstr "安装起始位置"
+
+#: client/views/part.jade:93
+msgid "Alignment To End"
+msgstr "安装结束位置"
+
+#: client/views/part.jade:95
+msgid "Close"
+msgstr "取消"
+
+#: client/views/part.jade:96
+msgid "Submit"
+msgstr "提交"
+
+#: client/views/part.jade:97
+msgid "create"
+msgstr "创建"
+
+#: client/views/part.jade:99
+msgid "delete"
+msgstr "删除"
+
+#: client/views/license.jade:153
+msgid "agree"
+msgstr "同意"
+
+#: client/views/license.jade:156
+msgid "disagree"
+msgstr "不同意"
+
+#: client/assets/js/part.js:134
+msgid "<b>You must choose a disk. </b>"
+msgstr ""
 
 #: client/assets/js/js_validate.js:5
 msgid "<b>This field is required. </b>"
@@ -93,3 +150,12 @@ msgstr "<b>长度不能超过%d个字母</b>"
 #, perl-format
 msgid "<b>Please enter at least %d characters.</b>"
 msgstr "<b>长度最少为%d个字符</b>"
+
+#: client/assets/js/js_validate.js:9
+#, fuzzy
+msgid "<b>Please enter the same content again.</b>"
+msgstr "<b>长度不能超过%d个字母</b>"
+
+#: client/assets/js/process.js:73
+msgid "<p>Congratulations~You have finished installing the system.</p>"
+msgstr "恭喜你～安装成功。"

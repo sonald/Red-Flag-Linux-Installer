@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-05 16:12+0800\n"
+"POT-Creation-Date: 2012-07-10 23:24+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,14 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: client/views/license.jade:153
-msgid "agree"
-msgstr ""
-
-#: client/views/license.jade:156
-msgid "disagree"
-msgstr ""
 
 #: client/views/part.jade:3
 msgid "Add a new user:"
@@ -49,28 +41,92 @@ msgstr ""
 msgid "confirm"
 msgstr ""
 
-#: client/views/part.jade:34
+#: client/views/part.jade:35
 msgid "Number"
 msgstr ""
 
-#: client/views/part.jade:35
+#: client/views/part.jade:36
 msgid "Start(MB)"
 msgstr ""
 
-#: client/views/part.jade:36
+#: client/views/part.jade:37
 msgid "End(MB)"
 msgstr ""
 
-#: client/views/part.jade:37
+#: client/views/part.jade:38
 msgid "Size(MB)"
 msgstr ""
 
-#: client/views/part.jade:38
+#: client/views/part.jade:39
 msgid "parttype"
 msgstr ""
 
-#: client/views/part.jade:39
+#: client/views/part.jade:40
 msgid "fs"
+msgstr ""
+
+#: client/views/part.jade:66
+msgid "Edit The New Disk"
+msgstr ""
+
+#: client/views/part.jade:69
+msgid "Size"
+msgstr ""
+
+#: client/views/part.jade:73
+msgid "PartType"
+msgstr ""
+
+#: client/views/part.jade:76
+msgid "primary"
+msgstr ""
+
+#: client/views/part.jade:77
+msgid "logical"
+msgstr ""
+
+#: client/views/part.jade:78
+msgid "extended"
+msgstr ""
+
+#: client/views/part.jade:80
+msgid "FileSystem"
+msgstr ""
+
+#: client/views/part.jade:90
+msgid "Alignment To Beginning"
+msgstr ""
+
+#: client/views/part.jade:93
+msgid "Alignment To End"
+msgstr ""
+
+#: client/views/part.jade:95
+msgid "Close"
+msgstr ""
+
+#: client/views/part.jade:96
+msgid "Submit"
+msgstr ""
+
+#: client/views/part.jade:97
+msgid "create"
+msgstr ""
+
+#: client/views/part.jade:99
+msgid "delete"
+msgstr ""
+
+#: client/views/license.jade:153
+msgid "agree"
+msgstr ""
+
+#: client/views/license.jade:156
+msgid "disagree"
+msgstr ""
+
+#: client/assets/js/part.js:134
+msgid "<b>You must choose a disk. </b>"
 msgstr ""
 
 #: client/assets/js/js_validate.js:5
@@ -89,4 +145,12 @@ msgstr ""
 #: client/assets/js/js_validate.js:8
 #, perl-format
 msgid "<b>Please enter at least %d characters.</b>"
+msgstr ""
+
+#: client/assets/js/js_validate.js:9
+msgid "<b>Please enter the same content again.</b>"
+msgstr ""
+
+#: client/assets/js/process.js:73
+msgid "<p>Congratulations~You have finished installing the system.</p>"
 msgstr ""

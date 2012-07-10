@@ -63,21 +63,21 @@ script(type="text/template", id="part_tmpl").
                                                             .modal.hide.fade(id="create_"+part + path)
                                                                 .modal-header
                                                                     button.close(type="button", data-dismiss="modal")×
-                                                                    h3 Edit The New Disk
+                                                                    h3= gettext('Edit The New Disk')
                                                                 .modal-body
                                                                     div.control-group.form-horizontal
-                                                                        label.control-label(for="size") Size
+                                                                        label.control-label(for="size")= gettext('Size')
                                                                         .controls
                                                                             input.input-xlarge#size
                                                                     div.control-group.form-horizontal
-                                                                        label.control-label(for="parttype") PartType
+                                                                        label.control-label(for="parttype")= gettext('PartType')
                                                                         .controls
                                                                             select.span3#parttype
-                                                                                option(value="primary") primary
-                                                                                option(value="logical") logical
-                                                                                option(value="extended") extended
+                                                                                option(value="primary")= gettext('primary')
+                                                                                option(value="logical")= gettext('logical')
+                                                                                option(value="extended")= gettext('extended')
                                                                     div.control-group.form-horizontal
-                                                                        label.control-label(for="fs") FileSystem
+                                                                        label.control-label(for="fs")= gettext('FileSystem')
                                                                         .controls
                                                                             select.span3#fs
                                                                                 option(value="ext3") ext3
@@ -87,13 +87,13 @@ script(type="text/template", id="part_tmpl").
                                                                         .controls
                                                                             label.radio
                                                                                 input(type="radio", name="create_"+part+path, id="beginning", value = p[1], checked)
-                                                                                b Alignment To Beginning
+                                                                                b= gettext('Alignment To Beginning')
                                                                             label.radio
                                                                                 input(type="radio", name="create_"+part+path, id="end", value = p[2])
-                                                                                b Alignment To End
+                                                                                b= gettext('Alignment To End')
                                                                 .modal-footer
-                                                                    a.btn(href="#", data-dismiss="modal") Close
-                                                                    a.btn.btn-primary.js-submit(href="#", data-dismiss="modal",for="create_"+part + path) Submit
-                                                            a.btn.new(href="#create_"+part+path,data-toggle="modal") create
+                                                                    a.btn(href="#", data-dismiss="modal")= gettext('Close')
+                                                                    a.btn.btn-primary.js-submit(href="#", data-dismiss="modal",for="create_"+part +path)= gettext('Submit')
+                                                            a.btn.new(href="#create_"+part+path,data-toggle="modal")= gettext('create')
                                                         - else
-                                                            a.btn.delete(devpath=disk["path"],partnumber=p[0],href="#") delete
+                                                            a.btn.delete(devpath=disk["path"],partnumber=p[0],href="#")= gettext('delete')
