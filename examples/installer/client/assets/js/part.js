@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade', 'js_validate', 'i18n'], function($, _system, _jade, jsvalidate, i18n) {
+define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalidate, i18n) {
     'use strict';
 
     var pageCache;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-10 23:24+0800\n"
+"POT-Creation-Date: 2012-07-12 10:38+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Language: zh_CN\n"
 "X-Source-Language: C\n"
+
+#: client/views/license.jade:153
+msgid "agree"
+msgstr "同意"
+
+#: client/views/license.jade:156
+msgid "disagree"
+msgstr "不同意"
 
 #: client/views/part.jade:3
 msgid "Add a new user:"
@@ -73,7 +81,6 @@ msgid "Edit The New Disk"
 msgstr "  编辑新分区"
 
 #: client/views/part.jade:69
-#, fuzzy
 msgid "Size"
 msgstr "大小(MB)"
 
@@ -121,17 +128,13 @@ msgstr "创建"
 msgid "delete"
 msgstr "删除"
 
-#: client/views/license.jade:153
-msgid "agree"
-msgstr "同意"
-
-#: client/views/license.jade:156
-msgid "disagree"
-msgstr "不同意"
-
 #: client/assets/js/part.js:134
 msgid "<b>You must choose a disk. </b>"
-msgstr ""
+msgstr "<b>请先选择一块硬盘。</b>"
+
+#: client/assets/js/process.js:73
+msgid "<p>Congratulations~You have finished installing the system.</p>"
+msgstr "<p>恭喜你～安装成功。</p>"
 
 #: client/assets/js/js_validate.js:5
 msgid "<b>This field is required. </b>"
@@ -152,10 +155,5 @@ msgid "<b>Please enter at least %d characters.</b>"
 msgstr "<b>长度最少为%d个字符</b>"
 
 #: client/assets/js/js_validate.js:9
-#, fuzzy
 msgid "<b>Please enter the same content again.</b>"
 msgstr "<b>长度不能超过%d个字母</b>"
-
-#: client/assets/js/process.js:73
-msgid "<p>Congratulations~You have finished installing the system.</p>"
-msgstr "恭喜你～安装成功。"
