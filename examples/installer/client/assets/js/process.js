@@ -16,7 +16,7 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'jade', 'i18n'], function($, _system, _jade, i18n) {
+define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
     'use strict';
 
     var pageCache;

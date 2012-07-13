@@ -16,12 +16,7 @@
  * =====================================================================================
 */
 
-define('i18n', ['system', 'jed', 'client.zh'], function(system, Jed, locale_data) {
+define('i18n', ['system', 'locale!client'], function(system, locale_obj) {
     console.log('defining i18n');
-    //console.log(locale_data);
-    
-    return new Jed({
-        "domain": 'zh',
-        'locale_data': locale_data
-    });
+    return locale_obj;
 });

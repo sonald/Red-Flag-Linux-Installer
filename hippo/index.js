@@ -17,7 +17,7 @@ exports.middleware = {};
 
 _.chain(fs.readdirSync(__dirname + '/middleware'))
     .filter(function(file) {
-        return /\.(js|coffee)$/.test(file);
+        return (/\.(js|coffee)$/).test(file);
     })
     .value()
     .forEach(function(file) {
@@ -32,7 +32,7 @@ _.chain(fs.readdirSync(__dirname + '/middleware'))
 module.exports = function() {
     'use strict';
 
-    var server; 
+    var server;
     // app's client and server dir
     var app_root = fspath.normalize(fspath.dirname(require.main.filename));
     var client_root = app_root + "/client";
@@ -94,14 +94,37 @@ module.exports = function() {
             var all_assets = _.union(opts.assets, opts.systemAssets);
 
             opts.localeDir = fspath.join(client_root, opts.localeDir);
+
             i18n.configure({
-                locales: opts.locales || ['en', 'zh'],
+                // locales: opts.locales || ['en', 'zh'],
+                debug: true,
                 directory: opts.localeDir,
-                extension: '.json',
+                extension: '.json'
             });
+
+            /**
+             * HACK:
+             * i18n-node has a bug: overrideLocaleFromQuery calls setLocale,
+             * which won't set correct locale. i18n_host acts as `this` for
+             * translation func.
+             */
+            var i18n_host = {
+                scope: {
+                  locale: 'en'
+                }
+            };
 
             server.configure(function() {
                 server.use(i18n.init)
+                    .use(function(req, res, next) {
+                        var urlObj = require('url').parse(req.url, true);
+                        if (urlObj.query.locale) {
+                            i18n_host.scope.locale = urlObj.query.locale;
+                        }
+
+                        i18n.overrideLocaleFromQuery(req);
+                        next();
+                    })
                     .use(express.bodyParser())
                     .use(express.cookieParser())
                     .use(express.session({
@@ -114,8 +137,12 @@ module.exports = function() {
                                                      opts.excludeAssets);
             server.helpers({
                 'author': '<!-- Author: Sian Cao -->',
-                tr: i18n.__,
-                _n: i18n.__n,
+                tr: function() {
+                    return i18n.__.apply(i18n_host, [].slice.apply(arguments));
+                },
+                _n: function() {
+                    return i18n.__n.apply(i18n_host, [].slice.apply(arguments));
+                }
             });
 
             server.configure('development', function() {
@@ -124,7 +151,7 @@ module.exports = function() {
 
                 all_assets.forEach(function(path) {
                     fspath.exists(path, function(exists) {
-                        if (!exists) 
+                        if (!exists)
                             return;
 
                         server.use(express.static(path));
@@ -147,11 +174,11 @@ module.exports = function() {
                 //will crash
                 server.use(compress());
                 server.use(express.errorHandler());
-                
+
                 var oneYear = 31557600000;
                 all_assets.forEach(function(path) {
                     fspath.exists(path, function(exists) {
-                        if (!exists) 
+                        if (!exists)
                             return;
 
                         server.use(express.static(path), {maxAge: oneYear});
@@ -173,7 +200,7 @@ module.exports = function() {
 
         loadServices: function() {
 
-            // load system services before user services and disable user to 
+            // load system services before user services and disable user to
             // override system services for security reason
             apis.loadServices(opts.systemServicePaths);
             apis.loadServices(opts.servicePaths);
@@ -181,7 +208,7 @@ module.exports = function() {
             return this;
         },
     };
-}; 
+};
 
 ["SIGTERM", "SIGINT", "SIGHUP", "SIGQUIT"].forEach( function(signal) {
     process.on(signal, function() {
