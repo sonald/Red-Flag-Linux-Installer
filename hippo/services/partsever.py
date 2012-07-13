@@ -10,8 +10,7 @@ import parted
 import time
 
 import lib.partedprint
-import lib.partedhelper
-import lib.partedcmd
+import lib.rfparted
 
 class PartSocket(tornadio2.SocketConnection):
     disks = lib.partedprint.DevDisk()
@@ -31,26 +30,40 @@ class PartSocket(tornadio2.SocketConnection):
         else:
             result = { 'status': 'success'}
         return json.dumps(result)
-    
+
+    def has_disk(self,devpath):
+        if devpath in self.disks:
+            if self.disks[devpath] is not None:
+                return True
+        return False
 
     @tornadio2.event
     def mkpart(self, devpath, parttype, start, end, fs):
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            obj = lib.partedcmd.PartedCmd(disk,devpath)
-            data = obj.mkpart(parttype, start, end, fs)
-            self.disks[devpath] = obj.disk
+        data = self.error_handle(None)       
+        start = parted.sizeToSectors(float(start), "MiB", 512)
+        end = parted.sizeToSectors(float(end), "MiB", 512)
+
+        if self.has_disk(devpath):
+            disk = self.disks[devpath]
+            dev = parted.getDevice(devpath)
+            try:
+                self.disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+            except Exception, e:
+                data = self.error_handle(e)
         else:
-            data = self.error_handle("error arguments,no disk specified")
+            data = self.error_handle("args is error.")
+
         self.emit('mkpart',data)
 
     @tornadio2.event
     def rmpart(self, devpath, partnumber):
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            obj = lib.partedcmd.PartedCmd(disk,devpath)
-            data = obj.rmpart(partnumber)
-            self.disks[devpath] = obj.disk
+        data = self.error_handle(None)       
+        if self.has_disk(devpath):
+            disk = self.disks[devpath]
+            try:
+                self.disk = lib.rfparted.rmpart(disk, partnumber)
+            except Exception, e:
+                data = self.error_handle(e)
         else:
             data = self.error_handle("error arguments,no disk specified")
         self.emit('rmpart',data)
@@ -58,7 +71,9 @@ class PartSocket(tornadio2.SocketConnection):
     @tornadio2.event
     def reset(self):
         parted.freeAllDevices()
-        self.disks = lib.partedprint.DevDisk()
+        self.disks = {}
+        for dev in parted.getAllDevices():
+            self.disks[dev.path] = lib.rfparted.reset(dev)
         data = self.error_handle(None)
         self.emit('reset',data)
 
@@ -75,38 +90,9 @@ class PartSocket(tornadio2.SocketConnection):
         self.emit('commit',data)
 
     @tornadio2.event
-    def mklabel(self, devpath, devtype):
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            obj = lib.partedcmd.PartedCmd(disk,devpath)
-            data = obj.mklabel(devtype)
-            self.disks[devpath] = obj.disk
-        else:
-            data = self.error_handle("error arguments,no disk specified")
-        self.emit('mklabel',data)
-
-    @tornadio2.event
-    def printpart(self, devpath):
-        #obj = lib.partedcmd.PartedCmd(disk,devpath)
-        #data = obj.printpart()
-        if devpath in self.disks:
-            disk = self.disks[devpath] #need try
-            data = lib.partedprint.parted_print([disk],True,True)
-        else:
-            data = self.error_handle("error arguments,no disk specified")
-        self.emit('printpart',data)
-
-    @tornadio2.event
     def getpartitions(self):
         data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
-
-    @tornadio2.event
-    def commitdisk(self):
-        for i in range(10):
-            up = i
-            time.sleep(1)
-            self.emit('commitdisk',up)
 
 if __name__ == "__main__":
     MyRouter = tornadio2.TornadioRouter(PartSocket)
