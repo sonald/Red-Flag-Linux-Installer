@@ -95,18 +95,6 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.mklabel = function(devpath, devtype, cb) {
-        if(sock && sock.socket.connected){
-            sock.emit('mklabel', devpath, devtype);
-            sock.once('mklabel',function(data){
-                data = JSON.parse(data);
-                cb(data);
-            });
-        }else{
-            cb({error:"sever is loading",});
-        }
-    };
-
     PartitionStub.reset = function(cb) {
         if(sock && sock.socket.connected){
             sock.emit('reset');
@@ -130,30 +118,6 @@ module.exports = (function() {
             cb({error:"sever is loading",});
         }
     };
-
-    PartitionStub.printpart = function(devpath, cb) {
-        if(sock && sock.socket.connected){
-            sock.emit('printpart',devpath);
-            sock.once('printpart',function(result){
-                var disks = JSON.parse(result);
-                cb(disks);
-            });
-        }else{
-            cb({error:"sever is loading",});
-        }
-    };
-
-    PartitionStub.commitdisk = function(cb){
-        if(sock && sock.socket.connected){
-            sock.emit('commitdisk');
-            sock.on('commitdisk',function(data){
-                cb(data);
-            });
-        }else{
-            cb({error:"sever is loading",});
-        }
-    };
-
 
     return PartitionStub;
 }());

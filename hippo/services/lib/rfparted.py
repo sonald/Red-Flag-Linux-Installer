@@ -54,47 +54,34 @@ def adjust_geometry(disk,ty,new_geometry):
         raise Exception, "Can't have overlapping partitions."
     return new_geo
 
-def mkpart(args, dev, disk):
-    """Given args, device and disk needed to make parted. The format 
-    of args: args = [part.type, start, end, filesystem.type]. Raise
-    Exception given wrong args."""
-
-    cons = dev.getConstraint()
-    ty = parted.PARTITION_NORMAL
+def mkpart(dev, disk, parttype, start, end, fstype):
+    parttype = partty_map[parttype]
     if disk.type == 'msdos':
-        ty = partty_map[args[0]]
-        del args[0]
         try:
-            msdos_validate_type(ty, disk)
+            msdos_validate_type(parttype, disk)
         except Exception, e:
             raise Exception, e
         
-    fs = None
-    start = parted.sizeToSectors(int(args[0]), "MiB", 512)
-    end = parted.sizeToSectors(int(args[1]), "MiB", 512)
-    new_geometry = parted.geometry.Geometry(dev,start,None,end)
+    new_geometry = parted.geometry.Geometry(dev, start, None, end)
     try:
-        new_geo = adjust_geometry(disk,ty,new_geometry)
+        new_geo = adjust_geometry(disk,parttype,new_geometry)
     except Exception, e:
         raise Exception, e
 
-    if not (ty & parted.PARTITION_EXTENDED):
-        fstype = args[2]
+    fs = None
+    if not (parttype & parted.PARTITION_EXTENDED):
         fs = parted.filesystem.FileSystem(fstype,new_geo)
         
-    new_partition = parted.partition.Partition(disk,ty,fs,new_geo)
-    disk.addPartition(new_partition, cons)
+    new_part = parted.partition.Partition(disk,parttype,fs,new_geo)
+    cons = dev.getConstraint()
+    disk.addPartition(new_part, cons)
     return disk
 
-def rmpart(args, dev, disk):
-    """Given args, device and disk needed to remove part specified. The format 
-    of args: args = [partition.number]. Raise Exception given wrong args or 
-    a valid parttiton.number."""
-
+def rmpart(disk, number):
     parts = disk.partitions
     n = 0
     for p in parts:
-        if p.number == int(args[0]):
+        if p.number == int(number):
             break;
         n = n + 1
 
@@ -110,32 +97,15 @@ def rmpart(args, dev, disk):
     disk.deletePartition(part)
     return disk
 
-def mklabel(args, dev, disk):
-    """Given args, device and disk needed to remove part specified. The format 
-    of args: args = [disk.type]. Raise Exception given wrong args or a valid 
-    disk.type."""
+def mklabel(dev, disktype):
+    return parted.freshDisk(dev,str(disktype))
 
-    return parted.freshDisk(dev,str(args[0]))
-
-def reset(args, dev, disk):
+def reset(dev):
     """
     """
-    return parted.disk.Disk(dev)
-
-_commands = {
-        "mkpart" : mkpart,
-        "rm" : rmpart,
-        "mklabel" : mklabel,
-        "reset": reset,
-        }
-def dispatch(cmd, args, dev, disk):
-    """Return the new disk arrording the given data."""
-    cands = [ cand for cand in _commands.keys() if cand.startswith(cmd) ]    
-   # if len(cands) > 1:
-   #     print "ambiguous cmd %s, possible ones %s " % (cmd, cands)
-   #     sys.exit(1)
-
-    new_disk = _commands[cands[0]](args, dev, disk)
-    return new_disk
-
+    try:
+        disk = parted.disk.Disk(dev)
+    except:
+        disk = None
+    return disk
 
