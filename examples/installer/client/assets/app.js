@@ -106,8 +106,9 @@ var app = {
     },
 };
 
-require(['jquery', 'license', 'part', 'process'], function($, pageLicense, pagePart, pageProcess) {
+require(['jquery', 'license', 'userinfo', 'part', 'process'], function($, pageLicense, pageInfo, pagePart, pageProcess) {
     app.stages.push(pageLicense);
+    app.stages.push(pageInfo);
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
 

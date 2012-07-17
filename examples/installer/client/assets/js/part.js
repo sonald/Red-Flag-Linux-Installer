@@ -1,22 +1,4 @@
-/*
- * =====================================================================================
- *
- *       Filename:  part.js
- *
- *    Description:  part page
- *
- *        Version:  1.0
- *        Created:  2012年06月18日 19时07分32秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Sian Cao (sonald), yinshuiboy@gmail.com
- *        Company:  Red Flag Linux Co. Ltd
- *
- * =====================================================================================
-*/
-
-define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalidate, i18n) {
+define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _system, jsvalidate, i18n) {
     'use strict';
 
     var pageCache;
@@ -31,7 +13,6 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
         initialize: function(app, reinit, callback) {
             var that = this;
             that.app = app;
-
             window.apis.services.partition.reset(function(result) {
                 if(result.status === "success"){
                     window.apis.services.partition.getPartitions(function(disks) {
@@ -66,30 +47,34 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
         },
 
         postSetup: function() {
-            $('body').off('click','button.new');
-            $('body').off('click','button.delete');
             this.locals = this.locals || {};
             var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
-            $("fieldset").after(pageC);
-
-            this.app.button_handler.rm("forward","disabled");
-            this.app.button_handler.rm("backward","disabled");
+            $('#part_table').html(pageC);
+            $("#part_table ul").doFade({ fadeColor: "#362b40" });
+            $("#part_table ul ul").doFade({ fadeColor: "#354668" });
+            $("#part_table ul ul ul").doFade({ fadeColor: "#304531" });
+            $("#part_table ul ul ul ul").doFade({ fadeColor: "#72352d" });
 
             var that = this;
-            $('body').on('click','a.delete',function () {
-                var path = $(this).attr("devpath");
-                var number = $(this).attr("partnumber");
+            $('body').on('click','.delete', function () {
+                console.log ("delete");
+                var path = $(this).attr("path");
+                var number = $(this).attr("num");
                 window.apis.services.partition.rmpart(
                     path, number, $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','a.js-submit',function () {
-                var size, parttype, fstype, start, end, path;
-                var id = $(this).attr("for");
-                var $content = $("#"+id).find(".modal-body");
-                var args = [];
+            $('body').on('click','#reset',function () {
+                console.log("reset");
+                window.apis.services.partition.reset(
+                    $.proxy(that.partflesh, that));
+            });
 
+            $('body').on('click','a.js-create-submit',function () {
+                var size, parttype, fstype, start, end, path;
+                var $content = $(this).parents('.modal');
                 size = Number($content.find("#size")[0].value);
+
                 $content.find(":checked").each(function(){
                     if (this.id) {
                         if (this.id === "beginning") {
@@ -101,13 +86,11 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                             start = end - size;
                         };
                     }else{
-                        args.push(this.value);
+                        parttype = this.value
                     }
                 });
-                path = "/dev/" + id.match(/[a-z]{3}$/g)[0];
-                parttype = args[0];
-                fstype = args[1];
-
+                path = $(this).attr("path");
+                fstype = "ext4";
                 window.apis.services.partition.mkpart(
                     path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
             });
@@ -115,45 +98,19 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
 
         rewind: function() {
             //enable backward
-            return true;
+            return 
         },
 
         validate: function(callback) {
-            $('fieldset').find('b').remove();
-            jsvalidate.execu();
-
-            if( jsvalidate.result === false ){
-                jsvalidate.result = true;
-                return false;
-            };
-            this.app.userData['username'] = $('#name').attr('value');
-            this.app.userData['passwd'] = $('#password').attr('value');
-            this.app.userData['newroot'] = $("#part-table input[name='parts']:checked").attr("value");
-
-            if( typeof this.app.userData['newroot'] === "undefined" ){
-                $('#getpartitions').before(i18n.gettext('<b>You must choose a disk. </b>'));
-                return false;
-            };
-            window.apis.services.partition.commit(function(result) {
-                if(result.status === "failure"){
-                    console.log(result.reason);
-                    return false;
-                }else if (result.status === "success") {
-                    callback();
-                    return true;
-                }else{
-                    console.log(result);
-                    return false;
-                }
-            });
         },
+
         partflesh: function(result){
             var that = this;
             if (result.status === "success") {
                 window.apis.services.partition.getPartitions(function(disks) {
                     that.locals["disks"] = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
-                    $("#part-table").replaceWith(pageC);
+                    $("#part_table").html(pageC);
                 });
             }else if(result.status === "failure") {
                 //TODO
@@ -164,8 +121,6 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             };
         },
     };
-
     return page;
 });
-
 

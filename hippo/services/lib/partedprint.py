@@ -11,7 +11,7 @@ def print_disk_helper_to_json_format(parts):
     parts_data = []
     for part in parts:
         partty =""
-        tmp = []
+        tmp = {}
         if part.type == parted.PARTITION_NORMAL:
             partty = "primary"
         elif part.type & parted.PARTITION_LOGICAL:
@@ -19,7 +19,7 @@ def print_disk_helper_to_json_format(parts):
         elif part.type & parted.PARTITION_EXTENDED:
             partty = "extended"
         elif part.type & parted.PARTITION_FREESPACE:
-            partty = "freespace"
+            partty = "free"
         elif part.type & parted.PARTITION_PROTECTED:
             partty = "protected"
         elif part.type & parted.PARTITION_METADATA:
@@ -29,10 +29,19 @@ def print_disk_helper_to_json_format(parts):
         start = parted.formatBytes(part.geometry.start*512,'MiB')
         end = parted.formatBytes(part.geometry.end*512,'MiB')
         size =  end - start
+        if size < 10:
+            continue
         fstype = ""
         if part.fileSystem:
             fstype = str(part.fileSystem.type)
-        tmp = [ part.number, start, end, size, partty, fstype]
+        tmp = { 
+                "number": part.number, 
+                "start": start, 
+                "end": end, 
+                "size": size, 
+                "ty": partty,
+                "fs": fstype,
+                }
         parts_data.append(tmp)
     return parts_data
 
@@ -58,7 +67,8 @@ def print_disks_to_json_format(disks,free):
         dev_data = {
             "model": dev.model,
             "path":  dev.path,
-            "size":str(dev.getSize())+'MB',
+            ##"size":str(dev.getSize())+'MB',
+            "size":dev.getSize(),
             "type":"unknow",
             "unit":'MB',
             "table":[],

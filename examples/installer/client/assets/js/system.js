@@ -22,14 +22,16 @@ require.config({
     },
     shim: {
         'bootstrap': ['jquery'],
-        'jquery.knob': ['jquery']
+        'jquery.knob': ['jquery'],
+        'jquery.color':['jquery'],
+        'sitemap': ['jquery'],
     },
 });
 
 // stub to load all hippo system libs
 // the problem is that underscore is actually not AMD-compatible now, it expose global `_`
 // as well as bootstrap
-define(['jquery', 'jquery.knob', 'dnode', 'underscore', 'bootstrap', 'jade', 'jed'], function($) {
+define(['jquery', 'jquery.knob', 'dnode', 'underscore', 'bootstrap', 'jade', 'jed', 'jquery.color', 'sitemap'], function($) {
     console.log('load sytem');
 });
 
