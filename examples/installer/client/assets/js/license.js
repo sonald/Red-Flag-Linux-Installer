@@ -28,8 +28,9 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
 
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
+            var locale = i18n.options.domain.slice(0,2);
             this.app = app;
-            this.view += '_' + i18n.options.domain.slice(0,2);
+            this.view += '_' + locale;
 
             callback();
             console.log('license initialized');
@@ -41,6 +42,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                 var locals = {
                     gettext: function(msgid) { return i18n.gettext(msgid); }
                 };
+
                 pageCache = (jade.compile($(this.view)[0].innerHTML.trim()))(locals);
             }
 

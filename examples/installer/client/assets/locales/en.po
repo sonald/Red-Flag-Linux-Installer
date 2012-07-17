@@ -1,8 +1,16 @@
-#: client/views/license.jade:153
+#: client/views/license.jade:5 client/views/license_zh.jade:5
+msgid "English"
+msgstr ""
+
+#: client/views/license.jade:6 client/views/license_zh.jade:6
+msgid "Chinese"
+msgstr ""
+
+#: client/views/license.jade:160
 msgid "agree"
 msgstr ""
 
-#: client/views/license.jade:156
+#: client/views/license.jade:163
 msgid "disagree"
 msgstr ""
 
