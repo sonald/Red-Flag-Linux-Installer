@@ -117,12 +117,16 @@ module.exports = function() {
             server.configure(function() {
                 server.use(i18n.init)
                     .use(function(req, res, next) {
+                        if (req.language) {
+                            i18n_host.scope.locale = req.language.slice(0,2);
+                        }
+
                         var urlObj = require('url').parse(req.url, true);
                         if (urlObj.query.locale) {
                             i18n_host.scope.locale = urlObj.query.locale;
+                            i18n.overrideLocaleFromQuery(req);
                         }
 
-                        i18n.overrideLocaleFromQuery(req);
                         next();
                     })
                     .use(express.bodyParser())

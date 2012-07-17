@@ -4,7 +4,7 @@ define(
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-07-10 16:16+0800",
+         "POT-Creation-Date": " 2012-07-17 15:41+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,6 +16,22 @@ define(
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
+      "English": [
+         null,
+         "英语"
+      ],
+      "Chinese": [
+         null,
+         "简体中文"
+      ],
+      "agree": [
+         null,
+         "同意"
+      ],
+      "disagree": [
+         null,
+         "不同意"
+      ],
       "Add a new user:": [
          null,
          "添加新用户："
@@ -116,17 +132,13 @@ define(
          null,
          "删除"
       ],
-      "agree": [
-         null,
-         "同意"
-      ],
-      "disagree": [
-         null,
-         "不同意"
-      ],
       "<b>You must choose a disk. </b>": [
          null,
-         ""
+         "<b>请先选择一块硬盘。</b>"
+      ],
+      "<p>Congratulations~You have finished installing the system.</p>": [
+         null,
+         "<p>恭喜你～安装成功。</p>"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -147,10 +159,6 @@ define(
       "<b>Please enter the same content again.</b>": [
          null,
          "<b>长度不能超过%d个字母</b>"
-      ],
-      "<p>Congratulations~You have finished installing the system.</p>": [
-         null,
-         "恭喜你～安装成功。"
       ]
    }
 }

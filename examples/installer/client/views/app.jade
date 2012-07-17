@@ -1,12 +1,12 @@
 extends layout
 
-block header        
+block header
     //-script(src="/app.js")
     title= tr('Hippo')
 
 block content
     .well
-        h1= tr('Welcome To Use Qomo Installer')
+        h1: center= tr('Welcome To Use Qomo Installer')
 
         #stage
 
@@ -19,5 +19,6 @@ block content
 
     include license
     include userinfo
+    include license_zh
     include part
     include process

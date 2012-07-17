@@ -28,7 +28,10 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
 
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
+            var locale = i18n.options.domain.slice(0,2);
             this.app = app;
+            this.view += '_' + locale;
+
             callback();
             console.log('license initialized');
         },
@@ -39,6 +42,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                 var locals = {
                     gettext: function(msgid) { return i18n.gettext(msgid); }
                 };
+
                 pageCache = (jade.compile($(this.view)[0].innerHTML.trim()))(locals);
             }
 
@@ -46,7 +50,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         },
 
         updateActions: function() {
-            if ( $("#choose").find(":checked").attr("value")==="agree" ){ 
+            if ( $("#choose").find(":checked").attr("value")==="agree" ){
                 this.app.button_handler.rm("forward","disabled");
             } else if ( $("#choose").find(":checked").attr("value")==="disagree"){
                 this.app.button_handler.add("forward","disabled");

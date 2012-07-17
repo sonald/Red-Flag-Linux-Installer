@@ -17,6 +17,6 @@
 */
 
 define('i18n', ['system', 'locale!client'], function(system, locale_obj) {
-    console.log('defining i18n');
+    console.log('defining i18n', locale_obj);
     return locale_obj;
 });

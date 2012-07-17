@@ -1,6 +1,14 @@
 define(
 {
    "en": {
+      "English": [
+         null,
+         ""
+      ],
+      "Chinese": [
+         null,
+         ""
+      ],
       "agree": [
          null,
          ""
@@ -54,6 +62,66 @@ define(
          ""
       ],
       "fs": [
+         null,
+         ""
+      ],
+      "Edit The New Disk": [
+         null,
+         ""
+      ],
+      "Size": [
+         null,
+         ""
+      ],
+      "PartType": [
+         null,
+         ""
+      ],
+      "primary": [
+         null,
+         ""
+      ],
+      "logical": [
+         null,
+         ""
+      ],
+      "extended": [
+         null,
+         ""
+      ],
+      "FileSystem": [
+         null,
+         ""
+      ],
+      "Alignment To Beginning": [
+         null,
+         ""
+      ],
+      "Alignment To End": [
+         null,
+         ""
+      ],
+      "Close": [
+         null,
+         ""
+      ],
+      "Submit": [
+         null,
+         ""
+      ],
+      "create": [
+         null,
+         ""
+      ],
+      "delete": [
+         null,
+         ""
+      ],
+      "<b>You must choose a disk. </b>": [
+         null,
+         ""
+      ],
+      "<p>Congratulations~You have finished installing the system.</p>": [
          null,
          ""
       ],
