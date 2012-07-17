@@ -29,6 +29,8 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
             this.app = app;
+            this.view += '_' + i18n.options.domain.slice(0,2);
+
             callback();
             console.log('license initialized');
         },
@@ -46,7 +48,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         },
 
         updateActions: function() {
-            if ( $("#choose").find(":checked").attr("value")==="agree" ){ 
+            if ( $("#choose").find(":checked").attr("value")==="agree" ){
                 this.app.button_handler.rm("forward","disabled");
             } else if ( $("#choose").find(":checked").attr("value")==="disagree"){
                 this.app.button_handler.add("forward","disabled");

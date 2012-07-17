@@ -39,14 +39,12 @@
 				}
 
 				match = /([^-]+)(?:-([^-]+))?/.exec(lang);
-				if (match) {
-					config.locale = match[1] || 'en';
-				}
+                config.locale = (match && match[1]) || 'en';
 
 				// console.log('config: ', config);
 				req(['jed', '../locales/' + name + '.' + config.locale], function(Jed, value) {
 
-					console.log(value);
+					//console.log(value);
 					load(new Jed({
 						'domain': config.locale,
 						'locale_data': value
