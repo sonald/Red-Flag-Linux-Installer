@@ -7,7 +7,9 @@ script(type="text/template", id="part_tmpl").
                 li.vertical
                     - disk = disks[i]
                     a(href="#")= disk["path"]
-                    a(href="#")= disk["size"].toFixed(2)
+                    a(href="#")
+                        = disk["size"].toFixed(2)
+                        = disk["unit"]
                     - var parts = disk["table"]
                     ul.wat-cf
                         - for (var p in parts)
@@ -26,7 +28,9 @@ script(type="text/template", id="part_tmpl").
                             li.horizontal(style = "width:" + percent + "%")
                                 ul.wat-cf.part(num=part["number"], ty=part["ty"])
                                     li
-                                        a(href="#")= Number(part["size"]).toFixed(2)
+                                        a(href="#")
+                                            = Number(part["size"]).toFixed(2)
+                                            = disk["unit"]
                                     li
                                         a(href="#")= part["ty"]
                                     li
@@ -47,6 +51,7 @@ script(type="text/template", id="part_tmpl").
                                                         .controls
                                                             select.span3#fs
                                                                 option(value="ext4") ext4
+                                                                option(value="linux-swap(v1)") swap
                                                 .modal-footer
                                                         a.btn(href="#", data-dismiss="modal")= gettext('Close')
                                                         a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
@@ -71,6 +76,12 @@ script(type="text/template", id="part_tmpl").
                                                                 option(value="primary")= gettext('primary')
                                                                 //option(value="logical")= gettext('logical')
                                                                 option(value="extended")= gettext('extended')
+                                                    div.control-group.form-horizontal
+                                                        label.control-label(for="fs")= gettext('FileSystem')
+                                                        .controls
+                                                            select.span3#fs
+                                                                option(value="ext4") ext4
+                                                                option(value="linux-swap(v1)") swap
                                                     div.control-group.form-horizontal
                                                         label.control-label
                                                         .controls

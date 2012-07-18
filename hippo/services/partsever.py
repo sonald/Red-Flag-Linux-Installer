@@ -40,8 +40,8 @@ class PartSocket(tornadio2.SocketConnection):
     @tornadio2.event
     def mkpart(self, devpath, parttype, start, end, fs):
         data = self.error_handle(None)       
-        start = parted.sizeToSectors(float(start), "MiB", 512)
-        end = parted.sizeToSectors(float(end), "MiB", 512)
+        start = parted.sizeToSectors(float(start), "GB", 512)
+        end = parted.sizeToSectors(float(end), "GB", 512)
 
         if self.has_disk(devpath):
             disk = self.disks[devpath]
