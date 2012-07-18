@@ -15,6 +15,8 @@
  *
  * =====================================================================================
 */
+/*jslint browser: true, devel: true*/
+/*global jade: false*/
 
 define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
     'use strict';
@@ -73,7 +75,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             if (this.app.button_handler.hasclass("forward","disabled") === false){
                 callback();
             }
-        },
+        }
     };
 
     return page;

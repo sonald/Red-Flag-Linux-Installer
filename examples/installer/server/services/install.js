@@ -1,3 +1,5 @@
+/*jslint node: true*/
+
 var pathlib = require('path');
 var fs = require('fs');
 var async = require('async');
@@ -5,6 +7,8 @@ var exec = require('child_process').exec;
 
 var fsutil = {
     getFileSystemInfo: function(path, callback) {
+        'use strict';
+
         exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
                 throw err;
@@ -26,13 +30,15 @@ var fsutil = {
     },
 
     mktempdir: function(callback) {
+        'use strict';
+
         exec('mktemp -d', {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
                 throw err;
             }
 
             var len = stdout.length;
-            if (stdout[len-1] === '\n') 
+            if (stdout[len-1] === '\n')
                 stdout = stdout.slice(0, len-1);
 
             console.log('mktemp: %s', stdout);
@@ -43,19 +49,15 @@ var fsutil = {
 
 module.exports = (function(){
     'use strict';
-    var errors  = { 
+    var errors  = {
         ENOROOT: 'no install destination specified',
         ECOPYBASE: 'copy base system failed',
-        EPOSTSCRIPT: 'postscript setup failed',
-    }
+        EPOSTSCRIPT: 'postscript setup failed'
+    };
 
     function copyBaseSystem(newroot, watcher, next) {
         async.waterfall([
-            function(cb) {
-                exec('mkfs.ext4 ' + newroot, {}, function(err) {
-                    cb(err);
-                });
-            },
+
             function(cb) {
                 fsutil.mktempdir(function(dirname) {
                     exec('mount -t ext4 ' + newroot + ' ' + dirname, {}, function(err) {
@@ -99,14 +101,14 @@ module.exports = (function(){
                     fsutil.getFileSystemInfo(newroot_mnt, function(info) {
                         var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
                         percentage = Math.floor((installed / total_size) * 100);
-                        
+
                         watcher({status: 'progress', data: percentage});
                     });
                 }
 
                 progId = setInterval(populateProgress, 1000);
-            },
-        ], 
+            }
+        ],
         function(err) {
             if (err) {
                 console.log(err);
@@ -166,7 +168,7 @@ module.exports = (function(){
             postscript += '/bin/chmod +x /home/' + opts.username + '\n';
 
             if (opts.passwd) {
-                postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd + 
+                postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
                     "'; } | passwd root\n";
             }
         }
@@ -192,7 +194,7 @@ module.exports = (function(){
 
                         fs.chmod(post, 493, function(err) {  // 0755 === 493
                             err_cb(err);
-                        }); 
+                        });
                     });
                 },
                 // run postscript
@@ -203,7 +205,7 @@ module.exports = (function(){
                 system("rm -rf " + root_dir + "/postscript.sh"),
                 system('grub-install --recheck --root-directory="' + root_dir + '" ' + dest_dev),
                 system("umount " + root_dir)
-        ], 
+        ],
         function(err) {
             if (err) {
                 watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
@@ -212,6 +214,75 @@ module.exports = (function(){
                 next();
             }
         });
+    }
+
+    function formatPartition(part, callback) {
+        var cmds = {
+            'ext4': 'mkfs.ext4 ',
+            'swap': 'mkswap '
+        };
+
+        exec(cmds[part.fs] + part.path, {}, callback);
+    }
+
+    function formatDirtyPartitions(disks, callback) {
+        var parts = [];
+
+        disks.forEach(function(disk) {
+            parts.concat( disk.table );
+        });
+
+        async.forEachSeries(parts, formatPartition, callback);
+    }
+
+    function enumMountPoints(disks) {
+        var mounts = [];
+        disks.forEach(function(disk) {
+            mounts.concat( disk.table.filter(function(entry) {
+                return entry.mountpoint.trim().length > 0;
+            }));
+        });
+
+        //TODO: sort it!
+        return mounts;
+    }
+
+    function mountNeededPartitions(disks, callback) {
+        var mounts = enumMountPoints(disks);
+
+        async.forEachSeries(mounts,
+            function(mnt, cb) {
+                exec('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' + mnt.mountpoint, {}, cb);
+            }, callback);
+    }
+
+
+    function guessNewRoot(disks) {
+        var cands = [];
+
+        disks.forEach(function(disk) {
+            cands.concat( disk.table.filter(function(entry) {
+                return (entry.mountpoint === '/');
+            }) );
+        });
+
+        if (cands.length === 1) {
+            return cands[0];
+        }
+
+        // if no candidates found or more than one found, it's an error.
+        return null;
+    }
+
+    //interpolate part path into itself for convience
+    function preprocessDisks(disks) {
+        disks.map(function(disk) {
+            disk.table.map(function(part) {
+                part.path = part.path || disk.path + part.number;
+            });
+        });
+
+        return disks;
     }
 
     var Installer = {
@@ -224,21 +295,59 @@ module.exports = (function(){
             });
         },
 
+        /**
+         * options contains all info needed to do installation
+         * options = {
+            // newroot: '/dev/sda1',
+            grubinstall: '' // empty, '/dev/sda', '/dev/sdb2'
+            installmode: 'fulldisk' // easy, advanced
+            disks: [
+                {
+                    path: '/dev/sda',
+                    ...,
+                    table: [
+                        {number: '1', fs: 'ext4', mountpoint: '/' },
+                        {...}
+                    ]
+                },
+                {
+                    //another disk
+                }
+            ]
+         }
+         */
         packAndUnpack: function(options, cb) {
+            options.disks = preprocessDisks( options.disks );
+            options.newroot = options.newroot || guessNewRoot(options.disks);
             if (!options.newroot) {
                 this.error('ENOROOT', cb);
                 return;
             }
 
-            copyBaseSystem(options.newroot, cb, function() {
-                var post_opts = Object.create(options);
+            async.waterfall([
+                function(next) {
+                    formatDirtyPartitions(options.disks, next);
+                },
+                function(next) {
+                    mountNeededPartitions(options.disks, next);
+                },
+                function(next) {
+                    copyBaseSystem(options.newroot, cb, function() {
+                        next(null);
+                        //TODO: umount all partitions
+                    });
+                },
+                function(next) {
 
-                postInstall(post_opts, cb, function() {
-                    cb({status: 'success'});
-                    console.log('install done');
-                });
+                    postInstall(options, cb, function() {
+                        next(null, {status: 'success'});
+                    });
+                }
+            ], function(err, result) {
+                cb(result);
+                console.log('install done');
             });
-        },
+        }
     };
 
     return Installer;
