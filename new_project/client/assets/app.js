@@ -9,6 +9,8 @@ $(function() {
             minus:[remote, 'services.demo.minus'],
             mul:[remote, 'services.demo.mul'],
             div:[remote, 'services.demo.div'],
+            model:[remote, 'services.demo.model'],
+            squ:[remote, 'services.demo.squ'],
         };
     });
 
@@ -37,6 +39,7 @@ $(function() {
         "minus" : 1,
         "mul" : 2,
         "div" : 2,
+        "model" : 2,
         "equal" : 0,
     };
     var result = function (res) {
@@ -78,10 +81,21 @@ $(function() {
             $('.input-xlarge').text("error");
         };
         var method = $(this).attr("id");
-        methodstack.push(method);
-        numberstack.push( Number($('.input-xlarge').text()) );
-        handler(numberstack,methodstack);
-        tmp = false;
+
+        if (method === "squ") {
+            methodstack = [];
+            numberstack = [];
+            numberstack.push( Number($('.input-xlarge').text()) );
+            val1 = numberstack.pop();
+            fire.apply(null, stubs[method].concat([val1, result]));
+            numberstack.push( Number($('.input-xlarge').text()) );
+        }
+        else {
+            methodstack.push(method);
+            numberstack.push( Number($('.input-xlarge').text()) );
+            handler(numberstack,methodstack);
+            tmp = false;
+        }
     });
 
     $('body').on('click', 'input.btn', function() {
