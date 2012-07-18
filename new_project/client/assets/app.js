@@ -45,6 +45,10 @@ $(function() {
     var result = function (res) {
         $('.input-xlarge').text(res);
         numberstack.push(Number(res));
+        if (methodstack[methodstack.length-1] === "squ") {
+            numberstack.pop();
+            methodstack.pop();
+        }
         if(methodstack.length === 2){
             handler(numberstack,methodstack);
         };
@@ -83,12 +87,9 @@ $(function() {
         var method = $(this).attr("id");
 
         if (method === "squ") {
-            methodstack = [];
-            numberstack = [];
-            numberstack.push( Number($('.input-xlarge').text()) );
-            val1 = numberstack.pop();
-            fire.apply(null, stubs[method].concat([val1, result]));
-            numberstack.push( Number($('.input-xlarge').text()) );
+            methodstack.push(method);
+            var val = Number($('.input-xlarge').text());
+            fire.apply(null, stubs[method].concat([val, result]));
         }
         else {
             methodstack.push(method);
