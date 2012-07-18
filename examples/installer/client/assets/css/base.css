@@ -12,12 +12,12 @@ input.dial {
     text-align: center;
 }
 
-#part_table {
+.part_table {
     margin: 0 auto; 
     padding: 0;
 }
 
-#part_table ul.wat-cf::after {
+.part_table ul.wat-cf::after {
     content: ".";
     display: block;
     height: 0;
@@ -25,41 +25,45 @@ input.dial {
     visibility: hidden;
 }
 
-#part_table a	{
+.part_table a	{
     text-decoration: none; 
     _color: #eee;
     display: block;
     padding: 4px 0;
 }
 
-#part_table a:hover {
+.part_table a:hover {
     text-decoration: underline; 
 }
 
-#part_table ul { 
+.part_table ul { 
     padding: 4px; 
     list-style: none;
     -webkit-box-shadow: 2px 2px 5px black;
     background: #282828;
 }
 
-#part_table ul ul {
+.part_table ul ul {
     background: #393939; 
     margin-left: 4px;
 }
 
-#part_table ul ul ul {
+.part_table ul ul ul {
     border-style: ridge;
     background: #4b4b4b;
 }
 
-#part_table ul ul ul ul {
+.part_table ul ul ul ul {
     background: #5a5a5a; 
 }
 
-#part_table li.vertical {
+.part_table li.vertical {
 }
 
-#part_table li.horizontal {
+.part_table li.horizontal {
     float: left;
+}
+
+.part_table .select {
+    background: #8b0000;
 }

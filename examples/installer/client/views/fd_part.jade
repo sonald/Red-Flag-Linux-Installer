@@ -1,0 +1,10 @@
+script(type="text/template", id="fulldisk_part_tmpl").
+    .part_table#fulldisk_part_table
+        -for (var i in disks)
+            - disk = disks[i]
+            ul.wat-cf.disk
+                li
+                    a(href="#")= disk["path"]
+                    a(href="#")
+                        = disk["size"].toFixed(2)
+                        = disk["unit"]
