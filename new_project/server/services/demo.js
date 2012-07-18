@@ -21,6 +21,14 @@ module.exports = (function(){
             cb(val1 / val2);
         };
     };
+
+    CalStub.model = function(val1, val2, cb){
+        cb(val1 % val2);
+    };
+
+    CalStub.squ = function(val1, cb){
+        cb(val1 * val1);
+    };
     return CalStub;
 
 }());
