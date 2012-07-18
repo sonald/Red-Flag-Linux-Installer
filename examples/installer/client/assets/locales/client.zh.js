@@ -60,17 +60,17 @@ define(
          null,
          "序号"
       ],
-      "Start(MB)": [
+      "Start(GB)": [
          null,
-         "开始(MB)"
+         "开始(GB)"
       ],
-      "End(MB)": [
+      "End(GB)": [
          null,
-         "结束(MB)"
+         "结束(GB)"
       ],
-      "Size(MB)": [
+      "Size(GB)": [
          null,
-         "大小(MB)"
+         "大小(GB)"
       ],
       "parttype": [
          null,
@@ -86,7 +86,7 @@ define(
       ],
       "Size": [
          null,
-         "大小(MB)"
+         "大小(GB)"
       ],
       "PartType": [
          null,

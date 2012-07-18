@@ -26,10 +26,10 @@ def print_disk_helper_to_json_format(parts):
             #partty = "metadata"
             continue
 
-        start = parted.formatBytes(part.geometry.start*512,'MiB')
-        end = parted.formatBytes(part.geometry.end*512,'MiB')
+        start = parted.formatBytes(part.geometry.start*512,'GB')
+        end = parted.formatBytes(part.geometry.end*512,'GB')
         size =  end - start
-        if size < 10:
+        if size < 0.01:
             continue
         fstype = ""
         if part.fileSystem:
@@ -64,14 +64,14 @@ def print_disks_to_json_format(disks,free):
     devpaths = disks.keys()
     for devpath in devpaths:
         dev = parted.getDevice(devpath)
+        disksize = parted.formatBytes(dev.getLength()*512,'GB')
         dev_data = {
             "model": dev.model,
             "path":  dev.path,
-            ##"size":str(dev.getSize())+'MB',
-            "size":dev.getSize(),
-            "type":"unknow",
-            "unit":'MB',
-            "table":[],
+            "size": disksize,
+            "type": "unknow",
+            "unit": 'GB',
+            "table": [],
             }
         if(disks[devpath]):
             disk = disks[devpath]

@@ -65,16 +65,16 @@ msgid "Number"
 msgstr "序号"
 
 #: client/views/part.jade:36
-msgid "Start(MB)"
-msgstr "开始(MB)"
+msgid "Start(GB)"
+msgstr "开始(GB)"
 
 #: client/views/part.jade:37
-msgid "End(MB)"
-msgstr "结束(MB)"
+msgid "End(GB)"
+msgstr "结束(GB)"
 
 #: client/views/part.jade:38
-msgid "Size(MB)"
-msgstr "大小(MB)"
+msgid "Size(GB)"
+msgstr "大小(GB)"
 
 #: client/views/part.jade:39
 msgid "parttype"
@@ -90,7 +90,7 @@ msgstr "  编辑新分区"
 
 #: client/views/part.jade:69
 msgid "Size"
-msgstr "大小(MB)"
+msgstr "大小(GB)"
 
 #: client/views/part.jade:73
 msgid "PartType"
