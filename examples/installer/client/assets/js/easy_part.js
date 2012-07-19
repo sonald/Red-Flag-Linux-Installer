@@ -3,13 +3,22 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
     var partialCache;
     var partial = {
         view: '#easy_part_tmpl',
+        app: null,
+        locals: null,
 
-        loadView: function (locals) {
-            locals = locals || {};
-            partialCache = (jade.compile($(this.view)[0].innerHTML))(locals);
+        initialize: function (app, locals) {
+            this.app = app;
+            this.locals = locals;
+            this.app.Data.options.installmode = "easy";
+            this.app.Data.options.grubinstall = "/dev/sda";
+        },
+
+        loadView: function () {
+            this.locals = this.locals || {};
+            partialCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             return partialCache;
         },
-        
+
         postSetup: function () {
             $("body").off('click', '#easy_part_table ul.part');
             $('body').on('click', '#easy_part_table ul.part', function () {

@@ -47,7 +47,7 @@ class PartSocket(tornadio2.SocketConnection):
             disk = self.disks[devpath]
             dev = parted.getDevice(devpath)
             try:
-                self.disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
             except Exception, e:
                 data = self.error_handle(e)
         else:
@@ -61,7 +61,7 @@ class PartSocket(tornadio2.SocketConnection):
         if self.has_disk(devpath):
             disk = self.disks[devpath]
             try:
-                self.disk = lib.rfparted.rmpart(disk, partnumber)
+                disk = lib.rfparted.rmpart(disk, partnumber)
             except Exception, e:
                 data = self.error_handle(e)
         else:
@@ -93,6 +93,37 @@ class PartSocket(tornadio2.SocketConnection):
     def getpartitions(self):
         data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
+
+    @tornadio2.event
+    def fdhandler(self, devpath):
+        data = self.error_handle(None)##TODO
+        dev = parted.getDevice(devpath)
+        ###unit of devsize is GiB short of GB
+        ###so the unit of start and end should use GiB
+        size = dev.getSize('GB')
+        disk = parted.disk.Disk(dev)
+        parttype = "primary"
+        if disk.deleteAllPartitions() and size >= 6:
+            fs = "linux-swap(v1)"
+            start = parted.sizeToSectors(0, "GB", 512)
+            end = parted.sizeToSectors(1, "GB", 512)
+            try:
+                disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                fs = "ext4"
+                start = parted.sizeToSectors(1.01, "GB", 512)
+                end = parted.sizeToSectors(size, "GB", 512)
+                if size > 30:
+                    end = parted.sizeToSectors(30, "GiB", 512)
+                disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                self.disks[devpath] = disk
+                data = lib.partedprint.parted_print(self.disks,True,True)
+            except Exception, e:
+                data = self.error_handle(e)
+        else:
+            data = self.error_handle("You'd better choose a disk larger than 6G.")
+        
+        self.emit('fdhandler',data)
+
 
 if __name__ == "__main__":
     MyRouter = tornadio2.TornadioRouter(PartSocket)

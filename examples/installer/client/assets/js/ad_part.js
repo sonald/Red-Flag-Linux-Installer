@@ -7,10 +7,16 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
     var page = {
         view: '#advanced_part_tmpl',
         locals : null,
+        app:null,
+
+        initialize: function (app, locals) {
+            this.app = app;
+            this.locals = locals;
+            this.app.Data.options.installmode = "advanced";
+        },
          
         // compile and return page partial
-        loadView: function(locals) {
-            this.locals = locals;
+        loadView: function() {
             partialCache = (jade.compile($(this.view)[0].innerHTML))();
             return partialCache;
         },
@@ -19,10 +25,10 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             this.locals = this.locals || {};
             var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
             $('#advanced_part_table').html(pageC);
-            $("#advanced_part_table ul").doFade({ fadeColor: "#362b40" });
-            $("#advanced_part_table ul ul").doFade({ fadeColor: "#354668" });
-            $("#advanced_part_table ul ul ul").doFade({ fadeColor: "#304531" });
-            $("#advanced_part_table ul ul ul ul").doFade({ fadeColor: "#72352d" });
+            //$("#advanced_part_table ul").doFade({ fadeColor: "#362b40" });
+            //$("#advanced_part_table ul ul").doFade({ fadeColor: "#354668" });
+            //$("#advanced_part_table ul ul ul").doFade({ fadeColor: "#304531" });
+            //$("#advanced_part_table ul ul ul ul").doFade({ fadeColor: "#72352d" });
 
             var that = this;
             $('body').off('click','.delete');

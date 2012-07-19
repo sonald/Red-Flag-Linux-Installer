@@ -33,7 +33,21 @@ var app = {
     },
 
     // collect user configurations
-    userData: {},
+    Data: {
+        userData: {
+            username:'',
+            hostname:'qomo',
+        },
+        options: {},
+    },
+
+    resetOptions: function () {
+        this.Data.options = {
+            grubinstall:'',
+            installmode: 'easy',
+            disks:[],
+        };
+    },
 
     // internal, do not change it manually
     _currentPage: 0,

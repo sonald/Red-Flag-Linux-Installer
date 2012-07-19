@@ -2,7 +2,7 @@ script(type="text/template", id="fulldisk_part_tmpl").
     .part_table#fulldisk_part_table
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk
+            ul.wat-cf.disk(dnum=i)
                 li
                     a(href="#")= disk["path"]
                     a(href="#")

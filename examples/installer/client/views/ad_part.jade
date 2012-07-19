@@ -48,7 +48,9 @@ script(type="text/template", id="advanced_part_tmpl").
                                                         label.control-label(for="mp") MountPoint
                                                         .controls
                                                             select.span3#mp
+                                                                option(value="") ""
                                                                 option(value="/")= "/"
+                                                                option(value="/home")= "/home"
                                                                 option(value="/mnt")= "/mnt"
                                                                 option(value="/tmp")= "/tmp"
                                                                 option(value="/boot")= "/boot"
@@ -58,13 +60,14 @@ script(type="text/template", id="advanced_part_tmpl").
                                                         label.control-label(for="fs")= gettext('FileSystem')
                                                         .controls
                                                             select.span3#fs
+                                                                option(value="") nochange
                                                                 option(value="ext4") ext4
                                                                 option(value="linux-swap(v1)") swap
                                                 .modal-footer
                                                         a.btn(href="#", data-dismiss="modal")= gettext('Close')
                                                         a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
                                         -else if (part["ty"]=="extended")
-                                            a.btn.create create
+                                            //a.btn.create create
                                             a.btn.delete(num=part["number"], path=disk["path"]) delete
                                         -else
                                             a.btn.create(href="#free"+String(i)+String(p),data-toggle="modal") create
@@ -82,7 +85,7 @@ script(type="text/template", id="advanced_part_tmpl").
                                                         .controls
                                                             select.span3#parttype
                                                                 option(value="primary")= gettext('primary')
-                                                                //option(value="logical")= gettext('logical')
+                                                                option(value="logical")= gettext('logical')
                                                                 option(value="extended")= gettext('extended')
                                                     div.control-group.form-horizontal
                                                         label.control-label(for="fs")= gettext('FileSystem')
