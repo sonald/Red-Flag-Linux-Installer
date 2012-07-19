@@ -116,7 +116,7 @@ module.exports = (function(){
             'swap': 'mkswap '
         };
 
-        system(cmds[part.fs] + part.path)(callback);
+        system(cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)] + part.path)(callback);
     }
 
     function formatDirtyPartitions(disks, callback) {
