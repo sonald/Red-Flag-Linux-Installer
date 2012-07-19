@@ -3,10 +3,19 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
     var partialCache;
     var partial = {
         view: '#fulldisk_part_tmpl',
+        locals:null,
+        app:null,
 
-        loadView: function (locals) {
-            locals = locals || {};
-            partialCache = (jade.compile($(this.view)[0].innerHTML))(locals);
+        initialize: function (app, locals) {
+            this.app = app;
+            this.locals = locals;
+            this.app.Data.options.installmode = "fulldisk";
+            this.app.Data.options.grubinstall = "/dev/sda";
+        },
+
+        loadView: function () {
+            this.locals = this.locals || {};
+            partialCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             return partialCache;
         },
 

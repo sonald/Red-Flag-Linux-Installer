@@ -2,7 +2,7 @@ script(type="text/template", id="easy_part_tmpl").
     .part_table#easy_part_table
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk
+            ul.wat-cf.disk(dnum=i)
                 li.vertical
                     a(href="#")= disk["path"]
                     a(href="#")
@@ -12,7 +12,7 @@ script(type="text/template", id="easy_part_tmpl").
                     ul.wat-cf
                         - for (var p in parts)
                             -var part = parts[p]
-                            -if (part["ty"] == "extended")
+                            -if (part["ty"] == "extended" || part["number"]==-1)
                                 - continue
                             -var percent = part["size"]*100/disk["size"]
                             -if (percent > 60)
@@ -26,7 +26,7 @@ script(type="text/template", id="easy_part_tmpl").
                             -else if (percent < 15)
                                 - percent = 15
                             li.horizontal(style = "width:" + percent + "%")
-                                ul.wat-cf.part(num=part["number"], psize=part["size"])
+                                ul.wat-cf.part(num=part["number"], pnum=p)
                                     li
                                         a(href="#")
                                             = Number(part["size"]).toFixed(2)

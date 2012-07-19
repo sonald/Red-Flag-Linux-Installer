@@ -108,9 +108,9 @@ module.exports = (function() {
     };
 
     PartitionStub.getPartitions = function(cb) {
-        if(sock && sock.socket.connected){
+        if (sock && sock.socket.connected) {
             sock.emit('getpartitions');
-            sock.once('getpartitions',function(result){
+            sock.once('getpartitions',function (result) {
                     var disks = JSON.parse(result);
                     cb(disks);
             });
@@ -118,6 +118,15 @@ module.exports = (function() {
             cb({error:"sever is loading",});
         }
     };
+
+    PartitionStub.FulldiskHandler = function ( devpath, cb) {
+        if (sock && sock.socket.connected) {
+            sock.emit('fdhandler', devpath);
+            sock.once('fdhandler', function (disks) {
+                cb(JSON.parse(disks));
+            });
+        }
+    }
 
     return PartitionStub;
 }());
