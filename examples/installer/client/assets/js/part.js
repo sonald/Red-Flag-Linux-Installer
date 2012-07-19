@@ -78,50 +78,6 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                 adPage.postSetup && adPage.postSetup();
             });
 
-            $('body').on('click', '#dataoptions', function () {
-                var $selected = that.$el.find('ul.select');
-                if (that.$el.has("#easy_part_table").length > 0) {
-                    var pnum = $selected.attr("pnum");
-                    var dnum = $selected.parents('ul.disk').attr("dnum");
-                    var part = that.app.Data.options.disks[dnum].table[pnum];
-                    part["dirty"] = true;
-                    part["mountpoint"] = "/";
-                    part.fs = "ext4";
-                    console.log(JSON.stringify(that.app.Data.options));
-                }else if (that.$el.has("#fulldisk_part_table").length > 0) {
-                    var dnum=$selected.attr("dnum");
-                    var disk = that.app.Data.options.disks[dnum];
-                    var devpath = disk["path"];
-                    window.apis.services.partition.FulldiskHandler(devpath, function (results) {
-                        if (results.status && results.status == "failure") {
-                            console.log(results);
-                        }else{
-                            that.locals["disks"] = results;
-                            that.app.Data.options.disks = results;
-                            var dnums = results.length;
-                            var i = 0;
-                            for (i=0; i<dnums; i++){
-                                if (results[i]["path"] === devpath){
-                                    var j =0;
-                                    var parts = results[i]["table"];
-                                    for (j =0; j< parts.length; j++){
-                                        if (parts[j]["number"] != -1){
-                                            parts[j]["dirty"] = true;
-                                            if (parts[j].size > 6){
-                                                parts[j]["mountpoint"] = "/";
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                            console.log(JSON.stringify(that.app.Data.options));
-                        }
-                    });
-                }else if (that.$el.has("#advanced_part_table").length > 0) {
-                };
-            });
-
             $('#easy').trigger("click");
         },
 
@@ -131,6 +87,51 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
         },
 
         validate: function(callback) {
+            var that = this;
+            if (that.$el.has("#easy_part_table").length > 0) {
+                var $selected = that.$el.find('ul.select');//TODO
+                var pnum = $selected.attr("pnum");
+                var dnum = $selected.parents('ul.disk').attr("dnum");
+                var part = that.app.Data.options.disks[dnum].table[pnum];
+                part["dirty"] = true;
+                part["mountpoint"] = "/";
+                part.fs = "ext4";
+                console.log(JSON.stringify(that.app.Data.options));
+                callback();
+            }else if (that.$el.has("#fulldisk_part_table").length > 0) {
+                var $selected = that.$el.find('ul.select');//TODO
+                var dnum=$selected.attr("dnum");
+                var disk = that.app.Data.options.disks[dnum];
+                var devpath = disk["path"];
+                window.apis.services.partition.FulldiskHandler(devpath, function (results) {
+                    if (results.status && results.status == "failure") {
+                        console.log(results);
+                    }else{
+                        that.locals["disks"] = results;
+                        that.app.Data.options.disks = results;
+                        var dnums = results.length;
+                        var i = 0;
+                        for (i=0; i<dnums; i++){
+                            if (results[i]["path"] === devpath){
+                                var j =0;
+                                var parts = results[i]["table"];
+                                for (j =0; j< parts.length; j++){
+                                    if (parts[j]["number"] != -1){
+                                        parts[j]["dirty"] = true;
+                                        if (parts[j].size > 6){
+                                            parts[j]["mountpoint"] = "/";
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        console.log(JSON.stringify(that.app.Data.options));
+                        callback();
+                    }
+                });
+            }else if (that.$el.has("#advanced_part_table").length > 0) {
+                };
         },
     };
     return page;
