@@ -48,6 +48,20 @@ var fsutil = {
     }
 };
 
+var debug = (function() {
+    'use strict';
+
+    if (process.env.NODE_DEBUG) {
+        return function() {
+            [].slice.apply(arguments).forEach(function(obj) {
+                console.log( require('util').inspect(obj, true, 10) );
+            });
+        };
+    } else {
+        return function() {};
+    }
+}());
+
 module.exports = (function(){
     'use strict';
 
@@ -90,7 +104,7 @@ module.exports = (function(){
         var parts = [];
 
         disks.forEach(function(disk) {
-            parts.concat( disk.table.filter(filter) );
+            parts = parts.concat( disk.table.filter(filter) );
         });
 
         return parts;
@@ -115,7 +129,7 @@ module.exports = (function(){
 
     function enumMountPoints(disks) {
         var mounts = filterAndFlattenPartitions(disks, function(entry) {
-            return entry.mountpoint.trim().length > 0;
+            return entry.mountpoint && entry.mountpoint.trim().length > 0;
         });
 
         return mounts;
@@ -151,13 +165,13 @@ module.exports = (function(){
         var cands = [];
 
         disks.forEach(function(disk) {
-            cands.concat( disk.table.filter(function(entry) {
+            cands = cands.concat( disk.table.filter(function(entry) {
                 return (entry.mountpoint === '/');
             }) );
         });
 
         if (cands.length === 1) {
-            return cands[0];
+            return cands[0].path;
         }
 
         // if no candidates found or more than one found, it's an error.
@@ -375,8 +389,56 @@ module.exports = (function(){
          }
          */
         packAndUnpack: function(options, cb) {
+            if (process.env.NODE_DEBUG) {
+                var fake_options = {
+                    "grubinstall": "/dev/sdb",
+                    "installmode": "easy",
+                    "disks": [
+                        {
+                            "table": [
+                                {
+                                    "fs": "ext4",
+                                    "ty": "primary",
+                                    "number": 1
+                                }
+                            ],
+                            "path": "/dev/sda",
+                            "model": "Alcor Flash Disk",
+                            "type": "msdos",
+                            "unit": "GB",
+                            "size": 1.03179776
+                        },
+                        {
+                            "table": [
+                                {
+                                    "fs": "ntfs",
+                                    "ty": "primary",
+                                    "number": 3
+                                },
+                                {
+                                    "fs": "ext4",
+                                    "ty": "primary",
+                                    "number": 1,
+                                    "dirty": true,
+                                    "mountpoint": "/"
+                                }
+                            ],
+                            "path": "/dev/sdb",
+                            "model": "ATA TOSHIBA MK1656GS",
+                            "type": "msdos",
+                            "unit": "GB",
+                            "size": 160.041885696
+                        }
+                    ]
+                };
+
+                options = fake_options; // for testing
+            }
+
             options.disks = preprocessDisks( options.disks );
             options.newroot = options.newroot || guessNewRoot(options.disks);
+            debug(options);
+
             if (!options.newroot) {
                 console.log( errors['ENOROOT'] );
                 cb( {status: 'succes', err: errors['ENOROOT']} );

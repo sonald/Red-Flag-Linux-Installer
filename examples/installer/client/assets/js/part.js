@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'], 
+define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
        function($, _system, i18n, easyPage, fdPage, adPage) {
     'use strict';
 
@@ -9,7 +9,7 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
         locals: null,
         app: null,
         $el: null,
-         
+
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
             var that = this;
@@ -82,10 +82,10 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
 
         rewind: function() {
             //enable backward
-            return 
         },
 
         validate: function(callback) {
+            callback();
         },
 
         partflesh: function(result){
