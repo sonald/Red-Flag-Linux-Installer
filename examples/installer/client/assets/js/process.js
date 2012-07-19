@@ -55,7 +55,15 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
             var that = this;
             $('body').one('click', '#install', function() {
                 that.app.button_handler.add("install", "disabled");
-                that.onInstall();
+                window.apis.services.partition.commit(function(result) {
+                    if(result.status === "failure"){
+                        console.log(result.reason);
+                    }else if (result.status === "success") {
+                        that.onInstall();
+                    }else{
+                        console.log(result);
+                    };
+                });
             });
         },
 
