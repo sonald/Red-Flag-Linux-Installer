@@ -12,17 +12,19 @@ var fsutil = {
 
         exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
-                throw err;
+                callback(err);
+                return;
             }
 
             var re = /(\d+) (\d+) (\d+)/;
             var info = re.exec(stdout);
             if (!info) {
-                throw new Error('stat result is invalid: ' + stdout);
+                callback(new Error('stat result is invalid: ' + stdout));
+                return;
             }
 
             console.log('getFileSystemInfo: %s', info);
-            callback({
+            callback(null, {
                 "block size": info[1],
                 "total blocks": info[2],
                 "free blocks": info[3]
@@ -76,8 +78,8 @@ module.exports = (function(){
     function error_wrapper(watcher, err_callback) {
         return function(err) {
             if (err) {
-                err = (typeof err === 'string') ? errors[err] : err;
-                console.log(err);
+                err = (typeof err === 'string') && errors[err] ? errors[err] : err;
+                debug(err);
                 watcher({status: "failure", reason: err});
             }
 
@@ -208,7 +210,13 @@ module.exports = (function(){
             },
 
             function(newroot_mnt, cb) {
-                fsutil.getFileSystemInfo('/', function(info) {
+                fsutil.getFileSystemInfo('/', function(err, info) {
+                    if (err) {
+                        debug(err);
+                        cb(err);
+                        return;
+                    }
+
                     var size = (+info['total blocks'] - info['free blocks']) * info['block size'];
                     cb(null, newroot_mnt, size);
                 });
@@ -226,15 +234,22 @@ module.exports = (function(){
                     progId.stop();
                     if (code === 0) {
                         watcher({status: 'progress', data: 100});
-                        next();
+                        cb();
 
                     } else {
                         watcher({status: 'failure', reason: errors['ECOPYBASE']});
+                        cb({status: 'failure', reason: errors['ECOPYBASE']});
                     }
                 });
 
+                //TODO: dynamically adjust reporting speed
                 function populateProgress() {
-                    fsutil.getFileSystemInfo(newroot_mnt, function(info) {
+                    fsutil.getFileSystemInfo(newroot_mnt, function(err, info) {
+                        if (err) {
+                            progId.stop();
+                            cb(err);
+                        }
+
                         var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
                         percentage = Math.floor((installed / total_size) * 100);
 
@@ -247,9 +262,10 @@ module.exports = (function(){
         ],
         function(err) {
             if (err) {
-                console.log(err);
+                debug(err);
                 watcher({status: 'failure', reason: errors['ECOPYBASE']});
             }
+            next(err);
         });
     } //~ copyBaseSystem
 
@@ -267,6 +283,7 @@ module.exports = (function(){
             function genFstabEntry(part, callback) {
                 exec("blkid " + part.path + " -s UUID | awk -F: '{print $2}'", {}, function(err, stdout) {
                     if (err) {
+                        debug(err);
                         callback(err);
 
                     } else {
@@ -276,13 +293,13 @@ module.exports = (function(){
 
                         //FIXME: ext4 is hardcoded
                         contents += stdout + "\t" + part.mountpoint + "\text4\tdefaults\t0\t1\n";
-                        fs.writeFileSync(fstab, contents, 'utf8');
                         callback(null);
                     }
                 });
             }
 
             async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
+            fs.writeFileSync(fstab, contents, 'utf8');
         }
 
         function generatePostscript(err_cb) {
@@ -393,7 +410,7 @@ module.exports = (function(){
             ]
          }
          */
-        packAndUnpack: function(options, cb) {
+        packAndUnpack: function(options, reporter) {
             if (process.env.RFINSTALLER === 'fake') {
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
@@ -465,25 +482,30 @@ module.exports = (function(){
 
             if (!options.newroot) {
                 console.log( errors['ENOROOT'] );
-                cb( {status: 'succes', err: errors['ENOROOT']} );
+                reporter( {status: 'succes', err: errors['ENOROOT']} );
                 return;
             }
 
             async.waterfall([
                 function(next) {
-                    formatDirtyPartitions( options.disks, error_wrapper(cb, next) );
+                    formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
-                    copyBaseSystem( options, cb, error_wrapper(cb, next) );
+                    copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
                     //FIXME: do I need to umount all partitions and then remount it?
-                    postInstall(options, cb, function(err) {
+                    postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );
                     });
                 }
             ], function(err, result) {
-                cb( result );
+                if (err) {
+                    debug(err);
+                    reporter(err);
+                } else {
+                    reporter( result );
+                }
                 console.log( 'install done' );
             });
         }

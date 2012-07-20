@@ -1,12 +1,12 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 # tar  --numeric-owner --one-file-system -C src_dir -cSf /root/fifo1 ./
-# | dd if=fifo1 of=fifo2 bs=1048576 
+# | dd if=fifo1 of=fifo2 bs=1048576
 # | tar --numeric-owner -C dest_dir -xSf /root/fifo1
-# 
+#
 # Usage: $0 src_dir dest_dir
 # precondition: dest_dir is for mounted dest dev
 
-if [[ $# -ne 2 ]]; then 
+if [[ $# -ne 2 ]]; then
     echo "Usage: $0 src_dev dest_dev"
     exit 1
 fi
@@ -49,6 +49,3 @@ umount $dest_dir
 rmdir $dest_dir
 
 exit $done
-
-
-
