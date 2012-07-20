@@ -292,12 +292,16 @@ module.exports = (function(){
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
-
-                if (opts.passwd) {
-                    postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
-                        "'; } | passwd root\n";
-                }
             }
+
+            //TODO: root is unaccessible
+            opts.passwd = opts.passwd || require('crypto').createHash('sha1')
+                    .update(Date().toString()).digest('hex');
+            if (opts.passwd) {
+                postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
+                    "'; } | passwd root\n";
+            }
+
             console.log(postscript);
 
             var post = pathlib.join(root_dir, "/postscript.sh");
@@ -389,7 +393,7 @@ module.exports = (function(){
          }
          */
         packAndUnpack: function(options, cb) {
-            if (process.env.NODE_DEBUG) {
+            if (process.env.RFINSTALLER === 'fake') {
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
                     "installmode": "easy",
