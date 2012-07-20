@@ -45,7 +45,4 @@ done=0
 unlink $fifo1
 unlink $fifo2
 
-umount $dest_dir
-rmdir $dest_dir
-
 exit $done

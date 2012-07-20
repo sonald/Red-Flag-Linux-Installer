@@ -91,18 +91,19 @@ module.exports = (function(){
 
     function system(cmd) {
         return function(err_cb) {
+            debug('exec ' + cmd);
             var child = exec(cmd);
             child.on('exit', function(code, signal) {
                 if (code === 0) {
                     err_cb(null);
 
                 } else {
-                    debug(cmd + ' failed');
                     err_cb(cmd + ' failed');
                 }
             });
         };
     }
+
     function filterAndFlattenPartitions(disks, filter) {
         var parts = [];
 
@@ -234,7 +235,7 @@ module.exports = (function(){
                     progId.stop();
                     if (code === 0) {
                         watcher({status: 'progress', data: 100});
-                        cb();
+                        cb(null, newroot_mnt);
 
                     } else {
                         watcher({status: 'failure', reason: errors['ECOPYBASE']});
@@ -258,6 +259,17 @@ module.exports = (function(){
                 }
 
                 progId = setInterval(populateProgress, 1000);
+            },
+
+            // cleanup: umount newroot_mnt and rmdir it
+            function(newroot_mnt, cb) {
+                system('umount ' + newroot_mnt)(function(err) {
+                    cb(null, newroot_mnt);
+                });
+            },
+
+            function(newroot_mnt, cb) {
+                system('rmdir ' + newroot_mnt)(cb);
             }
         ],
         function(err) {
@@ -320,7 +332,9 @@ module.exports = (function(){
                     "'; } | passwd root\n";
             }
 
-            console.log(postscript);
+            // whatever which cmd failed in script, consider it ok.
+            postscript += 'exit 0\n';
+            debug(postscript);
 
             var post = pathlib.join(root_dir, "/postscript.sh");
             fs.writeFile(post, postscript, 'utf8', function(err) {
