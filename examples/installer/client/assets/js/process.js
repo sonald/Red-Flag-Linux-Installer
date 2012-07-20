@@ -69,7 +69,7 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
 
         onInstall: function() {
             console.log(this.app.Data);
-            window.apis.services.install.packAndUnpack(this.app.Data.options, this.onProgress);
+            window.apis.services.install.packAndUnpack(this.app.options, this.onProgress);
         },
 
         onProgress: function(respond) {
