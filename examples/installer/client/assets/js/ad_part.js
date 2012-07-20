@@ -9,21 +9,14 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
         locals : null,
         app:null,
         record:{
-            disks:[],//"devpath":[part[number],....]
-            mp:[],//"/":path+number
-            fs:[],//"ext4":path+number
-            new:[] //"devpath":[number];
+            edit:[],//{path:"/dev/sda",num:1,mp:"/",fs:"ext4"}
+            dirty:[],//devpath
         },
 
         initialize: function (app, locals) {
             this.app = app;
             this.locals = locals;
             this.app.options.installmode = "advanced";
-            var i,j;
-            var disks = locals.disks;
-            for (i=0;i < disks.length; i++) {
-                
-            }
         },
          
         // compile and return page partial
@@ -88,10 +81,12 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','a.js-edit-submit',function () {
-                var mp, fstype, path;
+                var mp, fstype, path, num;
                 var $content = $(this).parents('.modal');
-                fstype = "ext4";
-                path = "/dev/sda";
+                fstype = "";
+                mp = "";
+                path = $(this).attr("path");
+                num = $(this).attr("num");
                 $content.find(":checked").each(function(){
                     if ($(this).parent().attr("id") === "mp") {
                         mp = this.value;
@@ -99,8 +94,24 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                         fstype = this.value;
                     }
                 });
-                path = $(this).attr("path");
-                if (mp !== "") {
+                for (var x in that.record.edit){
+                    if (that.record.edit[x].path === path && that.record.edit[x].num === num) {
+                        that.record.edit.splice(x,1);
+                        break;
+                    };
+                }
+                var tmp = {
+                    "path": path,
+                    "num":num,
+                    "fs": fstype,
+                    "mp": mp
+                };
+                that.record.edit.push(tmp);
+                if (fstype !== "") {
+                    $(this).parents('ul.part').find('a.partfs').text(fs);
+                }
+                if(mp !== "") {
+                    $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
                 }
             });
         },
@@ -115,14 +126,22 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                         that.record.dirty.push(newpart);
                     }else if (result.handlepart.sunstring(0,3) === "del") {
                         var oldpartpath = result.handlepart.sunstring(3,11);
-                        var num = Number(result.handlepart.sunstring(11));
+                        var oldpartnum = Number(result.handlepart.sunstring(11));
                         for (var x in that.record.dirty){
-                            if (that.record.dirty[x] === oldpart) {
+                            if (that.record.dirty[x] === oldpartpath) {
                                 that.record.dirty.splice(x,1);
-                            }
-                            if (that.record.edit[x].part === oldpart) {
+                                break;
                             }
                         }
+                        for (var x in that.record.edit){
+                            if (that.record.edit[x].path === oldpartpath) {
+                                if (that.record.edit[x].num === oldpartnum) {
+                                    that.record.edit.splice(x,1);
+                                } else if (oldpartnum > 4 && that.record.edit[x].num > oldpartnum) {
+                                    that.record.edit[x].num--;
+                                }
+                            }
+                        }//remove and fix record in edit about the deleted part
                     }
                 
                 }
@@ -130,6 +149,15 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     that.locals["disks"] = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
+                    for (var x in that.record.edit) {
+                        var $part = $('ul.disk[dpath="'+that.record.edit[x].path+'"]').find('ul.part[num="'+that.record.edit[x].num+'"]');
+                        if(that.record.edit[x].fs !== "") {
+                            $part.find('a.partfs').text($part.find('a.partfs').text() + that.record.edit[x].fs);
+                        }
+                        if (that.record.edit[x].mp !== ""){
+                            $part.find('a.partmp').text($part.find('a.partmp').text() + that.record.edit[x].mp);
+                        }
+                    }
                 });
             }else if(result.status === "failure") {
                 //TODO

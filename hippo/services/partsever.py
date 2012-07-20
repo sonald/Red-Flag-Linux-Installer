@@ -49,9 +49,9 @@ class PartSocket(tornadio2.SocketConnection):
             disk = self.disks[devpath]
             dev = parted.getDevice(devpath)
             partnumber = []
-            parts = disk.partitons
+            parts = disk.partitions
             for p in parts:
-                partnumber.push(p.number)
+                partnumber.append(p.number)
 
             try:
                 self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
@@ -62,7 +62,7 @@ class PartSocket(tornadio2.SocketConnection):
             for p in parts:
                 if p.number in partnumber:
                     continue
-                data = self.error_handle(None,"add"+devpath+p.number)
+                data = self.error_handle(None,"add"+devpath+ str(p.number))
                 break;
         else:
             data = self.error_handle("args is error.",None)
@@ -71,7 +71,7 @@ class PartSocket(tornadio2.SocketConnection):
 
     @tornadio2.event
     def rmpart(self, devpath, partnumber):
-        data = self.error_handle(None,"del"+devpath+partnumber)
+        data = self.error_handle(None,"del"+devpath+str(partnumber))
         if self.has_disk(devpath):
             disk = self.disks[devpath]
             try:

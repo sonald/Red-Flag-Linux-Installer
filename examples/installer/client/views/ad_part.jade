@@ -4,7 +4,7 @@ script(type="text/template", id="advanced_part_tmpl").
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk(dsize=disk["size"])
+            ul.wat-cf.disk(dsize=disk["size"],dpath=disk["path"])
                 li.vertical
                     a(href="#")= disk["path"]
                     a(href="#")
@@ -67,7 +67,7 @@ script(type="text/template", id="advanced_part_tmpl").
                                                                 option(value="linux-swap(v1)") swap
                                                 .modal-footer
                                                         a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                                                        a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
+                                                        a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"], num=part["number"])= gettext('Submit')
                                         -else if (part["ty"]=="extended")
                                             //a.btn.create create
                                             a.delete(num=part["number"], path=disk["path"]) delete
