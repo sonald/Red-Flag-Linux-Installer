@@ -1,0 +1,7 @@
+<html>
+<body>
+By using this <span style="color:red; font-weight=bold">font effect preview</span> tool，
+one can easily customize the font system to find what fits your favorite look and feel. 
+try it by clicking <span style="color:red; font-weight=bold">font preview</span>.
+</body>
+</html>

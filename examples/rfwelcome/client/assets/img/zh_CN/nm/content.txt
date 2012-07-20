@@ -1,0 +1,7 @@
+<html>
+<body>
+我们对<span style="color:red; font-weight=bold">网络配置工具</span>进行了改进，
+对无线连接点按信号强度进行排序，增强易用性，更直观的ipv4地址配置，
+方便用户快速设置网络。
+</body>
+</html>

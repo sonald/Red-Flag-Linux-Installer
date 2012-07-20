@@ -304,13 +304,27 @@ module.exports = (function(){
                             stdout = stdout.slice(0, len-1);
 
                         //FIXME: ext4 is hardcoded
-                        contents += stdout + "\t" + part.mountpoint + "\text4\tdefaults\t0\t1\n";
+                        contents += stdout + "\t" + part.mountpoint + "\t" +
+                            part.fs + "\tdefaults\t0\t1\n";
+
                         callback(null);
                     }
                 });
             }
 
+            var swaps = filterAndFlattenPartitions(opts.disks, function(entry) {
+                return entry.dirty && entry.fs.indexOf('swap') != -1;
+            }).map(function(part) {
+                return {
+                    fs: 'swap',
+                    mountpoint: 'swap',
+                    path: part.path
+                };
+            });
+
             async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
+            async.forEachSeries(swaps, genFstabEntry, err_cb);
+
             fs.writeFileSync(fstab, contents, 'utf8');
         }
 
@@ -322,6 +336,10 @@ module.exports = (function(){
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
+
+                // give sudo power
+                postscript += 'echo ' + opts.username + ' ALL=(ALL) ALL > /etc/sudoers.d/' +
+                    opts.username + '\n';
             }
 
             //TODO: root is unaccessible
@@ -331,6 +349,7 @@ module.exports = (function(){
                 postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
                     "'; } | passwd root\n";
             }
+
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
@@ -356,7 +375,7 @@ module.exports = (function(){
                 return;
             }
 
-            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos);
+            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos)(err_cb);
         }
 
         async.waterfall(
@@ -429,7 +448,7 @@ module.exports = (function(){
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
                     "installmode": "fulldisk",
-                    "username": "sonald",
+                    "username": "pangu_test",
                     "disks": [
                     {
                         "table": [

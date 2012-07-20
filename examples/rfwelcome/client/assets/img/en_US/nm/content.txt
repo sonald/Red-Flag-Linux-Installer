@@ -1,0 +1,6 @@
+<html>
+<body>
+We redesigned the whole ipv4 configuration panel of 
+<span style="color:red; font-weight=bold"> nm-connection-editor </span>, rearrange the wireless APs by signal quality, and more usable than before.
+</body>
+</html>
