@@ -356,7 +356,7 @@ module.exports = (function(){
                 return;
             }
 
-            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos);
+            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos)(err_cb);
         }
 
         async.waterfall(
@@ -429,7 +429,7 @@ module.exports = (function(){
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
                     "installmode": "fulldisk",
-                    "username": "sonald",
+                    "username": "pangu_test",
                     "disks": [
                     {
                         "table": [
