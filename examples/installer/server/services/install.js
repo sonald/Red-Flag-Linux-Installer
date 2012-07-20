@@ -55,8 +55,11 @@ var debug = (function() {
 
     if (process.env.NODE_DEBUG) {
         return function() {
-            [].slice.apply(arguments).forEach(function(obj) {
-                console.log( require('util').inspect(obj, true, 10) );
+            var util = require('util');
+
+            return [].slice.apply(arguments).reduce(function(acc, item) {
+                item = typeof item === 'string'? item: util.inspect(item, false, 5);
+                return acc + ' ' + item;
             });
         };
     } else {
@@ -338,7 +341,7 @@ module.exports = (function(){
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
 
                 // give sudo power
-                postscript += 'echo ' + opts.username + ' ALL=(ALL) ALL > /etc/sudoers.d/' +
+                postscript += 'echo "' + opts.username + ' ALL=(ALL) ALL" > /etc/sudoers.d/' +
                     opts.username + '\n';
             }
 
