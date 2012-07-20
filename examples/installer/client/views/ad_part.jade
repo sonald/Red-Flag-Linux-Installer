@@ -34,11 +34,13 @@ script(type="text/template", id="advanced_part_tmpl").
                                     li
                                         a(href="#")= part["ty"]
                                     li
-                                        a(href="#")= part["fs"]
+                                        a.partfs(href="#")= part["fs"]
                                     li
+                                        a.partmp(href="#")= "MountPoint:"
+                                    li.colorhidden
                                         -if (part["ty"] == "primary")
-                                            a.btn.delete(num=part["number"], path=disk["path"]) delete
-                                            a.btn.edit(href="#edit"+String(i)+String(p),data-toggle="modal") edit
+                                            a.delete(num=part["number"], path=disk["path"]) delete
+                                            a.edit(href="#edit"+String(i)+String(p),data-toggle="modal") edit
                                             .modal.hide.fade(id="edit"+String(i)+String(p))
                                                 .modal-header
                                                     button.close(type="button", data-dismiss="modal")×
@@ -68,9 +70,9 @@ script(type="text/template", id="advanced_part_tmpl").
                                                         a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
                                         -else if (part["ty"]=="extended")
                                             //a.btn.create create
-                                            a.btn.delete(num=part["number"], path=disk["path"]) delete
+                                            a.delete(num=part["number"], path=disk["path"]) delete
                                         -else
-                                            a.btn.create(href="#free"+String(i)+String(p),data-toggle="modal") create
+                                            a.create(href="#free"+String(i)+String(p),data-toggle="modal") create
                                             .modal.hide.fade(id="free"+String(i)+String(p))
                                                 .modal-header
                                                     button.close(type="button", data-dismiss="modal")×

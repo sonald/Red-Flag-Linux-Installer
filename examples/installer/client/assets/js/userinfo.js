@@ -32,6 +32,12 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
         postSetup: function() {
             this.app.button_handler.rm("forward","disabled");
             this.app.button_handler.rm("backward","disabled");
+            $('body').off('keyup', 'input#name');
+
+            $('body').on('keyup', 'input#name', function() {
+                var value = $(this).attr("value");
+                $('input#hostname').attr("value", value+"-qomo");
+            });
         },
 
         rewind: function() {
@@ -48,6 +54,8 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                 jsvalidate.result = true;
                 return false;
             };
+            this.app.options.username = $('input#name').attr("value")
+            this.app.options.hostname = $('input#hostname').attr("value")
             callback();
         },
     };

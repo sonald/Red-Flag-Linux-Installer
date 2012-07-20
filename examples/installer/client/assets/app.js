@@ -33,20 +33,18 @@ var app = {
     },
 
     // collect user configurations
-    Data: {
-        userData: {
-            username:'',
-            hostname:'qomo',
-        },
-        options: {},
+    options: {
+        username:'',
+        hostname:'qomo',
+        grubinstall:'',
+        installmode:'easy',
+        disks: [],
     },
 
-    resetOptions: function () {
-        this.Data.options = {
-            grubinstall:'',
-            installmode: 'easy',
-            disks:[],
-        };
+    resetDatas: function () {
+        this.options.grubinstall = '';
+        this.options.installmode = 'easy';
+        this.options.disks = [];
     },
 
     // internal, do not change it manually

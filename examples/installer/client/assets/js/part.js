@@ -27,10 +27,10 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
             var that = this;
             window.apis.services.partition.reset(function(result) {
                 if(result.status === "success"){
-                    that.app.resetOptions();
+                    that.app.resetDatas();
                     window.apis.services.partition.getPartitions(function(disks) {
                         that.locals["disks"] = disks;
-                        that.app.Data.options.disks = disks;
+                        that.app.options.disks = disks;
                         callback();
                     });
                 }else if(result.status === "failure"){
@@ -92,23 +92,22 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                 var $selected = that.$el.find('ul.select');//TODO
                 var pnum = $selected.attr("pnum");
                 var dnum = $selected.parents('ul.disk').attr("dnum");
-                var part = that.app.Data.options.disks[dnum].table[pnum];
+                var part = that.app.options.disks[dnum].table[pnum];
                 part["dirty"] = true;
                 part["mountpoint"] = "/";
                 part.fs = "ext4";
-                console.log(JSON.stringify(that.app.Data.options));
                 callback();
             }else if (that.$el.has("#fulldisk_part_table").length > 0) {
                 var $selected = that.$el.find('ul.select');//TODO
                 var dnum=$selected.attr("dnum");
-                var disk = that.app.Data.options.disks[dnum];
+                var disk = that.app.options.disks[dnum];
                 var devpath = disk["path"];
                 window.apis.services.partition.FulldiskHandler(devpath, function (results) {
                     if (results.status && results.status == "failure") {
                         console.log(results);
                     }else{
                         that.locals["disks"] = results;
-                        that.app.Data.options.disks = results;
+                        that.app.options.disks = results;
                         var dnums = results.length;
                         var i = 0;
                         for (i=0; i<dnums; i++){
@@ -126,7 +125,6 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                                 break;
                             }
                         }
-                        console.log(JSON.stringify(that.app.Data.options));
                         callback();
                     }
                 });

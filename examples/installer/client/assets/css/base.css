@@ -27,7 +27,7 @@ input.dial {
 
 .part_table a	{
     text-decoration: none; 
-    _color: #eee;
+    color: #eee;
     display: block;
     padding: 4px 0;
 }
@@ -57,7 +57,11 @@ input.dial {
     background: #5a5a5a; 
 }
 
-.part_table li.vertical {
+.part_table ul.part li.colorhidden a{
+    color: #4b4b4b;
+}
+.part_table ul.part:hover li.colorhidden a{
+    color: #eee;
 }
 
 .part_table li.horizontal {

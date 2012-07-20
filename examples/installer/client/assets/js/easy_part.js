@@ -9,8 +9,8 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
         initialize: function (app, locals) {
             this.app = app;
             this.locals = locals;
-            this.app.Data.options.installmode = "easy";
-            this.app.Data.options.grubinstall = "/dev/sda";
+            this.app.options.installmode = "easy";
+            this.app.options.grubinstall = "/dev/sda";
         },
 
         loadView: function () {
