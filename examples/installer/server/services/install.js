@@ -23,7 +23,7 @@ var fsutil = {
                 return;
             }
 
-            console.log('getFileSystemInfo: %s', info);
+            debug('getFileSystemInfo: ', info.toString());
             callback(null, {
                 "block size": info[1],
                 "total blocks": info[2],
@@ -44,7 +44,7 @@ var fsutil = {
             if (stdout[len-1] === '\n')
                 stdout = stdout.slice(0, len-1);
 
-            console.log('mktemp: %s', stdout);
+            debug('mktemp: ' + stdout);
             callback(stdout);
         });
     }
@@ -55,9 +55,14 @@ var debug = (function() {
 
     if (process.env.NODE_DEBUG) {
         return function() {
-            [].slice.apply(arguments).forEach(function(obj) {
-                console.log( require('util').inspect(obj, true, 10) );
+            var util = require('util');
+
+            var msg = [].slice.apply(arguments).reduce(function(acc, item) {
+                item = typeof item === 'string'? item: util.inspect(item, true, 5);
+                return acc + ' ' + item;
             });
+
+            console.log(msg);
         };
     } else {
         return function() {};
@@ -230,7 +235,7 @@ module.exports = (function(){
                 var percentage = 0;
                 var progId;
 
-                console.log('run %s', helper);
+                debug('run ' + helper);
                 child.on('exit', function(code, signal) {
                     progId.stop();
                     if (code === 0) {
@@ -295,7 +300,6 @@ module.exports = (function(){
             function genFstabEntry(part, callback) {
                 exec("blkid " + part.path + " -s UUID | awk -F: '{print $2}'", {}, function(err, stdout) {
                     if (err) {
-                        debug(err);
                         callback(err);
 
                     } else {
@@ -322,10 +326,11 @@ module.exports = (function(){
                 };
             });
 
-            async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
-            async.forEachSeries(swaps, genFstabEntry, err_cb);
-
-            fs.writeFileSync(fstab, contents, 'utf8');
+            async.forEachSeries(mounts.sort().concat(swaps), genFstabEntry, function(err) {
+                debug(contents);
+                fs.writeFileSync(fstab, contents, 'utf8');
+                err_cb(err);
+            });
         }
 
         function generatePostscript(err_cb) {
@@ -338,7 +343,7 @@ module.exports = (function(){
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
 
                 // give sudo power
-                postscript += 'echo ' + opts.username + ' ALL=(ALL) ALL > /etc/sudoers.d/' +
+                postscript += 'echo "' + opts.username + ' ALL=(ALL) ALL" > /etc/sudoers.d/' +
                     opts.username + '\n';
             }
 
@@ -399,10 +404,10 @@ module.exports = (function(){
             function(err) {
                 if (err) {
                     watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
-                    console.log('postInstall failed: ', err);
-                } else {
-                    next();
+                    console.error('postInstall failed: ', err);
                 }
+
+                next(err);
             });
     } // ~ postInstall
 
@@ -514,7 +519,7 @@ module.exports = (function(){
             debug(options);
 
             if (!options.newroot) {
-                console.log( errors['ENOROOT'] );
+                console.error( errors['ENOROOT'] );
                 reporter( {status: 'succes', err: errors['ENOROOT']} );
                 return;
             }
