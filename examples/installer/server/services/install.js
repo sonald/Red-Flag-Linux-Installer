@@ -304,13 +304,27 @@ module.exports = (function(){
                             stdout = stdout.slice(0, len-1);
 
                         //FIXME: ext4 is hardcoded
-                        contents += stdout + "\t" + part.mountpoint + "\text4\tdefaults\t0\t1\n";
+                        contents += stdout + "\t" + part.mountpoint + "\t" +
+                            part.fs + "\tdefaults\t0\t1\n";
+
                         callback(null);
                     }
                 });
             }
 
+            var swaps = filterAndFlattenPartitions(opts.disks, function(entry) {
+                return entry.dirty && entry.fs.indexOf('swap') != -1;
+            }).map(function(part) {
+                return {
+                    fs: 'swap',
+                    mountpoint: 'swap',
+                    path: part.path
+                };
+            });
+
             async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
+            async.forEachSeries(swaps, genFstabEntry, err_cb);
+
             fs.writeFileSync(fstab, contents, 'utf8');
         }
 
