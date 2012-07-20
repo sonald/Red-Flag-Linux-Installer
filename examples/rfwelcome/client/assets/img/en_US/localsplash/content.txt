@@ -1,0 +1,5 @@
+<html>
+<body>
+Congratulations! You have installed the inWise 2011 (Red Flag Linux Co. Ltd). Please feel free to explore the system and use this program as a guidance.
+</body>
+</html>

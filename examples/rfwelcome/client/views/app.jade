@@ -1,0 +1,33 @@
+extends layout
+
+block header        
+    //-script(src="/app.js")
+    title Demo App
+
+block content
+    .row
+        .span8.offset4
+            h1 Welcome the RedFlag
+            br
+            #myCarousel.carousel.slide
+                .carousel-inner
+                    .active.item
+                        img(src="/img/en_US/livecdsplash/a.png")
+                        .carousel-caption
+                            p welcome to inwise2011, please be aware of the fact that
+                               | you're under livecd environment. 
+                            p we provide you a re-designed installer which will help you install the system fast and easily.
+                            p click button 
+                                a.btn.btn-primary install
+                                |  below to start installer.
+                    .item
+                        img(src="/img/en_US/livecdsplash/c.png")
+                        .carousel-caption
+                            p We redesigned the whole ipv4 configuration panel of nm-connection-editor,
+                            p rearrange the wireless APs by signal quality, and more usable than before.
+                    .item
+                        img(src="/img/en_US/livecdsplash/c.png")
+                        .carousel-caption
+                            a.btn.btn-primary getPartitions
+                a.carousel-control.left(href="#myCarousel", data-slide="prev") &lsaquo;
+                a.carousel-control.right(href="#myCarousel", data-slide="next") &rsaquo;

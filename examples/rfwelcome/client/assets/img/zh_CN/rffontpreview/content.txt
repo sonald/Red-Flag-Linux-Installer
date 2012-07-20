@@ -1,0 +1,8 @@
+<html>
+<body>
+方便的<span style="color:red; font-weight=bold">字体效果预览和选择工具</span>，
+通过直观的选择您看到的文字效果来定制符合个人习惯的最佳系统字体环境。
+点击下面的<span style="color:red; font-weight=bold">字体效果配置</span>
+来尝试。
+</body>
+</html>

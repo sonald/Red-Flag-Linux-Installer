@@ -1,0 +1,7 @@
+<html>
+<body>
+Welcome to inWise2011, please be aware of the fact that
+<span style="color:red; font-weight=bold"> you're under LiveCD environment</span>，all changes may lose after reboot.
+we provide you a re-designed installer which will help you install the system fast and easily. click button <span style="color:red;font-weight:bold">install</span> below to start installer.
+</body>
+</html>

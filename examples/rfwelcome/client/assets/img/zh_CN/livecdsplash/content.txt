@@ -1,0 +1,11 @@
+<html>
+<body>
+欢迎使用<span style="color:red;font-weight:bold">inWise2011</span>，注意
+<span style="color:red; font-weight=bold">您正在LiveCD环境下体验系统</span>，所有修改在重启后将丢失。
+我们提供全新的桌面安装程序，您可以将此系统安装到硬盘上，以便获得更快速和丰富的体验。另外，使用Windows XP
+的用户也可以使用rfsetup协助硬盘安装。
+要安装系统到硬盘请点击下方的
+<span style="color:red;font-weight:bold">安装</span>
+按钮。
+</body>
+</html>
