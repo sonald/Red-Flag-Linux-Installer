@@ -95,6 +95,7 @@ module.exports = (function(){
                     err_cb(null);
 
                 } else {
+                    debug(cmd + ' failed');
                     err_cb(cmd + ' failed');
                 }
             });
@@ -396,43 +397,62 @@ module.exports = (function(){
             if (process.env.RFINSTALLER === 'fake') {
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
-                    "installmode": "easy",
+                    "installmode": "fulldisk",
+                    "username": "sonald",
                     "disks": [
+                    {
+                        "table": [
                         {
-                            "table": [
-                                {
-                                    "fs": "ext4",
-                                    "ty": "primary",
-                                    "number": 1
-                                }
-                            ],
-                            "path": "/dev/sda",
-                            "model": "Alcor Flash Disk",
-                            "type": "msdos",
-                            "unit": "GB",
-                            "size": 1.03179776
+                            "fs": "linux-swap(v1)",
+                            "end": 1.003483648,
+                            "ty": "primary",
+                            "number": 1,
+                            "start": 0.000032256,
+                            "size": 1.003451392,
+                            "dirty": true
                         },
                         {
-                            "table": [
-                                {
-                                    "fs": "ntfs",
-                                    "ty": "primary",
-                                    "number": 3
-                                },
-                                {
-                                    "fs": "ext4",
-                                    "ty": "primary",
-                                    "number": 1,
-                                    "dirty": true,
-                                    "mountpoint": "/"
-                                }
-                            ],
-                            "path": "/dev/sdb",
-                            "model": "ATA TOSHIBA MK1656GS",
-                            "type": "msdos",
-                            "unit": "GB",
-                            "size": 160.041885696
+                            "fs": "ext4",
+                            "end": 8.003196928,
+                            "ty": "primary",
+                            "number": 2,
+                            "start": 1.01170944,
+                            "size": 6.991487488,
+                            "dirty": true,
+                            "mountpoint": "/"
+                        },
+                        {
+                            "fs": "",
+                            "end": 8.587191808,
+                            "ty": "free",
+                            "number": -1,
+                            "start": 8.00319744,
+                            "size": 0.5839943680000008
                         }
+                        ],
+                        "path": "/dev/sdb",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.589934592
+                    },
+                    {
+                        "table": [
+                        {
+                            "fs": "ext4",
+                            "end": 8.388607488,
+                            "ty": "primary",
+                            "number": 1,
+                            "start": 0.000032256,
+                            "size": 8.388575231999999
+                        }
+                        ],
+                        "path": "/dev/sda",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.388608
+                    }
                     ]
                 };
 
