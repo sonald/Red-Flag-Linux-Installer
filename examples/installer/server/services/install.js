@@ -322,6 +322,10 @@ module.exports = (function(){
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
+
+                // give sudo power
+                postscript += 'echo ' + opts.username + ' ALL=(ALL) ALL > /etc/sudoers.d/' +
+                    opts.username + '\n';
             }
 
             //TODO: root is unaccessible
@@ -331,6 +335,7 @@ module.exports = (function(){
                 postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
                     "'; } | passwd root\n";
             }
+
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
