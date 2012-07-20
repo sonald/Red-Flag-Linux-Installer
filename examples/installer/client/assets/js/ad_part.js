@@ -8,11 +8,22 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
         view: '#advanced_part_tmpl',
         locals : null,
         app:null,
+        record:{
+            disks:[],//"devpath":[part[number],....]
+            mp:[],//"/":path+number
+            fs:[],//"ext4":path+number
+            new:[] //"devpath":[number];
+        },
 
         initialize: function (app, locals) {
             this.app = app;
             this.locals = locals;
-            this.app.Data.options.installmode = "advanced";
+            this.app.options.installmode = "advanced";
+            var i,j;
+            var disks = locals.disks;
+            for (i=0;i < disks.length; i++) {
+                
+            }
         },
          
         // compile and return page partial
@@ -75,11 +86,46 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 window.apis.services.partition.mkpart(
                     path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
             });
+
+            $('body').on('click','a.js-edit-submit',function () {
+                var mp, fstype, path;
+                var $content = $(this).parents('.modal');
+                fstype = "ext4";
+                path = "/dev/sda";
+                $content.find(":checked").each(function(){
+                    if ($(this).parent().attr("id") === "mp") {
+                        mp = this.value;
+                    }else if ($(this).parent().attr("id") === "fs") {
+                        fstype = this.value;
+                    }
+                });
+                path = $(this).attr("path");
+                if (mp !== "") {
+                }
+            });
         },
 
         partflesh: function(result){
             var that = this;
             if (result.status === "success") {
+                if (result.handlepart){
+                    //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
+                    if (result.handlepart.sunstring(0,3) === "add") {
+                        var newpart = result.handlepart.sunstring(3);
+                        that.record.dirty.push(newpart);
+                    }else if (result.handlepart.sunstring(0,3) === "del") {
+                        var oldpartpath = result.handlepart.sunstring(3,11);
+                        var num = Number(result.handlepart.sunstring(11));
+                        for (var x in that.record.dirty){
+                            if (that.record.dirty[x] === oldpart) {
+                                that.record.dirty.splice(x,1);
+                            }
+                            if (that.record.edit[x].part === oldpart) {
+                            }
+                        }
+                    }
+                
+                }
                 window.apis.services.partition.getPartitions(function(disks) {
                     that.locals["disks"] = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
