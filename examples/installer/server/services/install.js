@@ -23,7 +23,7 @@ var fsutil = {
                 return;
             }
 
-            console.log('getFileSystemInfo: %s', info);
+            debug('getFileSystemInfo: ', info);
             callback(null, {
                 "block size": info[1],
                 "total blocks": info[2],
@@ -44,7 +44,7 @@ var fsutil = {
             if (stdout[len-1] === '\n')
                 stdout = stdout.slice(0, len-1);
 
-            console.log('mktemp: %s', stdout);
+            debug('mktemp: ' + stdout);
             callback(stdout);
         });
     }
@@ -57,10 +57,12 @@ var debug = (function() {
         return function() {
             var util = require('util');
 
-            return [].slice.apply(arguments).reduce(function(acc, item) {
+            var msg = [].slice.apply(arguments).reduce(function(acc, item) {
                 item = typeof item === 'string'? item: util.inspect(item, false, 5);
                 return acc + ' ' + item;
             });
+
+            console.log(msg);
         };
     } else {
         return function() {};
@@ -233,7 +235,7 @@ module.exports = (function(){
                 var percentage = 0;
                 var progId;
 
-                console.log('run %s', helper);
+                debug('run ' + helper);
                 child.on('exit', function(code, signal) {
                     progId.stop();
                     if (code === 0) {
@@ -402,7 +404,7 @@ module.exports = (function(){
             function(err) {
                 if (err) {
                     watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
-                    console.log('postInstall failed: ', err);
+                    console.error('postInstall failed: ', err);
                 } else {
                     next();
                 }
@@ -517,7 +519,7 @@ module.exports = (function(){
             debug(options);
 
             if (!options.newroot) {
-                console.log( errors['ENOROOT'] );
+                console.error( errors['ENOROOT'] );
                 reporter( {status: 'succes', err: errors['ENOROOT']} );
                 return;
             }
