@@ -10,7 +10,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
         app:null,
         record:{
             edit:[],//{path:"/dev/sda",num:1,mp:"/",fs:"ext4"}
-            dirty:[],//devpath
+            dirty:[],//{path:"dev/sda",num:1}
         },
 
         initialize: function (app, locals) {
@@ -47,6 +47,10 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','#reset',function () {
+                that.record = {
+                    edit:[],
+                    dirty:[],
+                };
                 window.apis.services.partition.reset(
                     $.proxy(that.partflesh, that));
             });
@@ -108,7 +112,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 };
                 that.record.edit.push(tmp);
                 if (fstype !== "") {
-                    $(this).parents('ul.part').find('a.partfs').text(fs);
+                    $(this).parents('ul.part').find('a.partfs').text(fstype);
                 }
                 if(mp !== "") {
                     $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
@@ -122,13 +126,14 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 if (result.handlepart){
                     //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
                     if (result.handlepart.sunstring(0,3) === "add") {
-                        var newpart = result.handlepart.sunstring(3);
-                        that.record.dirty.push(newpart);
+                        var newpath = result.handlepart.sunstring(3,11);
+                        var newnumber = Number(result.handlepart.sunstring(11));
+                        that.record.dirty.push({path:newpath,num:newnumber});
                     }else if (result.handlepart.sunstring(0,3) === "del") {
                         var oldpartpath = result.handlepart.sunstring(3,11);
                         var oldpartnum = Number(result.handlepart.sunstring(11));
                         for (var x in that.record.dirty){
-                            if (that.record.dirty[x] === oldpartpath) {
+                            if (that.record.dirty[x].path === oldpartpath && that.record.dirty[x].num === oldpartnum) {
                                 that.record.dirty.splice(x,1);
                                 break;
                             }
@@ -143,21 +148,21 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                             }
                         }//remove and fix record in edit about the deleted part
                     }
-                
                 }
                 window.apis.services.partition.getPartitions(function(disks) {
                     that.locals["disks"] = disks;
+                    that.app.options.disks = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
                     for (var x in that.record.edit) {
                         var $part = $('ul.disk[dpath="'+that.record.edit[x].path+'"]').find('ul.part[num="'+that.record.edit[x].num+'"]');
                         if(that.record.edit[x].fs !== "") {
-                            $part.find('a.partfs').text($part.find('a.partfs').text() + that.record.edit[x].fs);
-                        }
+                            $part.find('a.partfs').text(that.record.edit[x].fs);
+                        };
                         if (that.record.edit[x].mp !== ""){
-                            $part.find('a.partmp').text($part.find('a.partmp').text() + that.record.edit[x].mp);
-                        }
-                    }
+                            $part.find('a.partmp').text("MountPoint:" + that.record.edit[x].mp);
+                        };
+                    };
                 });
             }else if(result.status === "failure") {
                 //TODO

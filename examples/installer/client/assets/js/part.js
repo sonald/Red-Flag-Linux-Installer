@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
+define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
        function($, _system, i18n, easyPage, fdPage, adPage) {
     'use strict';
 
@@ -129,7 +129,27 @@ define(['jquery', 'system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     }
                 });
             }else if (that.$el.has("#advanced_part_table").length > 0) {
+                for (var x in that.app.options.disks){
+                    var devpath = that.app.options.disks[x].path
+                    for (var y in that.app.options.disks[x].table) {
+                        var partnum = that.app.options.disks[x].table[y].number;
+                        var tmp = _.find(adPage.record.dirty, function(el){ return (el.paht == devpath && el.num == partnum); });
+                        if ( typeof tmp !== "undefined" ) {
+                            that.app.options.disks[x].table[y]["dirty"] = true;
+                        }
+                        tmp = _.find(adPage.record.edit, function(el){ return (el.path == devpath && partnum == el.num ); });
+                        if ( typeof tmp !== "undefined" ) {
+                            that.app.options.disks[x].table[y]["dirty"] = true;
+                            that.app.options.disks[x].table[y]["mountpoint"]= tmp.mp;
+                            if( tmp.fs !== "") {
+                                that.app.options.disks[x].table[y]["fs"]= tmp.fs;
+                            };
+                        }
+                    }
+                }
+                callback();
             };
+            console.log(that.app.options);
         },
     };
     return page;

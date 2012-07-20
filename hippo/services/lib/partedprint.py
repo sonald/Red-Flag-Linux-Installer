@@ -29,7 +29,7 @@ def print_disk_helper_to_json_format(parts):
         start = parted.formatBytes(part.geometry.start*512,'GB')
         end = parted.formatBytes(part.geometry.end*512,'GB')
         size =  end - start
-        if size < 0.01:
+        if size < 0.01 and part.number < 0:
             continue
         fstype = ""
         if part.fileSystem:
