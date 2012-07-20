@@ -23,7 +23,7 @@ var fsutil = {
                 return;
             }
 
-            debug('getFileSystemInfo: ', info);
+            debug('getFileSystemInfo: ', info.toString());
             callback(null, {
                 "block size": info[1],
                 "total blocks": info[2],
@@ -58,7 +58,7 @@ var debug = (function() {
             var util = require('util');
 
             var msg = [].slice.apply(arguments).reduce(function(acc, item) {
-                item = typeof item === 'string'? item: util.inspect(item, false, 5);
+                item = typeof item === 'string'? item: util.inspect(item, true, 5);
                 return acc + ' ' + item;
             });
 
@@ -300,7 +300,6 @@ module.exports = (function(){
             function genFstabEntry(part, callback) {
                 exec("blkid " + part.path + " -s UUID | awk -F: '{print $2}'", {}, function(err, stdout) {
                     if (err) {
-                        debug(err);
                         callback(err);
 
                     } else {
@@ -327,10 +326,11 @@ module.exports = (function(){
                 };
             });
 
-            async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
-            async.forEachSeries(swaps, genFstabEntry, err_cb);
-
-            fs.writeFileSync(fstab, contents, 'utf8');
+            async.forEachSeries(mounts.sort().concat(swaps), genFstabEntry, function(err) {
+                debug(contents);
+                fs.writeFileSync(fstab, contents, 'utf8');
+                err_cb(err);
+            });
         }
 
         function generatePostscript(err_cb) {
@@ -405,9 +405,9 @@ module.exports = (function(){
                 if (err) {
                     watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
                     console.error('postInstall failed: ', err);
-                } else {
-                    next();
                 }
+
+                next(err);
             });
     } // ~ postInstall
 
