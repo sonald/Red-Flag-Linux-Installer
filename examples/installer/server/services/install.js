@@ -12,17 +12,19 @@ var fsutil = {
 
         exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
-                throw err;
+                callback(err);
+                return;
             }
 
             var re = /(\d+) (\d+) (\d+)/;
             var info = re.exec(stdout);
             if (!info) {
-                throw new Error('stat result is invalid: ' + stdout);
+                callback(new Error('stat result is invalid: ' + stdout));
+                return;
             }
 
             console.log('getFileSystemInfo: %s', info);
-            callback({
+            callback(null, {
                 "block size": info[1],
                 "total blocks": info[2],
                 "free blocks": info[3]
@@ -76,8 +78,8 @@ module.exports = (function(){
     function error_wrapper(watcher, err_callback) {
         return function(err) {
             if (err) {
-                err = (typeof err === 'string') ? errors[err] : err;
-                console.log(err);
+                err = (typeof err === 'string') && errors[err] ? errors[err] : err;
+                debug(err);
                 watcher({status: "failure", reason: err});
             }
 
@@ -89,6 +91,7 @@ module.exports = (function(){
 
     function system(cmd) {
         return function(err_cb) {
+            debug('exec ' + cmd);
             var child = exec(cmd);
             child.on('exit', function(code, signal) {
                 if (code === 0) {
@@ -100,6 +103,7 @@ module.exports = (function(){
             });
         };
     }
+
     function filterAndFlattenPartitions(disks, filter) {
         var parts = [];
 
@@ -207,7 +211,13 @@ module.exports = (function(){
             },
 
             function(newroot_mnt, cb) {
-                fsutil.getFileSystemInfo('/', function(info) {
+                fsutil.getFileSystemInfo('/', function(err, info) {
+                    if (err) {
+                        debug(err);
+                        cb(err);
+                        return;
+                    }
+
                     var size = (+info['total blocks'] - info['free blocks']) * info['block size'];
                     cb(null, newroot_mnt, size);
                 });
@@ -225,15 +235,22 @@ module.exports = (function(){
                     progId.stop();
                     if (code === 0) {
                         watcher({status: 'progress', data: 100});
-                        next();
+                        cb(null, newroot_mnt);
 
                     } else {
                         watcher({status: 'failure', reason: errors['ECOPYBASE']});
+                        cb({status: 'failure', reason: errors['ECOPYBASE']});
                     }
                 });
 
+                //TODO: dynamically adjust reporting speed
                 function populateProgress() {
-                    fsutil.getFileSystemInfo(newroot_mnt, function(info) {
+                    fsutil.getFileSystemInfo(newroot_mnt, function(err, info) {
+                        if (err) {
+                            progId.stop();
+                            cb(err);
+                        }
+
                         var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
                         percentage = Math.floor((installed / total_size) * 100);
 
@@ -242,13 +259,25 @@ module.exports = (function(){
                 }
 
                 progId = setInterval(populateProgress, 1000);
+            },
+
+            // cleanup: umount newroot_mnt and rmdir it
+            function(newroot_mnt, cb) {
+                system('umount ' + newroot_mnt)(function(err) {
+                    cb(null, newroot_mnt);
+                });
+            },
+
+            function(newroot_mnt, cb) {
+                system('rmdir ' + newroot_mnt)(cb);
             }
         ],
         function(err) {
             if (err) {
-                console.log(err);
+                debug(err);
                 watcher({status: 'failure', reason: errors['ECOPYBASE']});
             }
+            next(err);
         });
     } //~ copyBaseSystem
 
@@ -266,6 +295,7 @@ module.exports = (function(){
             function genFstabEntry(part, callback) {
                 exec("blkid " + part.path + " -s UUID | awk -F: '{print $2}'", {}, function(err, stdout) {
                     if (err) {
+                        debug(err);
                         callback(err);
 
                     } else {
@@ -275,13 +305,13 @@ module.exports = (function(){
 
                         //FIXME: ext4 is hardcoded
                         contents += stdout + "\t" + part.mountpoint + "\text4\tdefaults\t0\t1\n";
-                        fs.writeFileSync(fstab, contents, 'utf8');
                         callback(null);
                     }
                 });
             }
 
             async.forEachSeries(mounts.sort(), genFstabEntry, err_cb);
+            fs.writeFileSync(fstab, contents, 'utf8');
         }
 
         function generatePostscript(err_cb) {
@@ -292,13 +322,19 @@ module.exports = (function(){
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
-
-                if (opts.passwd) {
-                    postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
-                        "'; } | passwd root\n";
-                }
             }
-            console.log(postscript);
+
+            //TODO: root is unaccessible
+            opts.passwd = opts.passwd || require('crypto').createHash('sha1')
+                    .update(Date().toString()).digest('hex');
+            if (opts.passwd) {
+                postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
+                    "'; } | passwd root\n";
+            }
+
+            // whatever which cmd failed in script, consider it ok.
+            postscript += 'exit 0\n';
+            debug(postscript);
 
             var post = pathlib.join(root_dir, "/postscript.sh");
             fs.writeFile(post, postscript, 'utf8', function(err) {
@@ -388,47 +424,66 @@ module.exports = (function(){
             ]
          }
          */
-        packAndUnpack: function(options, cb) {
-            if (process.env.NODE_DEBUG) {
+        packAndUnpack: function(options, reporter) {
+            if (process.env.RFINSTALLER === 'fake') {
                 var fake_options = {
                     "grubinstall": "/dev/sdb",
-                    "installmode": "easy",
+                    "installmode": "fulldisk",
+                    "username": "sonald",
                     "disks": [
+                    {
+                        "table": [
                         {
-                            "table": [
-                                {
-                                    "fs": "ext4",
-                                    "ty": "primary",
-                                    "number": 1
-                                }
-                            ],
-                            "path": "/dev/sda",
-                            "model": "Alcor Flash Disk",
-                            "type": "msdos",
-                            "unit": "GB",
-                            "size": 1.03179776
+                            "fs": "linux-swap(v1)",
+                            "end": 1.003483648,
+                            "ty": "primary",
+                            "number": 1,
+                            "start": 0.000032256,
+                            "size": 1.003451392,
+                            "dirty": true
                         },
                         {
-                            "table": [
-                                {
-                                    "fs": "ntfs",
-                                    "ty": "primary",
-                                    "number": 3
-                                },
-                                {
-                                    "fs": "ext4",
-                                    "ty": "primary",
-                                    "number": 1,
-                                    "dirty": true,
-                                    "mountpoint": "/"
-                                }
-                            ],
-                            "path": "/dev/sdb",
-                            "model": "ATA TOSHIBA MK1656GS",
-                            "type": "msdos",
-                            "unit": "GB",
-                            "size": 160.041885696
+                            "fs": "ext4",
+                            "end": 8.003196928,
+                            "ty": "primary",
+                            "number": 2,
+                            "start": 1.01170944,
+                            "size": 6.991487488,
+                            "dirty": true,
+                            "mountpoint": "/"
+                        },
+                        {
+                            "fs": "",
+                            "end": 8.587191808,
+                            "ty": "free",
+                            "number": -1,
+                            "start": 8.00319744,
+                            "size": 0.5839943680000008
                         }
+                        ],
+                        "path": "/dev/sdb",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.589934592
+                    },
+                    {
+                        "table": [
+                        {
+                            "fs": "ext4",
+                            "end": 8.388607488,
+                            "ty": "primary",
+                            "number": 1,
+                            "start": 0.000032256,
+                            "size": 8.388575231999999
+                        }
+                        ],
+                        "path": "/dev/sda",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.388608
+                    }
                     ]
                 };
 
@@ -441,25 +496,30 @@ module.exports = (function(){
 
             if (!options.newroot) {
                 console.log( errors['ENOROOT'] );
-                cb( {status: 'succes', err: errors['ENOROOT']} );
+                reporter( {status: 'succes', err: errors['ENOROOT']} );
                 return;
             }
 
             async.waterfall([
                 function(next) {
-                    formatDirtyPartitions( options.disks, error_wrapper(cb, next) );
+                    formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
-                    copyBaseSystem( options, cb, error_wrapper(cb, next) );
+                    copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
                     //FIXME: do I need to umount all partitions and then remount it?
-                    postInstall(options, cb, function(err) {
+                    postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );
                     });
                 }
             ], function(err, result) {
-                cb( result );
+                if (err) {
+                    debug(err);
+                    reporter(err);
+                } else {
+                    reporter( result );
+                }
                 console.log( 'install done' );
             });
         }
