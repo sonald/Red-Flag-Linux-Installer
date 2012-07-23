@@ -147,6 +147,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                         }
                     }
                 }
+                that.app.options.grubinstall=$('#grub').find(':checked').attr("value");
                 callback();
             };
             console.log(that.app.options);

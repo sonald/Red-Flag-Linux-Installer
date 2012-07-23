@@ -107,3 +107,11 @@ script(type="text/template", id="advanced_part_tmpl").
                                                 .modal-footer
                                                         a.btn(href="#", data-dismiss="modal")= gettext('Close')
                                                         a.btn.btn-primary.js-create-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
+
+        b grubinstall:
+        select#grub
+            -for (var x in disks)
+                -var disk = disks[x]
+                option(value=disk["path"])= disk["path"]
+            option(value="") uninstallgrub
+            option(value="") bootdisk
