@@ -89,64 +89,74 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
         validate: function(callback) {
             var that = this;
             if (that.$el.has("#easy_part_table").length > 0) {
-                var $selected = that.$el.find('ul.select');//TODO
-                var pnum = $selected.attr("pnum");
-                var dnum = $selected.parents('ul.disk').attr("dnum");
-                var part = that.app.options.disks[dnum].table[pnum];
+                var $selected, dnum, pnum, part;
+
+                $selected = that.$el.find('ul.select');//TODO
+                pnum = $selected.attr("pnum");
+                dnum = $selected.parents('ul.disk').attr("dnum");
+                part = that.app.options.disks[dnum].table[pnum];
                 part["dirty"] = true;
                 part["mountpoint"] = "/";
                 part.fs = "ext4";
+
                 callback();
             }else if (that.$el.has("#fulldisk_part_table").length > 0) {
-                var $selected = that.$el.find('ul.select');//TODO
-                var dnum=$selected.attr("dnum");
-                var disk = that.app.options.disks[dnum];
-                var devpath = disk["path"];
-                window.apis.services.partition.FulldiskHandler(devpath, function (results) {
-                    if (results.status && results.status == "failure") {
+                var $selected, dnum, pnum, part, dpath;
+
+                $selected = that.$el.find('ul.select');//TODO
+                dnum=$selected.attr("dnum");
+                dpath = that.app.options.disks[dnum].path;
+
+                window.apis.services.partition.FulldiskHandler(dpath, function (results) {
+                    if (results.status && results.status === "failure") {
                         console.log(results);
                     }else{
                         that.locals["disks"] = results;
                         that.app.options.disks = results;
-                        var dnums = results.length;
-                        var i = 0;
-                        for (i=0; i<dnums; i++){
-                            if (results[i]["path"] === devpath){
-                                var j =0;
-                                var parts = results[i]["table"];
-                                for (j =0; j< parts.length; j++){
-                                    if (parts[j]["number"] != -1){
-                                        parts[j]["dirty"] = true;
-                                        if (parts[j].size > 6){
-                                            parts[j]["mountpoint"] = "/";
-                                        }
-                                    }
+
+                        var disk = _.find(results,function(el){
+                            return el.path === dpath;
+                        });
+                        disk.table = _.map(disk.table, function (el) {
+                            if (el.number != -1){
+                                el["dirty"] = true;
+                                if (el.size >= 6 && el.fs != "linux-swap(v1)") {
+                                    el["mountpoint"] = "/";
                                 }
-                                break;
                             }
-                        }
+                            return el;
+                        });
                         callback();
                     }
                 });
             }else if (that.$el.has("#advanced_part_table").length > 0) {
-                for (var x in that.app.options.disks){
-                    var devpath = that.app.options.disks[x].path
-                    for (var y in that.app.options.disks[x].table) {
-                        var partnum = that.app.options.disks[x].table[y].number;
-                        var tmp = _.find(adPage.record.dirty, function(el){ return (el.paht == devpath && el.num == partnum); });
-                        if ( typeof tmp !== "undefined" ) {
-                            that.app.options.disks[x].table[y]["dirty"] = true;
-                        }
-                        tmp = _.find(adPage.record.edit, function(el){ return (el.path == devpath && partnum == el.num ); });
-                        if ( typeof tmp !== "undefined" ) {
-                            that.app.options.disks[x].table[y]["dirty"] = true;
-                            that.app.options.disks[x].table[y]["mountpoint"]= tmp.mp;
-                            if( tmp.fs !== "") {
-                                that.app.options.disks[x].table[y]["fs"]= tmp.fs;
-                            };
-                        }
-                    }
-                }
+                var disks = that.app.options.disks;
+                _.each(adPage.record.dirty, function (el) {
+                    var dpath = el.path;
+                    var pnum = el.num;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === dpath;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === pnum;
+                    });
+                    part["dirty"] = true;
+                });
+
+                _.each(adPage.record.edit, function (el) {
+                    var dpath = el.path;
+                    var pnum = el.num;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === dpath;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === pnum;
+                    });
+                    part["dirty"] = true;
+                    part["mountpoint"] = el.mp;
+                    part["fs"] = el.fs || part["fs"];
+                });
+
                 that.app.options.grubinstall=$('#grub').find(':checked').attr("value");
                 callback();
             };

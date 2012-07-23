@@ -30,7 +30,7 @@ class PartSocket(tornadio2.SocketConnection):
         elif handle_part is None:
             result = { 'status': 'success'}
         else:
-            result = {'status' : 'success' , 'handlepart_number':str(handle_part)}
+            result = {'status' : 'success' , 'handlepart':str(handle_part)}
         return json.dumps(result)
 
     def has_disk(self,devpath):

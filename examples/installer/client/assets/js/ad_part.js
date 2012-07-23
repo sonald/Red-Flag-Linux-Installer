@@ -26,15 +26,16 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
         },
 
         postSetup: function() {
+            var that = this;
+            var pageC;
             this.locals = this.locals || {};
-            var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
+            pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
             $('#advanced_part_table').html(pageC);
             //$("#advanced_part_table ul").doFade({ fadeColor: "#362b40" });
             //$("#advanced_part_table ul ul").doFade({ fadeColor: "#354668" });
             //$("#advanced_part_table ul ul ul").doFade({ fadeColor: "#304531" });
             //$("#advanced_part_table ul ul ul ul").doFade({ fadeColor: "#72352d" });
 
-            var that = this;
             $('body').off('click','.delete');
             $('body').off('click','#reset');
             $('body').off('click','a.js-create-submit');
@@ -56,30 +57,24 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','a.js-create-submit',function () {
-                var size, parttype, fstype, start, end, path;
+                var size, parttype, fstype, start, end, path, align;
                 var $content = $(this).parents('.modal');
                 size = Number($content.find("#size")[0].value);
                 //Default data;
                 fstype = "ext4";
                 parttype = "primary";
-                path = "/dev/sda";
-                $content.find(":checked").each(function(){
-                    if (this.id) {
-                        if (this.id === "beginning") {
-                            start = Number(this.value);
-                            end = start + size;
-                        }
-                        else if ( this.id === "end") {
-                            end = Number(this.value);
-                            start = end - size;
-                        };
-                    }else if ($(this).parent().attr("id") === "parttype") {
-                        parttype = this.value;
-                    }else if ($(this).parent().attr("id") === "fs") {
-                        fstype = this.value;
-                    }
-                });
                 path = $(this).attr("path");
+                parttype = $content.find('#parttype :checked').attr("value");
+                fstype = $content.find('#fs :checked').attr("value");
+                align = Number($content.find("#location :checked").attr("value"));
+
+                if($content.find("#location :checked").attr("id") === "start") {
+                    start = align;
+                    end = start + size;
+                } else if ($content.find("#location :checked").attr("id") === "end") {
+                    end = align;
+                    start = end - size;
+                };
                 window.apis.services.partition.mkpart(
                     path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
             });
@@ -90,7 +85,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 fstype = "";
                 mp = "";
                 path = $(this).attr("path");
-                num = $(this).attr("num");
+                num = Number($(this).attr("num"));
                 $content.find(":checked").each(function(){
                     if ($(this).parent().attr("id") === "mp") {
                         mp = this.value;
@@ -98,25 +93,18 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                         fstype = this.value;
                     }
                 });
-                for (var x in that.record.edit){
-                    if (that.record.edit[x].path === path && that.record.edit[x].num === num) {
-                        that.record.edit.splice(x,1);
-                        break;
-                    };
-                }
-                var tmp = {
-                    "path": path,
-                    "num":num,
-                    "fs": fstype,
-                    "mp": mp
-                };
-                that.record.edit.push(tmp);
+                that.record.edit = _.reject(that.record.edit,function(el){
+                    return el.path === path && el.num === num;
+                });
+
+                that.record.edit.push({"path":path,
+                                        "num":num,
+                                        "fs":fstype,
+                                        "mp":mp});
                 if (fstype !== "") {
                     $(this).parents('ul.part').find('a.partfs').text(fstype);
                 }
-                if(mp !== "") {
-                    $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
-                }
+                $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
             });
         },
 
@@ -125,28 +113,31 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             if (result.status === "success") {
                 if (result.handlepart){
                     //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
-                    if (result.handlepart.sunstring(0,3) === "add") {
-                        var newpath = result.handlepart.sunstring(3,11);
-                        var newnumber = Number(result.handlepart.sunstring(11));
-                        that.record.dirty.push({path:newpath,num:newnumber});
-                    }else if (result.handlepart.sunstring(0,3) === "del") {
-                        var oldpartpath = result.handlepart.sunstring(3,11);
-                        var oldpartnum = Number(result.handlepart.sunstring(11));
-                        for (var x in that.record.dirty){
-                            if (that.record.dirty[x].path === oldpartpath && that.record.dirty[x].num === oldpartnum) {
-                                that.record.dirty.splice(x,1);
-                                break;
-                            }
+                    var method, dpath, pnum;
+                    method = result.handlepart.substring(0,3);
+                    dpath = result.handlepart.substring(3,11);
+                    pnum = Number(result.handlepart.substring(11));
+                    console.log(method,dpath,pnum);
+
+                    if (method === "add") {
+                        that.record.dirty.push({path:dpath,num:pnum});
+                        console.log(that.record.dirty);
+
+                    }else if (method === "del") {
+                        that.record.dirty = _.reject(that.record.dirty, function(el) {
+                            return el.path === dpath && el.num === pnum;
+                        });
+                        that.record.edit = _.reject(that.record.edit,function(el){
+                            return el.path === dpath && el.num === pnum;
+                        });
+                        if(pnum > 4) {
+                            that.record.edit = _.map(that.record.edit,function(el){
+                                if (el.num > pnum && el.path === dpath) {
+                                    el.num--;
+                                };
+                                return el;
+                            })
                         }
-                        for (var x in that.record.edit){
-                            if (that.record.edit[x].path === oldpartpath) {
-                                if (that.record.edit[x].num === oldpartnum) {
-                                    that.record.edit.splice(x,1);
-                                } else if (oldpartnum > 4 && that.record.edit[x].num > oldpartnum) {
-                                    that.record.edit[x].num--;
-                                }
-                            }
-                        }//remove and fix record in edit about the deleted part
                     }
                 }
                 window.apis.services.partition.getPartitions(function(disks) {
@@ -155,12 +146,13 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
                     for (var x in that.record.edit) {
-                        var $part = $('ul.disk[dpath="'+that.record.edit[x].path+'"]').find('ul.part[num="'+that.record.edit[x].num+'"]');
-                        if(that.record.edit[x].fs !== "") {
-                            $part.find('a.partfs').text(that.record.edit[x].fs);
+                        var tmp = that.record.edit[x];
+                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[num="'+tmp.num+'"]');
+                        if(tmp.fs !== "") {
+                            $part.find('a.partfs').text(tmp.fs);
                         };
-                        if (that.record.edit[x].mp !== ""){
-                            $part.find('a.partmp').text("MountPoint:" + that.record.edit[x].mp);
+                        if (tmp.mp !== ""){
+                            $part.find('a.partmp').text("MountPoint:" + tmp.mp);
                         };
                     };
                 });

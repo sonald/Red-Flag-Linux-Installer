@@ -97,9 +97,9 @@ script(type="text/template", id="advanced_part_tmpl").
                                                                 option(value="linux-swap(v1)") swap
                                                     div.control-group.form-horizontal
                                                         label.control-label
-                                                        .controls
+                                                        .controls#location
                                                             label.radio
-                                                                input(type="radio", name=String(i)+String(p), id="beginning", value=part["start"], checked)
+                                                                input(type="radio", name=String(i)+String(p), id="start", value=part["start"], checked)
                                                                 b= gettext('Alignment To Beginning')
                                                             label.radio
                                                                 input(type="radio", name=String(i)+String(p), id="end", value = part["end"])
