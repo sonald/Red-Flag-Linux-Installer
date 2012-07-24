@@ -31,18 +31,12 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
 
         postSetup: function() {
             this.app.button_handler.rm("forward","disabled");
-            this.app.button_handler.rm("backward","disabled");
             $('body').off('keyup', 'input#name');
 
             $('body').on('keyup', 'input#name', function() {
                 var value = $(this).attr("value");
                 $('input#hostname').attr("value", value+"-qomo");
             });
-        },
-
-        rewind: function() {
-            //enable backward
-            return true;
         },
 
         validate: function(callback) {

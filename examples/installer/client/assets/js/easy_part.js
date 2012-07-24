@@ -35,6 +35,18 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 }
             });
         },
+
+        validate: function (callback) {
+            var dnum, pnum, part;
+            pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
+            dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
+
+            part = this.app.options.disks[dnum].table[pnum];
+            part["dirty"] = true;
+            part["mountpoint"] = "/";
+            part.fs = "ext4";
+            callback();
+        },
     };
     return partial;
 });

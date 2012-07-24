@@ -1,5 +1,5 @@
 define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
-       function($, _system, i18n, easyPage, fdPage, adPage) {
+       function ($, _system, i18n, easyPage, fdPage, adPage) {
     'use strict';
 
     var pageCache;
@@ -17,7 +17,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
             that.locals = {
                 'disks':null,
                 gettext:function(msgid){ return i18n.gettext(msgid);}
-            }
+            };
             pageCache = undefined;
             callback();
             console.log('part initialized');
@@ -81,72 +81,57 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
             $('#easy').trigger("click");
         },
 
-        rewind: function() {
-            //enable backward
-            return true;
-        },
-
         validate: function(callback) {
             var that = this;
             if (that.$el.has("#easy_part_table").length > 0) {
-                var $selected = that.$el.find('ul.select');//TODO
-                var pnum = $selected.attr("pnum");
-                var dnum = $selected.parents('ul.disk').attr("dnum");
-                var part = that.app.options.disks[dnum].table[pnum];
-                part["dirty"] = true;
-                part["mountpoint"] = "/";
-                part.fs = "ext4";
-                callback();
+                easyPage.validate(callback);
             }else if (that.$el.has("#fulldisk_part_table").length > 0) {
-                var $selected = that.$el.find('ul.select');//TODO
-                var dnum=$selected.attr("dnum");
-                var disk = that.app.options.disks[dnum];
-                var devpath = disk["path"];
-                window.apis.services.partition.FulldiskHandler(devpath, function (results) {
-                    if (results.status && results.status == "failure") {
-                        console.log(results);
-                    }else{
-                        that.locals["disks"] = results;
-                        that.app.options.disks = results;
-                        var dnums = results.length;
-                        var i = 0;
-                        for (i=0; i<dnums; i++){
-                            if (results[i]["path"] === devpath){
-                                var j =0;
-                                var parts = results[i]["table"];
-                                for (j =0; j< parts.length; j++){
-                                    if (parts[j]["number"] != -1){
-                                        parts[j]["dirty"] = true;
-                                        if (parts[j].size > 6){
-                                            parts[j]["mountpoint"] = "/";
-                                        }
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        callback();
-                    }
-                });
+                fdPage.validate(callback);
             }else if (that.$el.has("#advanced_part_table").length > 0) {
-                for (var x in that.app.options.disks){
-                    var devpath = that.app.options.disks[x].path
-                    for (var y in that.app.options.disks[x].table) {
-                        var partnum = that.app.options.disks[x].table[y].number;
-                        var tmp = _.find(adPage.record.dirty, function(el){ return (el.paht == devpath && el.num == partnum); });
-                        if ( typeof tmp !== "undefined" ) {
-                            that.app.options.disks[x].table[y]["dirty"] = true;
-                        }
-                        tmp = _.find(adPage.record.edit, function(el){ return (el.path == devpath && partnum == el.num ); });
-                        if ( typeof tmp !== "undefined" ) {
-                            that.app.options.disks[x].table[y]["dirty"] = true;
-                            that.app.options.disks[x].table[y]["mountpoint"]= tmp.mp;
-                            if( tmp.fs !== "") {
-                                that.app.options.disks[x].table[y]["fs"]= tmp.fs;
-                            };
-                        }
-                    }
-                }
+                var disks = that.app.options.disks;
+                var boot_mp, opt_mp;
+                boot_mp = 0;
+                opt_mp = 0;
+                _.each(adPage.record.edit,function (el) {
+                    if (el.mp === "/") {
+                        boot_mp++;
+                    }else if (el.mp === "/opt") {
+                        opt_mp++;
+                    };
+                });
+                if (boot_mp === 0) {
+                    alert("you need choose a disk for '/'!");
+                    return;
+                } else if (boot_mp > 1 || opt_mp > 1) {
+                    alert("you need choose only a disk for each mountpoint!");
+                    return;
+                };
+                _.each(adPage.record.dirty, function (el) {
+                    var path = el.path;
+                    var number = el.number;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === path;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === number;
+                    });
+                    part["dirty"] = true;
+                });
+
+                _.each(adPage.record.edit, function (el) {
+                    var path = el.path;
+                    var number = el.number;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === path;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === number;
+                    });
+                    part["dirty"] = true;
+                    part["mountpoint"] = el.mp;
+                    part["fs"] = el.fs;
+                });
+
                 that.app.options.grubinstall=$('#grub').find(':checked').attr("value");
                 callback();
             };
