@@ -357,6 +357,14 @@ module.exports = (function(){
                     "'; } | passwd root\n";
             }
 
+	    opts.hostname = opts.hostname || opts.username + '-qomo';
+	    postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts';
+
+	    opts.timezone = opts.timezone || 'Asia/Shanghai';
+	    postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime';
+
+	    //TODO: how?
+	    opts.keyboard = opts.keyboard || 'en';
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
@@ -472,6 +480,9 @@ module.exports = (function(){
             // newroot: '/dev/sda1',
             grubinstall: '' // empty, '/dev/sda', '/dev/sdb2'
             installmode: 'fulldisk' // easy, advanced
+	    timezone: '',
+	    hostname: username + '-qomo',
+	    username: '',
             // disks contains almost all partitions, use dirty to distinct which
             // need formatting
             disks: [
