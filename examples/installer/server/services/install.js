@@ -156,7 +156,8 @@ module.exports = (function(){
 
         async.forEachSeries(mounts.sort(),
             function(mnt, cb) {
-                system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' + mnt.mountpoint)(cb);
+                system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' +
+		       pathlib.join(destdir, mnt.mountpoint))(cb);
             }, callback);
     }
 
@@ -206,14 +207,24 @@ module.exports = (function(){
         async.waterfall([
             function(cb) {
                 fsutil.mktempdir(function(dirname) {
-                    exec('mount -t ext4 ' + options.newroot + ' ' + dirname, {}, function(err) {
+                    // exec('mount -t ext4 ' + options.newroot + ' ' + dirname, {}, function(err) {
+                    //     if (err) {
+                    //         cb(err);
+
+                    //     } else {
+                    //         cb(null, dirname);
+                    //     }
+                    // });
+
+		    mountNeededPartitions(options.disks, dirname, function(err) {
                         if (err) {
                             cb(err);
 
                         } else {
                             cb(null, dirname);
                         }
-                    });
+		    });
+
                 });
             },
 
@@ -270,9 +281,13 @@ module.exports = (function(){
 
             // cleanup: umount newroot_mnt and rmdir it
             function(newroot_mnt, cb) {
-                system('umount ' + newroot_mnt)(function(err) {
-                    cb(null, newroot_mnt);
-                });
+		unmountNeededPartitions(options.disks, function(err) {
+		    cb(err, newroot_mnt);
+		});
+		
+                // system('umount ' + newroot_mnt)(function(err) {
+                //     cb(null, newroot_mnt);
+                // });
             },
 
             function(newroot_mnt, cb) {
