@@ -23,11 +23,13 @@ var fsutil = {
                 return;
             }
 
+	    // "block size": info[1],
+            // "total blocks": info[2],
+            // "free blocks": info[3]
             debug('getFileSystemInfo: ', info.toString());
             callback(null, {
-                "block size": info[1],
-                "total blocks": info[2],
-                "free blocks": info[3]
+		"total": (+info['total blocks']) * info['block size'],
+		"free": (+info['free blocks']) * info['block size']
             });
         });
     },
@@ -223,7 +225,7 @@ module.exports = (function(){
                         return;
                     }
 
-                    var size = (+info['total blocks'] - info['free blocks']) * info['block size'];
+		    var size = info['total'] - info['free'];
                     cb(null, newroot_mnt, size);
                 });
             },
@@ -256,7 +258,7 @@ module.exports = (function(){
                             cb(err);
                         }
 
-                        var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
+                        var installed = info['total'] - info['free'];
                         percentage = Math.floor((installed / total_size) * 100);
 
                         watcher({status: 'progress', data: percentage});
@@ -412,7 +414,7 @@ module.exports = (function(){
     } // ~ postInstall
 
 
-     return {
+    return {
         meminfo: function(cb) {
             cb( {
                 free: require('os').freemem(), // unit: bytes
@@ -425,6 +427,45 @@ module.exports = (function(){
             cb(false);
         },
 
+	minimalSufficient: function(reporter) {
+	    async.waterfall([
+		function(cb) {
+		    var cmd = 'echo $(( `cat /sys/block/sda/size` * 512 ))';
+		    exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
+			if (err) {
+			    cb({status: 'failure', reason: err });
+			    return;
+			}
+
+			var size = +stdout.trim();
+			if (size / Math.pow(10,9) < 6) {
+			    cb({status: 'failure', reason: 'disk size does not suffcient minimal request'});
+			    return;
+			}
+
+			cb(null);
+		    });
+		},
+
+		function(cb) {
+		    if (require('os').totalmem() < Math.pow(10,9)) {
+			cb({status: 'failure', reason: 'need at least 1GB memory'});
+			
+		    } else {
+			cb(null);
+		    }
+		}
+		
+	    ], function(err) {
+		if (err) {
+		    debug(err);
+		    reporter(err);
+		} else {
+		    reporter({status: 'success'});
+		}
+	    });
+	},
+	 
         /**
          * options contains all info needed to do installation
          * options = {
