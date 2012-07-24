@@ -27,18 +27,14 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
 
         postSetup: function() {
             var that = this;
-            var pageC;
             this.locals = this.locals || {};
-            pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
+            var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
             $('#advanced_part_table').html(pageC);
-            //$("#advanced_part_table ul").doFade({ fadeColor: "#362b40" });
-            //$("#advanced_part_table ul ul").doFade({ fadeColor: "#354668" });
-            //$("#advanced_part_table ul ul ul").doFade({ fadeColor: "#304531" });
-            //$("#advanced_part_table ul ul ul ul").doFade({ fadeColor: "#72352d" });
 
             $('body').off('click','.delete');
             $('body').off('click','#reset');
             $('body').off('click','a.js-create-submit');
+            $('body').off('click','a.js-edit-submit');
 
             $('body').on('click','.delete', function () {
                 var path = $(this).attr("path");
@@ -60,14 +56,11 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 var size, parttype, fstype, start, end, path, align;
                 var $content = $(this).parents('.modal');
                 size = Number($content.find("#size")[0].value);
-                //Default data;
-                fstype = "ext4";
-                parttype = "primary";
-                path = $(this).attr("path");
                 parttype = $content.find('#parttype :checked').attr("value");
                 fstype = $content.find('#fs :checked').attr("value");
                 align = Number($content.find("#location :checked").attr("value"));
 
+                path = $(this).attr("path");
                 if($content.find("#location :checked").attr("id") === "start") {
                     start = align;
                     end = start + size;
@@ -80,30 +73,23 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','a.js-edit-submit',function () {
-                var mp, fstype, path, num;
+                var mp, fstype, pnum, dnum;
                 var $content = $(this).parents('.modal');
-                fstype = "";
-                mp = "";
-                path = $(this).attr("path");
-                num = Number($(this).attr("num"));
-                $content.find(":checked").each(function(){
-                    if ($(this).parent().attr("id") === "mp") {
-                        mp = this.value;
-                    }else if ($(this).parent().attr("id") === "fs") {
-                        fstype = this.value;
-                    }
-                });
-                that.record.edit = _.reject(that.record.edit,function(el){
-                    return el.path === path && el.num === num;
-                });
+                pnum = $(this).attr("pnum");
+                dnum = $(this).attr("dnum");
+                fstype = $content.find("#fs :checked").attr("value");
+                mp = $content.find("#mp :checked").attr("value");
 
-                that.record.edit.push({"path":path,
-                                        "num":num,
-                                        "fs":fstype,
-                                        "mp":mp});
-                if (fstype !== "") {
-                    $(this).parents('ul.part').find('a.partfs').text(fstype);
-                }
+                that.record.edit = _.reject(that.record.edit,function(el){
+                    return (el.path ===that.app.options.disks[dnum].path && 
+                            el.number === that.app.options.disks[dnum].table[pnum].number);
+                });
+                that.record.edit.push({"path":that.app.options.disks[dnum].path,
+                                        "number":that.app.options.disks[dnum].table[pnum].number,
+                                        "fs": fstype,
+                                        "mp": mp,});
+
+                $(this).parents('ul.part').find('a.partfs').text(fstype);
                 $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
             });
         },
@@ -113,27 +99,27 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             if (result.status === "success") {
                 if (result.handlepart){
                     //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
-                    var method, dpath, pnum;
+                    var method, path, number;
                     method = result.handlepart.substring(0,3);
-                    dpath = result.handlepart.substring(3,11);
-                    pnum = Number(result.handlepart.substring(11));
-                    console.log(method,dpath,pnum);
+                    path = result.handlepart.substring(3,11);
+                    number = Number(result.handlepart.substring(11));
 
                     if (method === "add") {
-                        that.record.dirty.push({path:dpath,num:pnum});
-                        console.log(that.record.dirty);
+                        //TODO ty==extended
+                        that.record.dirty.push({"path":path,"number":number});
 
                     }else if (method === "del") {
+                        //TODO ty==extended
                         that.record.dirty = _.reject(that.record.dirty, function(el) {
-                            return el.path === dpath && el.num === pnum;
+                            return el.path === path && el.number === number;
                         });
                         that.record.edit = _.reject(that.record.edit,function(el){
-                            return el.path === dpath && el.num === pnum;
+                            return el.path === path && el.number === number;
                         });
-                        if(pnum > 4) {
+                        if(number > 4) {
                             that.record.edit = _.map(that.record.edit,function(el){
-                                if (el.num > pnum && el.path === dpath) {
-                                    el.num--;
+                                if (el.number > number && el.path === path) {
+                                    el.number--;
                                 };
                                 return el;
                             })
@@ -147,7 +133,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     $("#advanced_part_table").html(pageC);
                     for (var x in that.record.edit) {
                         var tmp = that.record.edit[x];
-                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[num="'+tmp.num+'"]');
+                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[num="'+tmp.number+'"]');
                         if(tmp.fs !== "") {
                             $part.find('a.partfs').text(tmp.fs);
                         };

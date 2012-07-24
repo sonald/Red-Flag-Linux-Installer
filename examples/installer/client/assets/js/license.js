@@ -62,7 +62,6 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         postSetup: function() {
             var self = this;
             this.app.button_handler.add("forward","disabled");
-            this.app.button_handler.add("backward","disabled");
 
             $('body').on('click', '#choose', function(){
                 self.updateActions();

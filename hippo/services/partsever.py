@@ -127,7 +127,7 @@ class PartSocket(tornadio2.SocketConnection):
                 start = parted.sizeToSectors(1.005, "GB", 512)
                 end = parted.sizeToSectors(size, "GB", 512)
                 if size > 30:
-                    end = parted.sizeToSectors(30, "GiB", 512)
+                    end = parted.sizeToSectors(30, "GB", 512)
                 disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
                 self.disks[devpath] = disk
                 data = lib.partedprint.parted_print(self.disks,True,True)

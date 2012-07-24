@@ -35,6 +35,32 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 }
             });
         },
+
+        validate: function(callback) {
+            var that = this;
+            var dnum= $("#part_content").find('ul.select').attr("dnum");
+            var dpath = that.app.options.disks[dnum].path;
+
+            window.apis.services.partition.FulldiskHandler(dpath, function (results) {
+                if (results.status && results.status === "failure") {
+                    console.log(results);
+                }else{
+                    that.locals["disks"] = results;
+                    that.app.options.disks = results;
+                    var disk = _.find(results,function(el){
+                        return el.path === dpath;
+                    });
+                    disk.table = _.map(disk.table, function (el) {
+                        if (el.number > 0) el["dirty"] = true;
+                        if (el.number > 0 && el.fs != "linux-swap(v1)"){
+                            el["mountpoint"] = "/";
+                        }
+                        return el;
+                    });
+                    callback();
+                }
+            });
+        },
     };
     return partial;
 });

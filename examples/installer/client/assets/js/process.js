@@ -49,7 +49,6 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
             });
             
             this.app.button_handler.rm("forward", "disabled");
-            this.app.button_handler.add("backward", "disabled");
             this.app.button_handler.change("forward", "install");
 
             var that = this;
@@ -87,11 +86,6 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
             // check if install finished
             callback();
             //return true;
-        },
-
-        rewind: function() {
-            // disable backward
-            return false;
         },
     };
 

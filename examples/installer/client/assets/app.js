@@ -84,7 +84,6 @@ var app = {
         if (!valid) {
             console.log('page %d does not exists', pageId);
         }
-
         return valid;
     },
 
@@ -95,14 +94,6 @@ var app = {
         page.validate(function(){that.currentPage +=1;});
     },
 
-    backward: function() {
-        console.log('backward');
-        var page = this.stages[this.currentPage];
-        if( page.rewind && page.rewind()){
-            this.currentPage -= 1;
-        };
-    },
-
     // when app is ready, call this
     init: function() {
         this.$el = $('#stage');
@@ -110,7 +101,6 @@ var app = {
             console.log(apis);
         });
 
-        $('body').on('click', 'a#backward', $.proxy(this.backward, this));
         $('body').on('click', 'a#forward', $.proxy(this.forward, this));
 
         this.currentPage = 0;

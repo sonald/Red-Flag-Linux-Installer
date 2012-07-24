@@ -4,7 +4,7 @@ script(type="text/template", id="advanced_part_tmpl").
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk(dsize=disk["size"],dpath=disk["path"])
+            ul.wat-cf.disk(dpath=disk["path"])
                 li.vertical
                     a(href="#")= disk["path"]
                     a(href="#")
@@ -26,7 +26,7 @@ script(type="text/template", id="advanced_part_tmpl").
                             -else if (percent < 15)
                                 - percent = 15
                             li.horizontal(style = "width:" + percent + "%")
-                                ul.wat-cf.part(num=part["number"], ty=part["ty"])
+                                ul.wat-cf.part(dnum=i, pnum=p)
                                     li
                                         a(href="#")
                                             = Number(part["size"]).toFixed(2)
@@ -38,7 +38,7 @@ script(type="text/template", id="advanced_part_tmpl").
                                     li
                                         a.partmp(href="#")= "MountPoint:"
                                     li.colorhidden
-                                        -if (part["ty"] == "primary")
+                                        -if (part["number"] > 0 && (part["ty"] == "primary" || part["ty"] == "logical"))
                                             a.delete(num=part["number"], path=disk["path"]) delete
                                             a.edit(href="#edit"+String(i)+String(p),data-toggle="modal") edit
                                             .modal.hide.fade(id="edit"+String(i)+String(p))
@@ -52,22 +52,21 @@ script(type="text/template", id="advanced_part_tmpl").
                                                             select.span3#mp
                                                                 option(value="") ""
                                                                 option(value="/")= "/"
-                                                                option(value="/home")= "/home"
-                                                                option(value="/mnt")= "/mnt"
-                                                                option(value="/tmp")= "/tmp"
-                                                                option(value="/boot")= "/boot"
                                                                 option(value="/opt")= "/opt"
-                                                                option(value="/usr")= "/usr"
+                                                               // option(value="/home")= "/home"
+                                                               // option(value="/mnt")= "/mnt"
+                                                               // option(value="/tmp")= "/tmp"
+                                                               // option(value="/boot")= "/boot"
+                                                               // option(value="/usr")= "/usr"
                                                     div.control-group.form-horizontal
                                                         label.control-label(for="fs")= gettext('FileSystem')
                                                         .controls
                                                             select.span3#fs
-                                                                option(value="") nochange
                                                                 option(value="ext4") ext4
                                                                 option(value="linux-swap(v1)") swap
                                                 .modal-footer
                                                         a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                                                        a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal", path=disk["path"], num=part["number"])= gettext('Submit')
+                                                        a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",dnum=i,pnum=p )= gettext('Submit')
                                         -else if (part["ty"]=="extended")
                                             //a.btn.create create
                                             a.delete(num=part["number"], path=disk["path"]) delete

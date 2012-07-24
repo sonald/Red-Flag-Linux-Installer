@@ -2,7 +2,7 @@ script(type="text/template", id="easy_part_tmpl").
     .part_table#easy_part_table
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk(dnum=i)
+            ul.wat-cf.disk
                 li.vertical
                     a(href="#")= disk["path"]
                     a(href="#")
@@ -26,7 +26,7 @@ script(type="text/template", id="easy_part_tmpl").
                             -else if (percent < 15)
                                 - percent = 15
                             li.horizontal(style = "width:" + percent + "%")
-                                ul.wat-cf.part(num=part["number"], pnum=p)
+                                ul.wat-cf.part(pnum=p,dnum=i)
                                     li
                                         a(href="#")
                                             = Number(part["size"]).toFixed(2)
