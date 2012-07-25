@@ -76,6 +76,7 @@ page.open("http://127.0.0.1:8080", function(status) {
 	    });
 	});
 
+	// full disk installation scheme
 	page.evaluate(function() {
 	    var opts = {
                 "grubinstall": "/dev/sdb",
@@ -145,7 +146,79 @@ page.open("http://127.0.0.1:8080", function(status) {
 		console.log('[INSTALL]: ', JSON.stringify(status));
 	    });
 	});
-	
+
+	// advanced scheme
+	page.evaluate(function() {
+	    var opts = {
+                "grubinstall": "/dev/sdb",
+                "installmode": "fulldisk",
+                "username": "pangu_test2",
+		"hostname": 'pangu_test2-qomo',
+		"timezone": 'Asia/Shanghai',
+		"keyboard": 'en',
+                "disks": [
+                    {
+                        "table": [
+                            {
+				"fs": "linux-swap(v1)",
+				"end": 1.003483648,
+				"ty": "primary",
+				"number": 1,
+				"start": 0.000032256,
+				"size": 1.003451392,
+				"dirty": true
+                            },
+                            {
+				"fs": "ext4",
+				"end": 8.003196928,
+				"ty": "primary",
+				"number": 2,
+				"start": 1.01170944,
+				"size": 6.991487488,
+				"dirty": true,
+				"mountpoint": "/"
+                            },
+                            {
+				"fs": "",
+				"end": 8.587191808,
+				"ty": "free",
+				"number": 3,
+				"start": 8.00319744,
+				"size": 0.5839943680000008,
+				"dirty": true,
+				"mountpoint": "/opt"
+                            }
+                        ],
+                        "path": "/dev/sdb",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.589934592
+                    },
+                    {
+                        "table": [
+                            {
+				"fs": "ext4",
+				"end": 8.388607488,
+				"ty": "primary",
+				"number": 1,
+				"start": 0.000032256,
+				"size": 8.388575231999999
+                            }
+                        ],
+                        "path": "/dev/sda",
+                        "model": "ATA QEMU HARDDISK",
+                        "type": "msdos",
+                        "unit": "GB",
+                        "size": 8.388608
+                    }
+                ]
+            };
+	    
+	    apis.services.install.packAndUnpack(opts, function(status) {
+		console.log('[INSTALL]: ', JSON.stringify(status));
+	    });
+	});
 	
     }, 1800);
 
