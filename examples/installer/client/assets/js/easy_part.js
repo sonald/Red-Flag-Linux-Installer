@@ -40,6 +40,10 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var dnum, pnum, part;
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
             dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
+            if (this.app.options.disks[dnum].size < 6) {
+                alert("you should a part larger than 6G!");
+                return;
+            }
 
             part = this.app.options.disks[dnum].table[pnum];
             part["dirty"] = true;
