@@ -23,12 +23,15 @@ var fsutil = {
                 return;
             }
 
-            debug('getFileSystemInfo: ', info.toString());
-            callback(null, {
-                "block size": info[1],
-                "total blocks": info[2],
-                "free blocks": info[3]
-            });
+	    // "block size": info[1],
+            // "total blocks": info[2],
+            // "free blocks": info[3]
+	    info = {
+		"total": (+info[2]) * info[1],
+		"free": (+info[3]) * info[1]
+            };
+            debug('getFileSystemInfo: ', info);
+            callback(null, info);
         });
     },
 
@@ -154,7 +157,8 @@ module.exports = (function(){
 
         async.forEachSeries(mounts.sort(),
             function(mnt, cb) {
-                system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' + mnt.mountpoint)(cb);
+                system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' +
+		       pathlib.join(destdir, mnt.mountpoint))(cb);
             }, callback);
     }
 
@@ -204,14 +208,24 @@ module.exports = (function(){
         async.waterfall([
             function(cb) {
                 fsutil.mktempdir(function(dirname) {
-                    exec('mount -t ext4 ' + options.newroot + ' ' + dirname, {}, function(err) {
+                    // exec('mount -t ext4 ' + options.newroot + ' ' + dirname, {}, function(err) {
+                    //     if (err) {
+                    //         cb(err);
+
+                    //     } else {
+                    //         cb(null, dirname);
+                    //     }
+                    // });
+
+		    mountNeededPartitions(options.disks, dirname, function(err) {
                         if (err) {
                             cb(err);
 
                         } else {
                             cb(null, dirname);
                         }
-                    });
+		    });
+
                 });
             },
 
@@ -223,7 +237,7 @@ module.exports = (function(){
                         return;
                     }
 
-                    var size = (+info['total blocks'] - info['free blocks']) * info['block size'];
+		    var size = info['total'] - info['free'];
                     cb(null, newroot_mnt, size);
                 });
             },
@@ -256,7 +270,7 @@ module.exports = (function(){
                             cb(err);
                         }
 
-                        var installed = (+info['total blocks'] - info['free blocks']) * info['block size'];
+                        var installed = info['total'] - info['free'];
                         percentage = Math.floor((installed / total_size) * 100);
 
                         watcher({status: 'progress', data: percentage});
@@ -268,9 +282,13 @@ module.exports = (function(){
 
             // cleanup: umount newroot_mnt and rmdir it
             function(newroot_mnt, cb) {
-                system('umount ' + newroot_mnt)(function(err) {
-                    cb(null, newroot_mnt);
-                });
+		unmountNeededPartitions(options.disks, function(err) {
+		    cb(err, newroot_mnt);
+		});
+		
+                // system('umount ' + newroot_mnt)(function(err) {
+                //     cb(null, newroot_mnt);
+                // });
             },
 
             function(newroot_mnt, cb) {
@@ -355,6 +373,14 @@ module.exports = (function(){
                     "'; } | passwd root\n";
             }
 
+	    opts.hostname = opts.hostname || opts.username + '-qomo';
+	    postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts\n';
+
+	    opts.timezone = opts.timezone || 'Asia/Shanghai';
+	    postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime\n';
+
+	    //TODO: how?
+	    opts.keyboard = opts.keyboard || 'en';
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
@@ -412,7 +438,7 @@ module.exports = (function(){
     } // ~ postInstall
 
 
-     return {
+    return {
         meminfo: function(cb) {
             cb( {
                 free: require('os').freemem(), // unit: bytes
@@ -425,12 +451,54 @@ module.exports = (function(){
             cb(false);
         },
 
+	minimalSufficient: function(reporter) {
+	    async.waterfall([
+		function(cb) {
+		    var cmd = 'echo $(( `cat /sys/block/sda/size` * 512 ))';
+		    exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
+			if (err) {
+			    cb({status: 'failure', reason: err });
+			    return;
+			}
+
+			var size = +stdout.trim();
+			if (size / Math.pow(10,9) < 6) {
+			    cb({status: 'failure', reason: 'disk size does not suffcient minimal request'});
+			    return;
+			}
+
+			cb(null);
+		    });
+		},
+
+		function(cb) {
+		    if (require('os').totalmem() < Math.pow(10,9)) {
+			cb({status: 'failure', reason: 'need at least 1GB memory'});
+			
+		    } else {
+			cb(null);
+		    }
+		}
+		
+	    ], function(err) {
+		if (err) {
+		    debug(err);
+		    reporter(err);
+		} else {
+		    reporter({status: 'success'});
+		}
+	    });
+	},
+	 
         /**
          * options contains all info needed to do installation
          * options = {
             // newroot: '/dev/sda1',
             grubinstall: '' // empty, '/dev/sda', '/dev/sdb2'
             installmode: 'fulldisk' // easy, advanced
+	    timezone: '',
+	    hostname: username + '-qomo',
+	    username: '',
             // disks contains almost all partitions, use dirty to distinct which
             // need formatting
             disks: [
