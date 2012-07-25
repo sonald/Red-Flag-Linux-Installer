@@ -26,11 +26,12 @@ var fsutil = {
 	    // "block size": info[1],
             // "total blocks": info[2],
             // "free blocks": info[3]
-            debug('getFileSystemInfo: ', info.toString());
-            callback(null, {
-		"total": (+info['total blocks']) * info['block size'],
-		"free": (+info['free blocks']) * info['block size']
-            });
+	    info = {
+		"total": (+info[2]) * info[1],
+		"free": (+info[3]) * info[1]
+            };
+            debug('getFileSystemInfo: ', info);
+            callback(null, info);
         });
     },
 
@@ -373,10 +374,10 @@ module.exports = (function(){
             }
 
 	    opts.hostname = opts.hostname || opts.username + '-qomo';
-	    postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts';
+	    postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts\n';
 
 	    opts.timezone = opts.timezone || 'Asia/Shanghai';
-	    postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime';
+	    postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime\n';
 
 	    //TODO: how?
 	    opts.keyboard = opts.keyboard || 'en';
