@@ -196,7 +196,14 @@ module.exports = function() {
             server.get('/', function(req, res, next) {
                 res.render(opts.appView);
             });
-
+	    
+	    server.post('/shutdown', function(req, res) {
+		//TODO: test if it's safe to exist now
+		console.log('request shutdown');
+		res.end('approved');
+		process.exit(0);
+	    });
+	    
             server.listen(opts.port);
             dnode(apis.apis).listen(server);
             return this;
