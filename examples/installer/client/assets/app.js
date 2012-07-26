@@ -1,5 +1,14 @@
 require.config({
-    baseUrl: 'js',
+    baseUrl: 'js',    
+    paths: {
+        dnode: '/dnode'
+    },
+    shim: {
+        'bootstrap': ['jquery'],
+        'jquery.knob': ['jquery'],
+        'jquery.color':['jquery'],
+        'sitemap': ['jquery']
+    }
 });
 
 var app = {
