@@ -1,24 +1,9 @@
-#!/usr/bin/env node
+#!/usr/bin/env bash
+exe=`which $0`
+if [ -L $exe ]; then
+    exe=`readlink -f $exe`
+fi
 
-var spawn = require('child_process').spawn;
-var kill = require('child_process').kill;
-process.chdir(__dirname + '/../examples/installer');
-
-if (process.getuid() !== 0) {
-    console.error('need root to run installer');
-    process.exit(1);
-} 
-
-var installer = spawn('node', ['app.js']);
-installer.on('exit', function() {
-    process.exit(0);
-});
-
-installer.stdout.on('data', function(data) {
-    process.stdout.write(data.toString());
-});
-
-process.on('exit', function() {
-    installer.kill();
-});
-
+installer_dir=`dirname $exe`/../examples/installer
+cd $installer_dir 
+exec node ./bootstrap.js

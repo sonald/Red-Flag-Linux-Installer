@@ -27,6 +27,8 @@ var spawn = require('child_process').spawn;
 var fs = require('fs');
 var async = require('async');
 var pathlib = require('path');
+var installer = null;
+// require('longjohn');
 
 function testExists(cmd, callback) {
     'use strict';
@@ -57,7 +59,7 @@ function startServer() {
         }
 
         var cmd = results[0].split(/\s+/);
-        var installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: process.env});
+        installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: process.env});
 
         var fe_loaded = false;
         installer.stdout.on('data', function(data) {
@@ -69,13 +71,6 @@ function startServer() {
                 }
             }
             process.stdout.write(output);
-        });
-
-        process.on('exit', function() {
-            if (!installer.exitCode) {
-                console.log('try kill node');
-                // installer.kill('SIGKILL');
-            }
         });
     });
 }
@@ -91,7 +86,7 @@ function tryLoadFrontend() {
     console.log(options);
 
     var args = [ options.url || 'http://127.0.0.1:8080'];
-    var candidates = ['google-chrome', __dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
+    var candidates = [__dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
 
     async.filter(candidates, testExists, function(results) {
         console.log('found: ', results);
@@ -100,7 +95,27 @@ function tryLoadFrontend() {
             process.exit(1);
         }
         var fe = spawn(results[0], [args], {cwd: __dirname, env: process.env});
-
+	fe.on('exit', function() { 
+	    if (installer && !installer.exitCode) {
+                console.log('try kill node');
+		
+		var req = require('http').request({
+		    host: 'localhost',
+		    port: 8080,
+		    method: 'POST',
+		    path: '/shutdown'
+		}, function(res) {
+		    console.log(res);
+		    process.exit(0);
+		});
+		
+		req.on('error', function(err) {
+		    console.log('req: ', err.message);
+		});
+		req.end('immediately');
+	    }
+	});
+	
         process.on('exit', function() {
             if (!fe.exitCode) {
                 fe.kill('SIGKILL');
