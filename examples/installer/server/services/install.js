@@ -396,11 +396,12 @@ module.exports = (function(){
 		} else if (opts.installmode === 'fulldisk') {
 		    swapsize = 1<<30;
 		}
+
+		postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
+		postscript += 'mkswap /swapfile\n';
+		postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
 	    }
 	    
-	    postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
-	    postscript += 'mkswap /swapfile\n';
-	    postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
