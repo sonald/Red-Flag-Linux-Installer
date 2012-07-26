@@ -4,109 +4,13 @@ script(type="text/template", id="advanced_part_tmpl").
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
-            ul.wat-cf.disk(dpath=disk["path"])
+            ul.wat-cf.disk(dpath=disk["path"],dnum=i)
                 li.vertical
                     a(href="#")= disk["path"]
                     a(href="#")
                         = disk["size"].toFixed(2)
                         = disk["unit"]
-                    - var parts = disk["table"]
-                    ul.wat-cf
-                        - for (var p in parts)
-                            -var part = parts[p]
-                            -var percent = part["size"]*100/disk["size"]
-                            -if (percent > 60)
-                                -percent = 30
-                            -else if (percent > 40)
-                                -percent = 25
-                            -else if (percent > 20)
-                                -percent = 20
-                            -else if (percent < 5)
-                                -percent = 10
-                            -else if (percent < 15)
-                                - percent = 15
-                            li.horizontal(style = "width:" + percent + "%")
-                                ul.wat-cf.part(dnum=i, pnum=p)
-                                    li
-                                        a(href="#")
-                                            = Number(part["size"]).toFixed(2)
-                                            = disk["unit"]
-                                    li
-                                        a(href="#")= part["ty"]
-                                    li
-                                        a.partfs(href="#")= part["fs"]
-                                    li
-                                        a.partmp(href="#")= "MountPoint:"
-                                    li.colorhidden
-                                        -if (part["number"] > 0 && (part["ty"] == "primary" || part["ty"] == "logical"))
-                                            a.delete(num=part["number"], path=disk["path"]) delete
-                                            a.edit(href="#edit"+String(i)+String(p),data-toggle="modal") edit
-                                            .modal.hide.fade(id="edit"+String(i)+String(p))
-                                                .modal-header
-                                                    button.close(type="button", data-dismiss="modal")×
-                                                    h3= gettext('EditDisk')
-                                                .modal-body
-                                                    div.control-group.form-horizontal
-                                                        label.control-label(for="mp") MountPoint
-                                                        .controls
-                                                            select.span3#mp
-                                                                option(value="") ""
-                                                                option(value="/")= "/"
-                                                                option(value="/opt")= "/opt"
-                                                               // option(value="/home")= "/home"
-                                                               // option(value="/mnt")= "/mnt"
-                                                               // option(value="/tmp")= "/tmp"
-                                                               // option(value="/boot")= "/boot"
-                                                               // option(value="/usr")= "/usr"
-                                                    div.control-group.form-horizontal
-                                                        label.control-label(for="fs")= gettext('FileSystem')
-                                                        .controls
-                                                            select.span3#fs
-                                                                option(value="ext4") ext4
-                                                                option(value="linux-swap(v1)") swap
-                                                .modal-footer
-                                                        a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                                                        a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",dnum=i,pnum=p )= gettext('Submit')
-                                        -else if (part["ty"]=="extended")
-                                            //a.btn.create create
-                                            a.delete(num=part["number"], path=disk["path"]) delete
-                                        -else
-                                            a.create(href="#free"+String(i)+String(p),data-toggle="modal") create
-                                            .modal.hide.fade(id="free"+String(i)+String(p))
-                                                .modal-header
-                                                    button.close(type="button", data-dismiss="modal")×
-                                                    h3= gettext('CreateDisk')
-                                                .modal-body
-                                                    div.control-group.form-horizontal
-                                                        label.control-label(for="size")= gettext('Size')
-                                                        .controls
-                                                            input.input-xlarge#size
-                                                    div.control-group.form-horizontal
-                                                        label.control-label(for="parttype")= gettext('PartType')
-                                                        .controls
-                                                            select.span3#parttype
-                                                                option(value="primary")= gettext('primary')
-                                                                option(value="logical")= gettext('logical')
-                                                                option(value="extended")= gettext('extended')
-                                                    div.control-group.form-horizontal
-                                                        label.control-label(for="fs")= gettext('FileSystem')
-                                                        .controls
-                                                            select.span3#fs
-                                                                option(value="ext4") ext4
-                                                                option(value="linux-swap(v1)") swap
-                                                    div.control-group.form-horizontal
-                                                        label.control-label
-                                                        .controls#location
-                                                            label.radio
-                                                                input(type="radio", name=String(i)+String(p), id="start", value=part["start"], checked)
-                                                                b= gettext('Alignment To Beginning')
-                                                            label.radio
-                                                                input(type="radio", name=String(i)+String(p), id="end", value = part["end"])
-                                                                b= gettext('Alignment To End')
-                                                .modal-footer
-                                                        a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                                                        a.btn.btn-primary.js-create-submit(href="#", data-dismiss="modal", path=disk["path"])= gettext('Submit')
-
+                    ul.wat-cf.table
         b grubinstall:
         select#grub
             -for (var x in disks)
@@ -114,3 +18,7 @@ script(type="text/template", id="advanced_part_tmpl").
                 option(value=disk["path"])= disk["path"]
             option(value="") uninstallgrub
             option(value="") bootdisk
+include primary_part
+include logical_part
+include extended_part
+include free_part

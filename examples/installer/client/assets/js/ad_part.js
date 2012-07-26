@@ -24,21 +24,56 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             partialCache = (jade.compile($(this.view)[0].innerHTML))();
             return partialCache;
         },
-
-        postSetup: function() {
-            var that = this;
+        renderParts: function () {
             this.locals = this.locals || {};
             var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
             $('#advanced_part_table').html(pageC);
+            this.renderPart();
+        },
 
+        renderPart: function () {
+            var that = this;
+            var tys, pindex, $disk, tmpPage, args, dindex = 0;
+            tys = ["primary", "free", "extended"];//logical is special
+            _.each(app.options.disks, function (disk) {
+                pindex = 0;
+                $disk = $('ul.disk[dpath="'+disk.path+'"]');
+                _.each(disk.table, function (part){
+                    args = {
+                                pindex:pindex, 
+                                dindex:dindex,
+                                part:part,
+                                unit:disk.unit,
+                            };
+                    args["gettext"] = that.locals.gettext;
+                    if (part.number < 0) {
+                        tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
+                    }else{
+                        tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
+                    };
+                    if (_.indexOf(tys, part.ty) > -1) {
+                        $disk.find('ul.table').append(tmpPage);
+                    }else {
+                        $disk.find('ul.logicals').append(tmpPage);
+                    };
+                    pindex++;
+                });
+                dindex++;
+            });
+        },
+
+        postSetup: function() {
+            this.renderParts();
             $('body').off('click','.delete');
             $('body').off('click','#reset');
-            $('body').off('click','a.js-create-submit');
-            $('body').off('click','a.js-edit-submit');
 
+            var that = this;
             $('body').on('click','.delete', function () {
-                var path = $(this).attr("path");
-                var number = $(this).attr("num");
+                var dnum, pnum, path, number;
+                dnum = $(this).attr("dnum");
+                pnum = $(this).attr("pnum");
+                path = that.locals.disks[dnum].path;
+                number = that.locals.disks[dnum].table[pnum].number;
                 window.apis.services.partition.rmpart(
                     path, number, $.proxy(that.partflesh, that));
             });
@@ -55,7 +90,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             $('body').on('click','a.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path, align;
                 var $content = $(this).parents('.modal');
-                size = Number($content.find("#size")[0].value);
+                size = Number($content.find("#size").attr("value"));
                 parttype = $content.find('#parttype :checked').attr("value");
                 fstype = $content.find('#fs :checked').attr("value");
                 align = Number($content.find("#location :checked").attr("value"));
@@ -127,13 +162,23 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     }
                 }
                 window.apis.services.partition.getPartitions(function(disks) {
+                    disks = _.map(disks, function (disk) {
+                        disk.table = _.map(disk.table, function(part) {
+                            part["path"] = disk.path;
+                            return part;
+                        });
+                        return disk;
+                    })
+
                     that.locals["disks"] = disks;
                     that.app.options.disks = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
+                    that.renderPart();
+
                     for (var x in that.record.edit) {
                         var tmp = that.record.edit[x];
-                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[num="'+tmp.number+'"]');
+                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[number="'+tmp.number+'"]');
                         if(tmp.fs !== "") {
                             $part.find('a.partfs').text(tmp.fs);
                         };
@@ -144,9 +189,11 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 });
             }else if(result.status === "failure") {
                 //TODO
+                alert(result.reason);
                 console.log(result.reason);
             }else {
                 //TODO
+                alert(result.error);
                 console.log(result);
             };
         },

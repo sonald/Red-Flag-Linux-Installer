@@ -40,10 +40,15 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var that = this;
             var dnum= $("#part_content").find('ul.select').attr("dnum");
             var dpath = that.app.options.disks[dnum].path;
+            if (that.app.options.disks[dnum].size < 6) {
+                alert("you should choose a disk larger than 6G!");
+                return;
+            }
 
             window.apis.services.partition.FulldiskHandler(dpath, function (results) {
                 if (results.status && results.status === "failure") {
                     console.log(results);
+                    alert(results.reason);
                 }else{
                     that.locals["disks"] = results;
                     that.app.options.disks = results;

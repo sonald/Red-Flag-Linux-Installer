@@ -1,0 +1,42 @@
+script(type="text/template", id="logical_part_tmpl").
+    li.horizontal.logical
+        button.delete.close(type="button",pnum=pindex,dnum=dindex)×
+        ul.wat-cf.part(number=part.number)
+            li
+                a(href="#")
+                    = Number(part.size).toFixed(2)
+                    = unit
+            li
+                a(href="#")= part.ty
+            li
+                a.partfs(href="#")= part.fs
+            li
+                a.partmp(href="#")= "MountPoint:"
+            li
+                a.edit(data-toggle="modal", href="#"+String(dindex)+String(pindex)) edit
+                .modal.fade.hide(id=String(dindex)+String(pindex))
+                    .modal-header
+                        button.close(type="button", data-dismiss="modal")×
+                        h3= gettext('EditDisk')
+                    .modal-body
+                        div.control-group.form-horizontal
+                            label.control-label(for="mp") MountPoint
+                            .controls
+                                select.span3#mp
+                                    option(value="") ""
+                                    option(value="/")= "/"
+                                    option(value="/opt")= "/opt"
+                                   // option(value="/home")= "/home"
+                                   // option(value="/mnt")= "/mnt"
+                                   // option(value="/tmp")= "/tmp"
+                                   // option(value="/boot")= "/boot"
+                                   // option(value="/usr")= "/usr"
+                        div.control-group.form-horizontal
+                            label.control-label(for="fs")= gettext('FileSystem')
+                            .controls
+                                select.span3#fs
+                                    option(value="ext4") ext4
+                                    option(value="linux-swap(v1)") swap
+                    .modal-footer
+                            a.btn(href="#", data-dismiss="modal")= gettext('Close')
+                            a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",pnum=pindex,dnum=dindex)= gettext('Submit')
