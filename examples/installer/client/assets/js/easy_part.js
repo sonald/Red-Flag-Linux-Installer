@@ -41,7 +41,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
             dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
             if (this.app.options.disks[dnum].table[pnum].size < 6) {
-                alert("you should a part larger than 6G!");
+                alert(i18n.gettext("you should a part larger than 6G!"));
                 return;
             }
 

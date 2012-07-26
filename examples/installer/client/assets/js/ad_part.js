@@ -21,7 +21,8 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
          
         // compile and return page partial
         loadView: function() {
-            partialCache = (jade.compile($(this.view)[0].innerHTML))();
+            this.locals = this.locals || {};
+            partialCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             return partialCache;
         },
         renderParts: function () {
@@ -189,11 +190,11 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 });
             }else if(result.status === "failure") {
                 //TODO
-                alert(result.reason);
+                alert(i18n.gettext(result.reason));
                 console.log(result.reason);
             }else {
                 //TODO
-                alert(result.error);
+                alert(i18n.gettext(result.error));
                 console.log(result);
             };
         },
