@@ -34,8 +34,10 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                         callback();
                     });
                 }else if(result.status === "failure"){
+                    alert(result.reason);
                     console.log(result);
                 }else{
+                    alert(result.error);
                     console.log("data error");
                 };
             });
@@ -89,23 +91,34 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                 fdPage.validate(callback);
             }else if (that.$el.has("#advanced_part_table").length > 0) {
                 var disks = that.app.options.disks;
-                var boot_mp, opt_mp;
-                boot_mp = 0;
+                var root_mp, opt_mp, root_size;
+                root_mp = 0;
                 opt_mp = 0;
-                _.each(adPage.record.edit,function (el) {
+                root_size = 0;
+                _.each(adPage.record.edit, function (el) {
                     if (el.mp === "/") {
-                        boot_mp++;
+                        root_mp++;
+                        var disk = _.find(disks, function (disk) {
+                            return disk.path === el.path;
+                        });
+                        var part = _.find(disk.table, function (part) {
+                            return part.number === el.number;
+                        });
+                        root_size = part.size;
                     }else if (el.mp === "/opt") {
                         opt_mp++;
                     };
                 });
-                if (boot_mp === 0) {
+                if (root_mp === 0) {
                     alert("you need choose a disk for '/'!");
                     return;
-                } else if (boot_mp > 1 || opt_mp > 1) {
+                } else if (root_mp > 1 || opt_mp > 1) {
                     alert("you need choose only a disk for each mountpoint!");
                     return;
-                };
+                }else if (root_size < 6) {
+                    alert("you need choose a disk larger than 6G for '/'!");
+                    return;
+                }
                 _.each(adPage.record.dirty, function (el) {
                     var path = el.path;
                     var number = el.number;

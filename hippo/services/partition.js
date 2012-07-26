@@ -125,8 +125,10 @@ module.exports = (function() {
             sock.once('fdhandler', function (disks) {
                 cb(JSON.parse(disks));
             });
+        }else{
+            cb({error:"sever is loading",});
         }
-    }
+    };
 
     return PartitionStub;
 }());

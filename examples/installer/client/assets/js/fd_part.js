@@ -48,6 +48,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             window.apis.services.partition.FulldiskHandler(dpath, function (results) {
                 if (results.status && results.status === "failure") {
                     console.log(results);
+                    alert(results.reason);
                 }else{
                     that.locals["disks"] = results;
                     that.app.options.disks = results;

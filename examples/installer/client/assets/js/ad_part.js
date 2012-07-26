@@ -189,9 +189,11 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 });
             }else if(result.status === "failure") {
                 //TODO
+                alert(result.reason);
                 console.log(result.reason);
             }else {
                 //TODO
+                alert(result.error);
                 console.log(result);
             };
         },
