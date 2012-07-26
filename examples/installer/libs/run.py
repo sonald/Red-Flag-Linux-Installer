@@ -57,5 +57,6 @@ if __name__ == "__main__":
     url = args[0]
     app = QtGui.QApplication(sys.argv)
     myapp = httpWidget(url)
+    myapp.setFixedSize(800, 600)
     myapp.show()
     sys.exit(app.exec_())
