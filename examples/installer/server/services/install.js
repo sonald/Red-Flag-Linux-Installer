@@ -191,15 +191,19 @@ module.exports = (function(){
         return null;
     }
 
-    //interpolate part path into itself for convience
-    function preprocessDisks(disks) {
-        disks.map(function(disk) {
+    //interpolate part path into itself for convience, and record
+    //install device ( where / roots)
+    function preprocessOptions(opts) {
+        opts.disks.map(function(disk) {
             disk.table.map(function(part) {
                 part.path = part.path || disk.path + part.number;
+		if (part.mountpoint === '/') {
+		    opts.installdevice = disk;
+		}
             });
         });
 
-        return disks;
+        return opts;
     }
 
     // install routines
@@ -208,15 +212,8 @@ module.exports = (function(){
         async.waterfall([
             function(cb) {
                 fsutil.mktempdir(function(dirname) {
-                    // exec('mount -t ext4 ' + options.newroot + ' ' + dirname, {}, function(err) {
-                    //     if (err) {
-                    //         cb(err);
-
-                    //     } else {
-                    //         cb(null, dirname);
-                    //     }
-                    // });
-
+		    //TODO: we may need to mkdir -p before mounting
+		    //sub-volumes such as /opt.
 		    mountNeededPartitions(options.disks, dirname, function(err) {
                         if (err) {
                             cb(err);
@@ -382,6 +379,29 @@ module.exports = (function(){
 	    //TODO: how?
 	    opts.keyboard = opts.keyboard || 'en';
 
+	    // handle swap file
+	    var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
+                return entry.fs && entry.fs.indexOf('swap') != -1;
+            }).length > 0;
+	    if (need_swap_file && opts.installmode !== 'advanced') {
+		//TODO: check if space is big enough to create swapfile
+		var swapsize = 1<<30;
+		
+		if (opts.installmode === 'easy') {
+		    swapsize = require('os').totalmem();
+		    if (swapsize > (4<<30)) {
+			swapsize = 4<<30;
+		    }
+		    
+		} else if (opts.installmode === 'fulldisk') {
+		    swapsize = 1<<30;
+		}
+	    }
+	    
+	    postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
+	    postscript += 'mkswap /swapfile\n';
+	    postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
+
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
             debug(postscript);
@@ -517,72 +537,7 @@ module.exports = (function(){
          }
          */
         packAndUnpack: function(options, reporter) {
-            if (process.env.RFINSTALLER === 'fake') {
-                var fake_options = {
-                    "grubinstall": "/dev/sdb",
-                    "installmode": "fulldisk",
-                    "username": "pangu_test",
-                    "disks": [
-                    {
-                        "table": [
-                        {
-                            "fs": "linux-swap(v1)",
-                            "end": 1.003483648,
-                            "ty": "primary",
-                            "number": 1,
-                            "start": 0.000032256,
-                            "size": 1.003451392,
-                            "dirty": true
-                        },
-                        {
-                            "fs": "ext4",
-                            "end": 8.003196928,
-                            "ty": "primary",
-                            "number": 2,
-                            "start": 1.01170944,
-                            "size": 6.991487488,
-                            "dirty": true,
-                            "mountpoint": "/"
-                        },
-                        {
-                            "fs": "",
-                            "end": 8.587191808,
-                            "ty": "free",
-                            "number": -1,
-                            "start": 8.00319744,
-                            "size": 0.5839943680000008
-                        }
-                        ],
-                        "path": "/dev/sdb",
-                        "model": "ATA QEMU HARDDISK",
-                        "type": "msdos",
-                        "unit": "GB",
-                        "size": 8.589934592
-                    },
-                    {
-                        "table": [
-                        {
-                            "fs": "ext4",
-                            "end": 8.388607488,
-                            "ty": "primary",
-                            "number": 1,
-                            "start": 0.000032256,
-                            "size": 8.388575231999999
-                        }
-                        ],
-                        "path": "/dev/sda",
-                        "model": "ATA QEMU HARDDISK",
-                        "type": "msdos",
-                        "unit": "GB",
-                        "size": 8.388608
-                    }
-                    ]
-                };
-
-                options = fake_options; // for testing
-            }
-
-            options.disks = preprocessDisks( options.disks );
+            options = preprocessOptions( options );
             options.newroot = options.newroot || guessNewRoot(options.disks);
             debug(options);
 
