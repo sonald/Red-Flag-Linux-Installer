@@ -34,10 +34,10 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                         callback();
                     });
                 }else if(result.status === "failure"){
-                    alert(result.reason);
+                    alert(i18n.gettext(result.reason));
                     console.log(result);
                 }else{
-                    alert(result.error);
+                    alert(i18n.gettext(result.error));
                     console.log("data error");
                 };
             });
@@ -45,8 +45,9 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
 
         // compile and return page partial
         loadView: function() {
+            var locals = this.locals || {};
             if (typeof pageCache === 'undefined') {
-                pageCache = (jade.compile($(this.view)[0].innerHTML))();
+                pageCache = (jade.compile($(this.view)[0].innerHTML))(locals);
             }
             return pageCache;
         },
@@ -110,13 +111,13 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     };
                 });
                 if (root_mp === 0) {
-                    alert("you need choose a disk for '/'!");
+                    alert(i18n.gettext("you need choose a disk for '/'!"));
                     return;
                 } else if (root_mp > 1 || opt_mp > 1) {
-                    alert("you need choose only a disk for each mountpoint!");
+                    alert(i18n.gettext("you need choose only a disk for each mountpoint!"));
                     return;
                 }else if (root_size < 6) {
-                    alert("you need choose a disk larger than 6G for '/'!");
+                    alert(i18n.gettext("you need choose a disk larger than 6G for '/'!"));
                     return;
                 }
                 _.each(adPage.record.dirty, function (el) {
@@ -128,7 +129,9 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     var part = _.find(disk.table, function (part_el) {
                         return part_el.number === number;
                     });
-                    part["dirty"] = true;
+                    if(part && part.ty !== "extended") {
+                        part["dirty"] = true;
+                    };
                 });
 
                 _.each(adPage.record.edit, function (el) {
@@ -145,6 +148,14 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     part["fs"] = el.fs;
                 });
 
+                disks = _.map(disks, function (disk) {
+                    disk.table = _.map(disk.table, function(part) {
+                        delete part.path;
+                        return part;
+                    });
+                    return disk;
+                });
+                that.app.options.disks = disks;
                 that.app.options.grubinstall=$('#grub').find(':checked').attr("value");
                 callback();
             };

@@ -1,11 +1,11 @@
 script(type="text/template", id="part_tmpl").
     ul#myTab.nav.nav-tabs
         li.active
-            a#easy(href="#",data-toggle="tab") EasyPart
+            a#easy(href="#",data-toggle="tab")= gettext('EasyPart')
         li
-            a#fulldisk(href="#",data-toggle="tab") FullDiskPart
+            a#fulldisk(href="#",data-toggle="tab")= gettext('FullDiskPart')
         li
-            a#advanced(href="#",data-toggle="tab") AdvancedPart
+            a#advanced(href="#",data-toggle="tab")= gettext('AdvancedPart')
     #part_content
 include fd_part
 include easy_part

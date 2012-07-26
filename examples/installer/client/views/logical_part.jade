@@ -7,20 +7,20 @@ script(type="text/template", id="logical_part_tmpl").
                     = Number(part.size).toFixed(2)
                     = unit
             li
-                a(href="#")= part.ty
+                a(href="#")= gettext(part.ty)
             li
                 a.partfs(href="#")= part.fs
             li
-                a.partmp(href="#")= "MountPoint:"
+                a.partmp(href="#")= gettext("MountPoint:")
             li
-                a.edit(data-toggle="modal", href="#"+String(dindex)+String(pindex)) edit
+                a.edit(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('Edit')
                 .modal.fade.hide(id=String(dindex)+String(pindex))
                     .modal-header
                         button.close(type="button", data-dismiss="modal")×
                         h3= gettext('EditDisk')
                     .modal-body
                         div.control-group.form-horizontal
-                            label.control-label(for="mp") MountPoint
+                            label.control-label(for="mp")= gettext('MountPoint')
                             .controls
                                 select.span3#mp
                                     option(value="") ""
