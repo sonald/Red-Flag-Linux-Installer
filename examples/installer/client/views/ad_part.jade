@@ -13,11 +13,11 @@ script(type="text/template", id="advanced_part_tmpl").
                     ul.wat-cf.table
         b grubinstall:
         select#grub
-            -for (var x in disks)
-                -var disk = disks[x]
+            -for(var x = disks.length; x > 0 ; x--)
+                -var disk = disks[x-1]
                 option(value=disk["path"])= disk["path"]
             option(value="") uninstallgrub
-            option(value="") bootdisk
+            //option(value="") bootdisk
 include primary_part
 include logical_part
 include extended_part

@@ -120,8 +120,9 @@ module.exports = (function() {
     };
 
     PartitionStub.FulldiskHandler = function ( devpath, cb) {
+        var mem = require("os").totalmem();
         if (sock && sock.socket.connected) {
-            sock.emit('fdhandler', devpath);
+            sock.emit('fdhandler', devpath, mem);
             sock.once('fdhandler', function (disks) {
                 cb(JSON.parse(disks));
             });

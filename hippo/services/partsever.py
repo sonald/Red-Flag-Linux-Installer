@@ -109,30 +109,43 @@ class PartSocket(tornadio2.SocketConnection):
         self.emit('getpartitions',data)
 
     @tornadio2.event
-    def fdhandler(self, devpath):
+    def fdhandler(self, devpath, mem):
         data = self.error_handle(None,None)##TODO
         dev = parted.getDevice(devpath)
         ###unit of devsize is GiB short of GB
         ###so the unit of start and end should use GiB
+        sizeL = dev.getLength()
         size = dev.getSize('GB')
         disk = parted.disk.Disk(dev)
         parttype = "primary"
-        if disk.deleteAllPartitions() and size >= 6:
+        if disk.deleteAllPartitions() and size > 10:
             fs = "linux-swap(v1)"
             start = parted.sizeToSectors(0, "GB", 512)
-            end = parted.sizeToSectors(1, "GB", 512)
+            end = parted.sizeToSectors(mem,'B',512)
             try:
                 disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+
                 fs = "ext4"
-                start = parted.sizeToSectors(1.005, "GB", 512)
-                end = parted.sizeToSectors(size, "GB", 512)
+                start = end + 100;
                 if size > 30:
                     end = parted.sizeToSectors(30, "GB", 512)
+                    disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                    start = end + 100;
+                end = sizeL - 100
                 disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+
                 self.disks[devpath] = disk
                 data = lib.partedprint.parted_print(self.disks,True,True)
             except Exception, e:
                 data = self.error_handle(e,None)
+        elif disk.deleteAllPartitions() and size >= 6:
+            fs = "ext4"
+            start = parted.sizeToSectors(0, "GB", 512)
+            end = sizeL - 100
+            disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+
+            self.disks[devpath] = disk
+            data = lib.partedprint.parted_print(self.disks,True,True)
         else:
             data = self.error_handle("You'd better choose a disk larger than 6G.", None)
         

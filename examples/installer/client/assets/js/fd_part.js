@@ -56,12 +56,15 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                         return el.path === dpath;
                     });
                     disk.table = _.map(disk.table, function (el) {
-                        if (el.number > 0) el["dirty"] = true;
-                        if (el.number > 0 && el.fs != "linux-swap(v1)"){
-                            el["mountpoint"] = "/";
+                        if (el.number > 0) {
+                            el["dirty"]=true;
                         }
                         return el;
                     });
+                    var part = _.find(disk.table, function (el) {
+                        return (el.fs!="linux-swap(v1)" && el.number > 0);
+                    });
+                    part["mountpoint"] = "/";
                     callback();
                 }
             });
