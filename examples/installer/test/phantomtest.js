@@ -231,7 +231,7 @@ page.open("http://127.0.0.1:8080", function(status) {
 	    apis.services.install.packAndUnpack(opts, function(status) {
 		console.log('[INSTALL]: ', JSON.stringify(status));
 	    });
-	});
+	}, opts);
 
     }, 1800);
 
