@@ -472,36 +472,49 @@ module.exports = (function(){
             cb(false);
         },
 
-	minimalSufficient: function(reporter) {
-	    async.waterfall([
-		function(cb) {
-		    var cmd = 'echo $(( `cat /sys/block/sda/size` * 512 ))';
+	// [ '/dev/sda', '/dev/sdb' ]
+	minimalSufficient: function(devices, reporter) {
+	    var reasons = {
+		'diskmin': 'disk size does not suffcient minimal request',
+		'memory': 'need at least 1GB memory'
+	    };
+
+	    function diskminCheck(device) {
+		return function(cb) {
+		    var devname = device.replace(/\/dev\//, '');
+		    var cmd = 'echo $(( `cat /sys/block/' + devname + '/size` * 512 ))';
 		    exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
 			if (err) {
-			    cb({status: 'failure', reason: err });
+			    cb({status: 'warning', reason: err });
 			    return;
 			}
 
 			var size = +stdout.trim();
 			if (size / Math.pow(10,9) < 6) {
-			    cb({status: 'failure', reason: 'disk size does not suffcient minimal request'});
+			    cb({status: 'warning', reason: reasons['diskmin']});
 			    return;
 			}
 
 			cb(null);
 		    });
-		},
+		};
+	    }
 
-		function(cb) {
-		    if (require('os').totalmem() < Math.pow(10,9)) {
-			cb({status: 'failure', reason: 'need at least 1GB memory'});
-			
-		    } else {
-			cb(null);
-		    }
+	    var checklist = [];
+	    devices.forEach(function(device) {
+		checklist.push(diskminCheck(device));
+	    });
+	    
+	    checklist.push( function(cb) {
+		if (require('os').totalmem() < Math.pow(10,9)) {
+		    cb({status: 'failure', reason: reasons['memory']});
+		    
+		} else {
+		    cb(null);
 		}
-		
-	    ], function(err) {
+	    } );
+	    
+	    async.waterfall(checklist, function(err) {
 		if (err) {
 		    debug(err);
 		    reporter(err);
