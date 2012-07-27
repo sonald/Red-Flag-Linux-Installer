@@ -16,17 +16,7 @@
  * =====================================================================================
 */
 
-require.config({
-    paths: {
-        dnode: '/dnode',
-    },
-    shim: {
-        'bootstrap': ['jquery'],
-        'jquery.knob': ['jquery'],
-        'jquery.color':['jquery'],
-        'sitemap': ['jquery'],
-    },
-});
+
 
 // stub to load all hippo system libs
 // the problem is that underscore is actually not AMD-compatible now, it expose global `_`

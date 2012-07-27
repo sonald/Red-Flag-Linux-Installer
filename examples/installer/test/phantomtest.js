@@ -210,15 +210,29 @@ page.open("http://127.0.0.1:8080", function(status) {
                 }
             ]
         };
-	
+
 	// full disk installation scheme
-	var opts = sys.args.indexOf('-adv') >= 0 ? adv_opts : fulldisk_opts;
+	var opts = null;	
+	if (sys.args.indexOf('-adv') != -1) {
+	    opts = adv_opts;
+	    
+	} else if (sys.args.indexOf('-easy') != -1) {
+	    opts = fulldisk_opts;
+	    opts.disks[0].table[0].dirty = false; // simulate existed swap fs
+	    
+	} else if (sys.args.indexOf('-fulldisk') != -1) {
+	    opts = fulldisk_opts;
+	    
+	} else {
+	    phantom.exit(0);
+	}
+	
 	page.evaluateAsync(function(opts) {
 	    apis.services.install.packAndUnpack(opts, function(status) {
 		console.log('[INSTALL]: ', JSON.stringify(status));
 	    });
-	});
-	
+	}, opts);
+
     }, 1800);
 
 });

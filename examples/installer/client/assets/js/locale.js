@@ -22,7 +22,7 @@
 (function() {
 	'use strict';
 
-	define({
+	define(['system', 'jed'], {
 			load: function(name, req, load, config) {
 				console.log('load client locale data');
 
