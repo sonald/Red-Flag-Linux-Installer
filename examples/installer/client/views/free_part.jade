@@ -1,12 +1,12 @@
 script(type="text/template", id="free_part_tmpl").
     li.horizontal.free
-        ul.wat-cf.part
+        ul.wat-cf.part(pty="free")
             li
                 a(href="#")
                     = Number(part.size).toFixed(2)
                     = unit
             li
-                a(href="#")= gettext(part.ty)
+                a(href="#")= gettext('free')
             li
                 a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex)) create
                 .modal.fade.hide(id=String(dindex)+String(pindex))

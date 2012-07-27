@@ -2,33 +2,49 @@ script(type="text/template", id="easy_part_tmpl").
     .part_table#easy_part_table
         -for (var i in disks)
             - disk = disks[i]
+            p.diskinfo
+                = disk["path"]
+                ="("
+                = disk["size"].toFixed(2)
+                = disk["unit"]
+                =")"
+            - var parts = disk["table"]
             ul.wat-cf.disk
-                li.vertical
-                    a(href="#")= disk["path"]
-                    a(href="#")
-                        = disk["size"].toFixed(2)
-                        = disk["unit"]
-                    - var parts = disk["table"]
-                    ul.wat-cf
-                        - for (var p in parts)
-                            -var part = parts[p]
-                            -if (part["ty"] == "extended" || part["number"]==-1)
-                                - continue
-                            -var percent = part["size"]*100/disk["size"]
-                            -if (percent > 60)
-                                -percent = 30
-                            -else if (percent > 40)
-                                -percent = 25
-                            -else if (percent > 20)
-                                -percent = 20
-                            -else if (percent < 5)
-                                -percent = 10
-                            -else if (percent < 15)
-                                - percent = 15
-                            li.horizontal(style = "width:" + percent + "%")
-                                ul.wat-cf.part(pnum=p,dnum=i)
-                                    li
-                                        a(href="#")
-                                            = Number(part["size"]).toFixed(2)
-                                            = disk["unit"]
+                - for (var p in parts)
+                    -var part = parts[p]
+                    -var ty = part["ty"]
+                    -if (part["ty"] == "extended")
+                        - continue
+                    -if (part["number"]<0)
+                        -ty = "free"
+                    -var percent = part["size"]*100/disk["size"]
+                    li.horizontal(style = "width:" + percent + "%")
+                        ul.wat-cf.part(pnum=p,dnum=i,psize=part["size"],pty=ty)
+                            li
+                                a(href="#")
+                                    - if (part["number"] < 0)
+                                        ="free"
+                                    - else
+                                        =part["number"]
+                                    ="("
+                                    = Number(part["size"]).toFixed(2)
+                                    = disk["unit"]
+                                    =")"
+                                a(href="#")
+                                    - if (part["fs"] === "")
+                                        br
+                                    -else
+                                        = part["fs"]
     .warninfo
+        br
+    table
+        tbody
+            tr
+                td(bgcolor="#304531",height="20",width="20")
+                td= "primary"
+                td(bgcolor="#72352d",height="20",width="20")
+                td= "logical"
+                td(bgcolor="#354668",height="20",width="20")
+                td= "free"
+                td(bgcolor="#D66B6B",height="20",width="20")
+                td= "selected"

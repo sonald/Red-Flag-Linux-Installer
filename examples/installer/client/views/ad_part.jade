@@ -4,13 +4,13 @@ script(type="text/template", id="advanced_part_tmpl").
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
+            p
+                = disk["path"]
+                ="("
+                = disk["size"].toFixed(2)
+                = disk["unit"]
+                =")"
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
-                li.vertical
-                    a(href="#")= disk["path"]
-                    a(href="#")
-                        = disk["size"].toFixed(2)
-                        = disk["unit"]
-                    ul.wat-cf.table
         b= gettext('grubinstall')
         select#grub
             -for(var x = disks.length; x > 0 ; x--)

@@ -1,7 +1,7 @@
 script(type="text/template", id="logical_part_tmpl").
     li.horizontal.logical
         button.delete.close(type="button",pnum=pindex,dnum=dindex)×
-        ul.wat-cf.part(number=part.number)
+        ul.wat-cf.part(number=part.number,pty="logical")
             li
                 a(href="#")
                     = Number(part.size).toFixed(2)

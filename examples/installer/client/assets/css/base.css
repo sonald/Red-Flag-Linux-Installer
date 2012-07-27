@@ -36,25 +36,43 @@ input.dial {
     text-decoration: underline; 
 }
 
-.part_table ul { 
-    padding: 4px; 
+.part_table ul.disk {
+    padding: 4px;
     list-style: none;
     -webkit-box-shadow: 2px 2px 5px black;
-    background: #282828;
+    background: #362b40;
+}
+
+#advanced_part_table ul.disk li.horizontal {
+    border-style: ridge;
 }
 
 .part_table ul ul {
-    background: #393939; 
+    background: #354668;
     margin-left: 4px;
+    list-style: none;
 }
 
-.part_table ul ul ul {
-    border-style: ridge;
-    background: #4b4b4b;
+.part_table ul[pty="primary"] {
+    background:#304531;
+}
+.part_table ul[pty="logical"] {
+    background:#72352d;
+}
+.part_table ul[pty="free"] {
+    background:#354668;
 }
 
-.part_table ul ul ul ul {
-    background: #5a5a5a; 
+.part_table ul[pty="extended"] {
+    background:#283142;
+}
+
+.part_table ul.part {
+    list-style: none;
+}
+
+.part_table ul.part li {
+    white-space: nowrap;
 }
 
 .part_table ul.part li.colorhidden a{
@@ -68,6 +86,6 @@ input.dial {
     float: left;
 }
 
-.part_table .select {
-    background: #8b0000;
+.part_table ul.select {
+    background: #D66B6B;
 }

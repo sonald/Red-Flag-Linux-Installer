@@ -53,7 +53,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                         tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
                     };
                     if (_.indexOf(tys, part.ty) > -1) {
-                        $disk.find('ul.table').append(tmpPage);
+                        $disk.append(tmpPage);
                     }else {
                         $disk.find('ul.logicals').append(tmpPage);
                     };

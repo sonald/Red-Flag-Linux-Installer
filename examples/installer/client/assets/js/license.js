@@ -77,6 +77,9 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                     window.apis.services.install.minimalSufficient(devices, function (result) {
                         if (result.status === "success") {
                             callback();
+                        }else if (result.status === "warning"){
+                            alert(i18n.gettext(result.reason));
+                            callback ();
                         }else {
                             alert(i18n.gettext(result.reason));
                         }

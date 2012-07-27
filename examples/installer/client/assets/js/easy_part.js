@@ -22,11 +22,10 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
         postSetup: function () {
             $("body").off('click', '#easy_part_table ul.part');
             $('body').on('click', '#easy_part_table ul.part', function () {
-                $('.warninfo').html("");
+                $('.warninfo').html("<br/>");
                 if ($(this).hasClass("select")) {
                     $(this).removeClass("select");
-                }
-                else {
+                }else {
                     $("#easy_part_table").find('ul.select').removeClass("select");
                     $(this).addClass("select");
                     if ($(this).attr("psize") < 6) {
@@ -38,10 +37,15 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
 
         validate: function (callback) {
             var dnum, pnum, part;
+            if ($("#part_content").find('ul.select').length < 1) {
+                alert(i18n.gettext("you should a part to install the system."));
+                return;
+            }
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
             dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
-            if (this.app.options.disks[dnum].table[pnum].size < 6) {
-                alert(i18n.gettext("you should a part larger than 6G!"));
+            if (this.app.options.disks[dnum].table[pnum].size < 6 || 
+                this.app.options.disks[dnum].table[pnum].number < 0) {
+                alert(i18n.gettext("you should a part which is larger than 6G and not free!"));
                 return;
             }
 
