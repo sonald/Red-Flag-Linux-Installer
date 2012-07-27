@@ -18,36 +18,19 @@ class httpWidget(QtGui.QWidget):
     
         # set the default
         self.ui.webView.setUrl(QtCore.QUrl(url))
+        page = self.ui.webView.page()
+        page.action(page.Reload).setVisible(False)
+        page.action(page.Back).setVisible(False)
+        page.action(page.Forward).setVisible(False)
     
-        QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("linkClicked (const QUrl&)"), self.link_clicked)
-        QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("urlChanged (const QUrl&)"), self.link_clicked)
         QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("titleChanged (const QString&)"), self.title_changed)
         QtCore.QMetaObject.connectSlotsByName(self)
-
-    def url_changed(self):
-	      """
-	      Url have been changed by user
-	      """
-	      page = self.ui.webView.page()
-	      self.ui.webView.setUrl(QtCore.QUrl(url))
 
     def title_changed(self, title):
 	      """
         Web page title changed - change the tab name
 	      """
 	      self.setWindowTitle(title)
-	
-    def reload_page(self):
-	      """
-	      Reload the web page
-	      """
-	      self.ui.webView.setUrl(QtCore.QUrl(self.ui.url.text()))
-	
-    def link_clicked(self, url):
-	      """
-	      Update the URL if a link on a web page is clicked
-	      """
-	      page = self.ui.webView.page()
 	
 if __name__ == "__main__":
     try: 
@@ -57,6 +40,5 @@ if __name__ == "__main__":
     url = args[0]
     app = QtGui.QApplication(sys.argv)
     myapp = httpWidget(url)
-    myapp.setFixedSize(800, 600)
     myapp.show()
     sys.exit(app.exec_())
