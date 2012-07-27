@@ -72,7 +72,16 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
 
         validate: function(callback) {
             if (this.app.button_handler.hasclass("forward","disabled") === false){
-                callback();
+                window.apis.services.partition.getPartitions(function(disks) {
+                    var devices = _.pluck(disks, 'path');
+                    window.apis.services.install.minimalSufficient(devices, function (result) {
+                        if (result.status === "success") {
+                            callback();
+                        }else {
+                            alert(i18n.gettext(result.reason));
+                        }
+                    })
+                });
             }
         }
     };

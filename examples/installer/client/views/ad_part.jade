@@ -1,6 +1,6 @@
 script(type="text/template", id="advanced_part_tmpl").
     .part_table#advanced_part_table
-    .btn#reset reset
+    .btn#reset= gettext('Reset')
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
