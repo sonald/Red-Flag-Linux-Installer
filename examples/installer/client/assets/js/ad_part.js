@@ -67,6 +67,8 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             this.renderParts();
             $('body').off('click','.delete');
             $('body').off('click','#reset');
+            $('body').off('click','.js-create-submit');
+            $('body').off('click','.js-edit-submit');
 
             var that = this;
             $('body').on('click','.delete', function () {

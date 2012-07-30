@@ -1,18 +1,21 @@
 #!/usr/bin/env python
 """ Partition Service """
 
+from gevent import monkey; monkey.patch_all()
+
+from socketio import socketio_manage
+from socketio.server import SocketIOServer
+from socketio.namespace import BaseNamespace
 import os
 import sys
 import json
-import tornadio2
-import tornado
 import parted
 import time
 
 import lib.partedprint
 import lib.rfparted
 
-class PartSocket(tornadio2.SocketConnection):
+class PartSocket(BaseNamespace):
     disks = lib.partedprint.DevDisk()
     def on_open(self, info):
         pass
@@ -39,8 +42,7 @@ class PartSocket(tornadio2.SocketConnection):
                 return True
         return False
 
-    @tornadio2.event
-    def mkpart(self, devpath, parttype, start, end, fs):
+    def on_mkpart(self, devpath, parttype, start, end, fs):
         data = {}
         start = parted.sizeToSectors(float(start), "GB", 512)
         end = parted.sizeToSectors(float(end), "GB", 512)
@@ -69,8 +71,7 @@ class PartSocket(tornadio2.SocketConnection):
 
         self.emit('mkpart',data)
 
-    @tornadio2.event
-    def rmpart(self, devpath, partnumber):
+    def on_rmpart(self, devpath, partnumber):
         data = self.error_handle(None,"del"+devpath+str(partnumber))
         if self.has_disk(devpath):
             disk = self.disks[devpath]
@@ -82,8 +83,7 @@ class PartSocket(tornadio2.SocketConnection):
             data = self.error_handle("error arguments,no disk specified", None)
         self.emit('rmpart',data)
 
-    @tornadio2.event
-    def reset(self):
+    def on_reset(self):
         parted.freeAllDevices()
         self.disks = {}
         for dev in parted.getAllDevices():
@@ -91,8 +91,7 @@ class PartSocket(tornadio2.SocketConnection):
         data = self.error_handle(None, None)
         self.emit('reset',data)
 
-    @tornadio2.event
-    def commit(self):
+    def on_commit(self):
         data = self.error_handle(None, None)
         for disk in self.disks.values():
             if disk is None:
@@ -103,13 +102,11 @@ class PartSocket(tornadio2.SocketConnection):
                 data = self.error_handle(e,None)
         self.emit('commit',data)
 
-    @tornadio2.event
-    def getpartitions(self):
+    def on_getpartitions(self):
         data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
 
-    @tornadio2.event
-    def fdhandler(self, devpath, mem):
+    def on_fdhandler(self, devpath, mem):
         data = self.error_handle(None,None)##TODO
         dev = parted.getDevice(devpath)
         ###unit of devsize is GiB short of GB
@@ -151,10 +148,12 @@ class PartSocket(tornadio2.SocketConnection):
         
         self.emit('fdhandler',data)
 
+class Application(object):
+    def __call__(self, environ, start_response):
+        path = environ['PATH_INFO'].strip('/')
+        if path.startswith("socket.io"):
+            socketio_manage(environ, {'': PartSocket})
 
 if __name__ == "__main__":
-    MyRouter = tornadio2.TornadioRouter(PartSocket)
-    app = tornado.web.Application(
-                            MyRouter.urls,
-                            socket_io_port = 3000)
-    socketio_server = tornadio2.server.SocketServer(app)
+    SocketIOServer(('127.0.0.1', 3000), Application(),
+        resource="socket.io", policy_server=False).serve_forever()
