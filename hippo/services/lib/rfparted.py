@@ -57,16 +57,10 @@ def adjust_geometry(disk,ty,new_geometry):
 def mkpart(dev, disk, parttype, start, end, fstype):
     parttype = partty_map[parttype]
     if disk.type == 'msdos':
-        try:
-            msdos_validate_type(parttype, disk)
-        except Exception, e:
-            raise Exception, e
+        msdos_validate_type(parttype, disk)
         
     new_geometry = parted.geometry.Geometry(dev, start, None, end)
-    try:
-        new_geo = adjust_geometry(disk,parttype,new_geometry)
-    except Exception, e:
-        raise Exception, e
+    new_geo = adjust_geometry(disk,parttype,new_geometry)
 
     fs = None
     if not (parttype & parted.PARTITION_EXTENDED):
