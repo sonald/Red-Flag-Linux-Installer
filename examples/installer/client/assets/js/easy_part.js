@@ -3,14 +3,14 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
     var partialCache;
     var partial = {
         view: '#easy_part_tmpl',
-        app: null,
+        options: null,
         locals: null,
 
-        initialize: function (app, locals) {
-            this.app = app;
+        initialize: function (options, locals) {
+            this.options = options;
             this.locals = locals;
-            this.app.options.installmode = "easy";
-            this.app.options.grubinstall = "/dev/sda";
+            this.options.installmode = "easy";
+            this.options.grubinstall = "/dev/sda";
         },
 
         loadView: function () {
@@ -43,13 +43,13 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             }
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
             dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
-            if (this.app.options.disks[dnum].table[pnum].size < 6 || 
-                this.app.options.disks[dnum].table[pnum].number < 0) {
+            if (this.options.disks[dnum].table[pnum].size < 6 || 
+                this.options.disks[dnum].table[pnum].number < 0) {
                 alert(i18n.gettext("you should a part which is larger than 6G and not free!"));
                 return;
             }
 
-            part = this.app.options.disks[dnum].table[pnum];
+            part = this.options.disks[dnum].table[pnum];
             part["dirty"] = true;
             part["mountpoint"] = "/";
             part.fs = "ext4";

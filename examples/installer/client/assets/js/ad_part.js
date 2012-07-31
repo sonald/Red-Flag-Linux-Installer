@@ -7,16 +7,16 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
     var page = {
         view: '#advanced_part_tmpl',
         locals : null,
-        app:null,
+        options:null,
         record:{
             edit:[],//{path:"/dev/sda",num:1,mp:"/",fs:"ext4"}
             dirty:[],//{path:"dev/sda",num:1}
         },
 
-        initialize: function (app, locals) {
-            this.app = app;
+        initialize: function (options, locals) {
+            this.options = options;
             this.locals = locals;
-            this.app.options.installmode = "advanced";
+            this.options.installmode = "advanced";
         },
          
         // compile and return page partial
@@ -36,7 +36,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             var that = this;
             var tys, pindex, $disk, tmpPage, args, dindex = 0;
             tys = ["primary", "free", "extended"];//logical is special
-            _.each(app.options.disks, function (disk) {
+            _.each(that.options.disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
@@ -119,11 +119,11 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 mp = $content.find("#mp :checked").attr("value");
 
                 that.record.edit = _.reject(that.record.edit,function(el){
-                    return (el.path ===that.app.options.disks[dnum].path && 
-                            el.number === that.app.options.disks[dnum].table[pnum].number);
+                    return (el.path ===that.options.disks[dnum].path && 
+                            el.number === that.options.disks[dnum].table[pnum].number);
                 });
-                that.record.edit.push({"path":that.app.options.disks[dnum].path,
-                                        "number":that.app.options.disks[dnum].table[pnum].number,
+                that.record.edit.push({"path":that.options.disks[dnum].path,
+                                        "number":that.options.disks[dnum].table[pnum].number,
                                         "fs": fstype,
                                         "mp": mp,});
 
@@ -174,7 +174,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     })
 
                     that.locals["disks"] = disks;
-                    that.app.options.disks = disks;
+                    that.options.disks = disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
                     that.renderPart();
