@@ -45,27 +45,29 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 return;
             }
 
-            window.apis.services.partition.FulldiskHandler(dpath, function (results) {
-                if (results.status && results.status === "failure") {
+            window.apis.services.partition.FulldiskHandler(dpath, function (result) {
+                if (result.status && result.status === "failure") {
                     console.log(results);
                     alert(i18n.gettext(results.reason));
-                }else{
-                    that.locals["disks"] = results;
-                    that.app.options.disks = results;
-                    var disk = _.find(results,function(el){
-                        return el.path === dpath;
+                }else if ( result.status && result.status === "success"){
+                    window.apis.services.partition.getPartitions(function(disks){
+                        that.locals["disks"] = disks;
+                        that.app.options.disks = disks;
+                        var disk = _.find(disks, function(el){
+                            return el.path === dpath;
+                        });
+                        disk.table = _.map(disk.table, function (el) {
+                            if (el.number > 0) {
+                                el["dirty"]=true;
+                            }
+                            return el;
+                        });
+                        var part = _.find(disk.table, function (el) {
+                            return (el.fs!="linux-swap(v1)" && el.number > 0);
+                        });
+                        part["mountpoint"] = "/";
+                        callback();
                     });
-                    disk.table = _.map(disk.table, function (el) {
-                        if (el.number > 0) {
-                            el["dirty"]=true;
-                        }
-                        return el;
-                    });
-                    var part = _.find(disk.table, function (el) {
-                        return (el.fs!="linux-swap(v1)" && el.number > 0);
-                    });
-                    part["mountpoint"] = "/";
-                    callback();
                 }
             });
         },

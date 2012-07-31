@@ -17,15 +17,6 @@ import lib.rfparted
 
 class PartSocket(BaseNamespace):
     disks = lib.partedprint.DevDisk()
-    def on_open(self, info):
-        pass
-
-    def on_message(self,msg):
-        pass
-
-    def on_close(self):
-        pass
-    
     def error_handle(self,reason,handle_part):
         result = []
         if reason is not None:
@@ -50,18 +41,14 @@ class PartSocket(BaseNamespace):
         if self.has_disk(devpath):
             disk = self.disks[devpath]
             dev = parted.getDevice(devpath)
-            partnumber = []
-            parts = disk.partitions
-            for p in parts:
-                partnumber.append(p.number)
+            partnumber = [ part.number for part in disk.partitions ]
 
             try:
                 self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
             except Exception, e:
                 data = self.error_handle(e,None)
 
-            parts = disk.partitions
-            for p in parts:
+            for p in disk.partitions:
                 if p.number in partnumber:
                     continue
                 data = self.error_handle(None,"add"+devpath+ str(p.number))
@@ -107,53 +94,33 @@ class PartSocket(BaseNamespace):
         self.emit('getpartitions',data)
 
     def on_fdhandler(self, devpath, mem):
-        data = self.error_handle(None,None)##TODO
-        dev = parted.getDevice(devpath)
-        ###unit of devsize is GiB short of GB
-        ###so the unit of start and end should use GiB
-        sizeL = dev.getLength()
-        size = dev.getSize('GB')
-        disk = parted.disk.Disk(dev)
-        parttype = "primary"
-        if disk.deleteAllPartitions() and size > 10:
-            fs = "linux-swap(v1)"
-            start = parted.sizeToSectors(0, "GB", 512)
-            end = parted.sizeToSectors(mem,'B',512)
-            try:
-                disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+        data = self.error_handle(None, None)
+        try :
+            dev = parted.getDevice(devpath)
+            disk = lib.autopart.fdhandler(dev,mem)
+        except Exception, e:
+            data = self.error_handle(e, None)
+        self.emit('fdhandler', data)
 
-                fs = "ext4"
-                start = end + 100;
-                if size > 30:
-                    end = parted.sizeToSectors(30, "GB", 512)
-                    disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
-                    start = end + 100;
-                end = sizeL - 100
-                disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
-
-                self.disks[devpath] = disk
-                data = lib.partedprint.parted_print(self.disks,True,True)
-            except Exception, e:
-                data = self.error_handle(e,None)
-        elif disk.deleteAllPartitions() and size >= 6:
-            fs = "ext4"
-            start = parted.sizeToSectors(0, "GB", 512)
-            end = sizeL - 100
-            disk = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
-
-            self.disks[devpath] = disk
-            data = lib.partedprint.parted_print(self.disks,True,True)
-        else:
-            data = self.error_handle("You'd better choose a disk larger than 6G.", None)
-        
-        self.emit('fdhandler',data)
+    def on_easyparthandler(self, devpath, parttype, start, end):
+        data = self.error_handle(None,None)
+        try :
+            dev = parted.getDevice(devpath)
+            disk = lib.autopart.easyhandler(dev,mem)
+        except Exception, e:
+            data = self.error_handle(e, None)
+        self.emit('easyhandler',data)
 
 class Application(object):
+    def __init__(self):
+        self.buffer = []
+        self.request = {};
+
     def __call__(self, environ, start_response):
         path = environ['PATH_INFO'].strip('/')
         if path.startswith("socket.io"):
             socketio_manage(environ, {'': PartSocket})
 
 if __name__ == "__main__":
-    SocketIOServer(('127.0.0.1', 3000), Application(),
-        resource="socket.io", policy_server=False).serve_forever()
+    SocketIOServer(('localhost', 3000), Application(),
+        resource = "socket.io", policy_server=False).serve_forever()

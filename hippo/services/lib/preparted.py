@@ -37,30 +37,24 @@ def premkpart(args, dev, disk):
 
     if not (parttype == "extended"):
         fstype = args[2]
-    try:
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, fstype)
-    except Exception, e:
-        raise Exception, e
+
+    disk = rfparted.mkpart(dev, disk, parttype, start, end, fstype)
     return disk
 
 def prermpart(args, dev, disk):
     """Given args, device and disk needed to remove part specified. 
     The format of args: args = [partition.number]. Raise Exception 
     given wrong args or a valid parttiton.number."""
-    try:
-        disk = rfparted.rmpart(disk, args[0])
-    except Exception, e:
-        raise Exception, e
+
+    disk = rfparted.rmpart(disk, args[0])
     return disk
 
 def premklabel(args, dev, disk):
     """Given args, device and disk needed to remove part specified.
     The format of args: args = [disk.type]. Raise Exception given 
     wrong args or a valid disk.type."""
-    try:
-        disk = rfparted.mklabel(dev, args[0])
-    except Exception,e:
-        raise Exception, e
+
+    disk = rfparted.mklabel(dev, args[0])
     return disk
 
 def prereset(dev,disk):
