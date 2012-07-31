@@ -473,6 +473,10 @@ module.exports = (function(){
         },
 
 	// [ '/dev/sda', '/dev/sdb' ]
+	/**
+	 * @return {JSON} status of checking
+	 * @arg devices 
+	 */
 	minimalSufficient: function(devices, reporter) {
 	    var reasons = {
 		'diskmin': 'disk size does not suffcient minimal request',
@@ -563,12 +567,15 @@ module.exports = (function(){
 
             async.waterfall([
                 function(next) {
+		    reporter({status: 'formatting partitions'});
                     formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
+		    reporter({status: 'start copying data'});
                     copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
+		    reporter({status: 'do post install'});
                     //FIXME: do I need to umount all partitions and then remount it?
                     postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );

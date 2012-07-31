@@ -4,8 +4,14 @@
     position: relative;
 }
 
-input.dial {
-    height:auto;
+div#presentation {
+    height: 400px;
+    overflow: auto;
+}
+
+#presentation div.label {
+    width: 90%;
+    margin: 1px 0 5px 0;
 }
 
 .process_center {
