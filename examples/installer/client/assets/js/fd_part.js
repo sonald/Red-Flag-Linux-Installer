@@ -4,13 +4,13 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
     var partial = {
         view: '#fulldisk_part_tmpl',
         locals:null,
-        app:null,
+        options:null,
 
-        initialize: function (app, locals) {
-            this.app = app;
+        initialize: function (options, locals) {
+            this.options = options;
             this.locals = locals;
-            this.app.options.installmode = "fulldisk";
-            this.app.options.grubinstall = "/dev/sda";
+            this.options.installmode = "fulldisk";
+            this.options.grubinstall = "/dev/sda";
         },
 
         loadView: function () {
@@ -39,8 +39,8 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
         validate: function(callback) {
             var that = this;
             var dnum= $("#part_content").find('ul.select').attr("dnum");
-            var dpath = that.app.options.disks[dnum].path;
-            if (that.app.options.disks[dnum].size < 6) {
+            var dpath = that.options.disks[dnum].path;
+            if (that.options.disks[dnum].size < 6) {
                 alert(i18n.gettext("you should choose a disk larger than 6G!"));
                 return;
             }
@@ -51,7 +51,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 }else if ( result.status && result.status === "success"){
                     window.apis.services.partition.getPartitions(function(disks){
                         that.locals["disks"] = disks;
-                        that.app.options.disks = disks;
+                        that.options.disks = disks;
                         var disk = _.find(disks, function(el){
                             return el.path === dpath;
                         });

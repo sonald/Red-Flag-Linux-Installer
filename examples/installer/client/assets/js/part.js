@@ -61,7 +61,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
             var that = this;
             $('body').on('click', '#easy', function(){
                 that.getparts(function () {
-                    easyPage.initialize(that.app, that.locals);
+                    easyPage.initialize(that.app.options, that.locals);
                     that.$el.html( easyPage.loadView() );
                     easyPage.postSetup && easyPage.postSetup();
                 });
@@ -69,14 +69,14 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
 
             $('body').on('click', '#fulldisk', function(){
                 that.getparts(function () {
-                    fdPage.initialize(that.app, that.locals);
+                    fdPage.initialize(that.app.options, that.locals);
                     that.$el.html( fdPage.loadView() );
                     fdPage.postSetup && fdPage.postSetup();
                 });
             });
 
             $('body').on('click', '#advanced', function(){
-                adPage.initialize(that.app, that.locals);
+                adPage.initialize(that.app.options, that.locals);
                 that.$el.html( adPage.loadView());
                 adPage.postSetup && adPage.postSetup();
             });

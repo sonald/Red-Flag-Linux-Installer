@@ -14,6 +14,7 @@ import time
 
 import lib.partedprint
 import lib.rfparted
+import lib.autoparted
 
 class PartSocket(BaseNamespace):
     disks = lib.partedprint.DevDisk()
@@ -97,7 +98,7 @@ class PartSocket(BaseNamespace):
         data = self.error_handle(None, None)
         try :
             dev = parted.getDevice(devpath)
-            disk = lib.autopart.fdhandler(dev,mem)
+            self.disks[devpath] = lib.autoparted.fdhandler(dev,mem)
         except Exception, e:
             data = self.error_handle(e, None)
         self.emit('fdhandler', data)
@@ -106,7 +107,8 @@ class PartSocket(BaseNamespace):
         data = self.error_handle(None,None)
         try :
             dev = parted.getDevice(devpath)
-            disk = lib.autopart.easyhandler(dev,mem)
+            disk = self.disks[devpath]
+            self.disks[devpath] = lib.autoparted.easyhandler(dev, disk, parttype, start, end)
         except Exception, e:
             data = self.error_handle(e, None)
         self.emit('easyhandler',data)
