@@ -5,7 +5,6 @@ require.config({
     },
     shim: {
         'bootstrap': ['jquery'],
-        'jquery.knob': ['jquery'],
         'jquery.color':['jquery'],
         'sitemap': ['jquery']
     }
@@ -38,7 +37,7 @@ var app = {
                 $("#"+old_id).text(str);
                 $("#"+old_id).attr("id",new_id);
             };
-        },
+        }
     },
 
     // collect user configurations
@@ -47,7 +46,7 @@ var app = {
         hostname:'qomo',
         grubinstall:'',
         installmode:'easy',
-        disks: [],
+        disks: []
     },
 
     resetDatas: function () {
@@ -67,6 +66,8 @@ var app = {
             return;
 
         console.log('load page %d', pageId);
+
+	this.animateStage(this.stages[pageId]);
         this._currentPage = pageId;
         this.loadPage(this._currentPage, false);
     },
@@ -103,9 +104,36 @@ var app = {
         page.validate(function(){that.currentPage +=1;});
     },
 
+    setupStageNavigator: function() {
+	var $ul = $('ul.stages');
+	this.stages.forEach(function(stage) {
+
+	    var $li = $(document.createElement('li'));
+	    $li.html('<div class="ball" data-stage="' + stage.name
+		     + '"></div> <div class="pulse" data-stage="' +
+		     stage.name + '"></div>');
+	    
+	    $ul.append($li);
+	});
+    },
+
+    animateStage: function(stage) {
+	var name = stage.name;
+	console.log('animate ' + stage.name);
+
+	var $ul = $('ul.stages');
+	var $items = $ul.find('div[data-stage=' + name + ']');
+	$items.filter('.ball').css('-webkit-animation', ' loading 400ms linear forwards');
+	setTimeout(function() {
+            $items.filter('.pulse').css('-webkit-animation', 'pulse 400ms ease-out');
+	}, 300);
+    },
+    
     // when app is ready, call this
     init: function() {
         this.$el = $('#stage');
+	this.setupStageNavigator();
+	
         window.apis.expose(function(apis) {
             console.log(apis);
         });
@@ -114,7 +142,7 @@ var app = {
 
         this.currentPage = 0;
         console.log('app init');
-    },
+    }
 };
 
 require(['jquery', 'license', 'userinfo', 'part', 'process'], function($, pageLicense, pageInfo, pagePart, pageProcess) {
