@@ -4,6 +4,7 @@
     position: relative;
 }
 
+<<<<<<< HEAD
 ul.breadcrumbs {
     /* Clear floats */
     overflow: hidden;
@@ -66,6 +67,11 @@ ul.breadcrumbs .current:hover {
 ul.breadcrumbs .current::after,
 ul.breadcrumbs .current::before {
     content: normal;
+}
+
+#content {
+    width: 100%;
+    height: 576px;
 }
 
 div#presentation {

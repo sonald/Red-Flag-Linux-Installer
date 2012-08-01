@@ -48,6 +48,7 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
     
     console.log('load process');
     var page = {
+	name: 'process',
         view: '#process_tmpl',
         app: null,
 	$presentation: null,
@@ -73,9 +74,7 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
         postSetup: function() {
 	    this.$progress = $('.progress');
 	    this.$presentation = $('#presentation');
-	    
-            this.$progress.css('wdith', '0%');
-                
+            
             this.app.button_handler.rm("forward", "disabled");
             this.app.button_handler.change("forward", i18n.gettext("install"));
 
