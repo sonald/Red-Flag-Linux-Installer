@@ -67,7 +67,7 @@ var app = {
 
         console.log('load page %d', pageId);
 
-	this.animateStage(this.stages[pageId]);
+        this.animateStage(this.stages[pageId]);
         this._currentPage = pageId;
         this.loadPage(this._currentPage, false);
     },
@@ -103,42 +103,32 @@ var app = {
         var that = this;
         page.validate(function(){
             that.currentPage +=1;
-            var $current = $('ul.breadcrumbs li.current');
-            $current.next().addClass("current");
-            $current.removeClass("current");
         });
     },
 
     setupStageNavigator: function() {
-	var $ul = $('ul.stages');
-	this.stages.forEach(function(stage) {
-
-	    var $li = $(document.createElement('li'));
-	    $li.html('<div class="ball" data-stage="' + stage.name
-		     + '"></div> <div class="pulse" data-stage="' +
-		     stage.name + '"></div>');
-	    
-	    $ul.append($li);
-	});
+        var $ul = $('ul.breadcrumbs');
+        this.stages.forEach(function(stage) {
+            var $li = $(document.createElement('li'));
+            $li.html('<a data-stage=' + stage.name + '>' + stage.name + '</a>');
+            $ul.append($li);
+        });
     },
 
     animateStage: function(stage) {
-	var name = stage.name;
-	console.log('animate ' + stage.name);
+        var name = stage.name;
+        console.log('animate ' + stage.name);
 
-	var $ul = $('ul.stages');
-	var $items = $ul.find('div[data-stage=' + name + ']');
-	$items.filter('.ball').css('-webkit-animation', ' loading 400ms linear forwards');
-	setTimeout(function() {
-            $items.filter('.pulse').css('-webkit-animation', 'pulse 400ms ease-out');
-	}, 300);
+        var $ul = $('ul.breadcrumbs');
+        $ul.find('li').removeClass("current");
+        $ul.find('a[data-stage=' + name + ']').parent().addClass("current");
     },
-    
+
     // when app is ready, call this
     init: function() {
         this.$el = $('#stage');
-	this.setupStageNavigator();
-	
+        this.setupStageNavigator();
+
         window.apis.expose(function(apis) {
             console.log(apis);
         });

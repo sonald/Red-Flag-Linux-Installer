@@ -20,39 +20,39 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
     'use strict';
 
     var pageCache;
-    
+
     function mock_packAndUnpack(options, callback) {
-	var msgs = [
-	    {status: 'formatting /dev/sdb1'},
-	    {status: 'start copying base system'}
-	];
+        var msgs = [
+            {status: 'formatting /dev/sdb1'},
+            {status: 'start copying base system'}
+        ];
 
-	for (var pr = 0; pr <= 100; pr += 2) {
-	    msgs.push({status: 'progress', data: pr});
-	}
+        for (var pr = 0; pr <= 100; pr += 2) {
+            msgs.push({status: 'progress', data: pr});
+        }
 
-	msgs.push({status: 'success'});
-	
-	function doReport() {
-	    if (msgs.length === 0)
-		return;
+        msgs.push({status: 'success'});
 
-	    callback( msgs.shift() );
-	    setTimeout(function() {
-		doReport();
-	    }, 500);
-	}
+        function doReport() {
+            if (msgs.length === 0)
+                return;
 
-	doReport();
+            callback( msgs.shift() );
+            setTimeout(function() {
+                doReport();
+            }, 500);
+        }
+
+        doReport();
     }
-    
+
     console.log('load process');
     var page = {
-	name: 'process',
+        name: 'Install',
         view: '#process_tmpl',
         app: null,
-	$presentation: null,
-	$progress: null,
+        $presentation: null,
+        $progress: null,
 
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
@@ -72,9 +72,9 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
         },
 
         postSetup: function() {
-	    this.$progress = $('.progress');
-	    this.$presentation = $('#presentation');
-            
+            this.$progress = $('.progress');
+            this.$presentation = $('#presentation');
+
             this.app.button_handler.rm("forward", "disabled");
             this.app.button_handler.change("forward", i18n.gettext("install"));
 
@@ -95,36 +95,36 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
 
         onInstall: function() {
             console.log(this.app.options);
-	    // mock_packAndUnpack(this.app.options, $.proxy(this.onProgress, this));
+            // mock_packAndUnpack(this.app.options, $.proxy(this.onProgress, this));
             window.apis.services.install.packAndUnpack(
-	    	this.app.options, $.proxy(this, this.onProgress));
+                this.app.options, $.proxy(this, this.onProgress));
         },
 
-	buildMessage: function(msg, kind) {
-	    var $msg = $(document.createElement('div')).toggleClass('label ' + kind);
-	    $msg.text(msg);
-	    this.$presentation.append($msg);
-	},
-	
+        buildMessage: function(msg, kind) {
+            var $msg = $(document.createElement('div')).toggleClass('label ' + kind);
+            $msg.text(msg);
+            this.$presentation.append($msg);
+        },
+
         onProgress: function(respond) {
-	    var $msg;
+            var $msg;
 
             if (respond.status === "progress") {
-		this.buildMessage(respond.data, '');
+                this.buildMessage(respond.data, '');
                 this.$progress.find('.bar').css('width', respond.data + '%');
-		
+
             } else if (respond.status === "failure") {
-		this.buildMessage(respond.reason, 'label-error');
-		
+                this.buildMessage(respond.reason, 'label-error');
+
             } else if (respond.status === "success") {
-		this.buildMessage(
-		    i18n.gettext('Congratulations~You have finished installing the system.'),
-		    'label-important');
-		
+                this.buildMessage(
+                    i18n.gettext('Congratulations~You have finished installing the system.'),
+                    'label-important');
+
             } else {
-		this.buildMessage(respond.status, 'label-info');
-	    }
-	    
+                this.buildMessage(respond.status, 'label-info');
+            }
+
             console.log(respond);
         },
 

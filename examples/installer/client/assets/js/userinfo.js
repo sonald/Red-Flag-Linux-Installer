@@ -5,7 +5,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
 
     console.log('load userinfo');
     var page = {
-	name: 'userinfo',
+	      name: 'Set',
         view: '#userinfo_tmpl',
         locals: null,
         app: null,
