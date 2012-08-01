@@ -8,15 +8,16 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
         view: '#advanced_part_tmpl',
         locals : null,
         options:null,
-        record:{
-            edit:[],//{path:"/dev/sda",num:1,mp:"/",fs:"ext4"}
-            dirty:[],//{path:"dev/sda",num:1}
-        },
+        record: {},
 
         initialize: function (options, locals) {
             this.options = options;
             this.locals = locals;
             this.options.installmode = "advanced";
+            this.record = {
+                edit: [],
+                dirty: [],
+            };
         },
          
         // compile and return page partial
@@ -40,6 +41,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
+                    part["path"] = disk.path;
                     args = {
                                 pindex:pindex, 
                                 dindex:dindex,
@@ -72,13 +74,10 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
 
             var that = this;
             $('body').on('click','.delete', function () {
-                var dnum, pnum, path, number;
-                dnum = $(this).attr("dnum");
-                pnum = $(this).attr("pnum");
-                path = that.locals.disks[dnum].path;
-                number = that.locals.disks[dnum].table[pnum].number;
+                var $this = $(this);
                 window.apis.services.partition.rmpart(
-                    path, number, $.proxy(that.partflesh, that));
+                    $this.attr("path"), $this.attr("number"),
+                    $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','#reset',function () {
@@ -91,19 +90,18 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','a.js-create-submit',function () {
-                var size, parttype, fstype, start, end, path, align;
-                var $content = $(this).parents('.modal');
-                size = Number($content.find("#size").attr("value"));
-                parttype = $content.find('#parttype :checked').attr("value");
-                fstype = $content.find('#fs :checked').attr("value");
-                align = Number($content.find("#location :checked").attr("value"));
+                var size, parttype, fstype, start, end, path;
+                var $modal = $(this).parents('.modal');
+                size = Number($modal.find("#size").attr("value"));
+                parttype = $modal.find('#parttype :checked').attr("value");
+                fstype = $modal.find('#fs :checked').attr("value");
 
                 path = $(this).attr("path");
-                if($content.find("#location :checked").attr("id") === "start") {
-                    start = align;
+                if($modal.find("#location :checked").attr("id") === "start") {
+                    start = Number($modal.find("#location :checked").attr("value"));
                     end = start + size;
-                } else if ($content.find("#location :checked").attr("id") === "end") {
-                    end = align;
+                } else if ($modal.find("#location :checked").attr("id") === "end") {
+                    end = Number($modal.find("#location :checked").attr("value"));
                     start = end - size;
                 };
                 window.apis.services.partition.mkpart(
@@ -111,22 +109,20 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
             });
 
             $('body').on('click','a.js-edit-submit',function () {
-                var mp, fstype, pnum, dnum;
-                var $content = $(this).parents('.modal');
-                pnum = $(this).attr("pnum");
-                dnum = $(this).attr("dnum");
-                fstype = $content.find("#fs :checked").attr("value");
-                mp = $content.find("#mp :checked").attr("value");
+                var mp, fstype, path, number;
+                var $modal = $(this).parents('.modal');
+                path = $(this).attr("path");
+                number = $(this).attr("number");
+                fstype = $modal.find("#fs :checked").attr("value");
+                mp = $modal.find("#mp :checked").attr("value");
 
                 that.record.edit = _.reject(that.record.edit,function(el){
-                    return (el.path ===that.options.disks[dnum].path && 
-                            el.number === that.options.disks[dnum].table[pnum].number);
+                    return (el.path === path && el.number === number);
                 });
-                that.record.edit.push({"path":that.options.disks[dnum].path,
-                                        "number":that.options.disks[dnum].table[pnum].number,
+                that.record.edit.push({"path":path,
+                                        "number":number,
                                         "fs": fstype,
                                         "mp": mp,});
-
                 $(this).parents('ul.part').find('a.partfs').text(fstype);
                 $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
             });
@@ -134,6 +130,7 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
 
         partflesh: function(result){
             var that = this;
+            console.log(result);
             if (result.status === "success") {
                 if (result.handlepart){
                     //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
@@ -165,16 +162,8 @@ define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _syste
                     }
                 }
                 window.apis.services.partition.getPartitions(function(disks) {
-                    disks = _.map(disks, function (disk) {
-                        disk.table = _.map(disk.table, function(part) {
-                            part["path"] = disk.path;
-                            return part;
-                        });
-                        return disk;
-                    })
-
-                    that.locals["disks"] = disks;
                     that.options.disks = disks;
+                    that.locals["disks"] = that.options.disks;
                     var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
                     $("#advanced_part_table").html(pageC);
                     that.renderPart();

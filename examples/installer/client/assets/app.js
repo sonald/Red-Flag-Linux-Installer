@@ -100,7 +100,12 @@ var app = {
         console.log('forward');
         var page = this.stages[this.currentPage];
         var that = this;
-        page.validate(function(){that.currentPage +=1;});
+        page.validate(function(){
+            that.currentPage +=1;
+            var $current = $('ul.breadcrumbs li.current');
+            $current.next().addClass("current");
+            $current.removeClass("current");
+        });
     },
 
     // when app is ready, call this
