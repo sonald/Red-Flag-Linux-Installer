@@ -73,9 +73,7 @@ class PartSocket(BaseNamespace):
 
     def on_reset(self):
         parted.freeAllDevices()
-        self.disks = {}
-        for dev in parted.getAllDevices():
-            self.disks[dev.path] = lib.rfparted.reset(dev)
+        self.disks = lib.partedprint.DevDisk()
         data = self.error_handle(None, None)
         self.emit('reset',data)
 

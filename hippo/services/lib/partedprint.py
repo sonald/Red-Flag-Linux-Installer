@@ -160,7 +160,7 @@ def test(str, list):
 
 def DevDisk():
     disks = {}
-    blacklist = ["mapper", "dr"]
+    blacklist = ["mapper", "sr"]
     for dev in parted.getAllDevices():
         if test(dev.path.split('/')[2], blacklist) is False:
             continue
