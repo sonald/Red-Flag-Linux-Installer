@@ -150,10 +150,19 @@ def parted_print(disks,isjson = False,free = False):
     else:
         print_disks(disks,free)
 
+def test(str, list):
+    result = True
+    for x in list:
+        if str.startswith(x):
+            result = False
+            break
+    return result;
+
 def DevDisk():
     disks = {}
+    blacklist = ["mapper", "dr"]
     for dev in parted.getAllDevices():
-        if dev.path.startwith("/dev/sd") is False:
+        if test(dev.path.split('/')[2], blacklist) is False:
             continue
         try:
             disks[dev.path] = parted.disk.Disk(dev)
