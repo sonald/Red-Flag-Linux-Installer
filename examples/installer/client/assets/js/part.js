@@ -55,34 +55,25 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
 
         postSetup: function() {
             this.$el = $("#part_content");
-            $('body').off('click','#easy');
-            $('body').off('click','#fulldisk');
-            $('body').off('click','#advanced');
+            $('body').off('click','ul#PartTabs li a');
 
             var that = this;
-            $('body').on('click', '#easy', function(){
+            var method = {
+                "easy": easyPage,
+                "fulldisk": fdPage,
+                "advanced": adPage,
+            }
+            $('body').on('click', 'ul#PartTabs li a', function(){
+                var $this = $(this);
+                var partial_page = method[$this.attr("id")];
                 that.getparts(function () {
-                    easyPage.initialize(that.app.options, that.locals);
-                    that.$el.html( easyPage.loadView() );
-                    easyPage.postSetup && easyPage.postSetup();
+                    partial_page.initialize(that.app.options, that.locals);
+                    that.$el.html( partial_page.loadView() );
+                    partial_page.postSetup && partial_page.postSetup();
                 });
             });
 
-            $('body').on('click', '#fulldisk', function(){
-                that.getparts(function () {
-                    fdPage.initialize(that.app.options, that.locals);
-                    that.$el.html( fdPage.loadView() );
-                    fdPage.postSetup && fdPage.postSetup();
-                });
-            });
-
-            $('body').on('click', '#advanced', function(){
-                adPage.initialize(that.app.options, that.locals);
-                that.$el.html( adPage.loadView());
-                adPage.postSetup && adPage.postSetup();
-            });
-
-            $('#easy').trigger("click");
+            $('ul#PartTabs li a#easy').trigger("click");
         },
 
         validate: function(callback) {
