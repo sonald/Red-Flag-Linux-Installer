@@ -74,11 +74,20 @@ ul.breadcrumbs .current::before {
 }
 
 div#presentation {
-    height: 400px;
-    overflow: auto;
+    height: 300px;
 }
 
-#presentation div.label {
+div#presentation .item img {
+    width: 100%;
+    height: 100%;
+}
+
+#install-log {
+    overflow: auto;
+    height: 100px;
+}
+
+#install-log div.label {
     width: 90%;
     margin: 1px 0 5px 0;
 }

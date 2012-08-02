@@ -16,11 +16,10 @@
  * =====================================================================================
 */
 
-define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
+define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progressbar, i18n) {
     'use strict';
 
     var pageCache;
-
     function mock_packAndUnpack(options, callback) {
         var msgs = [
             {status: 'formatting /dev/sdb1'},
@@ -32,7 +31,6 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
         }
 
         msgs.push({status: 'success'});
-
         function doReport() {
             if (msgs.length === 0)
                 return;
@@ -52,7 +50,7 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
         view: '#process_tmpl',
         app: null,
         $presentation: null,
-        $progress: null,
+        $logs: null,
 
         // do initialization, called when loading the page
         initialize: function(app, reinit, callback) {
@@ -71,10 +69,61 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
             return pageCache;
         },
 
-        postSetup: function() {
-            this.$progress = $('.progress');
-            this.$presentation = $('#presentation');
+        setupPresentation: function() {
+            var $p = this.$presentation = $('#presentation');
+            var tmpl = '<div class="item"> <img src="$1" alt="$2"></img> </div>';
+            var tmpl_active = '<div class="item active"> <img src="$1" alt="$2"></img> </div>';
+            
+            var imgs = [
+                'installer-001.jpg', 
+                'installer-002.jpg', 
+                'installer-003.jpg', 
+                'installer-004.jpg', 
+                'installer-005.jpg', 
+                'installer-006.jpg', 
+                'installer-007.jpg', 
+                'installer-008.jpg', 
+                'installer-009.jpg', 
+                'installer-010.jpg', 
+                'installer-011.jpg', 
+                'installer-012.jpg', 
+                'installer-013.jpg', 
+                'installer-014.jpg', 
+                'installer-015.jpg', 
+                'installer-016.jpg', 
+                'installer-017.jpg', 
+                'installer-018.jpg', 
+                'installer-019.jpg', 
+                'installer-020.jpg', 
+                'installer-021.jpg', 
+                'installer-022.jpg', 
+                'installer-023.jpg', 
+                'installer-024.jpg', 
+                'installer-025.jpg', 
+                'installer-026.jpg', 
+                'installer-027.jpg', 
+                'installer-028.jpg', 
+                'installer-029.jpg' 
+            ];
 
+            var items = '', active_set = false;
+            imgs.forEach(function(img) {
+                if (!active_set) {
+                    items += tmpl_active.replace('$1', 'images/' + img).replace('$2', img);
+                    active_set = true;
+                } else
+                    items += tmpl.replace('$1', 'images/' + img).replace('$2', img);
+            });
+            
+            $p.find('.carousel-inner').html(items);
+            $p.carousel();
+        },
+        
+        postSetup: function() {
+            this.$logs = $('#install-log');
+            this.setupPresentation();
+            progressbar.init($('#install-progress'));
+            
             this.app.button_handler.rm("forward", "disabled");
             this.app.button_handler.change("forward", i18n.gettext("install"));
 
@@ -101,21 +150,22 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
         },
 
         buildMessage: function(msg, kind) {
-            var $msg = $(document.createElement('div')).toggleClass('label ' + kind);
-            $msg.text(msg);
-            this.$presentation.append($msg);
+            var $msg = $('<div> <span class="label ' + kind + '"></span> </div>');
+            
+            $msg.find('span').text(msg);
+            this.$logs.append($msg);
         },
-
+        
         onProgress: function(respond) {
             var $msg;
 
             if (respond.status === "progress") {
-                this.buildMessage(respond.data, '');
-                this.$progress.find('.bar').css('width', respond.data + '%');
-
+                // this.buildMessage('install progress: ' + respond.data + '%', '');
+                progressbar.update(respond.data);
+                
             } else if (respond.status === "failure") {
                 this.buildMessage(respond.reason, 'label-error');
-
+                
             } else if (respond.status === "success") {
                 this.buildMessage(
                     i18n.gettext('Congratulations~You have finished installing the system.'),
@@ -124,8 +174,8 @@ define(['jquery', 'system', 'i18n'], function($, _system, i18n) {
             } else {
                 this.buildMessage(respond.status, 'label-info');
             }
-
-            console.log(respond);
+            
+            // console.log(respond);
         },
 
         validate: function(callback) {
