@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'js_validate', 'i18n','sitemap'], function($, _system, jsvalidate, i18n) {
+define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalidate, i18n) {
     'use strict';
 
     var partialCache;
