@@ -146,7 +146,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             console.log(this.app.options);
             // mock_packAndUnpack(this.app.options, $.proxy(this.onProgress, this));
             window.apis.services.install.packAndUnpack(
-                this.app.options, $.proxy(this, this.onProgress));
+                this.app.options, $.proxy(this.onProgress, this));
         },
 
         buildMessage: function(msg, kind) {
@@ -160,7 +160,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             var $msg;
 
             if (respond.status === "progress") {
-                // this.buildMessage('install progress: ' + respond.data + '%', '');
+                this.buildMessage('install progress: ' + respond.data + '%', '');
                 progressbar.update(respond.data);
                 
             } else if (respond.status === "failure") {
