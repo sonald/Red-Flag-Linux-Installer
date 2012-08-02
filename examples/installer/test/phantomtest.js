@@ -21,40 +21,8 @@ var sys = require('system');
 var page = require('webpage').create();
 
 page.onConsoleMessage = function(msg) {
-    console.log('[page]: ', inspect(msg));
+    console.log('[page]: ', msg);
 };
-
-function inspect(obj) {
-    if (!obj || typeof obj != 'object') {
-	return obj;
-    }
-    
-    if (typeof obj === 'function') {
-	return 'function';
-    }
-
-    var res = '';
-    if (obj instanceof Array) {
-	res += '[';
-	for (var i = 0; i < obj.length; i++) {
-	    res += inspect(obj[i]) + ', ';
-	}
-	res += ']';
-
-    } else {
-	res = '{ ';
-	Object.keys(obj).forEach(function(prop) {
-	    res += '  ' + prop + ': "' + inspect(obj[prop]) + '", ';
-	});
-	res += ' }';
-    }
-    
-    return res;
-}
-
-function debug(obj) {
-    console.log( inspect(obj) );
-}
 
 page.open("http://127.0.0.1:8080", function(status) {
     if (!status) {
@@ -65,19 +33,47 @@ page.open("http://127.0.0.1:8080", function(status) {
     console.log('load phantom');
     setTimeout(function() {
 	var apis = page.evaluate(function() {
-	    console.log(JSON.stringify(window.apis));
+	    window.inspect = window.inspect || function(obj) {
+		if (!obj || typeof obj != 'object') {
+		    return obj;
+		}
+		
+		if (typeof obj === 'function') {
+		    return 'function';
+		}
+
+		var res = '';
+		if (obj instanceof Array) {
+		    res += '[';
+		    for (var i = 0; i < obj.length; i++) {
+			res += inspect(obj[i]) + ', ';
+		    }
+		    res += ']';
+
+		} else {
+		    res = '{ ';
+		    Object.keys(obj).forEach(function(prop) {
+			res += '  ' + prop + ': "' + inspect(obj[prop]) + '", ';
+		    });
+		    res += ' }';
+		}
+		
+		return res;
+	    };
+	    
+	    console.log(inspect(window.apis));
 	    return window.apis;
 	});
 
 	page.evaluateAsync(function() {
-	    apis.services.install.minimalSufficient(function(res) {
-		console.log('minimalSufficient: ', JSON.stringify(res));
+	    apis.services.install.minimalSufficient(['/dev/sda'], function(res) {
+		console.log('minimalSufficient: ', inspect(res));
 	    });
 	});
 
 	page.evaluateAsync(function() {
 	    apis.services.install.meminfo(function(res) {
-		console.log('meminfo: ', JSON.stringify(res));
+		console.log('meminfo: ', inspect(res));
 	    });
 	});
 
@@ -223,8 +219,10 @@ page.open("http://127.0.0.1:8080", function(status) {
 	} else if (sys.args.indexOf('-fulldisk') != -1) {
 	    opts = fulldisk_opts;
 	    
-	} else {
-	    phantom.exit(0);
+	} 
+
+	if (!opts) {
+	    return;
 	}
 	
 	page.evaluateAsync(function(opts) {
