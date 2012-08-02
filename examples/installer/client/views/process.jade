@@ -1,7 +1,15 @@
 script(type="text/html", id="process_tmpl").
-    div#presentation
+    .page-container
+        #presentation.carousel.slide
+            .carousel-inner
+
+            a.carousel-control.left(href="#presentation", data-slide="prev") &lsaquo;
+            a.carousel-control.right(href="#presentation", data-slide="next") &rsaquo;
+
         h3 Current Status
 
-    div.progress.progress-striped.active
-        div.bar
+        #install-log
+
+    div#install-progress
+        
         
