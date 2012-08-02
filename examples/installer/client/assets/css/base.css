@@ -5,64 +5,72 @@
 }
 
 ul.breadcrumbs {
-    /* Clear floats */
+    background: #eee;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f5f5f5 #e5e5e5 #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgba(0,0,0,.2);
     overflow: hidden;
-    width: 100%;
+    width: 98%;
 }
 
 ul.breadcrumbs li {
     float: left;
-    margin: 0 .5em 0 1em;
 }
 
 ul.breadcrumbs a {
-    background: #ddd;
-    padding: .7em 1em;
+    padding: .7em 1em .7em 2em;
     float: left;
     text-decoration: none;
     color: #444;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
     position: relative;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    background-color: #ddd;
+    background-image: -webkit-linear-gradient(left, whiteSmoke, #DDD);
 }
+
 ul.breadcrumbs .current a {
     background: #99db76;
 }
 
+ul.breadcrumbs li:firstchild a {
+    padding-left: 1em;
+    border-radius: 5px 0 0 5px;
+}
+
+ul.breadcrumbs a::after,
 ul.breadcrumbs a::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    margin-top: -1.5em;
-    border-width: 1.5em 0 1.5em 1em;
-    border-style: solid;
-    border-color: #ddd #ddd #ddd transparent;
-    left: -1em;
-}
-
-ul.breadcrumbs .current a::before {
-    border-color: #99db76 #99db76 #99db76 transparent;
-}
-
-ul.breadcrumbs a::after {
     content: "";
     position: absolute;
     top: 50%;
     margin-top: -1.5em;
     border-top: 1.5em solid transparent;
     border-bottom: 1.5em solid transparent;
-    border-left: 1em solid #ddd;
+    border-left: 1em solid;
     right: -1em;
+}
+
+ul.breadcrumbs a::after {
+    z-index: 2;
+    border-left-color: #ddd
+}
+
+ul.breadcrumbs a::before {
+    border-left-color: #ccc;
+    right: -1.1em;
+    z-index: 1;
 }
 
 ul.breadcrumbs .current a::after {
     border-left-color: #99db76;
 }
 
-ul.breadcrumbs .current,
-ul.breadcrumbs .current:hover {
+ul.breadcrumbs .current {
     font-weight: bold;
     background: none;
 }
+
 ul.breadcrumbs .current::after,
 ul.breadcrumbs .current::before {
     content: normal;
@@ -137,12 +145,17 @@ div#presentation .item img {
     list-style: none;
 }
 
+table.colorinfo td[pty="primary"],
 .part_table ul[pty="primary"] {
     background:#F3A01E;
 }
+
+table.colorinfo td[pty="logical"],
 .part_table ul[pty="logical"] {
     background:#F3CB20;
 }
+
+table.colorinfo td[pty="free"],
 .part_table ul[pty="free"] {
     background:#A75375;
 }
@@ -170,6 +183,7 @@ div#presentation .item img {
     float: left;
 }
 
+table.colorinfo td[pty="select"],
 .part_table ul.select {
     background: #D66B6B;
 }
