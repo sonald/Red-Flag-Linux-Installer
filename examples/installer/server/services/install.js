@@ -434,9 +434,9 @@ module.exports = (function(){
         }
 
         function generateGrubMenulst(err_cb) {
-            // map 'a'..'z' to 1..26
+            // map 'a'..'z' to 0..25
             function charToNum(ch) {
-                return ch.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+                return ch.charCodeAt(0) - 'a'.charCodeAt(0);
             }
             
             // system('mkdir -p /boot/grub')
