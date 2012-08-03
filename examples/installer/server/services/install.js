@@ -323,8 +323,9 @@ module.exports = (function(){
                             stdout = stdout.slice(0, len-1);
 
                         //FIXME: ext4 is hardcoded
+                        var pass = part.mountpoint === '/' ? '1': '0';
                         contents += stdout + "\t" + part.mountpoint + "\t" +
-                            part.fs + "\tdefaults\t0\t1\n";
+                            part.fs + "\tdefaults\t0\t" + pass + "\n";
 
                         callback(null);
                     }
@@ -382,7 +383,8 @@ module.exports = (function(){
             // handle swap file
             var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
                 return entry.fs && entry.fs.indexOf('swap') != -1;
-            }).length > 0;
+            }).length === 0;
+            
             if (need_swap_file && opts.installmode !== 'advanced') {
                 //TODO: check if space is big enough to create swapfile
                 var swapsize = 1<<30;
