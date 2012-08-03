@@ -63,11 +63,18 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         postSetup: function() {
             var self = this;
             this.app.button_handler.add("forward","disabled");
-
+            
             $('body').on('click', '#choose', function(){
                 self.updateActions();
             });
 
+            var lang = 'zh';
+            var href = $('#js_langs').find('li.active a').attr('href');
+            if (href) {
+                lang = href.replace('/?locale=', '');
+            }
+            this.app.Options.lang = lang;
+            
             self.updateActions();
         },
 
@@ -84,7 +91,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                         }else {
                             alert(i18n.gettext(result.reason));
                         }
-                    })
+                    });
                 });
             }
         }

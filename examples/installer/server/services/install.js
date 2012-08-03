@@ -402,6 +402,8 @@ module.exports = (function(){
 		postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
 	    }
 	    
+            // regenerate vmlinux
+            postscript += 'mkinitcpio -p linux\n';
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
@@ -427,9 +429,31 @@ module.exports = (function(){
                 return;
             }
 
-            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos)(err_cb);
+            var cmd = 'grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos;
+            system(cmd)(err_cb);
         }
 
+        function generateGrubMenulst(err_cb) {
+            // map 'a'..'z' to 1..26
+            function charToNum(ch) {
+                return num = ch.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+            }
+            
+            // system('mkdir -p /boot/grub')
+            var menulst_tmpl = fs.readFileSync(pathlib.join(__dirname, 'menu.lst.tmpl'), 'utf8');
+            // grub_parts[1] = 'a', grub_parts[2] = '1'
+            //FIXME: TODO: here we only test sd[a-z] mode disk
+            var grub_parts = /\/dev\/sd([a-z])(\d+)/.exec(opts.newroot);
+            
+            var grub_root = 'hd' + charToNum(grub_parts[1]) + ',' + (grub_parts[2] - 1);
+            menulst_tmpl = menulst_tmpl.replace('$1', grub_root).replace('$2', opts.newroot);
+
+            debug('menu.lst', menulst_tmpl);
+            var menulst = pathlib.join(root_dir, "/boot/grub/menu.lst");
+            watcher({status: 'generate grub menu.lst'});
+            fs.writeFile(menulst, menulst_tmpl, 'utf8', err_cb);
+        }
+        
         async.waterfall(
             [
                 system("mkdir -p " + root_dir),
@@ -438,13 +462,16 @@ module.exports = (function(){
                     generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
                 },
                 generatePostscript,
+                system("mount --bind /dev " + root_dir + "/dev"),
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
                 system("umount " + root_dir + "/sys"),
+                system("umount " + root_dir + "/dev"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
                 grubInstall,
+                generateGrubMenulst,
                 system("umount " + root_dir)
             ],
 
@@ -571,11 +598,11 @@ module.exports = (function(){
                     formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
-		    reporter({status: 'start copying data'});
+		    reporter({status: 'start copying data...'});
                     copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
-		    reporter({status: 'do post install'});
+		    reporter({status: 'do post install processing...'});
                     //FIXME: do I need to umount all partitions and then remount it?
                     postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );
