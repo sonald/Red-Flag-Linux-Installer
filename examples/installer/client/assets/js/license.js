@@ -73,7 +73,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             if (href) {
                 lang = href.replace('/?locale=', '');
             }
-            this.app.Options.lang = lang;
+            this.app.options.lang = lang;
             
             self.updateActions();
         },
