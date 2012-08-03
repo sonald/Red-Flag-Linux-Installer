@@ -36,24 +36,51 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
         },
 
         validate: function (callback) {
-            var dnum, pnum, part;
+            var dnum, pnum, part, disk;
+            var that = this;
             if ($("#part_content").find('ul.select').length < 1) {
-                alert(i18n.gettext("you should a part to install the system."));
+                alert(i18n.gettext("you should select a partition."));
                 return;
             }
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
             dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
-            if (this.options.disks[dnum].table[pnum].size < 6 || 
-                this.options.disks[dnum].table[pnum].number < 0) {
-                alert(i18n.gettext("you should a part which is larger than 6G and not free!"));
+            disk = this.options.disks[dnum];
+            part = disk.table[pnum];
+            if (part.size < 6) {
+                alert(i18n.gettext("Choose one larger than 6G again!"));
                 return;
             }
+            var dpath = disk.path;
 
-            part = this.options.disks[dnum].table[pnum];
-            part["dirty"] = true;
-            part["mountpoint"] = "/";
-            part.fs = "ext4";
-            callback();
+            if (part.number < 0) {
+                window.apis.services.partition.EasyHandler(dpath, part.ty, part.start, part.end, 
+                                                           function (result) {
+                    if (result.status && result.status === "failure") {
+                        alert(i18n.gettext(result.reason));
+                    }else if (result.status && result.status === "success") {
+                        var new_number = Number(result.handlepart);
+                        window.apis.services.partition.getPartitions(function(disks){
+                            console.log(disks);
+                            that.locals["disks"] = disks;
+                            that.options.disks = disks;
+                            var disk = _.find(disks, function(el){
+                                return el.path === dpath;
+                            });
+                            var part = _.find(disk.table, function (el) {
+                                return (el.number === new_number);
+                            });
+                            part["mountpoint"] = "/";
+                            part["dirty"] = true;
+                            callback();
+                        });
+                    }
+                });
+            }else{
+                part["dirty"] = true;
+                part["mountpoint"] = "/";
+                part.fs = "ext4";
+                callback();
+            }
         },
     };
     return partial;

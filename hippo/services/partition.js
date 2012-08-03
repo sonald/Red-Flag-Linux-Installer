@@ -119,12 +119,23 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.FulldiskHandler = function ( devpath, cb) {
+    PartitionStub.FulldiskHandler = function (devpath, cb) {
         var mem = require("os").totalmem();
         if (sock && sock.socket.connected) {
             sock.emit('fdhandler', devpath, mem);
-            sock.once('fdhandler', function (disks) {
-                cb(JSON.parse(disks));
+            sock.once('fdhandler', function (result) {
+                cb(JSON.parse(result));
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
+    PartitionStub.EasyHandler = function (devpath, parttype, start, end, cb) {
+        if (sock && sock.socket.connected) {
+            sock.emit('easyhandler', devpath, parttype, start, end);
+            sock.once('easyhandler', function (result) {
+                cb(JSON.parse(result));
             });
         }else{
             cb({error:"sever is loading",});

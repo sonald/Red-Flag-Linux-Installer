@@ -40,19 +40,30 @@ def fdhandler(dev,mem):
         raise Exception, "error"
     return disk
 
-def easy_handler(self, dev, disk, parttype, start, end):
+def easyhandler(dev, disk, parttype, start, end):
+    fs = "ext4"
     start = parted.sizeToSectors(float(start), "GB", 512)
     end = parted.sizeToSectors(float(end), "GB", 512)
     if parttype == "free":
-        if disk.primaryPartitionCount() == 4:
+        if disk.primaryPartitionCount == 4:
             raise Exception, "Error"
-        elif disk.primaryPartitionCount() == 3 and disk.getExtendedPartition() is None:
+        elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
             disk = rfparted.mkpart(dev, disk, "extended", start, end, fs)
             parttype = "logical"
-        elif disk.primaryPartitionCount() < 4:
+        elif disk.primaryPartitionCount < 4:
             parttype = "primary"
-    disk = rfparted.mkpart(dev, disk, "primary", start, end, fs)
-    return disk
+    ###elif parttype == "logical"
+    ### nothing changed
+    partnumber = [ part.number for part in disk.partitions ]
+    disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+    number = 0
+    for p in disk.partitions:
+        if p.number in partnumber:
+            continue
+        number = p.number
+        break;
+
+    return [disk, number]
 
 
 
