@@ -37,7 +37,7 @@ def fdhandler(dev,mem):
         end = sizeL - 100
         disk = rfparted.mkpart(dev, disk, parttype, start, end, "ext4")
     else:
-        raise Exception, "error"
+        raise Exception, "Error, select a disk of at least 6 GB ."
     return disk
 
 def easyhandler(dev, disk, parttype, start, end):
@@ -46,7 +46,7 @@ def easyhandler(dev, disk, parttype, start, end):
     end = parted.sizeToSectors(float(end), "GB", 512)
     if parttype == "free":
         if disk.primaryPartitionCount == 4:
-            raise Exception, "Error"
+            raise Exception, "Too many primary partitions."
         elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
             disk = rfparted.mkpart(dev, disk, "extended", start, end, fs)
             parttype = "logical"

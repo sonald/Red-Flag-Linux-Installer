@@ -29,7 +29,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                     $("#easy_part_table").find('ul.select').removeClass("select");
                     $(this).addClass("select");
                     if ($(this).attr("psize") < 6) {
-                        $('.warninfo').html("<b>You'd better choose a partition larger than 6G.</b>");
+                        $('.warninfo').html("<b>"+i18n.gettext('Select a partition of at least 6 GB.')+"</b>");
                     }
                 }
             });
@@ -39,7 +39,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var dnum, pnum, part, disk;
             var that = this;
             if ($("#part_content").find('ul.select').length < 1) {
-                alert(i18n.gettext("you should select a partition."));
+                alert(i18n.gettext("Please select a partition to continue."));
                 return;
             }
             pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
@@ -47,7 +47,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             disk = this.options.disks[dnum];
             part = disk.table[pnum];
             if (part.size < 6) {
-                alert(i18n.gettext("Choose one larger than 6G again!"));
+                alert(i18n.gettext("Select a partition of at least 6 GB"));
                 return;
             }
             var dpath = disk.path;

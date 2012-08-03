@@ -26,7 +26,7 @@ def msdos_validate_type(ty, disk):
         raise Exception, "Too many extended partitions."
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
-        raise Exception, "create extended partition first"
+        raise Exception, "Create extended partition first."
 
 def adjust_geometry(disk,ty,new_geometry):
     """Given the disk,partiton type and the geomery,return the suitable
@@ -80,7 +80,7 @@ def rmpart(disk, number):
         n = n + 1
 
     if n == len(parts):
-        raise Exception, "there is no such partition"
+        raise Exception, "Error arguments, no partition specified."
 
     part = parts[n]
     if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:

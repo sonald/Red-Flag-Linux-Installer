@@ -30,7 +30,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                     $("#fulldisk_part_table").find('ul.select').removeClass("select");
                     $(this).addClass("select");
                     if ($(this).attr("dsize") < 6) {
-                        $('.warninfo').html("<b>You'd better choose a disk larger than 6G.</b>");
+                        $('.warninfo').html("<b>"+i18n.gettext("Select a disk of at least 6 GB.")+"</b>");
                     }
                 }
             });
@@ -41,7 +41,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var dnum= $("#part_content").find('ul.select').attr("dnum");
             var dpath = that.options.disks[dnum].path;
             if (that.options.disks[dnum].size < 6) {
-                alert(i18n.gettext("you should choose a disk larger than 6G!"));
+                alert(i18n.gettext("Select a disk of at least 6 GB."));
                 return;
             }
 

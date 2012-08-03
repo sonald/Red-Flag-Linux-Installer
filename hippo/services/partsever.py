@@ -43,7 +43,6 @@ class PartSocket(BaseNamespace):
             disk = self.disks[devpath]
             dev = parted.getDevice(devpath)
             partnumber = [ part.number for part in disk.partitions ]
-
             try:
                 self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
             except Exception, e:
@@ -55,7 +54,7 @@ class PartSocket(BaseNamespace):
                 data = self.error_handle(None,"add"+devpath+ str(p.number))
                 break;
         else:
-            data = self.error_handle("args is error.",None)
+            data = self.error_handle("Error arguments,no disk specified", None)
 
         self.emit('mkpart',data)
 

@@ -103,13 +103,13 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     };
                 });
                 if (root_mp === 0) {
-                    alert(i18n.gettext("you need choose a disk for '/'!"));
+                    alert(i18n.gettext("You need specify a root partition."));
                     return;
                 } else if (root_mp > 1 || opt_mp > 1) {
-                    alert(i18n.gettext("you need choose only a disk for each mountpoint!"));
+                    alert(i18n.gettext("Select only one root partition."));
                     return;
                 }else if (root_size < 6) {
-                    alert(i18n.gettext("you need choose a disk larger than 6G for '/'!"));
+                    alert(i18n.gettext("The root partition requires at least 6 GB space!"));
                     return;
                 }
                 _.each(adPage.record.dirty, function (el) {
