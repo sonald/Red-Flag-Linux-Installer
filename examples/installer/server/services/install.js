@@ -23,12 +23,12 @@ var fsutil = {
                 return;
             }
 
-	    // "block size": info[1],
+            // "block size": info[1],
             // "total blocks": info[2],
             // "free blocks": info[3]
-	    info = {
-		"total": (+info[2]) * info[1],
-		"free": (+info[3]) * info[1]
+            info = {
+                "total": (+info[2]) * info[1],
+                "free": (+info[3]) * info[1]
             };
             debug('getFileSystemInfo: ', info);
             callback(null, info);
@@ -158,7 +158,7 @@ module.exports = (function(){
         async.forEachSeries(mounts.sort(),
             function(mnt, cb) {
                 system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' +
-		       pathlib.join(destdir, mnt.mountpoint))(cb);
+                       pathlib.join(destdir, mnt.mountpoint))(cb);
             }, callback);
     }
 
@@ -197,9 +197,9 @@ module.exports = (function(){
         opts.disks.map(function(disk) {
             disk.table.map(function(part) {
                 part.path = part.path || disk.path + part.number;
-		if (part.mountpoint === '/') {
-		    opts.installdevice = disk;
-		}
+                if (part.mountpoint === '/') {
+                    opts.installdevice = disk;
+                }
             });
         });
 
@@ -212,16 +212,16 @@ module.exports = (function(){
         async.waterfall([
             function(cb) {
                 fsutil.mktempdir(function(dirname) {
-		    //TODO: we may need to mkdir -p before mounting
-		    //sub-volumes such as /opt.
-		    mountNeededPartitions(options.disks, dirname, function(err) {
+                    //TODO: we may need to mkdir -p before mounting
+                    //sub-volumes such as /opt.
+                    mountNeededPartitions(options.disks, dirname, function(err) {
                         if (err) {
                             cb(err);
 
                         } else {
                             cb(null, dirname);
                         }
-		    });
+                    });
 
                 });
             },
@@ -234,7 +234,7 @@ module.exports = (function(){
                         return;
                     }
 
-		    var size = info['total'] - info['free'];
+                    var size = info['total'] - info['free'];
                     cb(null, newroot_mnt, size);
                 });
             },
@@ -279,10 +279,10 @@ module.exports = (function(){
 
             // cleanup: umount newroot_mnt and rmdir it
             function(newroot_mnt, cb) {
-		unmountNeededPartitions(options.disks, function(err) {
-		    cb(err, newroot_mnt);
-		});
-		
+                unmountNeededPartitions(options.disks, function(err) {
+                    cb(err, newroot_mnt);
+                });
+                
                 // system('umount ' + newroot_mnt)(function(err) {
                 //     cb(null, newroot_mnt);
                 // });
@@ -370,38 +370,40 @@ module.exports = (function(){
                     "'; } | passwd root\n";
             }
 
-	    opts.hostname = opts.hostname || opts.username + '-qomo';
-	    postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts\n';
+            opts.hostname = opts.hostname || opts.username + '-qomo';
+            postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts\n';
 
-	    opts.timezone = opts.timezone || 'Asia/Shanghai';
-	    postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime\n';
+            opts.timezone = opts.timezone || 'Asia/Shanghai';
+            postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime\n';
 
-	    //TODO: how?
-	    opts.keyboard = opts.keyboard || 'en';
+            //TODO: how?
+            opts.keyboard = opts.keyboard || 'en';
 
-	    // handle swap file
-	    var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
+            // handle swap file
+            var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
                 return entry.fs && entry.fs.indexOf('swap') != -1;
             }).length > 0;
-	    if (need_swap_file && opts.installmode !== 'advanced') {
-		//TODO: check if space is big enough to create swapfile
-		var swapsize = 1<<30;
-		
-		if (opts.installmode === 'easy') {
-		    swapsize = require('os').totalmem();
-		    if (swapsize > (4<<30)) {
-			swapsize = 4<<30;
-		    }
-		    
-		} else if (opts.installmode === 'fulldisk') {
-		    swapsize = 1<<30;
-		}
+            if (need_swap_file && opts.installmode !== 'advanced') {
+                //TODO: check if space is big enough to create swapfile
+                var swapsize = 1<<30;
+                
+                if (opts.installmode === 'easy') {
+                    swapsize = require('os').totalmem();
+                    if (swapsize > (4<<30)) {
+                        swapsize = 4<<30;
+                    }
+                    
+                } else if (opts.installmode === 'fulldisk') {
+                    swapsize = 1<<30;
+                }
 
-		postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
-		postscript += 'mkswap /swapfile\n';
-		postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
-	    }
-	    
+                postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
+                postscript += 'mkswap /swapfile\n';
+                postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
+            }
+            
+            // regenerate vmlinux
+            postscript += 'mkinitcpio -p linux\n';
 
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
@@ -427,9 +429,31 @@ module.exports = (function(){
                 return;
             }
 
-            system('grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos)(err_cb);
+            var cmd = 'grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos;
+            system(cmd)(err_cb);
         }
 
+        function generateGrubMenulst(err_cb) {
+            // map 'a'..'z' to 0..25
+            function charToNum(ch) {
+                return ch.charCodeAt(0) - 'a'.charCodeAt(0);
+            }
+            
+            // system('mkdir -p /boot/grub')
+            var menulst_tmpl = fs.readFileSync(pathlib.join(__dirname, 'menu.lst.tmpl'), 'utf8');
+            // grub_parts[1] = 'a', grub_parts[2] = '1'
+            //FIXME: TODO: here we only test sd[a-z] mode disk
+            var grub_parts = /\/dev\/sd([a-z])(\d+)/.exec(opts.newroot);
+            
+            var grub_root = 'hd' + charToNum(grub_parts[1]) + ',' + (grub_parts[2] - 1);
+            menulst_tmpl = menulst_tmpl.replace('$1', grub_root).replace('$2', opts.newroot);
+
+            debug('menu.lst', menulst_tmpl);
+            var menulst = pathlib.join(root_dir, "/boot/grub/menu.lst");
+            watcher({status: 'generate grub menu.lst'});
+            fs.writeFile(menulst, menulst_tmpl, 'utf8', err_cb);
+        }
+        
         async.waterfall(
             [
                 system("mkdir -p " + root_dir),
@@ -438,13 +462,16 @@ module.exports = (function(){
                     generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
                 },
                 generatePostscript,
+                system("mount --bind /dev " + root_dir + "/dev"),
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
                 system("umount " + root_dir + "/sys"),
+                system("umount " + root_dir + "/dev"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
                 grubInstall,
+                generateGrubMenulst,
                 system("umount " + root_dir)
             ],
 
@@ -472,71 +499,71 @@ module.exports = (function(){
             cb(false);
         },
 
-	// [ '/dev/sda', '/dev/sdb' ]
-	/**
-	 * @return {JSON} status of checking
-	 * @arg devices 
-	 */
-	minimalSufficient: function(devices, reporter) {
-	    var reasons = {
-		'diskmin': 'disk size does not suffcient minimal request',
-		'memory': 'need at least 1GB memory'
-	    };
+        // [ '/dev/sda', '/dev/sdb' ]
+        /**
+         * @return {JSON} status of checking
+         * @arg devices 
+         */
+        minimalSufficient: function(devices, reporter) {
+            var reasons = {
+                'diskmin': 'disk size does not suffcient minimal request',
+                'memory': 'need at least 1GB memory'
+            };
 
-	    function diskminCheck(device) {
-		return function(cb) {
-		    var devname = device.replace(/\/dev\//, '');
-		    var cmd = 'echo $(( `cat /sys/block/' + devname + '/size` * 512 ))';
-		    exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
-			if (err) {
-			    cb({status: 'warning', reason: err });
-			    return;
-			}
+            function diskminCheck(device) {
+                return function(cb) {
+                    var devname = device.replace(/\/dev\//, '');
+                    var cmd = 'echo $(( `cat /sys/block/' + devname + '/size` * 512 ))';
+                    exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
+                        if (err) {
+                            cb({status: 'warning', reason: err });
+                            return;
+                        }
 
-			var size = +stdout.trim();
-			if (size / Math.pow(10,9) < 6) {
-			    cb({status: 'warning', reason: reasons['diskmin']});
-			    return;
-			}
+                        var size = +stdout.trim();
+                        if (size / Math.pow(10,9) < 6) {
+                            cb({status: 'warning', reason: reasons['diskmin']});
+                            return;
+                        }
 
-			cb(null);
-		    });
-		};
-	    }
+                        cb(null);
+                    });
+                };
+            }
 
-	    var checklist = [];
-	    devices.forEach(function(device) {
-		checklist.push(diskminCheck(device));
-	    });
-	    
-	    checklist.push( function(cb) {
-		if (require('os').totalmem() < Math.pow(10,9)) {
-		    cb({status: 'failure', reason: reasons['memory']});
-		    
-		} else {
-		    cb(null);
-		}
-	    } );
-	    
-	    async.waterfall(checklist, function(err) {
-		if (err) {
-		    debug(err);
-		    reporter(err);
-		} else {
-		    reporter({status: 'success'});
-		}
-	    });
-	},
-	 
+            var checklist = [];
+            devices.forEach(function(device) {
+                checklist.push(diskminCheck(device));
+            });
+            
+            checklist.push( function(cb) {
+                if (require('os').totalmem() < Math.pow(10,9)) {
+                    cb({status: 'failure', reason: reasons['memory']});
+                    
+                } else {
+                    cb(null);
+                }
+            } );
+            
+            async.waterfall(checklist, function(err) {
+                if (err) {
+                    debug(err);
+                    reporter(err);
+                } else {
+                    reporter({status: 'success'});
+                }
+            });
+        },
+         
         /**
          * options contains all info needed to do installation
          * options = {
             // newroot: '/dev/sda1',
             grubinstall: '' // empty, '/dev/sda', '/dev/sdb2'
             installmode: 'fulldisk' // easy, advanced
-	    timezone: '',
-	    hostname: username + '-qomo',
-	    username: '',
+            timezone: '',
+            hostname: username + '-qomo',
+            username: '',
             // disks contains almost all partitions, use dirty to distinct which
             // need formatting
             disks: [
@@ -567,15 +594,15 @@ module.exports = (function(){
 
             async.waterfall([
                 function(next) {
-		    reporter({status: 'formatting partitions'});
+                    reporter({status: 'formatting partitions'});
                     formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
-		    reporter({status: 'start copying data'});
+                    reporter({status: 'start copying data...'});
                     copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
-		    reporter({status: 'do post install'});
+                    reporter({status: 'do post install processing...'});
                     //FIXME: do I need to umount all partitions and then remount it?
                     postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );

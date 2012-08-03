@@ -156,27 +156,31 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.$logs.append($msg);
         },
         
-        onProgress: function(respond) {
-            var $msg;
+        onProgress: (function() {
+            var progress = 0;
 
-            if (respond.status === "progress") {
-                this.buildMessage('install progress: ' + respond.data + '%', '');
-                progressbar.update(respond.data);
-                
-            } else if (respond.status === "failure") {
-                this.buildMessage(respond.reason, 'label-error');
-                
-            } else if (respond.status === "success") {
-                this.buildMessage(
-                    i18n.gettext('Congratulations~You have finished installing the system.'),
-                    'label-important');
+            return function(respond) {
+                if (respond.status === "progress") {
+                    if (progress >= respond.data)
+                        return;
+                    progress = respond.data;
+                    
+                    this.buildMessage('install progress: ' + respond.data + '%', '');
+                    progressbar.update(respond.data);
+                    
+                } else if (respond.status === "failure") {
+                    this.buildMessage(respond.reason, 'label-error');
+                    
+                } else if (respond.status === "success") {
+                    this.buildMessage(
+                        i18n.gettext('Congratulations~You have finished installing the system.'),
+                        'label-important');
 
-            } else {
-                this.buildMessage(respond.status, 'label-info');
-            }
-            
-            // console.log(respond);
-        },
+                } else {
+                    this.buildMessage(respond.status, 'label-info');
+                }
+            };
+        }()),
 
         validate: function(callback) {
             // check if install finished

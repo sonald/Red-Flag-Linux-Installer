@@ -22,7 +22,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
         loadView: function() {
             if (typeof pageCache === 'undefined') {
                 this.locals = {
-                    gettext: function(msgid) {return i18n.gettext(msgid); },
+                    gettext: function(msgid) {return i18n.gettext(msgid); }
                 };
                 pageCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             }
@@ -48,11 +48,11 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             if( jsvalidate.result === false ){
                 jsvalidate.result = true;
                 return false;
-            };
-            this.app.options.username = $('input#name').attr("value")
-            this.app.options.hostname = $('input#hostname').attr("value")
+            }
+            this.app.options.username = $('input#name').attr("value");
+            this.app.options.hostname = $('input#hostname').attr("value");
             callback();
-        },
+        }
     };
 
     return page;
