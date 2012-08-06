@@ -47,8 +47,8 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                                 dindex:dindex,
                                 part:part,
                                 unit:disk.unit,
+                                gettext:that.locals.gettext,
                             };
-                    args["gettext"] = that.locals.gettext;
                     if (part.number < 0) {
                         tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
                     }else{
@@ -92,10 +92,16 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             $('body').on('click','a.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
-                size = Number($modal.find("#size").attr("value"));
                 parttype = $modal.find('#parttype :checked').attr("value");
                 fstype = $modal.find('#fs :checked').attr("value");
 
+                if ($modal.find("#size").attr("value").match(/^(\d*)(\.?)(\d*)$/g) === null) {
+                    alert(i18n.gettext('Number!!'));
+                    return;
+                }else {
+                    size = Number($modal.find("#size").attr("value"));
+                    size = Number(size.toFixed(2));
+                }
                 path = $(this).attr("path");
                 if($modal.find("#location :checked").attr("id") === "start") {
                     start = Number($modal.find("#location :checked").attr("value"));
@@ -112,7 +118,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
                 path = $(this).attr("path");
-                number = $(this).attr("number");
+                number = Number($(this).attr("number"));
                 fstype = $modal.find("#fs :checked").attr("value");
                 mp = $modal.find("#mp :checked").attr("value");
 
@@ -124,7 +130,8 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                                         "fs": fstype,
                                         "mp": mp,});
                 $(this).parents('ul.part').find('a.partfs').text(fstype);
-                $(this).parents('ul.part').find('a.partmp').text("MountPoint:" + mp);
+                var str = i18n.gettext('MountPoint:');
+                $(this).parents('ul.part').find('a.partmp').text(str + mp);
             });
         },
 
@@ -134,59 +141,64 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             if (result.status === "success") {
                 if (result.handlepart){
                     //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
-                    var method, path, number;
-                    method = result.handlepart.substring(0,3);
-                    path = result.handlepart.substring(3,11);
-                    number = Number(result.handlepart.substring(11));
-
-                    if (method === "add") {
-                        //TODO ty==extended
-                        that.record.dirty.push({"path":path,"number":number});
-
-                    }else if (method === "del") {
-                        //TODO ty==extended
-                        that.record.dirty = _.reject(that.record.dirty, function(el) {
-                            return el.path === path && el.number === number;
-                        });
-                        that.record.edit = _.reject(that.record.edit,function(el){
-                            return el.path === path && el.number === number;
-                        });
-                        if(number > 4) {
-                            that.record.edit = _.map(that.record.edit,function(el){
-                                if (el.number > number && el.path === path) {
-                                    el.number--;
-                                };
-                                return el;
-                            })
-                        }
-                    }
+                    that.parthandler(result.handlepart);
                 }
                 window.apis.services.partition.getPartitions(function(disks) {
                     that.options.disks = disks;
                     that.locals["disks"] = that.options.disks;
-                    var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(that.locals);
-                    $("#advanced_part_table").html(pageC);
-                    that.renderPart();
+                    that.renderParts();
 
-                    for (var x in that.record.edit) {
-                        var tmp = that.record.edit[x];
-                        var $part = $('ul.disk[dpath="'+tmp.path+'"]').find('ul.part[number="'+tmp.number+'"]');
-                        if(tmp.fs !== "") {
-                            $part.find('a.partfs').text(tmp.fs);
+                    //deal with record
+                    _.each(that.record.edit, function(el) {
+                        var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
+                        if(el.fs !== "") {
+                            $part.find('a.partfs').text(el.fs);
                         };
-                        if (tmp.mp !== ""){
-                            $part.find('a.partmp').text("MountPoint:" + tmp.mp);
+                        if (el.mp !== ""){
+                            var str = i18n.gettext('MountPoint:');
+                            $part.find('a.partmp').text(str + el.mp);
                         };
-                    };
+                    });
                 });
-            }else if(result.status === "failure") {
-                //TODO
-                alert(i18n.gettext(result.reason));
-                console.log(result.reason);
             }else {
-                //TODO
-                alert(i18n.gettext(result.error));
+                alert(i18n.gettext("System error"));
                 console.log(result);
+            };
+        },
+
+        parthandler: function(result) {
+            var method, path, number;
+            var that = this;
+            method = result.substring(0,3);
+            path = result.substring(3,11);
+            number = Number(result.substring(11));
+
+            if (method === "add") {
+                //TODO ty==extended
+                that.record.dirty.push({"path":path,"number":number});
+            }else if (method === "del") {
+                //TODO ty==extended
+                that.record.dirty = _.reject(that.record.dirty, function(el) {
+                    return el.path === path && el.number === number;
+                });
+                that.record.edit = _.reject(that.record.edit,function(el){
+                    return el.path === path && el.number === number;
+                });
+                //in msdos,number of logical > 4
+                if(number > 4) {
+                    that.record.edit = _.map(that.record.edit,function(el){
+                        if (el.number > number && el.path === path) {
+                            el.number--;
+                        };
+                        return el;
+                    });
+                    that.record.dirty = _.map(that.record.dirty,function(el){
+                        if (el.number > number && el.path === path) {
+                            el.number--;
+                        };
+                        return el;
+                    });
+                };//if number > 4
             };
         },
     };
