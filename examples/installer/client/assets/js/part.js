@@ -85,6 +85,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
             }else if (that.$el.has("#advanced_part_table").length > 0) {
                 var disks = that.app.options.disks;
                 var root_mp, opt_mp, root_size;
+
                 root_mp = 0;
                 opt_mp = 0;
                 root_size = 0;
@@ -112,6 +113,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     alert(i18n.gettext("The root partition requires at least 6 GB space!"));
                     return;
                 }
+
                 _.each(adPage.record.dirty, function (el) {
                     var path = el.path;
                     var number = el.number;
@@ -126,6 +128,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     };
                 });
 
+                var grubinstall = $('#grub').find(':checked').attr("value");
                 _.each(adPage.record.edit, function (el) {
                     var path = el.path;
                     var number = el.number;
@@ -138,6 +141,9 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     part["dirty"] = true;
                     part["mountpoint"] = el.mp;
                     part["fs"] = el.fs;
+                    if (el.mp === "/" && grubinstall === "/") {
+                        grubinstall = el.path + el.number;
+                    };
                 });
 
                 disks = _.map(disks, function (disk) {
@@ -148,7 +154,7 @@ define(['jquery','system', 'i18n', 'easy_part', 'fd_part', 'ad_part'],
                     return disk;
                 });
                 that.app.options.disks = disks;
-                that.app.options.grubinstall=$('#grub').find(':checked').attr("value");
+                that.app.options.grubinstall = grubinstall;
                 callback();
             };
             console.log(that.app.options);
