@@ -150,10 +150,9 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
         },
 
         buildMessage: function(msg, kind) {
-            var $msg = $('<div> <span class="label ' + kind + '"></span> </div>');
-            
-            $msg.find('span').text(msg);
-            this.$logs.append($msg);
+            var $msg = $('<span class="label ' + kind + '"></span>');
+            $msg.text(msg);
+            this.$logs.html($msg);
         },
         
         onProgress: (function() {

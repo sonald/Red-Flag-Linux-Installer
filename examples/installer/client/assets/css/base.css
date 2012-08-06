@@ -91,11 +91,12 @@ div#presentation .item img {
 }
 
 #install-log {
-    overflow: auto;
-    height: 100px;
+    overflow: hidden;
+    height: auto;
+    margin-bottom: 10px;
 }
 
-#install-log div.label {
+#install-log span.label {
     width: 90%;
     margin: 1px 0 5px 0;
 }
