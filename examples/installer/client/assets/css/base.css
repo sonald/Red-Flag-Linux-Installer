@@ -12,7 +12,7 @@ ul.breadcrumbs {
     border-radius: 5px;
     box-shadow: 0 0 2px rgba(0,0,0,.2);
     overflow: hidden;
-    width: 98%;
+    margin: 12px auto 12px auto;
 }
 
 ul.breadcrumbs li {
@@ -25,7 +25,7 @@ ul.breadcrumbs a {
     text-decoration: none;
     color: #444;
     position: relative;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    text-shadow: 0 0 1px #4B1919;
     background-color: #ddd;
     background-image: -webkit-linear-gradient(left, whiteSmoke, #DDD);
 }
