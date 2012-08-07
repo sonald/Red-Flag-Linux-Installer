@@ -50,16 +50,36 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: client/views/ad_part.jade:14
+#: client/views/ad_part.jade:4
+msgid "Reset"
+msgstr ""
+
+#: client/views/ad_part.jade:15
 msgid "Grub Install At:"
 msgstr ""
 
-#: client/views/ad_part.jade:19
+#: client/views/ad_part.jade:20
 msgid "Boot Partition"
+msgstr ""
+
+#: client/views/part.jade:5
+msgid "Easy"
+msgstr ""
+
+#: client/views/part.jade:8
+msgid "Full Disk"
+msgstr ""
+
+#: client/views/part.jade:11
+msgid "Advanced"
 msgstr ""
 
 #: client/views/free_part.jade:9
 msgid "free"
+msgstr ""
+
+#: client/views/free_part.jade:11
+msgid "create"
 msgstr ""
 
 #: client/views/free_part.jade:15 client/views/create_part.jade:5

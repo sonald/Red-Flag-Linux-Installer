@@ -49,6 +49,10 @@ define(["system"],
          null,
          ""
       ],
+      "Reset": [
+         null,
+         ""
+      ],
       "Grub Install At:": [
          null,
          ""
@@ -57,7 +61,23 @@ define(["system"],
          null,
          ""
       ],
+      "Easy": [
+         null,
+         ""
+      ],
+      "Full Disk": [
+         null,
+         ""
+      ],
+      "Advanced": [
+         null,
+         ""
+      ],
       "free": [
+         null,
+         ""
+      ],
+      "create": [
          null,
          ""
       ],

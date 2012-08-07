@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-07 16:30+0800\n"
+"POT-Creation-Date: 2012-08-07 17:40+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,17 +72,37 @@ msgstr "取消"
 msgid "Submit"
 msgstr "提交"
 
-#: client/views/ad_part.jade:14
+#: client/views/ad_part.jade:4
+msgid "Reset"
+msgstr "重置"
+
+#: client/views/ad_part.jade:15
 msgid "Grub Install At:"
 msgstr "安装grub位置："
 
-#: client/views/ad_part.jade:19
+#: client/views/ad_part.jade:20
 msgid "Boot Partition"
 msgstr "启动分区"
+
+#: client/views/part.jade:5
+msgid "Easy"
+msgstr "简单"
+
+#: client/views/part.jade:8
+msgid "Full Disk"
+msgstr "全磁盘"
+
+#: client/views/part.jade:11
+msgid "Advanced"
+msgstr "高级分区"
 
 #: client/views/free_part.jade:9
 msgid "free"
 msgstr "空闲"
+
+#: client/views/free_part.jade:11
+msgid "create"
+msgstr "创建"
 
 #: client/views/free_part.jade:15 client/views/create_part.jade:5
 msgid "CreateDisk"

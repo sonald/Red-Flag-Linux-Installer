@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-07 16:30+0800",
+         "POT-Creation-Date": " 2012-08-07 17:40+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -64,6 +64,10 @@ define(["system"],
          null,
          "提交"
       ],
+      "Reset": [
+         null,
+         "重置"
+      ],
       "Grub Install At:": [
          null,
          "安装grub位置："
@@ -72,9 +76,25 @@ define(["system"],
          null,
          "启动分区"
       ],
+      "Easy": [
+         null,
+         "简单"
+      ],
+      "Full Disk": [
+         null,
+         "全磁盘"
+      ],
+      "Advanced": [
+         null,
+         "高级分区"
+      ],
       "free": [
          null,
          "空闲"
+      ],
+      "create": [
+         null,
+         "创建"
       ],
       "CreateDisk": [
          null,

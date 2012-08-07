@@ -11,10 +11,10 @@
 # client.po 
 # js
 localedir=client/assets/locales
-xgettext -L Perl --output-dir=$localedir --from-code=utf-8 --output=client.pot\
+xgettext -L Perl --output-dir=$localedir --from-code=utf-8 --output=client.pot \
  `find client/views/ -name '*.jade' `
 
-xgettext -j -L Perl --output-dir=$localedir --from-code=utf-8 --output=client.pot\
+xgettext -j -L Perl --output-dir=$localedir --from-code=utf-8 --output=client.pot \
  client/assets/app.js `find client/assets/js/ -name '*.js' | grep -v 'i18n.js' | grep -v 'gettext.js' `
 
 
