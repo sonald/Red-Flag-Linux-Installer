@@ -5,13 +5,13 @@ block header
     title= tr('Hippo')
 
 block content
-    .well
-        h1: center= tr('Welcome To Use Qomo Installer')
-        br
-        ul.breadcrumbs
+    h1: center= tr('Welcome To Use Qomo Installer')
+    
+    div: ul.breadcrumbs
 
-        #stage
+    #stage.body-expand
 
+    .footer
         ul.pager
             li.next
                 a#forward(href="#")= tr('Next →')

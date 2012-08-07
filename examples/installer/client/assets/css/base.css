@@ -1,3 +1,36 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: whiteSmoke;    
+}
+
+#content {
+    width: 98%;
+    min-height: 100%;
+    margin: 0 auto;
+    background: whiteSmoke;
+}
+
+.mywell {
+    min-height: 100%;
+    background: whiteSmoke;
+}
+
+.body-expand {
+    width: 98%;
+    padding-bottom: 40px;
+}
+
+.footer {
+    position: absolute;
+    height: 40px;
+    bottom: 0;
+    width: 98%;    
+}
+
 .scrollspy-example {
     height: 300px;
     overflow: auto;
@@ -28,6 +61,7 @@ ul.breadcrumbs a {
     text-shadow: 0 0 1px #4B1919;
     background-color: #ddd;
     background-image: -webkit-linear-gradient(left, whiteSmoke, #DDD);
+    background-image: -moz-linear-gradient(left, whiteSmoke, #DDD);    
 }
 
 ul.breadcrumbs .current a {
@@ -76,10 +110,7 @@ ul.breadcrumbs .current::before {
     content: normal;
 }
 
-#content {
-    width: 100%;
-    height: 576px;
-}
+
 
 div#presentation {
     height: 300px;
@@ -188,3 +219,4 @@ table.colorinfo td[pty="select"],
 .part_table ul.select {
     background: #D66B6B;
 }
+

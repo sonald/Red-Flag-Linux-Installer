@@ -4,6 +4,7 @@ ul.progressbar {
     margin:0 auto;
     overflow: hidden;
 }
+
 ul.progressbar li {
     float:left;
     position:relative;
