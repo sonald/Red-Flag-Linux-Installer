@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'i18n'], function($,_system,i18n){
+define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpart){
     'use strict';
     var partialCache;
     var partial = {
@@ -45,29 +45,22 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 return;
             }
 
-            window.apis.services.partition.FulldiskHandler(dpath, function (result) {
-                if (result.status && result.status === "failure") {
-                    alert(i18n.gettext(result.reason));
-                }else if ( result.status && result.status === "success"){
-                    window.apis.services.partition.getPartitions(function(disks){
-                        that.locals["disks"] = disks;
-                        that.options.disks = disks;
-                        var disk = _.find(disks, function(el){
-                            return el.path === dpath;
-                        });
-                        disk.table = _.map(disk.table, function (el) {
-                            if (el.number > 0) {
-                                el["dirty"]=true;
-                            }
-                            return el;
-                        });
-                        var part = _.find(disk.table, function (el) {
-                            return (el.fs!="linux-swap(v1)" && el.number > 0);
-                        });
-                        part["mountpoint"] = "/";
-                        callback();
-                    });
-                }
+            Rpart.method(['FulldiskHandler', dpath], function (result, disks) {
+                that.locals["disks"] = that.options.disks = disks;
+                var disk = _.find(disks, function(el){
+                    return el.path === dpath;
+                });
+                disk.table = _.map(disk.table, function (el) {
+                    if (el.number > 0) {
+                        el["dirty"]=true;
+                    }
+                    return el;
+                });
+                var part = _.find(disk.table, function (el) {
+                    return (el.fs!="linux-swap(v1)" && el.number > 0);
+                });
+                part["mountpoint"] = "/";
+                callback();
             });
         },
     };

@@ -1,4 +1,5 @@
-define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalidate, i18n) {
+define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
+       function($, _system, jsvalidate, i18n, Rpart) {
     'use strict';
 
     var partialCache;
@@ -26,6 +27,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             partialCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             return partialCache;
         },
+
         renderParts: function () {
             this.locals = this.locals || {};
             var pageC = (jade.compile($("#part_partial_tmpl")[0].innerHTML))(this.locals);
@@ -75,8 +77,8 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             var that = this;
             $('body').on('click','.delete', function () {
                 var $this = $(this);
-                window.apis.services.partition.rmpart(
-                    $this.attr("path"), $this.attr("number"),
+                Rpart.method(['rmpart',
+                             $this.attr("path"), $this.attr("number")],
                     $.proxy(that.partflesh, that));
             });
 
@@ -85,7 +87,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                     edit:[],
                     dirty:[],
                 };
-                window.apis.services.partition.reset(
+                Rpart.method(['reset'],
                     $.proxy(that.partflesh, that));
             });
 
@@ -110,8 +112,8 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                     end = Number($modal.find("#location :checked").attr("value"));
                     start = end - size;
                 };
-                window.apis.services.partition.mkpart(
-                    path, parttype, start, end, fstype, $.proxy(that.partflesh, that));
+                Rpart.method(['mkpart',path, parttype, start, end, fstype],
+                             $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','a.js-edit-submit',function () {
@@ -135,35 +137,26 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             });
         },
 
-        partflesh: function(result){
+        partflesh: function(result, disks){
             var that = this;
-            console.log(result);
-            if (result.status === "success") {
-                if (result.handlepart){
-                    //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
-                    that.parthandler(result.handlepart);
-                }
-                window.apis.services.partition.getPartitions(function(disks) {
-                    that.options.disks = disks;
-                    that.locals["disks"] = that.options.disks;
-                    that.renderParts();
+            if (result.handlepart){
+                //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
+                that.parthandler(result.handlepart);
+            }
+            that.options.disks = that.locals.disks = disks;
+            that.renderParts();
 
-                    //deal with record
-                    _.each(that.record.edit, function(el) {
-                        var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
-                        if(el.fs !== "") {
-                            $part.find('a.partfs').text(el.fs);
-                        };
-                        if (el.mp !== ""){
-                            var str = i18n.gettext('MountPoint:');
-                            $part.find('a.partmp').text(str + el.mp);
-                        };
-                    });
-                });
-            }else {
-                alert(i18n.gettext("System error"));
-                console.log(result);
-            };
+            //deal with record
+            _.each(that.record.edit, function(el) {
+                var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
+                if(el.fs !== "") {
+                    $part.find('a.partfs').text(el.fs);
+                };
+                if (el.mp !== ""){
+                    var str = i18n.gettext('MountPoint:');
+                    $part.find('a.partmp').text(str + el.mp);
+                };
+            });
         },
 
         parthandler: function(result) {
@@ -200,6 +193,83 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                     });
                 };//if number > 4
             };
+        },
+
+        validate: function(callback) {
+            var that = this;
+            var disks = that.options.disks;
+            //validate~~
+            var root_mp, opt_mp, root_size;
+            root_mp = 0;
+            opt_mp = 0;
+            root_size = 0;
+            _.each(that.record.edit, function (el) {
+                if (el.mp === "/") {
+                    root_mp++;
+                    var disk = _.find(disks, function (disk) {
+                        return disk.path === el.path;
+                    });
+                    var part = _.find(disk.table, function (part) {
+                        return part.number === el.number;
+                    });
+                    root_size = part.size;
+                }else if (el.mp === "/opt") {
+                    opt_mp++;
+                };
+            });
+            if (root_mp === 0) {
+                alert(i18n.gettext("You need specify a root partition."));
+                return;
+            } else if (root_mp > 1 || opt_mp > 1) {
+                alert(i18n.gettext("Select only one root partition."));
+                return;
+            }else if (root_size < 6) {
+                alert(i18n.gettext("The root partition requires at least 6 GB space!"));
+                return;
+            }
+            //data control
+            _.each(that.record.dirty, function (el) {
+                var path = el.path;
+                var number = el.number;
+                var disk = _.find(disks, function (disk_el) {
+                    return disk_el.path === path;
+                });
+                var part = _.find(disk.table, function (part_el) {
+                    return part_el.number === number;
+                });
+                if(part && part.ty !== "extended") {
+                    part["dirty"] = true;
+                };
+            });
+
+            var grubinstall = $('#grub').find(':checked').attr("value");
+            _.each(that.record.edit, function (el) {
+                var path = el.path;
+                var number = el.number;
+                var disk = _.find(disks, function (disk_el) {
+                    return disk_el.path === path;
+                });
+                var part = _.find(disk.table, function (part_el) {
+                    return part_el.number === number;
+                });
+                part["dirty"] = true;
+                part["mountpoint"] = el.mp;
+                part["fs"] = el.fs;
+                if (el.mp === "/" && grubinstall === "/") {
+                    grubinstall = el.path + el.number;
+                };
+            });
+
+            disks = _.map(disks, function (disk) {
+                disk.table = _.map(disk.table, function(part) {
+                    delete part.path;
+                    return part;
+                });
+                return disk;
+            });
+            that.options.disks = disks;
+            that.options.grubinstall = grubinstall;
+            callback();
         },
     };
     return page;

@@ -1,6 +1,6 @@
 script(type="text/template", id="logical_part_tmpl").
     li.horizontal.logical
-        button.delete.close(type="button",pnum=pindex,dnum=dindex)×
+        button.delete.close(type="button",number=part.number,path=part.path)×
         ul.wat-cf.part(number=part.number,pty="logical")
             li
                 a(href="#")
@@ -26,11 +26,6 @@ script(type="text/template", id="logical_part_tmpl").
                                     option(value="") ""
                                     option(value="/")= "/"
                                     option(value="/opt")= "/opt"
-                                   // option(value="/home")= "/home"
-                                   // option(value="/mnt")= "/mnt"
-                                   // option(value="/tmp")= "/tmp"
-                                   // option(value="/boot")= "/boot"
-                                   // option(value="/usr")= "/usr"
                         div.control-group.form-horizontal
                             label.control-label(for="fs")= gettext('FileSystem')
                             .controls
@@ -39,4 +34,4 @@ script(type="text/template", id="logical_part_tmpl").
                                     option(value="linux-swap(v1)") swap
                     .modal-footer
                             a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                            a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",pnum=pindex,dnum=dindex)= gettext('Submit')
+                            a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",path=part.path,number=part.number)= gettext('Submit')

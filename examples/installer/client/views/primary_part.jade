@@ -11,7 +11,7 @@ script(type="text/template", id="primary_part_tmpl").
             li
                 a.partfs(href="#")= part.fs
             li
-                a.partmp(href="#")= "MountPoint:"
+                a.partmp(href="#")= gettext("MountPoint:")
             li
                 a.edit(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('Edit')
                 .modal.fade.hide(id=String(dindex)+String(pindex))
@@ -26,11 +26,6 @@ script(type="text/template", id="primary_part_tmpl").
                                     option(value="") ""
                                     option(value="/")= "/"
                                     option(value="/opt")= "/opt"
-                                   // option(value="/home")= "/home"
-                                   // option(value="/mnt")= "/mnt"
-                                   // option(value="/tmp")= "/tmp"
-                                   // option(value="/boot")= "/boot"
-                                   // option(value="/usr")= "/usr"
                         div.control-group.form-horizontal
                             label.control-label(for="fs")= gettext('FileSystem')
                             .controls

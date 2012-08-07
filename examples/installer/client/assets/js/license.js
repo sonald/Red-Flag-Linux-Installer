@@ -25,7 +25,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
 
     console.log('load license');
     var page = {
-	      name: 'Welcome',
+	      name: i18n.gettext('Welcome'),
         view: '#license_tmpl',
         app: null,
 

@@ -46,7 +46,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
     console.log('load process');
     var page = {
-        name: 'Install',
+        name: i18n.gettext('Install'),
         view: '#process_tmpl',
         app: null,
         $presentation: null,

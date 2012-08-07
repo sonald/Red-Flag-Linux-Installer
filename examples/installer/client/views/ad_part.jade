@@ -11,14 +11,13 @@ script(type="text/template", id="advanced_part_tmpl").
                 = disk["unit"]
                 =")"
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
-        b= gettext('grubinstall')
+        b= gettext('Grub Install At:')
         select#grub
             -for(var x = disks.length; x > 0 ; x--)
                 -var disk = disks[x-1]
                 option(value=disk["path"])= disk["path"]
-            option(value="")= gettext('uninstallgrub')
-            option(value="/")= gettext('install_in_boot_part')
-            //option(value="") bootdisk
+            option(value="/")= gettext('Boot Partition')
+            option(value="")= ""
 include primary_part
 include logical_part
 include extended_part

@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'i18n'], function($,_system,i18n){
+define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpart){
     'use strict';
     var partialCache;
     var partial = {
@@ -53,27 +53,18 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var dpath = disk.path;
 
             if (part.number < 0) {
-                window.apis.services.partition.EasyHandler(dpath, part.ty, part.start, part.end, 
-                                                           function (result) {
-                    if (result.status && result.status === "failure") {
-                        alert(i18n.gettext(result.reason));
-                    }else if (result.status && result.status === "success") {
-                        var new_number = Number(result.handlepart);
-                        window.apis.services.partition.getPartitions(function(disks){
-                            console.log(disks);
-                            that.locals["disks"] = disks;
-                            that.options.disks = disks;
-                            var disk = _.find(disks, function(el){
-                                return el.path === dpath;
-                            });
-                            var part = _.find(disk.table, function (el) {
-                                return (el.number === new_number);
-                            });
-                            part["mountpoint"] = "/";
-                            part["dirty"] = true;
-                            callback();
-                        });
-                    }
+                Rpart.method(['EasyHandler', dpath, part.ty, part.start, part.end], function (result, disks) {
+                    var new_number = Number(result.handlepart);
+                    that.locals["disks"] = that.options.disks = disks;
+                    var disk = _.find(disks, function(el){
+                        return el.path === dpath;
+                    });
+                    var part = _.find(disk.table, function (el) {
+                        return (el.number === new_number);
+                    });
+                    part["mountpoint"] = "/";
+                    part["dirty"] = true;
+                    callback();
                 });
             }else{
                 part["dirty"] = true;
