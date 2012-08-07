@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_HttpWidget(object):
     def setupUi(self, HttpWidget):
         HttpWidget.setObjectName(_fromUtf8("HttpWidget"))
-        HttpWidget.setFixedSize(1024, 576)
+        HttpWidget.resize(1024, 576)
         self.verticalLayout = QtGui.QVBoxLayout(HttpWidget)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.webView = QtWebKit.QWebView(HttpWidget)

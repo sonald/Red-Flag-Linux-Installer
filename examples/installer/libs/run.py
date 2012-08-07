@@ -23,7 +23,7 @@ class httpWidget(QtGui.QWidget):
         page.action(page.Back).setVisible(False)
         page.action(page.Forward).setVisible(False)
     
-        QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("titleChanged (const QString&)"), self.title_changed)
+        QtCore.QObject.connect( self.ui.webView, QtCore.SIGNAL("titleChanged (const QString&)"), self.title_changed)
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def title_changed(self, title):

@@ -1,3 +1,36 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: whiteSmoke;    
+}
+
+#content {
+    width: 98%;
+    min-height: 100%;
+    margin: 0 auto;
+    background: whiteSmoke;
+}
+
+.mywell {
+    min-height: 100%;
+    background: whiteSmoke;
+}
+
+.body-expand {
+    width: 98%;
+    padding-bottom: 40px;
+}
+
+.footer {
+    position: absolute;
+    height: 40px;
+    bottom: 0;
+    width: 98%;    
+}
+
 .scrollspy-example {
     height: 300px;
     overflow: auto;
@@ -12,7 +45,7 @@ ul.breadcrumbs {
     border-radius: 5px;
     box-shadow: 0 0 2px rgba(0,0,0,.2);
     overflow: hidden;
-    width: 98%;
+    margin: 12px auto 12px auto;
 }
 
 ul.breadcrumbs li {
@@ -25,9 +58,10 @@ ul.breadcrumbs a {
     text-decoration: none;
     color: #444;
     position: relative;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    text-shadow: 0 0 1px #4B1919;
     background-color: #ddd;
     background-image: -webkit-linear-gradient(left, whiteSmoke, #DDD);
+    background-image: -moz-linear-gradient(left, whiteSmoke, #DDD);    
 }
 
 ul.breadcrumbs .current a {
@@ -76,10 +110,7 @@ ul.breadcrumbs .current::before {
     content: normal;
 }
 
-#content {
-    width: 100%;
-    height: 576px;
-}
+
 
 div#presentation {
     height: 300px;
@@ -91,11 +122,12 @@ div#presentation .item img {
 }
 
 #install-log {
-    overflow: auto;
-    height: 100px;
+    overflow: hidden;
+    height: auto;
+    margin-bottom: 10px;
 }
 
-#install-log div.label {
+#install-log span.label {
     width: 90%;
     margin: 1px 0 5px 0;
 }
@@ -187,3 +219,4 @@ table.colorinfo td[pty="select"],
 .part_table ul.select {
     background: #D66B6B;
 }
+
