@@ -53,16 +53,19 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         },
 
         updateActions: function() {
+            var btns = this.app.buttons;
+            
             if ( $("#choose").find(":checked").attr("value")==="agree" ){
-                this.app.button_handler.rm("forward","disabled");
+                btns.get('forward').enable();
+                
             } else if ( $("#choose").find(":checked").attr("value")==="disagree"){
-                this.app.button_handler.add("forward","disabled");
+                btns.get('forward').disable();
             }
         },
 
         postSetup: function() {
             var self = this;
-            this.app.button_handler.add("forward","disabled");
+            self.app.buttons.get('forward').disable();
             
             $('body').on('click', '#choose', function(){
                 self.updateActions();
@@ -79,22 +82,24 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         },
 
         validate: function(callback) {
-            if (this.app.button_handler.hasclass("forward","disabled") === false){
-                window.apis.services.partition.getPartitions(function(disks) {
-                    var devices = _.pluck(disks, 'path');
-                    window.apis.services.install.minimalSufficient(devices, function (result) {
-                        if (result.status === "success") {
-                            callback();
-                        }else if (result.status === "warning"){
-                            alert(i18n.gettext(result.reason));
-                            callback ();
-                        }else {
-                            alert(i18n.gettext(result.reason));
-                        }
-                    });
+            if (!this.app.buttons.get('forward').enabled())
+                return;
+            
+            window.apis.services.partition.getPartitions(function(disks) {
+                var devices = _.pluck(disks, 'path');
+                window.apis.services.install.minimalSufficient(devices, function (result) {
+                    if (result.status === "success") {
+                        callback();
+                    }else if (result.status === "warning"){
+                        alert(i18n.gettext(result.reason));
+                        callback ();
+                    }else {
+                        alert(i18n.gettext(result.reason));
+                    }
                 });
-            }
+            });
         }
+
     };
 
     return page;

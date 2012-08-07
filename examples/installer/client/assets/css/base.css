@@ -220,3 +220,23 @@ table.colorinfo td[pty="select"],
     background: #D66B6B;
 }
 
+/* buttons */
+ul.buttons {
+    list-style: none;
+    text-align: center;
+}
+
+ul.buttons a {
+    float: right;
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: white;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;    
+}
+
+ul.buttons a.disabled {
+    background-color: #e6e6e6;
+}

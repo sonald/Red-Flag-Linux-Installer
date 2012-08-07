@@ -31,7 +31,7 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
         },
 
         postSetup: function() {
-            this.app.button_handler.rm("forward","disabled");
+            this.app.buttons.get('forward').enable();
             $('body').off('keyup', 'input#name');
 
             $('body').on('keyup', 'input#name', function() {

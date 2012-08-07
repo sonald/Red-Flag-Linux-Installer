@@ -123,19 +123,20 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.$logs = $('#install-log');
             this.setupPresentation();
             progressbar.init($('#install-progress'));
-            
-            this.app.button_handler.rm("forward", "disabled");
-            this.app.button_handler.change("forward", i18n.gettext("install"));
+
+            this.app.buttons.get("forward").enable();
+            this.app.buttons.get("forward").change(i18n.gettext('install'));
 
             var that = this;
-            $('body').one('click', '#install', function() {
-                that.app.button_handler.add("install", "disabled");
+            this.app.buttons.get("forward").bind('click', function() {
+                that.app.buttons.get("forward").disable();
+
                 window.apis.services.partition.commit(function(result) {
                     if(result.status === "failure"){
                         console.log(result.reason);
-                    }else if (result.status === "success") {
+                    } else if (result.status === "success") {
                         that.onInstall();
-                    }else{
+                    } else {
                         console.log(result);
                     };
                 });
