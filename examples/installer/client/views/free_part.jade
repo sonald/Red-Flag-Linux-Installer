@@ -8,7 +8,7 @@ script(type="text/template", id="free_part_tmpl").
             li
                 a(href="#")= gettext('free')
             li
-                a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex)) create
+                a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('create')
                 .modal.fade.hide(id=String(dindex)+String(pindex))
                     .modal-header
                         button.close(type="button", data-dismiss="modal")×
