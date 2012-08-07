@@ -357,10 +357,6 @@ module.exports = (function(){
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
-
-                // give sudo power
-                postscript += 'echo "' + opts.username + ' ALL=(ALL) ALL" > /etc/sudoers.d/' +
-                    opts.username + '\n';
             }
 
             //TODO: root is unaccessible
