@@ -1,10 +1,10 @@
-define(
+define(["system"], 
 {
    "zh": {
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-07-17 15:41+0800",
+         "POT-Creation-Date": " 2012-08-07 16:30+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,13 +16,17 @@ define(
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "English": [
+      "Username": [
          null,
-         "英语"
+         "用户名"
       ],
-      "Chinese": [
+      "Only letters, numbers, and underscores.": [
          null,
-         "简体中文"
+         "只允许填入字母、数字和_。"
+      ],
+      "Hostname": [
+         null,
+         "主机名"
       ],
       "agree": [
          null,
@@ -32,57 +36,49 @@ define(
          null,
          "不同意"
       ],
-      "Add a new user:": [
+      "MountPoint:": [
          null,
-         "添加新用户："
+         "挂载点："
       ],
-      "name": [
+      "Edit": [
          null,
-         "名字"
+         "编辑"
       ],
-      "Only letters, numbers, and underscores.": [
+      "EditDisk": [
          null,
-         "只允许填入字母、数字和_"
+         "编辑磁盘"
       ],
-      "Password For Root:": [
+      "MountPoint": [
          null,
-         "超级用户密码："
+         "挂载点"
       ],
-      "password": [
-         null,
-         "密码"
-      ],
-      "confirm": [
-         null,
-         "确认"
-      ],
-      "Number": [
-         null,
-         "序号"
-      ],
-      "Start(GB)": [
-         null,
-         "开始(GB)"
-      ],
-      "End(GB)": [
-         null,
-         "结束(GB)"
-      ],
-      "Size(GB)": [
-         null,
-         "大小(GB)"
-      ],
-      "parttype": [
-         null,
-         "分区类型"
-      ],
-      "fs": [
+      "FileSystem": [
          null,
          "文件系统"
       ],
-      "Edit The New Disk": [
+      "Close": [
          null,
-         "  编辑新分区"
+         "取消"
+      ],
+      "Submit": [
+         null,
+         "提交"
+      ],
+      "Grub Install At:": [
+         null,
+         "安装grub位置："
+      ],
+      "Boot Partition": [
+         null,
+         "启动分区"
+      ],
+      "free": [
+         null,
+         "空闲"
+      ],
+      "CreateDisk": [
+         null,
+         "创建磁盘"
       ],
       "Size": [
          null,
@@ -104,10 +100,6 @@ define(
          null,
          "扩展分区"
       ],
-      "FileSystem": [
-         null,
-         "文件系统"
-      ],
       "Alignment To Beginning": [
          null,
          "安装起始位置"
@@ -116,29 +108,41 @@ define(
          null,
          "安装结束位置"
       ],
-      "Close": [
+      "Next": [
          null,
-         "取消"
+         "下一步"
       ],
-      "Submit": [
+      "System Error!": [
          null,
-         "提交"
+         "系统错误！"
       ],
-      "create": [
+      "Set": [
          null,
-         "创建"
+         "设置"
       ],
-      "delete": [
+      "Welcome": [
          null,
-         "删除"
+         "欢迎"
       ],
-      "<b>You must choose a disk. </b>": [
+      "Part": [
          null,
-         "<b>请先选择一块硬盘。</b>"
+         "分区"
       ],
-      "<p>Congratulations~You have finished installing the system.</p>": [
+      "Install": [
          null,
-         "<p>恭喜你～安装成功。</p>"
+         "安装"
+      ],
+      "install": [
+         null,
+         "安装"
+      ],
+      "Congratulations~You have finished installing the system.": [
+         null,
+         "恭喜，安装成功。"
+      ],
+      "Select a disk of at least 6 GB.": [
+         null,
+         "选择一块至少6GB大小的磁盘。"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -159,6 +163,86 @@ define(
       "<b>Please enter the same content again.</b>": [
          null,
          "<b>长度不能超过%d个字母</b>"
+      ],
+      "Number!!": [
+         null,
+         "序号！！"
+      ],
+      "You need specify a root partition.": [
+         null,
+         "请指定一个根分区。"
+      ],
+      "Select only one root partition.": [
+         null,
+         "仅选择一个根分区。"
+      ],
+      "The root partition requires at least 6 GB space!": [
+         null,
+         "根分区需要至少6GB空间！"
+      ],
+      "Select a partition of at least 6 GB.": [
+         null,
+         "选择一个至少6GB大小的分区。"
+      ],
+      "Please select a partition to continue.": [
+         null,
+         "继续前，请选择一块分区。"
+      ],
+      "Select a partition of at least 6 GB": [
+         null,
+         "选择一个至少6GB大小的分区"
+      ],
+      "English": [
+         null,
+         "英语"
+      ],
+      "Chinese": [
+         null,
+         "简体中文"
+      ],
+      "Add a new user:": [
+         null,
+         "添加新用户："
+      ],
+      "Password For Root:": [
+         null,
+         "超级用户密码："
+      ],
+      "password": [
+         null,
+         "密码"
+      ],
+      "confirm": [
+         null,
+         "确认"
+      ],
+      "Start(GB)": [
+         null,
+         "开始(GB)"
+      ],
+      "End(GB)": [
+         null,
+         "结束(GB)"
+      ],
+      "Size(GB)": [
+         null,
+         "大小(GB)"
+      ],
+      "parttype": [
+         null,
+         "分区类型"
+      ],
+      "fs": [
+         null,
+         "文件系统"
+      ],
+      "delete": [
+         null,
+         "删除"
+      ],
+      "<b>You must choose a disk. </b>": [
+         null,
+         "<b>请先选择一块硬盘。</b>"
       ]
    }
 }

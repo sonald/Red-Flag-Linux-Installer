@@ -1,11 +1,15 @@
-define(
+define(["system"], 
 {
    "en": {
-      "English": [
+      "Username": [
          null,
          ""
       ],
-      "Chinese": [
+      "Only letters, numbers, and underscores.": [
+         null,
+         ""
+      ],
+      "Hostname": [
          null,
          ""
       ],
@@ -17,55 +21,47 @@ define(
          null,
          ""
       ],
-      "Add a new user:": [
+      "MountPoint:": [
          null,
          ""
       ],
-      "name": [
+      "Edit": [
          null,
          ""
       ],
-      "Only letters, numbers, and underscores.": [
+      "EditDisk": [
          null,
          ""
       ],
-      "Password For Root:": [
+      "MountPoint": [
          null,
          ""
       ],
-      "password": [
+      "FileSystem": [
          null,
          ""
       ],
-      "confirm": [
+      "Close": [
          null,
          ""
       ],
-      "Number": [
+      "Submit": [
          null,
          ""
       ],
-      "Start(MB)": [
+      "Grub Install At:": [
          null,
          ""
       ],
-      "End(MB)": [
+      "Boot Partition": [
          null,
          ""
       ],
-      "Size(MB)": [
+      "free": [
          null,
          ""
       ],
-      "parttype": [
-         null,
-         ""
-      ],
-      "fs": [
-         null,
-         ""
-      ],
-      "Edit The New Disk": [
+      "CreateDisk": [
          null,
          ""
       ],
@@ -89,10 +85,6 @@ define(
          null,
          ""
       ],
-      "FileSystem": [
-         null,
-         ""
-      ],
       "Alignment To Beginning": [
          null,
          ""
@@ -101,27 +93,39 @@ define(
          null,
          ""
       ],
-      "Close": [
+      "Next": [
          null,
          ""
       ],
-      "Submit": [
+      "System Error!": [
          null,
          ""
       ],
-      "create": [
+      "Set": [
          null,
          ""
       ],
-      "delete": [
+      "Welcome": [
          null,
          ""
       ],
-      "<b>You must choose a disk. </b>": [
+      "Part": [
          null,
          ""
       ],
-      "<p>Congratulations~You have finished installing the system.</p>": [
+      "Install": [
+         null,
+         ""
+      ],
+      "install": [
+         null,
+         ""
+      ],
+      "Congratulations~You have finished installing the system.": [
+         null,
+         ""
+      ],
+      "Select a disk of at least 6 GB.": [
          null,
          ""
       ],
@@ -142,6 +146,34 @@ define(
          ""
       ],
       "<b>Please enter the same content again.</b>": [
+         null,
+         ""
+      ],
+      "Number!!": [
+         null,
+         ""
+      ],
+      "You need specify a root partition.": [
+         null,
+         ""
+      ],
+      "Select only one root partition.": [
+         null,
+         ""
+      ],
+      "The root partition requires at least 6 GB space!": [
+         null,
+         ""
+      ],
+      "Select a partition of at least 6 GB.": [
+         null,
+         ""
+      ],
+      "Please select a partition to continue.": [
+         null,
+         ""
+      ],
+      "Select a partition of at least 6 GB": [
          null,
          ""
       ],

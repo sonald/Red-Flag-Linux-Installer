@@ -1,9 +1,13 @@
-#: client/views/license.jade:5 client/views/license_zh.jade:5
-msgid "English"
+#: client/views/userinfo.jade:6
+msgid "Username"
 msgstr ""
 
-#: client/views/license.jade:6 client/views/license_zh.jade:6
-msgid "Chinese"
+#: client/views/userinfo.jade:9
+msgid "Only letters, numbers, and underscores."
+msgstr ""
+
+#: client/views/userinfo.jade:12
+msgid "Hostname"
 msgstr ""
 
 #: client/views/license.jade:160
@@ -14,112 +18,116 @@ msgstr ""
 msgid "disagree"
 msgstr ""
 
-#: client/views/part.jade:3
-msgid "Add a new user:"
+#: client/views/logical_part.jade:14 client/views/primary_part.jade:14
+#: client/assets/js/ad_part.js:135 client/assets/js/ad_part.js:156
+msgid "MountPoint:"
 msgstr ""
 
-#: client/views/part.jade:5
-msgid "name"
+#: client/views/logical_part.jade:16 client/views/primary_part.jade:16
+msgid "Edit"
 msgstr ""
 
-#: client/views/part.jade:8
-msgid "Only letters, numbers, and underscores."
+#: client/views/logical_part.jade:20 client/views/primary_part.jade:20
+msgid "EditDisk"
 msgstr ""
 
-#: client/views/part.jade:10
-msgid "Password For Root:"
+#: client/views/logical_part.jade:23 client/views/primary_part.jade:23
+msgid "MountPoint"
 msgstr ""
 
-#: client/views/part.jade:12
-msgid "password"
-msgstr ""
-
-#: client/views/part.jade:16
-msgid "confirm"
-msgstr ""
-
-#: client/views/part.jade:35
-msgid "Number"
-msgstr ""
-
-#: client/views/part.jade:36
-msgid "Start(MB)"
-msgstr ""
-
-#: client/views/part.jade:37
-msgid "End(MB)"
-msgstr ""
-
-#: client/views/part.jade:38
-msgid "Size(MB)"
-msgstr ""
-
-#: client/views/part.jade:39
-msgid "parttype"
-msgstr ""
-
-#: client/views/part.jade:40
-msgid "fs"
-msgstr ""
-
-#: client/views/part.jade:66
-msgid "Edit The New Disk"
-msgstr ""
-
-#: client/views/part.jade:69
-msgid "Size"
-msgstr ""
-
-#: client/views/part.jade:73
-msgid "PartType"
-msgstr ""
-
-#: client/views/part.jade:76
-msgid "primary"
-msgstr ""
-
-#: client/views/part.jade:77
-msgid "logical"
-msgstr ""
-
-#: client/views/part.jade:78
-msgid "extended"
-msgstr ""
-
-#: client/views/part.jade:80
+#: client/views/logical_part.jade:30 client/views/free_part.jade:29
+#: client/views/primary_part.jade:30 client/views/create_part.jade:19
 msgid "FileSystem"
 msgstr ""
 
-#: client/views/part.jade:90
-msgid "Alignment To Beginning"
-msgstr ""
-
-#: client/views/part.jade:93
-msgid "Alignment To End"
-msgstr ""
-
-#: client/views/part.jade:95
+#: client/views/logical_part.jade:36 client/views/free_part.jade:44
+#: client/views/primary_part.jade:36 client/views/create_part.jade:34
 msgid "Close"
 msgstr ""
 
-#: client/views/part.jade:96
+#: client/views/logical_part.jade:37 client/views/free_part.jade:45
+#: client/views/primary_part.jade:37 client/views/create_part.jade:35
 msgid "Submit"
 msgstr ""
 
-#: client/views/part.jade:97
-msgid "create"
+#: client/views/ad_part.jade:14
+msgid "Grub Install At:"
 msgstr ""
 
-#: client/views/part.jade:99
-msgid "delete"
+#: client/views/ad_part.jade:19
+msgid "Boot Partition"
 msgstr ""
 
-#: client/assets/js/part.js:134
-msgid "<b>You must choose a disk. </b>"
+#: client/views/free_part.jade:9
+msgid "free"
 msgstr ""
 
-#: client/assets/js/process.js:73
-msgid "<p>Congratulations~You have finished installing the system.</p>"
+#: client/views/free_part.jade:15 client/views/create_part.jade:5
+msgid "CreateDisk"
+msgstr ""
+
+#: client/views/free_part.jade:18 client/views/create_part.jade:8
+msgid "Size"
+msgstr ""
+
+#: client/views/free_part.jade:22 client/views/create_part.jade:12
+msgid "PartType"
+msgstr ""
+
+#: client/views/free_part.jade:25 client/views/create_part.jade:15
+msgid "primary"
+msgstr ""
+
+#: client/views/free_part.jade:26 client/views/create_part.jade:16
+msgid "logical"
+msgstr ""
+
+#: client/views/free_part.jade:27 client/views/create_part.jade:17
+msgid "extended"
+msgstr ""
+
+#: client/views/free_part.jade:39 client/views/create_part.jade:29
+msgid "Alignment To Beginning"
+msgstr ""
+
+#: client/views/free_part.jade:42 client/views/create_part.jade:32
+msgid "Alignment To End"
+msgstr ""
+
+#: client/assets/app.js:177
+msgid "Next"
+msgstr ""
+
+#: client/assets/js/remote_part.js:22
+msgid "System Error!"
+msgstr ""
+
+#: client/assets/js/userinfo.js:8
+msgid "Set"
+msgstr ""
+
+#: client/assets/js/license.js:28
+msgid "Welcome"
+msgstr ""
+
+#: client/assets/js/part.js:8
+msgid "Part"
+msgstr ""
+
+#: client/assets/js/process.js:49
+msgid "Install"
+msgstr ""
+
+#: client/assets/js/process.js:128
+msgid "install"
+msgstr ""
+
+#: client/assets/js/process.js:176
+msgid "Congratulations~You have finished installing the system."
+msgstr ""
+
+#: client/assets/js/fd_part.js:33 client/assets/js/fd_part.js:44
+msgid "Select a disk of at least 6 GB."
 msgstr ""
 
 #: client/assets/js/js_validate.js:5
@@ -142,4 +150,32 @@ msgstr ""
 
 #: client/assets/js/js_validate.js:9
 msgid "<b>Please enter the same content again.</b>"
+msgstr ""
+
+#: client/assets/js/ad_part.js:101
+msgid "Number!!"
+msgstr ""
+
+#: client/assets/js/ad_part.js:221
+msgid "You need specify a root partition."
+msgstr ""
+
+#: client/assets/js/ad_part.js:224
+msgid "Select only one root partition."
+msgstr ""
+
+#: client/assets/js/ad_part.js:227
+msgid "The root partition requires at least 6 GB space!"
+msgstr ""
+
+#: client/assets/js/easy_part.js:32
+msgid "Select a partition of at least 6 GB."
+msgstr ""
+
+#: client/assets/js/easy_part.js:42
+msgid "Please select a partition to continue."
+msgstr ""
+
+#: client/assets/js/easy_part.js:50
+msgid "Select a partition of at least 6 GB"
 msgstr ""
