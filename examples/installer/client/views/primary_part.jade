@@ -7,8 +7,6 @@ script(type="text/template", id="primary_part_tmpl").
                     = Number(part.size).toFixed(2)
                     = unit
             li
-                a(href="#")= gettext(part.ty)
-            li
                 a.partfs(href="#")= part.fs
             li
                 a.partmp(href="#")= gettext("MountPoint:")
@@ -33,5 +31,5 @@ script(type="text/template", id="primary_part_tmpl").
                                     option(value="ext4") ext4
                                     option(value="linux-swap(v1)") swap
                     .modal-footer
-                            a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                            a.btn.btn-primary.js-edit-submit(href="#", data-dismiss="modal",path=part.path,number=part.number)= gettext('Submit')
+                            button.btn(data-dismiss="modal")= gettext('Close')
+                            button.btn.btn-primary.js-edit-submit(data-dismiss="modal",path=part.path,number=part.number)= gettext('Submit')

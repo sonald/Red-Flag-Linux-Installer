@@ -87,7 +87,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 Rpart.method('reset',[], $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','a.js-create-submit',function () {
+            $('body').on('click','.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
 
@@ -116,7 +116,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                              $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','a.js-edit-submit',function () {
+            $('body').on('click','.js-edit-submit',function () {
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
                 path = $(this).attr("path");

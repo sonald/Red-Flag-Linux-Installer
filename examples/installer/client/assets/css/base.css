@@ -156,22 +156,13 @@ div#presentation .item img {
     padding: 4px 0;
 }
 
-.part_table a:hover {
-    text-decoration: underline; 
-}
-
 .part_table ul.disk {
     padding: 4px;
     list-style: none;
     -webkit-box-shadow: 2px 2px 5px black;
 }
 
-#advanced_part_table ul.disk li.horizontal {
-    border-style: ridge;
-}
-
 .part_table ul ul {
-    background: #354668;
     margin-left: 4px;
     list-style: none;
 }
@@ -245,3 +236,9 @@ ul.buttons a {
 ul.buttons a.disabled {
     background-color: #e6e6e6;
 }
+
+table.colorinfo, 
+#reset {
+    float: right;
+}
+

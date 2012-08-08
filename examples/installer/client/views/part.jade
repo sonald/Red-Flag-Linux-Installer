@@ -9,6 +9,22 @@ script(type="text/template", id="part_tmpl").
         li
             a#advanced(href="#",data-toggle="tab")
                 = gettext('Advanced')
+    table.colorinfo
+        tbody
+            tr
+                td(pty="disk",height="20",width="20")
+                td= gettext("disk")
+                td(pty="primary",height="20",width="20")
+                td= gettext("primary")
+                td(pty="logical",height="20",width="20")
+                td= gettext("logical")
+                td(pty="extended",height="20",width="20")
+                td= gettext("extended")
+                td(pty="free",height="20",width="20")
+                td= gettext("free")
+                td(pty="select",height="20",width="20")
+                td= gettext("selected")
+    br
     #part_content
 include fd_part
 include easy_part
