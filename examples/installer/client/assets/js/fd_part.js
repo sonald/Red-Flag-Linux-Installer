@@ -45,7 +45,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 return;
             }
 
-            Rpart.method(['FulldiskHandler', dpath], function (result, disks) {
+            Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
                 that.locals["disks"] = that.options.disks = disks;
                 var disk = _.find(disks, function(el){
                     return el.path === dpath;

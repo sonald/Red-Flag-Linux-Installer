@@ -1,5 +1,6 @@
 script(type="text/template", id="fulldisk_part_tmpl").
     .part_table#fulldisk_part_table
+        p= gettext('Select one disk: ')
         -for (var i in disks)
             - disk = disks[i]
             ul.wat-cf.disk(dnum=i)
@@ -8,3 +9,12 @@ script(type="text/template", id="fulldisk_part_tmpl").
                     a(href="#")
                         = disk["size"].toFixed(2)
                         = disk["unit"]
+    .warninfo
+        br
+    table.colorinfo
+        tbody
+            tr
+                td(pty="disk",height="20",width="20")
+                td= gettext("disk")
+                td(pty="select",height="20",width="20")
+                td= gettext("selected")

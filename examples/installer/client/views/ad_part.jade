@@ -19,6 +19,21 @@ script(type="text/template", id="advanced_part_tmpl").
                 option(value=disk["path"])= disk["path"]
             option(value="/")= gettext('Boot Partition')
             option(value="")= ""
+    .warninfo
+        br
+    table.colorinfo
+        tbody
+            tr
+                td(pty="disk",height="20",width="20")
+                td= gettext("disk")
+                td(pty="primary",height="20",width="20")
+                td= gettext("primary")
+                td(pty="logical",height="20",width="20")
+                td= gettext("logical")
+                td(pty="extended",height="20",width="20")
+                td= gettext("extended")
+                td(pty="free",height="20",width="20")
+                td= gettext("free")
 include primary_part
 include logical_part
 include extended_part

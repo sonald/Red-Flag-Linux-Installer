@@ -23,7 +23,7 @@ script(type="text/template", id="easy_part_tmpl").
                             li
                                 a(href="#")
                                     - if (part["number"] < 0)
-                                        ="free"
+                                        =gettext("free")
                                     - else
                                         =part["number"]
                                     ="("
@@ -40,11 +40,13 @@ script(type="text/template", id="easy_part_tmpl").
     table.colorinfo
         tbody
             tr
+                td(pty="disk",height="20",width="20")
+                td= gettext("disk")
                 td(pty="primary",height="20",width="20")
-                td= "primary"
+                td= gettext("primary")
                 td(pty="logical",height="20",width="20")
-                td= "logical"
+                td= gettext("logical")
                 td(pty="free",height="20",width="20")
-                td= "free"
+                td= gettext("free")
                 td(pty="select",height="20",width="20")
-                td= "selected"
+                td= gettext("selected")

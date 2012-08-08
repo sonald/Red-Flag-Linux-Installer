@@ -9,16 +9,16 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         view: '#advanced_part_tmpl',
         locals : null,
         options:null,
-        record: {},
+        record: null,
+        init_record: function () {
+            this.record = {edit:[],dirty:[]};
+        },
 
         initialize: function (options, locals) {
             this.options = options;
             this.locals = locals;
             this.options.installmode = "advanced";
-            this.record = {
-                edit: [],
-                dirty: [],
-            };
+            this.init_record();
         },
          
         // compile and return page partial
@@ -77,34 +77,33 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             var that = this;
             $('body').on('click','.delete', function () {
                 var $this = $(this);
-                Rpart.method(['rmpart',
-                             $this.attr("path"), $this.attr("number")],
+                Rpart.method('rmpart',
+                             [$this.attr("path"), $this.attr("number")],
                     $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','#reset',function () {
-                that.record = {
-                    edit:[],
-                    dirty:[],
-                };
-                Rpart.method(['reset'],
-                    $.proxy(that.partflesh, that));
+                that.init_record ();
+                Rpart.method('reset',[], $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','a.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
-                parttype = $modal.find('#parttype :checked').attr("value");
-                fstype = $modal.find('#fs :checked').attr("value");
 
-                if ($modal.find("#size").attr("value").match(/^(\d*)(\.?)(\d*)$/g) === null) {
+                size = $modal.find("#size").attr("value");
+                if (size.match(/^(\d*)(\.?)(\d*)$/g) === null) {
                     alert(i18n.gettext('Number!!'));
                     return;
                 }else {
                     size = Number($modal.find("#size").attr("value"));
                     size = Number(size.toFixed(2));
-                }
+                };
+
                 path = $(this).attr("path");
+                parttype = $modal.find('#parttype :checked').attr("value");
+                fstype = $modal.find('#fs :checked').attr("value");
+
                 if($modal.find("#location :checked").attr("id") === "start") {
                     start = Number($modal.find("#location :checked").attr("value"));
                     end = start + size;
@@ -112,7 +111,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     end = Number($modal.find("#location :checked").attr("value"));
                     start = end - size;
                 };
-                Rpart.method(['mkpart',path, parttype, start, end, fstype],
+
+                Rpart.method('mkpart',[path, parttype, start, end, fstype],
                              $.proxy(that.partflesh, that));
             });
 

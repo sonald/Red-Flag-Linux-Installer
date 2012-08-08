@@ -164,7 +164,6 @@ div#presentation .item img {
     padding: 4px;
     list-style: none;
     -webkit-box-shadow: 2px 2px 5px black;
-    background: #9DC425;
 }
 
 #advanced_part_table ul.disk li.horizontal {
@@ -182,6 +181,11 @@ table.colorinfo td[pty="primary"],
     background:#F3A01E;
 }
 
+table.colorinfo td[pty="disk"],
+.part_table ul.disk {
+    background: #9DC425;
+}
+
 table.colorinfo td[pty="logical"],
 .part_table ul[pty="logical"] {
     background:#F3CB20;
@@ -192,6 +196,7 @@ table.colorinfo td[pty="free"],
     background:#A75375;
 }
 
+table.colorinfo td[pty="extended"],
 .part_table ul[pty="extended"] {
     background:#7C48B5;
 }

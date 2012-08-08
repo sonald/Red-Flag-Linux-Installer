@@ -31,7 +31,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
 
         getparts: function(load_parts){
             var that = this;
-            Rpart.method(['reset'], function (result, disks) {
+            Rpart.method('reset',[], function (result, disks) {
                 that.app.resetDatas();
                 that.locals.disks = that.app.options.disks = disks;
                 load_parts();

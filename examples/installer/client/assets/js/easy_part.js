@@ -53,7 +53,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             var dpath = disk.path;
 
             if (part.number < 0) {
-                Rpart.method(['EasyHandler', dpath, part.ty, part.start, part.end], function (result, disks) {
+                Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
                     var new_number = Number(result.handlepart);
                     that.locals["disks"] = that.options.disks = disks;
                     var disk = _.find(disks, function(el){
