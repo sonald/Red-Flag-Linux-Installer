@@ -1,3 +1,4 @@
 script(type="text/template", id="extended_part_tmpl").
-    li.extended.horizontal
+    li.extended.horizontal(style="width:"+part.percent+"%;")
+        button.delete.close(type="button",number=part.number,path=part.path)×
         ul.wat-cf.logicals(pty="extended")

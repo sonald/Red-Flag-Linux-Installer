@@ -10,8 +10,13 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         locals : null,
         options:null,
         record: null,
+
         init_record: function () {
-            this.record = {edit:[],dirty:[]};
+            this.record = {
+                edit:[],
+                dirty:[],
+                mp:{"/":false,"/opt":false},
+            };
         },
 
         initialize: function (options, locals) {
@@ -39,6 +44,32 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             var that = this;
             var tys, pindex, $disk, tmpPage, args, dindex = 0;
             tys = ["primary", "free", "extended"];//logical is special
+            
+
+            _.each(that.options.disks, function (disk) {
+                var dsize = disk.size;
+                var exsize, expercent=0, diskpercent=0;
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = (part.size/dsize < 0.05) ? 0.05:part.size/dsize;
+                        diskpercent += part.percent;
+                        if (part.ty === "extended") {
+                            exsize = part.size;
+                        }
+                    }else {
+                        part.percent = (part.size/exsize < 0.2) ? 0.2:part.size/exsize;
+                        expercent += part.percent;
+                    };
+                });
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = part.percent*100/diskpercent;
+                    }else {
+                        part.percent = part.percent*100/expercent;
+                    }
+                });
+            });
+
             _.each(that.options.disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
@@ -60,6 +91,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                         $disk.append(tmpPage);
                     }else {
                         $disk.find('ul.logicals').append(tmpPage);
+                        if(part.number > 0) {
+                            $disk.find('ul.logicals').prev('button.close').remove();
+                        };
                     };
                     pindex++;
                 });
@@ -73,6 +107,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').off('click','#reset');
             $('body').off('click','.js-create-submit');
             $('body').off('click','.js-edit-submit');
+            $('body').off('click','.create');
+            $('body').off('click','.edit');
 
             var that = this;
             $('body').on('click','.delete', function () {
@@ -85,6 +121,26 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').on('click','#reset',function () {
                 that.init_record ();
                 Rpart.method('reset',[], $.proxy(that.partflesh, that));
+            });
+
+            $('body').on('click', '.create', function (){
+                var $modal = $(this).next();
+                $modal.find('input#size').val("");
+            });
+
+            $('body').on('click', '.edit', function (){
+                var $modal = $(this).next();
+                $modal.find('select#mp').next('b').remove();
+            });
+
+            $('body').on('change', '.modal #mp', function (){
+                var value = $(this).attr("value");
+                if (that.record.mp[value]) {
+                    $(this).after("<b>Sorry</b>");
+                    $(this).val("");
+                }else{
+                    $(this).next('b').remove();
+                }
             });
 
             $('body').on('click','.js-create-submit',function () {
@@ -131,6 +187,19 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                                         "number":number,
                                         "fs": fstype,
                                         "mp": mp,});
+                var has_mp = _.pluck(that.record.edit, 'mp');
+                has_mp = _.intersection(has_mp, ["/", "/opt"]);
+                if (_.include(has_mp, "/")){
+                    that.record.mp["/"] = true;
+                }else {
+                    that.record.mp["/"] = false;
+                }
+                if (_.include(has_mp, "/opt")){
+                    that.record.mp["/opt"] = true;
+                }else {
+                    that.record.mp["/opt"] = false;
+                }
+
                 $(this).parents('ul.part').find('a.partfs').text(fstype);
                 var str = i18n.gettext('MountPoint:');
                 $(this).parents('ul.part').find('a.partmp').text(str + mp);

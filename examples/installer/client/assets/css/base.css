@@ -167,6 +167,10 @@ div#presentation .item img {
     list-style: none;
 }
 
+.part_table ul.logicals {
+    padding: 4px;
+}
+
 table.colorinfo td[pty="primary"],
 .part_table ul[pty="primary"] {
     background:#F3A01E;
