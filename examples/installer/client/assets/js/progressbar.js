@@ -22,6 +22,22 @@ define(['jquery', 'system'], function($, _system) {
         this.$el.find('#pgcontrol'+barid).css('-moz-animation', 'fill .5s linear forwards');
     }
 
+    var animQueue = [];
+    
+    function runAnimQueue() {
+        if (animQueue.length === 0) {
+            if (pgControl._percent < 100) {
+                requestAnimFrame(runAnimQueue);
+            }
+            return;
+        }
+
+        var animation = animQueue.shift();
+        animation(function() {
+            requestAnimFrame(runAnimQueue);
+        });
+    }
+    
     var $ul = null;
     var pgControl = {
         $el: null,
@@ -33,12 +49,11 @@ define(['jquery', 'system'], function($, _system) {
             this.$el.append($ul);
             buildProgressbar();
             this._percent = 0;
+            requestAnimFrame(runAnimQueue);
         },
 
         update: function(percent) {
             var that = this;
-            // $.proxy(activateBar, that)(percent);
-            // return;
             
             var oldpercent = this._percent;
             this._percent = percent;
@@ -47,15 +62,22 @@ define(['jquery', 'system'], function($, _system) {
             percent = Math.min(percent, 100);
             
             var barid = oldpercent+1;
-            (function animateIt() {
+            // console.log('cache animation for ', barid);
+            animQueue.push(function animateIt(onFinish) {
                 if (barid > percent)  {
+                    // console.log('finished at barid ', barid);
+                    if (arguments.length > 0) {
+                        arguments[0]();
+                    }
                     return;
                 }
 
                 $.proxy(activateBar, that)(barid);
                 barid++;
-                setTimeout(animateIt, 400);
-            })();
+                setTimeout(function() {
+                    animateIt(onFinish);
+                }, 400);
+            });
         },
 
         reset: function() {

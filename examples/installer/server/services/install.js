@@ -269,6 +269,7 @@ module.exports = (function(){
 
                         var installed = info['total'] - info['free'];
                         percentage = Math.floor((installed / total_size) * 100);
+                        percentage = Math.min(percentage, 100);
 
                         watcher({status: 'progress', data: percentage});
                     });

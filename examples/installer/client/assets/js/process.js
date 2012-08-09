@@ -27,6 +27,8 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
         ];
 
         for (var pr = 0; pr <= 100; pr += 2) {
+            if (pr > 1 && pr < 10)
+                continue;
             msgs.push({status: 'progress', data: pr});
         }
 
@@ -161,10 +163,15 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
             return function(respond) {
                 if (respond.status === "progress") {
-                    if (progress >= respond.data)
-                        return;
-                    progress = respond.data;
+                    var percentage = parseInt(respond.data, 10);
                     
+                    percentage = isNaN(percentage) ? 0: percentage;
+                    percentage = Math.min(percentage, 100);
+
+                    if (progress >= percentage)
+                        return;
+                    progress = percentage;
+
                     this.buildMessage('install progress: ' + respond.data + '%', '');
                     progressbar.update(respond.data);
                     
