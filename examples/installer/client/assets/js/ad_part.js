@@ -135,11 +135,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).attr("value");
+                $(this).next('b').remove();
                 if (that.record.mp[value]) {
                     $(this).after("<b>Sorry</b>");
                     $(this).val("");
-                }else{
-                    $(this).next('b').remove();
                 }
             });
 
@@ -157,8 +156,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
 
                 path = $(this).attr("path");
-                parttype = $modal.find('#parttype :checked').attr("value");
-                fstype = $modal.find('#fs :checked').attr("value");
+                parttype = $modal.find('#parttype').val();
+                fstype = $modal.find('#fs').val();
 
                 if($modal.find("#location :checked").attr("id") === "start") {
                     start = Number($modal.find("#location :checked").attr("value"));
@@ -177,8 +176,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var $modal = $(this).parents('.modal');
                 path = $(this).attr("path");
                 number = Number($(this).attr("number"));
-                fstype = $modal.find("#fs :checked").attr("value");
-                mp = $modal.find("#mp :checked").attr("value");
+                fstype = $modal.find("#fs").val();
+                mp = $modal.find("#mp").val();
 
                 that.record.edit = _.reject(that.record.edit,function(el){
                     return (el.path === path && el.number === number);
@@ -229,7 +228,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         },
 
         parthandler: function(result) {
-            var method, path, number;
+            var method, path, number, mp;
             var that = this;
             method = result.substring(0,3);
             path = result.substring(3,11);
@@ -244,8 +243,15 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     return el.path === path && el.number === number;
                 });
                 that.record.edit = _.reject(that.record.edit,function(el){
-                    return el.path === path && el.number === number;
+                    if (el.path === path && el.number === number){
+                        mp = el.mp;
+                        return true;
+                    }
+                    return false;
                 });
+                if( mp in that.record.mp ) {
+                    that.record.mp = false;
+                }
                 //in msdos,number of logical > 4
                 if(number > 4) {
                     that.record.edit = _.map(that.record.edit,function(el){
