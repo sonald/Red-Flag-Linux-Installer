@@ -14,7 +14,10 @@ define(['jquery', 'system'], function($, _system) {
 
     var requestAnimFrame = (function() {
         return window.requestAnimationFrame || window.mozRequestAnimationFrame ||  
-            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame; 
+            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame ||
+            function(callback) {
+                setTimeout(callback, 1000/30);
+            };
     })();
 
     function activateBar(barid) {
