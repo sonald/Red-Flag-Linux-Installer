@@ -66,4 +66,24 @@ def easyhandler(dev, disk, parttype, start, end):
     return [disk, number]
 
 
+def test(str, list):
+    result = True
+    for x in list:
+        if str.startswith(x):
+            result = False
+            break
+    return result;
+
+def DevDisk():
+    disks = {}
+    blacklist = ["mapper", "sr"]
+    for dev in parted.getAllDevices():
+        if test(dev.path.split('/')[2], blacklist) is False:
+            continue
+        try:
+            disks[dev.path] = parted.disk.Disk(dev)
+        except:
+            disks[dev.path] = parted.freshDisk(dev,'msdos')
+            continue
+    return disks
 

@@ -17,7 +17,7 @@ import lib.rfparted
 import lib.autoparted
 
 class PartSocket(BaseNamespace):
-    disks = lib.partedprint.DevDisk()
+    disks = lib.autoparted.DevDisk()
     def error_handle(self,reason,handle_part):
         result = []
         if reason is not None:
@@ -72,7 +72,7 @@ class PartSocket(BaseNamespace):
 
     def on_reset(self):
         parted.freeAllDevices()
-        self.disks = lib.partedprint.DevDisk()
+        self.disks = lib.autoparted.DevDisk()
         data = self.error_handle(None, None)
         self.emit('reset',data)
 
