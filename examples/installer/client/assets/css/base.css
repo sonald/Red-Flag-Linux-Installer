@@ -4,31 +4,48 @@ html {
 
 body {
     height: 100%;
-    background: whiteSmoke;    
+    background: none repeat scroll 0 0 #FFF;    
 }
 
 #content {
-    width: 98%;
+    width: 100%;
     min-height: 100%;
     margin: 0 auto;
-    background: whiteSmoke;
+    background: none repeat scroll 0 0 #FFF;
+    position: relative;
 }
 
 .mywell {
-    min-height: 100%;
-    background: whiteSmoke;
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid rbga(0, 0, 0, 0.05);
+    background: rgb(250, 250, 250);
+    -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.05) inset;
 }
 
 .body-expand {
-    width: 98%;
-    padding-bottom: 40px;
+    position: absolute;
+    width: 100%;
+    height: -webkit-calc(100% - 80px - 100px);
+    margin-bottom: 80px;
+    top: 100px;
+}
+
+#stage {
+    background-color: #EDF4F7;
+    
+    border-top: 1px solid #D6E3E8;
+    border-bottom: 1px solid #D6E3E8;
 }
 
 .footer {
     position: absolute;
-    height: 40px;
+    /* height: 50px; */
+    padding-bottom: 10px;
     bottom: 0;
-    width: 98%;    
+    width: 100%;
 }
 
 .scrollspy-example {
@@ -224,12 +241,15 @@ table.colorinfo td[pty="select"],
 ul.buttons {
     list-style: none;
     text-align: center;
+    margin: 0 auto;
+    padding: 0 20px 0 20px;
 }
 
 ul.buttons a {
-    float: right;
     display: inline-block;
-    padding: 5px 14px;
+    padding: 15px 20px;
+    margin: 0 5px;
+    font-size: 18px;
     background-color: white;
     border: 1px solid #DDD;
     -webkit-border-radius: 15px;
