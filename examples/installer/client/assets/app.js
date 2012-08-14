@@ -148,21 +148,31 @@ var app = {
     },
 
     setupStageNavigator: function() {
-        var $ul = $('ul.breadcrumbs');
+        var $ul = $('ol#breadcrumb-trail');
         this.stages.forEach(function(stage) {
             var $li = $(document.createElement('li'));
-            $li.html('<a data-stage=' + stage.name + '>' + stage.name + '</a>');
+            $li.addClass("mybreadcrumb category incomplete");
+            $li.attr("data-stage",stage.name);
+            $li.html('<span class="survey-progress-label">'+stage.name+
+                     '</span><div class="myicon-spacer left"></div><div class="myicon-container"><div class="breadcrumb-myicon"></div></div><div class="myicon-spacer right"></div>');
             $ul.append($li);
         });
+        $ul.after('<div class="arrow-container">'+
+                  '<div class="survey-progress-arrow"></div>'+
+                  '</div>'+'<div class="end-trail"><span>'+
+                 'Finished!'+'</span></div>');
     },
 
     animateStage: function(stage) {
         var name = stage.name;
         console.log('animate ' + stage.name);
 
-        var $ul = $('ul.breadcrumbs');
-        $ul.find('li').removeClass("current");
-        $ul.find('a[data-stage=' + name + ']').parent().addClass("current");
+        var $ul = $('ol#breadcrumb-trail');
+        if($ul.find('li.current').length > 0) {
+            $ul.find('li.current').addClass("checked")
+            $ul.find('li.current').removeClass("incomplete current")
+        }
+        $ul.find('li[data-stage=' + name + ']').addClass("current");
     },
 
     // when app is ready, call this
