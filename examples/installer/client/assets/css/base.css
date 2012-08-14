@@ -33,7 +33,7 @@ body {
     height: -webkit-calc(100% - 100px - 100px);
     height: -moz-calc(100% - 100px - 100px);    
     margin-bottom: 100px;
-    top: 100px;
+    top: 120px;
 }
 
 #stage {
@@ -61,81 +61,6 @@ body {
     overflow: auto;
     position: relative;
 }
-
-ul.breadcrumbs {
-    background: #eee;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #f5f5f5 #e5e5e5 #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 2px rgba(0,0,0,.2);
-    overflow: hidden;
-    margin: 12px auto 12px auto;
-}
-
-ul.breadcrumbs li {
-    float: left;
-}
-
-ul.breadcrumbs a {
-    padding: .7em 1em .7em 2em;
-    float: left;
-    text-decoration: none;
-    color: #444;
-    position: relative;
-    text-shadow: 0 0 1px #4B1919;
-    background-color: #ddd;
-    background-image: -webkit-linear-gradient(left, whiteSmoke, #DDD);
-    background-image: -moz-linear-gradient(left, whiteSmoke, #DDD);    
-}
-
-ul.breadcrumbs .current a {
-    background: #99db76;
-}
-
-ul.breadcrumbs li:firstchild a {
-    padding-left: 1em;
-    border-radius: 5px 0 0 5px;
-}
-
-ul.breadcrumbs a::after,
-ul.breadcrumbs a::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    margin-top: -1.5em;
-    border-top: 1.5em solid transparent;
-    border-bottom: 1.5em solid transparent;
-    border-left: 1em solid;
-    right: -1em;
-}
-
-ul.breadcrumbs a::after {
-    z-index: 2;
-    border-left-color: #ddd
-}
-
-ul.breadcrumbs a::before {
-    border-left-color: #ccc;
-    right: -1.1em;
-    z-index: 1;
-}
-
-ul.breadcrumbs .current a::after {
-    border-left-color: #99db76;
-}
-
-ul.breadcrumbs .current {
-    font-weight: bold;
-    background: none;
-}
-
-ul.breadcrumbs .current::after,
-ul.breadcrumbs .current::before {
-    content: normal;
-}
-
-
 
 div#presentation {
     height: 300px;
