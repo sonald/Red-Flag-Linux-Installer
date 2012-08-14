@@ -354,7 +354,7 @@ module.exports = (function(){
             var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
 
             if (opts.username) {
-                postscript += '/usr/sbin/useradd -m ' + opts.username + '\n';
+                postscript += '/usr/sbin/useradd -m -g users ' + opts.username + '\n';
                 postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
                 postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
                 postscript += '/bin/chmod +x /home/' + opts.username + '\n';
