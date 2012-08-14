@@ -17,7 +17,7 @@ import lib.rfparted
 import lib.autoparted
 
 class PartSocket(BaseNamespace):
-    disks = lib.autoparted.DevDisk()
+    disks, disks_tag  = lib.autoparted.DevDisk()
     def error_handle(self,reason,handle_part):
         result = []
         if reason is not None:
@@ -45,6 +45,7 @@ class PartSocket(BaseNamespace):
             partnumber = [ part.number for part in disk.partitions ]
             try:
                 self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                self.disks_tag[devpath] = True
             except Exception, e:
                 data = self.error_handle(e,None)
 
@@ -64,6 +65,7 @@ class PartSocket(BaseNamespace):
             disk = self.disks[devpath]
             try:
                 self.disks[devpath] = lib.rfparted.rmpart(disk, partnumber)
+                self.disks_tag[devpath] = True
             except Exception, e:
                 data = self.error_handle(e,None)
         else:
@@ -72,17 +74,17 @@ class PartSocket(BaseNamespace):
 
     def on_reset(self):
         parted.freeAllDevices()
-        self.disks = lib.autoparted.DevDisk()
+        self.disks, self.disks_tag = lib.autoparted.DevDisk()
         data = self.error_handle(None, None)
         self.emit('reset',data)
 
     def on_commit(self):
         data = self.error_handle(None, None)
-        for disk in self.disks.values():
-            if disk is None:
+        for devpath in self.disks.keys():
+            if self.disks_tag[devpath] is False:
                 continue
             try:
-                disk.commit()
+                self.disks[devpath].commit()
             except Exception, e:
                 data = self.error_handle(e,None)
         self.emit('commit',data)
@@ -96,6 +98,7 @@ class PartSocket(BaseNamespace):
         try :
             dev = parted.getDevice(devpath)
             self.disks[devpath] = lib.autoparted.fdhandler(dev,mem)
+            self.disks_tag[devpath] = True
         except Exception, e:
             data = self.error_handle(e, None)
         self.emit('fdhandler', data)
@@ -108,6 +111,7 @@ class PartSocket(BaseNamespace):
             easyresult = lib.autoparted.easyhandler(dev, disk, parttype, start, end)
             self.disks[devpath] = easyresult[0]
             number = easyresult[1]
+            self.disks_tag[devpath] = True
             data = self.error_handle(None,number)
         except Exception, e:
             data = self.error_handle(e, None)

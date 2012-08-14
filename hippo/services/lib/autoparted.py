@@ -76,14 +76,16 @@ def test(str, list):
 
 def DevDisk():
     disks = {}
+    disks_tag = {}
     blacklist = ["mapper", "sr"]
     for dev in parted.getAllDevices():
         if test(dev.path.split('/')[2], blacklist) is False:
             continue
+        disks_tag[dev.path] = False
         try:
             disks[dev.path] = parted.disk.Disk(dev)
         except:
             disks[dev.path] = parted.freshDisk(dev,'msdos')
             continue
-    return disks
+    return [disks, disks_tag]
 
