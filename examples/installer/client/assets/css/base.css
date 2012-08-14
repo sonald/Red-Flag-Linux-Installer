@@ -41,8 +41,9 @@ body {
     padding: 20px;
     border-top: 1px solid #D6E3E8;
     border-bottom: 1px solid #D6E3E8;
-    min-height: -webkit-calc(100% - 42px);
-    min-height: -moz-calc(100% - 42px);    
+    height: -webkit-calc(100% - 42px);
+    height: -moz-calc(100% - 42px);
+    overflow: auto;
 }
 
 .footer {
@@ -54,12 +55,6 @@ body {
 
 #content h1 {
     color: #EB7A24;
-}
-
-.scrollspy-example {
-    height: 400px;
-    overflow: auto;
-    position: relative;
 }
 
 div#presentation {
