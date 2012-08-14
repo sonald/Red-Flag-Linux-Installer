@@ -186,7 +186,7 @@ var app = {
 
         this.buttons.add('forward', this.i18n.gettext('Next'));
         this.buttons.get('forward').bind('click', $.proxy(this.forward, this));
-        this.buttons.add('help', 'Help');
+        // this.buttons.add('help', 'Help');
         
         this.currentPage = 0;
         console.log('app init');
