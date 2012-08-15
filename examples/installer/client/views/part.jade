@@ -9,7 +9,7 @@ script(type="text/template", id="part_tmpl").
         li
             a#advanced(href="#",data-toggle="tab")
                 = gettext('Advanced')
-    table.colorinfo
+    table.colorinfo.right
         tbody
             tr
                 td(pty="disk",height="20",width="20")
@@ -24,7 +24,6 @@ script(type="text/template", id="part_tmpl").
                 td= gettext("free")
                 td(pty="select",height="20",width="20")
                 td= gettext("selected")
-    br
     #part_content
 include fd_part
 include easy_part

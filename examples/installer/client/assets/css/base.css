@@ -84,8 +84,8 @@ div#presentation .item img {
 }
 
 .part_table {
-    margin: 0 auto; 
-    padding: 0;
+    width: 100%;
+    clear: both;
 }
 
 .part_table ul.wat-cf::after {
@@ -100,22 +100,21 @@ div#presentation .item img {
     text-decoration: none; 
     color: #eee;
     display: block;
-    padding: 4px 0;
+    overflow: hidden;
 }
 
-.part_table ul.disk {
-    padding: 4px;
+.part_table ul {
+    padding: 3px;
     list-style: none;
     -webkit-box-shadow: 2px 2px 5px black;
 }
 
-.part_table ul ul {
-    margin-left: 4px;
-    list-style: none;
+.part_table ul.disk {
+    width: 95%;
 }
 
-.part_table ul.logicals {
-    padding: 4px;
+.part_table ul.part {
+    margin: 2px;
 }
 
 table.colorinfo td[pty="primary"],
@@ -143,23 +142,20 @@ table.colorinfo td[pty="extended"],
     background:#7C48B5;
 }
 
-.part_table ul.part {
-    list-style: none;
-}
-
 .part_table ul.part li {
     white-space: nowrap;
 }
 
-.part_table ul.part li.colorhidden a{
-    color: #4b4b4b;
-}
-.part_table ul.part:hover li.colorhidden a{
-    color: #eee;
-}
-
 .part_table li.horizontal {
     float: left;
+}
+
+#advanced_part_table ul.part {
+    height: 80px;
+}
+
+#advanced_part_table ul.logicals ul {
+    height: 70px;
 }
 
 table.colorinfo td[pty="select"],
@@ -194,6 +190,11 @@ ul.buttons a {
     text-decoration: none;
 }
 
+ul.buttons a.smaller {
+    font-size: 13px;
+    padding: 9px 12px;
+}
+
 ul.buttons a.disabled {
     background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);   
 }
@@ -202,8 +203,19 @@ ul.buttons a:active {
     background: #41862A;
 }
 
-table.colorinfo, 
-#reset {
+.right {
     float: right;
 }
 
+span.mycheckbox {
+    display: inline-block;
+    background: url('/images/checkbox.png') no-repeat;
+    width: 23px;
+    height: 23px;
+    background-position: 0px -23px;
+    vertical-align: middle;
+}
+
+span.mycheckbox.checked {
+    background-position: 0px -46px;
+}
