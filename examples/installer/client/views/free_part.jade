@@ -6,10 +6,6 @@ script(type="text/template", id="free_part_tmpl").
                     = Number(part.size).toFixed(2)
                     = unit
             li
-                a(href="#")
-                    br
-                    br
-            li
                 a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('create')
                 .modal.fade.hide(id=String(dindex)+String(pindex))
                     .modal-header

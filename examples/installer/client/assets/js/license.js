@@ -68,7 +68,6 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             self.app.buttons.get('forward').disable();
             
             $('body').on('click', '#choose li', function(){
-                console.log("click");
                 $(this).parent().find('span').removeClass("checked")
                 $(this).find('span').addClass("checked");
                 self.updateActions();

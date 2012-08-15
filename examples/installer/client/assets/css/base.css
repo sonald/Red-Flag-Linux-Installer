@@ -100,7 +100,6 @@ div#presentation .item img {
     text-decoration: none; 
     color: #eee;
     display: block;
-    padding: 2px 0;
     overflow: hidden;
 }
 
@@ -149,6 +148,14 @@ table.colorinfo td[pty="extended"],
 
 .part_table li.horizontal {
     float: left;
+}
+
+#advanced_part_table ul.part {
+    height: 80px;
+}
+
+#advanced_part_table ul.logicals ul {
+    height: 70px;
 }
 
 table.colorinfo td[pty="select"],

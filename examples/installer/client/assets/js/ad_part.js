@@ -97,6 +97,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     };
                     pindex++;
                 });
+                if ($disk.find('ul.logicals').prev('button.close').length > 0){
+                    $disk.find('ul.logicals').find('li').css("float","none");
+                }
                 dindex++;
             });
         },

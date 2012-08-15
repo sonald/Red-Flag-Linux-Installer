@@ -12,9 +12,9 @@ script(type="text/template", id="advanced_part_tmpl").
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
         .warninfo
             br
-        .btn.btn-primary#reset
-            = gettext('Reset')
-        br
+        ul.buttons
+            a#reset.smaller.right
+                = gettext('Reset')
         hr
         .control-group.form-horizontal
             label.control-label(for="grub")
