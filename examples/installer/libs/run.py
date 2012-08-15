@@ -9,11 +9,20 @@ from PyQt4.QtWebKit import *
 
 from webpage import WebPage
 
+class Installer(QObject):
+    @pyqtSlot()
+    def closeInstaller(self):
+        sys.exit(0)
+
 class Window(QWidget):
     def __init__(self):
         super(Window, self).__init__()
+        # self.setWindowFlags(Qt.FramelessWindowHint)
         self.view = QWebView(self)
-
+        self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
+        
+        installer = Installer()
+        self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
         self.setupInspector()
 
         self.splitter = QSplitter(self)

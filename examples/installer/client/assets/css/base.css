@@ -30,6 +30,7 @@ body {
 .body-expand {
     position: absolute;
     width: 100%;
+    height: 370px; /* fallback without calc */
     height: -webkit-calc(100% - 100px - 100px);
     height: -moz-calc(100% - 100px - 100px);    
     margin-bottom: 100px;
@@ -41,6 +42,7 @@ body {
     padding: 20px;
     border-top: 1px solid #D6E3E8;
     border-bottom: 1px solid #D6E3E8;
+    height: 328px; /* fallback without calc */    
     height: -webkit-calc(100% - 42px);
     height: -moz-calc(100% - 42px);
     overflow: auto;
@@ -190,10 +192,13 @@ ul.buttons a.disabled {
     background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);   
 }
 
+ul.buttons a:active {
+    background: #41862A;
+}
+
 .right {
     float: right;
 }
-
 
 span.mycheckbox {
     display: inline-block;

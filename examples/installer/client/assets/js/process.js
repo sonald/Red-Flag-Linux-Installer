@@ -157,6 +157,15 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             $msg.text(msg);
             this.$logs.html($msg);
         },
+
+        setupCloseButton: function() {
+            var btns = this.app.buttons;
+            btns.get("forward").enable();
+            btns.get("forward").change(i18n.gettext('close'));
+            btns.get("forward").bind('click', function() {
+                window.installer && window.installer.closeInstaller();
+            });
+        },
         
         onProgress: (function() {
             var progress = 0;
@@ -177,11 +186,13 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     
                 } else if (respond.status === "failure") {
                     this.buildMessage(respond.reason, 'label-error');
+                    this.setupCloseButton();
                     
                 } else if (respond.status === "success") {
                     this.buildMessage(
                         i18n.gettext('Congratulations~You have finished installing the system.'),
                         'label-important');
+                    this.setupCloseButton();
 
                 } else {
                     this.buildMessage(respond.status, 'label-info');
