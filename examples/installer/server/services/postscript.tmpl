@@ -9,17 +9,3 @@ chmod 1777 /tmp
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 
-# initialize rpm db
-if which rpm 1>/dev/null 2>&1; then
-	rm -rf /var/lib/rpm/__db.*
-	rpm --initdb
-fi
-
-# set timezone to CST
-if [ -L /etc/localtime ]; then
-	unlink /etc/localtime
-fi
-# /bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-# userdel qomo
-

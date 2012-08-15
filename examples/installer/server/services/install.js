@@ -283,7 +283,7 @@ module.exports = (function(){
                 unmountNeededPartitions(options.disks, function(err) {
                     cb(err, newroot_mnt);
                 });
-                
+
                 // system('umount ' + newroot_mnt)(function(err) {
                 //     cb(null, newroot_mnt);
                 // });
@@ -351,47 +351,47 @@ module.exports = (function(){
         }
 
         function generatePostscript(err_cb) {
+            function postSetVar(name, val) {
+                postscript += 'export HIPPO_' + name + '="' + val + '"\n';
+            }
+
             var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
 
             if (opts.username) {
-                postscript += '/usr/sbin/useradd -m -g users ' + opts.username + '\n';
-                postscript += '/usr/bin/passwd -d ' + opts.username + '\n';
-                postscript += '/usr/sbin/usermod -G disk,audio,video,sys,wheel ' + opts.username + '\n';
-                postscript += '/bin/chmod +x /home/' + opts.username + '\n';
-            }
-
-            //TODO: root is unaccessible
-            opts.passwd = opts.passwd || require('crypto').createHash('sha1')
-                    .update(Date().toString()).digest('hex');
-            if (opts.passwd) {
-                postscript += "{ echo '" + opts.passwd + "'; echo '" + opts.passwd +
-                    "'; } | passwd root\n";
+                postSetVar("USERNAME", opts.username);
             }
 
             opts.hostname = opts.hostname || opts.username + '-qomo';
-            postscript += 'echo "127.0.0.1  ' + opts.hostname + '" >> /etc/hosts\n';
+            postSetVar("HOSTNAME", opts.hostname);
 
             opts.timezone = opts.timezone || 'Asia/Shanghai';
-            postscript += '/bin/cp -f /usr/share/zoneinfo/' + opts.timezone + ' /etc/localtime\n';
+            postSetVar("TIMEZONE", opts.timezone);
 
-            //TODO: how?
-            opts.keyboard = opts.keyboard || 'en';
+            opts.lang = opts.lang || process.env.LANG.slice(0, 2);
+            var lang2localeMap = {
+                'zh': 'zh_CN.UTF-8',
+                'en': 'en_US.UTF-8'
+            };
+            postSetVar("LANG", lang2localeMap[opts.lang]);
+
+            opts.keyboard = opts.keyboard || 'en_US';
+            postSetVar("KEYBOARD", opts.keyboard);
 
             // handle swap file
             var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
                 return entry.fs && entry.fs.indexOf('swap') != -1;
             }).length === 0;
-            
+
             if (need_swap_file && opts.installmode !== 'advanced') {
                 //TODO: check if space is big enough to create swapfile
                 var swapsize = 1<<30;
-                
+
                 if (opts.installmode === 'easy') {
                     swapsize = require('os').totalmem();
                     if (swapsize > (4<<30)) {
                         swapsize = 4<<30;
                     }
-                    
+
                 } else if (opts.installmode === 'fulldisk') {
                     swapsize = 1<<30;
                 }
@@ -400,10 +400,12 @@ module.exports = (function(){
                 postscript += 'mkswap /swapfile\n';
                 postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
             }
-            
-            // regenerate vmlinux
-            postscript += 'mkinitcpio -p linux\n';
 
+            var grubpos = opts.grubinstall || "null";
+            postSetVar("GRUB_VERSION", "2");
+            postSetVar("GRUB", grubpos);
+
+            postscript += 'if [ -f /etc/postinstall ]; then \n . /etc/postinstall; \nfi\n';
             // whatever which cmd failed in script, consider it ok.
             postscript += 'exit 0\n';
             debug(postscript);
@@ -421,38 +423,6 @@ module.exports = (function(){
             });
         }
 
-        function grubInstall(err_cb) {
-            var grubpos = opts.grubinstall || "";
-            if (grubpos.length === 0) {
-                err_cb(null);
-                return;
-            }
-
-            var cmd = 'grub-install --recheck --root-directory="' + root_dir + '" ' + grubpos;
-            system(cmd)(err_cb);
-        }
-
-        function generateGrubMenulst(err_cb) {
-            // map 'a'..'z' to 0..25
-            function charToNum(ch) {
-                return ch.charCodeAt(0) - 'a'.charCodeAt(0);
-            }
-            
-            // system('mkdir -p /boot/grub')
-            var menulst_tmpl = fs.readFileSync(pathlib.join(__dirname, 'menu.lst.tmpl'), 'utf8');
-            // grub_parts[1] = 'a', grub_parts[2] = '1'
-            //FIXME: TODO: here we only test sd[a-z] mode disk
-            var grub_parts = /\/dev\/sd([a-z])(\d+)/.exec(opts.newroot);
-            
-            var grub_root = 'hd' + charToNum(grub_parts[1]) + ',' + (grub_parts[2] - 1);
-            menulst_tmpl = menulst_tmpl.replace('$1', grub_root).replace('$2', opts.newroot);
-
-            debug('menu.lst', menulst_tmpl);
-            var menulst = pathlib.join(root_dir, "/boot/grub/menu.lst");
-            watcher({status: 'generate grub menu.lst'});
-            fs.writeFile(menulst, menulst_tmpl, 'utf8', err_cb);
-        }
-        
         async.waterfall(
             [
                 system("mkdir -p " + root_dir),
@@ -469,8 +439,6 @@ module.exports = (function(){
                 system("umount " + root_dir + "/dev"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
-                grubInstall,
-                generateGrubMenulst,
                 system("umount " + root_dir)
             ],
 
@@ -501,7 +469,7 @@ module.exports = (function(){
         // [ '/dev/sda', '/dev/sdb' ]
         /**
          * @return {JSON} status of checking
-         * @arg devices 
+         * @arg devices
          */
         minimalSufficient: function(devices, reporter) {
             var reasons = {
@@ -534,16 +502,16 @@ module.exports = (function(){
             devices.forEach(function(device) {
                 checklist.push(diskminCheck(device));
             });
-            
+
             checklist.push( function(cb) {
                 if (require('os').totalmem() < Math.pow(10,9)) {
                     cb({status: 'failure', reason: reasons['memory']});
-                    
+
                 } else {
                     cb(null);
                 }
             } );
-            
+
             async.waterfall(checklist, function(err) {
                 if (err) {
                     debug(err);
@@ -553,7 +521,7 @@ module.exports = (function(){
                 }
             });
         },
-         
+
         /**
          * options contains all info needed to do installation
          * options = {
@@ -563,6 +531,7 @@ module.exports = (function(){
             timezone: '',
             hostname: username + '-qomo',
             username: '',
+            lang: 'zh',
             // disks contains almost all partitions, use dirty to distinct which
             // need formatting
             disks: [
