@@ -156,8 +156,8 @@ script(type="text/template", id="license_tmpl_en").
 
     ul.pager#choose
         li
-            input(type="radio",name="choose",value="agree")
+            span.mycheckbox(value="agree")
             b= gettext('agree')
         li
-            input(type="radio",name="choose",value="disagree",checked)
+            span.mycheckbox.checked(value="disagree")
             b= gettext('disagree')
