@@ -155,7 +155,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     size = Number($modal.find("#size").attr("value"));
                     size = Number(size.toFixed(2));
                     start = Number($modal.find("#size").attr("start"));
-                    end = start + size;
+                    end = Number($modal.find("#size").attr("end"));
+                    end = (start + size > end) ? end : start + size;
                 };
 
                 path = $(this).attr("path");
