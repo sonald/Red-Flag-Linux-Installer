@@ -25,7 +25,7 @@ script(type="text/template", id="edit_part_tmpl").
                 label.control-label(for="mp")= gettext('MountPoint')
                 .controls
                     select.span3#mp
-                        option(value="") ""
+                        option(value="")= ""
                         option(value="/")= "/"
                         option(value="/opt")= "/opt"
         .modal-footer

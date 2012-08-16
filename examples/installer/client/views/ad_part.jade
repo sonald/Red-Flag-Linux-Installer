@@ -21,11 +21,11 @@ script(type="text/template", id="advanced_part_tmpl").
                 = gettext('Grub Install At:')
             .controls
                 select#grub
-                    -for(var x = disks.length; x > 0 ; x--)
-                        -var disk = disks[x-1]
+                    -for(var x in disks)
+                        -var disk = disks[x]
                         option(value=disk["path"])= disk["path"]
                     option(value="/")= gettext('Boot Partition')
-                    option(value="")= ""
+                    option(value="")= gettext('Not install')
 include primary_part
 include logical_part
 include extended_part

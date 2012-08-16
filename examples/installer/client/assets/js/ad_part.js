@@ -45,34 +45,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         renderPart: function () {
             var that = this;
             var tys, pindex, $disk, tmpPage, args, dindex = 0;
+            var new_disks = Rpart.calc_percent(that.options.disks);
             tys = ["primary", "free", "extended"];//logical is special
             
-
-            _.each(that.options.disks, function (disk) {
-                var dsize = disk.size;
-                var exsize, expercent=0, diskpercent=0;
-                _.each(disk.table, function (part){
-                    if (part.ty !== "logical") {
-                        part.percent = (part.size/dsize < 0.05) ? 0.05:part.size/dsize;
-                        diskpercent += part.percent;
-                        if (part.ty === "extended") {
-                            exsize = part.size;
-                        }
-                    }else {
-                        part.percent = (part.size/exsize < 0.2) ? 0.2:part.size/exsize;
-                        expercent += part.percent;
-                    };
-                });
-                _.each(disk.table, function (part){
-                    if (part.ty !== "logical") {
-                        part.percent = part.percent*100/diskpercent;
-                    }else {
-                        part.percent = part.percent*100/expercent;
-                    }
-                });
-            });
-
-            _.each(that.options.disks, function (disk) {
+            _.each(new_disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
