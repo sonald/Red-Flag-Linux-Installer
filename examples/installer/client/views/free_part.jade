@@ -1,45 +1,10 @@
 script(type="text/template", id="free_part_tmpl").
     li.horizontal.free(style="width:"+part.percent+"%;")
-        ul.wat-cf.part(pty="free")
+        ul.selectable.wat-cf.part(pty="free",data-toggle="modal", href="#"+String(dindex)+String(pindex))
             li
-                a(href="#")
+                b
+                    = gettext("Free")
+            li
+                b
                     = Number(part.size).toFixed(2)
                     = unit
-            li
-                a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('create')
-                .modal.fade.hide(id=String(dindex)+String(pindex))
-                    .modal-header
-                        button.close(type="button", data-dismiss="modal")×
-                        h3= gettext('CreateDisk')
-                    .modal-body
-                        div.control-group.form-horizontal
-                            label.control-label(for="size")= gettext('Size')
-                            .controls
-                                input.input-xlarge#size
-                        div.control-group.form-horizontal
-                            label.control-label(for="parttype")= gettext('PartType')
-                            .controls
-                                select.span3#parttype
-                                    option(value="primary")= gettext('primary')
-                                    option(value="logical")= gettext('logical')
-                                    option(value="extended")= gettext('extended')
-                        div.control-group.form-horizontal
-                            label.control-label(for="fs")= gettext('FileSystem')
-                            .controls
-                                select.span3#fs
-                                    option(value="ext4") ext4
-                                    option(value="linux-swap(v1)") swap
-                        div.control-group.form-horizontal
-                            label.control-label
-                            .controls#location
-                                label.radio
-                                    input(type="radio", name=String(dindex)+String(pindex), id="start", value=part["start"], checked)
-                                    b= gettext('Alignment To Beginning')
-                                label.radio
-                                    input(type="radio", name="create", id="end", value=part["end"])
-                                    b= gettext('Alignment To End')
-                    .modal-footer
-                            button.btn(data-dismiss="modal")= gettext('Close')
-                            button.btn.btn-primary.js-create-submit(data-dismiss="modal", path=part["path"])= gettext('Submit')
-
-

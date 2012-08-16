@@ -19,9 +19,72 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             return partialCache;
         },
 
+        renderparts: function () {
+            var that = this;
+            var tys, pindex, $disk, tmpPage, args, dindex = 0;
+            tys = ["primary", "free", "extended"];//logical is special
+            
+
+            _.each(that.options.disks, function (disk) {
+                var dsize = disk.size;
+                var exsize, expercent=0, diskpercent=0;
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = (part.size/dsize < 0.03) ? 0.03:part.size/dsize;
+                        diskpercent += part.percent;
+                        if (part.ty === "extended") {
+                            exsize = part.size;
+                        }
+                    }else {
+                        part.percent = (part.size/exsize < 0.1) ? 0.1:part.size/exsize;
+                        expercent += part.percent;
+                    };
+                });
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = part.percent*100/diskpercent;
+                    }else {
+                        part.percent = part.percent*100/expercent;
+                    }
+                });
+            });
+
+            _.each(that.options.disks, function (disk) {
+                pindex = 0;
+                $disk = $('ul.disk[dpath="'+disk.path+'"]');
+                _.each(disk.table, function (part){
+                    part["path"] = disk.path;
+                    args = {
+                                pindex:pindex, 
+                                dindex:dindex,
+                                part:part,
+                                unit:disk.unit,
+                                gettext:that.locals.gettext,
+                            };
+                    if (part.number < 0) {
+                        tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
+                    }else{
+                        tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
+                    };
+                    if (_.indexOf(tys, part.ty) > -1) {
+                        $disk.append(tmpPage);
+                    }else {
+                        $disk.find('ul.logicals').append(tmpPage);
+                    };
+                    $disk.find('ul.part').prev('button.close').remove();
+                    pindex++;
+                });
+                if ($disk.find('ul.logicals').prev('button.close').length > 0){
+                    $disk.find('ul.logicals').find('li').css("float","none");
+                }
+                dindex++;
+            });
+        },
+
         postSetup: function () {
-            $("body").off('click', '#easy_part_table ul.part');
-            $('body').on('click', '#easy_part_table ul.part', function () {
+            this.renderparts();
+            $("body").off('click', '#easy_part_table ul.selectable');
+            $('body').on('click', '#easy_part_table ul.selectable', function () {
                 $('.warninfo').html("<br/>");
                 if ($(this).hasClass("select")) {
                     $(this).removeClass("select");

@@ -1,17 +1,17 @@
-script(type="text/template", id="create_part_tmpl").
+script(type="text/template", id="edit_part_tmpl").
     .modal.fade.hide(id=String(dindex)+String(pindex))
         .modal-header
             button.close(type="button", data-dismiss="modal")×
-            h3= gettext('CreateDisk')
+            h3= gettext('EditDisk')
         .modal-body
             div.control-group.form-horizontal
                 label.control-label(for="size")= gettext('Size')
                 .controls
-                    input.focused.input-xlarge#size(value=(part.size).toFixed(2), start=part.start)
+                    input.disabled.input-xlarge#size(disabled, placeholder=(part.size).toFixed(2))
             div.control-group.form-horizontal
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
-                    select.span3#parttype
+                    select.span3#parttype(value=part.ty,disabled)
                         option(value="primary")= gettext('primary')
                         option(value="logical")= gettext('logical')
                         option(value="extended")= gettext('extended')
@@ -20,7 +20,7 @@ script(type="text/template", id="create_part_tmpl").
                 .controls
                     select.span3#fs
                         option(value="ext4") ext4
-                        option(value="linux-swap(v1)") swap
+                        option(value="swap") swap
             div.control-group.form-horizontal
                 label.control-label(for="mp")= gettext('MountPoint')
                 .controls
@@ -30,5 +30,5 @@ script(type="text/template", id="create_part_tmpl").
                         option(value="/opt")= "/opt"
         .modal-footer
                 button.btn(data-dismiss="modal")= gettext('Close')
-                button.btn.btn-primary.js-create-submit(data-dismiss="modal", path=part["path"])= gettext('Submit')
+                button.btn.btn-primary.js-edit-submit(data-dismiss="modal",path=part.path,number=part.number)= gettext('Submit')
 
