@@ -5,6 +5,31 @@ var fs = require('fs');
 var async = require('async');
 var exec = require('child_process').exec;
 
+// simple sprintf stuff
+function sprintf(fmt) {
+    fmt = fmt || "";
+    if (arguments.length <= 1) {
+        return fmt;
+    }
+
+    var args = [].slice.call(arguments, 1);
+    var r = /%\d+/g;
+    var match;
+    var arg;
+    var result = fmt;
+
+    while (match = r.exec(fmt)) {
+        if (args.length === 0) {
+            console.warning('need another arg');
+            break;
+        }
+
+        arg = args.shift();
+        result = result.replace(match[0], arg.toString());
+    }
+
+    return result;
+}
 
 var fsutil = {
     getFileSystemInfo: function(path, callback) {
@@ -211,23 +236,45 @@ module.exports = (function(){
     function copyBaseSystem(options, watcher, next) {
         async.waterfall([
             function(cb) {
+                exec('losetup -f', {encoding: 'utf8'}, function(err, stdout, stderr) {
+                    if (err) {
+                        cb(err);
+                        return;
+                    }
+
+                    stdout = stdout.trim();
+                    cb(err, stdout);
+                });
+            },
+
+            function(loopdev, cb) {
+                var cmd = sprintf('losetup %1 /run/redflagiso/sfs/root-image/root-image.fs', loopdev);
+                system(cmd)(function(err) {
+                    cb(err, loopdev);
+                });
+            },
+
+            function(loopdev, cb) {
+                fsutil.mktempdir(function(dirname) {
+                    var cmd = sprintf('mount -o ro %1 %2', loopdev, dirname);
+                    system(cmd)(function(err) {
+                        cb(err, dirname);
+                    });
+                });
+            },
+
+            function(base_mnt, cb) {
                 fsutil.mktempdir(function(dirname) {
                     //TODO: we may need to mkdir -p before mounting
                     //sub-volumes such as /opt.
                     mountNeededPartitions(options.disks, dirname, function(err) {
-                        if (err) {
-                            cb(err);
-
-                        } else {
-                            cb(null, dirname);
-                        }
+                        cb(err, base_mnt, dirname);
                     });
-
                 });
             },
 
-            function(newroot_mnt, cb) {
-                fsutil.getFileSystemInfo('/', function(err, info) {
+            function(base_mnt, newroot_mnt, cb) {
+                fsutil.getFileSystemInfo(base_mnt, function(err, info) {
                     if (err) {
                         debug(err);
                         cb(err);
@@ -235,12 +282,13 @@ module.exports = (function(){
                     }
 
                     var size = info['total'] - info['free'];
-                    cb(null, newroot_mnt, size);
+                    cb(null, base_mnt, newroot_mnt, size);
                 });
             },
 
-            function(newroot_mnt, total_size, cb) {
-                var helper = pathlib.join(__dirname, 'copy_base_system.sh') +  ' / ' + newroot_mnt;
+            function(base_mnt, newroot_mnt, total_size, cb) {
+                var helper = sprintf('%1 %2 %3', pathlib.join(__dirname, 'copy_base_system.sh'),
+                                     base_mnt, newroot_mnt);
                 var child = exec(helper);
 
                 var percentage = 0;
@@ -251,7 +299,7 @@ module.exports = (function(){
                     progId.stop();
                     if (code === 0) {
                         watcher({status: 'progress', data: 100});
-                        cb(null, newroot_mnt);
+                        cb(null, base_mnt, newroot_mnt);
 
                     } else {
                         watcher({status: 'failure', reason: errors['ECOPYBASE']});
@@ -279,14 +327,22 @@ module.exports = (function(){
             },
 
             // cleanup: umount newroot_mnt and rmdir it
-            function(newroot_mnt, cb) {
+            function(base_mnt, newroot_mnt, cb) {
                 unmountNeededPartitions(options.disks, function(err) {
                     cb(err, newroot_mnt);
                 });
+            },
 
-                // system('umount ' + newroot_mnt)(function(err) {
-                //     cb(null, newroot_mnt);
-                // });
+            function(base_mnt, newroot_mnt, cb) {
+                system('umount ' + base_mnt)(function(err) {
+                    cb(err, base_mnt, newroot_mnt);
+                });
+            },
+
+            function(base_mnt, newroot_mnt, cb) {
+                system('rmdir ' + base_mnt)(function(err) {
+                    cb(err, newroot_mnt);
+                });
             },
 
             function(newroot_mnt, cb) {
@@ -352,10 +408,11 @@ module.exports = (function(){
 
         function generatePostscript(err_cb) {
             function postSetVar(name, val) {
-                postscript += 'export HIPPO_' + name + '="' + val + '"\n';
+                postscript += sprintf('export HIPPO_%1=%2\n', name, val);
             }
 
             var postscript = fs.readFileSync(pathlib.join(__dirname, 'postscript.tmpl'), 'utf8');
+            postSetVar("NEWROOT", opts.newroot);
 
             if (opts.username) {
                 postSetVar("USERNAME", opts.username);
