@@ -313,7 +313,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 });
                 part["dirty"] = true;
                 part["mountpoint"] = el.mp;
-                part["fs"] = el.fs;
+                part["fs"] = el.fs || part["fs"];
                 if (el.mp === "/" && grubinstall === "/") {
                     grubinstall = el.path + el.number;
                 };
