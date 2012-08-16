@@ -10,6 +10,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         locals : null,
         options:null,
         record: null,
+        mp_tag: null,
 
         init_record: function () {
             this.record = {
@@ -17,6 +18,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 dirty:[],
                 mp:{"/":false,"/opt":false},
             };
+            this.mp_tag = "";
         },
 
         initialize: function (options, locals) {
@@ -43,34 +45,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         renderPart: function () {
             var that = this;
             var tys, pindex, $disk, tmpPage, args, dindex = 0;
+            var new_disks = Rpart.calc_percent(that.options.disks);
             tys = ["primary", "free", "extended"];//logical is special
             
-
-            _.each(that.options.disks, function (disk) {
-                var dsize = disk.size;
-                var exsize, expercent=0, diskpercent=0;
-                _.each(disk.table, function (part){
-                    if (part.ty !== "logical") {
-                        part.percent = (part.size/dsize < 0.05) ? 0.05:part.size/dsize;
-                        diskpercent += part.percent;
-                        if (part.ty === "extended") {
-                            exsize = part.size;
-                        }
-                    }else {
-                        part.percent = (part.size/exsize < 0.2) ? 0.2:part.size/exsize;
-                        expercent += part.percent;
-                    };
-                });
-                _.each(disk.table, function (part){
-                    if (part.ty !== "logical") {
-                        part.percent = part.percent*100/diskpercent;
-                    }else {
-                        part.percent = part.percent*100/expercent;
-                    }
-                });
-            });
-
-            _.each(that.options.disks, function (disk) {
+            _.each(new_disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
@@ -82,15 +60,24 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                                 unit:disk.unit,
                                 gettext:that.locals.gettext,
                             };
+                    var actPage;
                     if (part.number < 0) {
                         tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
+                        actPage = (jade.compile($('#create_part_tmpl')[0].innerHTML))(args);
                     }else{
                         tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
+                        if (part.ty === "extended") {
+                            actPage = "";
+                        }else {
+                            actPage = (jade.compile($('#edit_part_tmpl')[0].innerHTML))(args);
+                        };
                     };
                     if (_.indexOf(tys, part.ty) > -1) {
                         $disk.append(tmpPage);
+                        $disk.find('ul.part').last().after(actPage);
                     }else {
                         $disk.find('ul.logicals').append(tmpPage);
+                        $disk.find('ul.logicals ul.part').last().after(actPage);
                         if(part.number > 0) {
                             $disk.find('ul.logicals').prev('button.close').remove();
                         };
@@ -104,14 +91,35 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             });
         },
 
+        mp_conflict: function (path, number, fstype, mp) {
+            var that = this;
+            that.record.edit = _.reject(that.record.edit,function(el){
+                return (el.path === path && el.number === number);
+            });
+            that.record.edit.push({"path":path,
+                                    "number":number,
+                                    "fs": fstype,
+                                    "mp": mp,});
+            var has_mp = _.pluck(that.record.edit, 'mp');
+            has_mp = _.intersection(has_mp, ["/", "/opt"]);
+            if (_.include(has_mp, "/")){
+                that.record.mp["/"] = true;
+            }else {
+                that.record.mp["/"] = false;
+            }
+            if (_.include(has_mp, "/opt")){
+                that.record.mp["/opt"] = true;
+            }else {
+                that.record.mp["/opt"] = false;
+            }
+        },
+
         postSetup: function() {
             this.renderParts();
             $('body').off('click','.delete');
             $('body').off('click','#reset');
             $('body').off('click','.js-create-submit');
             $('body').off('click','.js-edit-submit');
-            $('body').off('click','.create');
-            $('body').off('click','.edit');
 
             var that = this;
             $('body').on('click','.delete', function () {
@@ -126,21 +134,11 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 Rpart.method('reset',[], $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click', '.create', function (){
-                var $modal = $(this).next();
-                $modal.find('input#size').val("");
-            });
-
-            $('body').on('click', '.edit', function (){
-                var $modal = $(this).next();
-                $modal.find('select#mp').next('b').remove();
-            });
-
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).attr("value");
                 $(this).next('b').remove();
                 if (that.record.mp[value]) {
-                    $(this).after("<b>Sorry</b>");
+                    $(this).after(i18n.gettext("<b>Sorry</b>"));
                     $(this).val("");
                 }
             });
@@ -156,19 +154,15 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 }else {
                     size = Number($modal.find("#size").attr("value"));
                     size = Number(size.toFixed(2));
+                    start = Number($modal.find("#size").attr("start"));
+                    end = Number($modal.find("#size").attr("end"));
+                    end = (start + size > end) ? end : start + size;
                 };
 
                 path = $(this).attr("path");
                 parttype = $modal.find('#parttype').val();
                 fstype = $modal.find('#fs').val();
-
-                if($modal.find("#location :checked").attr("id") === "start") {
-                    start = Number($modal.find("#location :checked").attr("value"));
-                    end = start + size;
-                } else if ($modal.find("#location :checked").attr("id") === "end") {
-                    end = Number($modal.find("#location :checked").attr("value"));
-                    start = end - size;
-                };
+                that.mp_tag = $modal.find('#mp').val();
 
                 Rpart.method('mkpart',[path, parttype, start, end, fstype],
                              $.proxy(that.partflesh, that));
@@ -181,30 +175,14 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 number = Number($(this).attr("number"));
                 fstype = $modal.find("#fs").val();
                 mp = $modal.find("#mp").val();
+                that.mp_conflict(path, number, fstype, mp);
 
-                that.record.edit = _.reject(that.record.edit,function(el){
-                    return (el.path === path && el.number === number);
-                });
-                that.record.edit.push({"path":path,
-                                        "number":number,
-                                        "fs": fstype,
-                                        "mp": mp,});
-                var has_mp = _.pluck(that.record.edit, 'mp');
-                has_mp = _.intersection(has_mp, ["/", "/opt"]);
-                if (_.include(has_mp, "/")){
-                    that.record.mp["/"] = true;
-                }else {
-                    that.record.mp["/"] = false;
+                $modal.prev('ul.part').find('b.partfs').text(fstype);
+                if(mp === "") {
+                    $modal.prev('ul.part').find('b.partmp').text("");
+                }else{
+                    $modal.prev('ul.part').find('b.partmp').text("("+mp+")");
                 }
-                if (_.include(has_mp, "/opt")){
-                    that.record.mp["/opt"] = true;
-                }else {
-                    that.record.mp["/opt"] = false;
-                }
-
-                $(this).parents('ul.part').find('a.partfs').text(fstype);
-                var str = i18n.gettext('MountPoint:');
-                $(this).parents('ul.part').find('a.partmp').text(str + mp);
             });
         },
 
@@ -214,6 +192,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
                 that.parthandler(result.handlepart);
             }
+            that.mp_tag = "";
             that.options.disks = that.locals.disks = disks;
             that.renderParts();
 
@@ -221,11 +200,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             _.each(that.record.edit, function(el) {
                 var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
                 if(el.fs !== "") {
-                    $part.find('a.partfs').text(el.fs);
+                    $part.find('b.partfs').text(el.fs);
                 };
                 if (el.mp !== ""){
-                    var str = i18n.gettext('MountPoint:');
-                    $part.find('a.partmp').text(str + el.mp);
+                    $part.find('b.partmp').text("(" + el.mp + ")");
                 };
             });
         },
@@ -240,6 +218,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             if (method === "add") {
                 //TODO ty==extended
                 that.record.dirty.push({"path":path,"number":number});
+                if (that.mp_tag !== "") {
+                    that.mp_conflict (path, number, "", that.mp_tag)
+                }
             }else if (method === "del") {
                 //TODO ty==extended
                 that.record.dirty = _.reject(that.record.dirty, function(el) {
@@ -332,7 +313,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 });
                 part["dirty"] = true;
                 part["mountpoint"] = el.mp;
-                part["fs"] = el.fs;
+                part["fs"] = el.fs || part["fs"];
                 if (el.mp === "/" && grubinstall === "/") {
                     grubinstall = el.path + el.number;
                 };

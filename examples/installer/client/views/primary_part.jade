@@ -1,39 +1,19 @@
 script(type="text/template", id="primary_part_tmpl").
     li.primary.horizontal(style="width:"+part.percent+"%;")
         button.delete.close(type="button",number=part.number,path=part.path)×
-        ul.wat-cf.part(number=part.number,pty="primary")
+        ul.selectable.wat-cf.part(number=part.number,pty="primary", data-toggle="modal", href="#"+String(dindex)+String(pindex))
             li
-                a(href="#")
-                    = Number(part.size).toFixed(2)
-                    = unit
+                b
+                    = part.path.slice(5) + part.number
+                b.partmp
             li
-                a.partfs(href="#")
+                b.partfs
                     -if(part.fs.match("swap"))
                         = "swap"
+                    -else if (part.fs == "")
+                        = gettext("Unknow")
                     -else
                         = part.fs
-            li
-                a.partmp(href="#")= gettext("MountPoint:")
-            li
-                a.edit(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('Edit')
-                .modal.fade.hide(id=String(dindex)+String(pindex))
-                    .modal-header
-                        button.close(type="button", data-dismiss="modal")×
-                        h3= gettext('EditDisk')
-                    .modal-body
-                        div.control-group.form-horizontal
-                            label.control-label(for="mp")= gettext('MountPoint')
-                            .controls
-                                select.span3#mp
-                                    option(value="") ""
-                                    option(value="/")= "/"
-                                    option(value="/opt")= "/opt"
-                        div.control-group.form-horizontal
-                            label.control-label(for="fs")= gettext('FileSystem')
-                            .controls
-                                select.span3#fs
-                                    option(value="ext4") ext4
-                                    option(value="swap") swap
-                    .modal-footer
-                            button.btn(data-dismiss="modal")= gettext('Close')
-                            button.btn.btn-primary.js-edit-submit(data-dismiss="modal",path=part.path,number=part.number)= gettext('Submit')
+                b
+                    = " "+Number(part.size).toFixed(2)
+                    = unit

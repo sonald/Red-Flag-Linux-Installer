@@ -96,17 +96,19 @@ div#presentation .item img {
     visibility: hidden;
 }
 
-.part_table a	{
-    text-decoration: none; 
-    color: #eee;
-    display: block;
+.part_table b	{
+    color: black;
     overflow: hidden;
 }
 
 .part_table ul {
-    padding: 3px;
+    padding: 2px;
     list-style: none;
-    -webkit-box-shadow: 2px 2px 5px black;
+    cursor: pointer;
+}
+
+.part_table ul.part:hover {
+    _-webkit-box-shadow: 2px 2px 5px black;
 }
 
 .part_table ul.disk {
@@ -134,7 +136,7 @@ table.colorinfo td[pty="logical"],
 
 table.colorinfo td[pty="free"],
 .part_table ul[pty="free"] {
-    background:#A75375;
+    background: #D66B6B;
 }
 
 table.colorinfo td[pty="extended"],
@@ -150,17 +152,20 @@ table.colorinfo td[pty="extended"],
     float: left;
 }
 
-#advanced_part_table ul.part {
-    height: 80px;
+.part_table ul.part {
+    height: 50px;
 }
 
-#advanced_part_table ul.logicals ul {
-    height: 70px;
+.part_table ul.logicals ul {
+    height: 40px;
 }
 
 table.colorinfo td[pty="select"],
 .part_table ul.select {
-    background: #D66B6B;
+    _background:#A75375;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
 }
 
 /* buttons */
