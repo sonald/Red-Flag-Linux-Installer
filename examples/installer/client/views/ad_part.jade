@@ -1,7 +1,5 @@
 script(type="text/template", id="advanced_part_tmpl").
     .part_table#advanced_part_table
-    .btn#reset
-        = gettext('Reset')
     script(type="text/template",id="part_partial_tmpl").
         -for (var i in disks)
             - disk = disks[i]
@@ -12,28 +10,22 @@ script(type="text/template", id="advanced_part_tmpl").
                 = disk["unit"]
                 =")"
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
-        b= gettext('Grub Install At:')
-        select#grub
-            -for(var x = disks.length; x > 0 ; x--)
-                -var disk = disks[x-1]
-                option(value=disk["path"])= disk["path"]
-            option(value="/")= gettext('Boot Partition')
-            option(value="")= ""
-    .warninfo
-        br
-    table.colorinfo
-        tbody
-            tr
-                td(pty="disk",height="20",width="20")
-                td= gettext("disk")
-                td(pty="primary",height="20",width="20")
-                td= gettext("primary")
-                td(pty="logical",height="20",width="20")
-                td= gettext("logical")
-                td(pty="extended",height="20",width="20")
-                td= gettext("extended")
-                td(pty="free",height="20",width="20")
-                td= gettext("free")
+        .warninfo
+            br
+        ul.buttons
+            a#reset.smaller.right
+                = gettext('Reset')
+        hr
+        .control-group.form-horizontal
+            label.control-label(for="grub")
+                = gettext('Grub Install At:')
+            .controls
+                select#grub
+                    -for(var x = disks.length; x > 0 ; x--)
+                        -var disk = disks[x-1]
+                        option(value=disk["path"])= disk["path"]
+                    option(value="/")= gettext('Boot Partition')
+                    option(value="")= ""
 include primary_part
 include logical_part
 include extended_part

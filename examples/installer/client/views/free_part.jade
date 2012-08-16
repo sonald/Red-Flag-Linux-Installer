@@ -1,12 +1,10 @@
 script(type="text/template", id="free_part_tmpl").
-    li.horizontal.free
+    li.horizontal.free(style="width:"+part.percent+"%;")
         ul.wat-cf.part(pty="free")
             li
                 a(href="#")
                     = Number(part.size).toFixed(2)
                     = unit
-            li
-                a(href="#")= gettext('free')
             li
                 a.create(data-toggle="modal", href="#"+String(dindex)+String(pindex))= gettext('create')
                 .modal.fade.hide(id=String(dindex)+String(pindex))
@@ -41,7 +39,7 @@ script(type="text/template", id="free_part_tmpl").
                                     input(type="radio", name="create", id="end", value=part["end"])
                                     b= gettext('Alignment To End')
                     .modal-footer
-                            a.btn(href="#", data-dismiss="modal")= gettext('Close')
-                            a.btn.btn-primary.js-create-submit(href="#", data-dismiss="modal", path=part["path"])= gettext('Submit')
+                            button.btn(data-dismiss="modal")= gettext('Close')
+                            button.btn.btn-primary.js-create-submit(data-dismiss="modal", path=part["path"])= gettext('Submit')
 
 

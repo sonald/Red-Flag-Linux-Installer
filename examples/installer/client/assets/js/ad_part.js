@@ -10,8 +10,13 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         locals : null,
         options:null,
         record: null,
+
         init_record: function () {
-            this.record = {edit:[],dirty:[]};
+            this.record = {
+                edit:[],
+                dirty:[],
+                mp:{"/":false,"/opt":false},
+            };
         },
 
         initialize: function (options, locals) {
@@ -39,6 +44,32 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             var that = this;
             var tys, pindex, $disk, tmpPage, args, dindex = 0;
             tys = ["primary", "free", "extended"];//logical is special
+            
+
+            _.each(that.options.disks, function (disk) {
+                var dsize = disk.size;
+                var exsize, expercent=0, diskpercent=0;
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = (part.size/dsize < 0.05) ? 0.05:part.size/dsize;
+                        diskpercent += part.percent;
+                        if (part.ty === "extended") {
+                            exsize = part.size;
+                        }
+                    }else {
+                        part.percent = (part.size/exsize < 0.2) ? 0.2:part.size/exsize;
+                        expercent += part.percent;
+                    };
+                });
+                _.each(disk.table, function (part){
+                    if (part.ty !== "logical") {
+                        part.percent = part.percent*100/diskpercent;
+                    }else {
+                        part.percent = part.percent*100/expercent;
+                    }
+                });
+            });
+
             _.each(that.options.disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
@@ -60,9 +91,15 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                         $disk.append(tmpPage);
                     }else {
                         $disk.find('ul.logicals').append(tmpPage);
+                        if(part.number > 0) {
+                            $disk.find('ul.logicals').prev('button.close').remove();
+                        };
                     };
                     pindex++;
                 });
+                if ($disk.find('ul.logicals').prev('button.close').length > 0){
+                    $disk.find('ul.logicals').find('li').css("float","none");
+                }
                 dindex++;
             });
         },
@@ -73,6 +110,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').off('click','#reset');
             $('body').off('click','.js-create-submit');
             $('body').off('click','.js-edit-submit');
+            $('body').off('click','.create');
+            $('body').off('click','.edit');
 
             var that = this;
             $('body').on('click','.delete', function () {
@@ -87,7 +126,26 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 Rpart.method('reset',[], $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','a.js-create-submit',function () {
+            $('body').on('click', '.create', function (){
+                var $modal = $(this).next();
+                $modal.find('input#size').val("");
+            });
+
+            $('body').on('click', '.edit', function (){
+                var $modal = $(this).next();
+                $modal.find('select#mp').next('b').remove();
+            });
+
+            $('body').on('change', '.modal #mp', function (){
+                var value = $(this).attr("value");
+                $(this).next('b').remove();
+                if (that.record.mp[value]) {
+                    $(this).after("<b>Sorry</b>");
+                    $(this).val("");
+                }
+            });
+
+            $('body').on('click','.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
 
@@ -101,8 +159,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
 
                 path = $(this).attr("path");
-                parttype = $modal.find('#parttype :checked').attr("value");
-                fstype = $modal.find('#fs :checked').attr("value");
+                parttype = $modal.find('#parttype').val();
+                fstype = $modal.find('#fs').val();
 
                 if($modal.find("#location :checked").attr("id") === "start") {
                     start = Number($modal.find("#location :checked").attr("value"));
@@ -116,13 +174,13 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                              $.proxy(that.partflesh, that));
             });
 
-            $('body').on('click','a.js-edit-submit',function () {
+            $('body').on('click','.js-edit-submit',function () {
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
                 path = $(this).attr("path");
                 number = Number($(this).attr("number"));
-                fstype = $modal.find("#fs :checked").attr("value");
-                mp = $modal.find("#mp :checked").attr("value");
+                fstype = $modal.find("#fs").val();
+                mp = $modal.find("#mp").val();
 
                 that.record.edit = _.reject(that.record.edit,function(el){
                     return (el.path === path && el.number === number);
@@ -131,6 +189,19 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                                         "number":number,
                                         "fs": fstype,
                                         "mp": mp,});
+                var has_mp = _.pluck(that.record.edit, 'mp');
+                has_mp = _.intersection(has_mp, ["/", "/opt"]);
+                if (_.include(has_mp, "/")){
+                    that.record.mp["/"] = true;
+                }else {
+                    that.record.mp["/"] = false;
+                }
+                if (_.include(has_mp, "/opt")){
+                    that.record.mp["/opt"] = true;
+                }else {
+                    that.record.mp["/opt"] = false;
+                }
+
                 $(this).parents('ul.part').find('a.partfs').text(fstype);
                 var str = i18n.gettext('MountPoint:');
                 $(this).parents('ul.part').find('a.partmp').text(str + mp);
@@ -160,7 +231,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         },
 
         parthandler: function(result) {
-            var method, path, number;
+            var method, path, number, mp;
             var that = this;
             method = result.substring(0,3);
             path = result.substring(3,11);
@@ -175,8 +246,15 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     return el.path === path && el.number === number;
                 });
                 that.record.edit = _.reject(that.record.edit,function(el){
-                    return el.path === path && el.number === number;
+                    if (el.path === path && el.number === number){
+                        mp = el.mp;
+                        return true;
+                    }
+                    return false;
                 });
+                if( mp in that.record.mp ) {
+                    that.record.mp = false;
+                }
                 //in msdos,number of logical > 4
                 if(number > 4) {
                     that.record.edit = _.map(that.record.edit,function(el){
