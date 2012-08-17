@@ -15,17 +15,20 @@ function sprintf(fmt) {
     var args = [].slice.call(arguments, 1);
     var r = /%\d+/g;
     var match;
-    var arg;
+    var count = 1;
+    var key2valMap = {};
     var result = fmt;
 
-    while (match = r.exec(fmt)) {
-        if (args.length === 0) {
-            console.warning('need another arg');
-            break;
-        }
+    while (args.length) {
+        key2valMap['%'+count] = args.shift();
+        count++;
+    }
 
-        arg = args.shift();
-        result = result.replace(match[0], arg.toString());
+    while ((match = r.exec(fmt))) {
+        if (!(match[0] in key2valMap)) {
+            key2valMap[match[0]] = match[0];
+        }
+        result = result.replace(match[0], key2valMap[match[0]]);
     }
 
     return result;

@@ -30,6 +30,34 @@ var pathlib = require('path');
 var installer = null;
 // require('longjohn');
 
+function sprintf(fmt) {
+    fmt = fmt || "";
+    if (arguments.length <= 1) {
+        return fmt;
+    }
+
+    var args = [].slice.call(arguments, 1);
+    var r = /%\d+/g;
+    var match;
+    var count = 1;
+    var key2valMap = {};
+    var result = fmt;
+
+    while (args.length) {
+        key2valMap['%'+count] = args.shift();
+        count++;
+    }
+
+    while ((match = r.exec(fmt))) {
+        if (!(match[0] in key2valMap)) {
+            key2valMap[match[0]] = match[0];
+        }
+        result = result.replace(match[0], key2valMap[match[0]]);
+    }
+
+    return result;
+}
+
 function testExists(cmd, callback) {
     'use strict';
 
@@ -44,12 +72,13 @@ function testExists(cmd, callback) {
 function startServer() {
     'use strict';
 
+    var node_cmd = 'node app.js';
+
     var cmd_list = [
-        'pkexec --user root node ' + pathlib.join(__dirname, 'app.js'),
-        'gksudo -t node app.js',
-        'gksu -t node app.js',
-        'kdesu node app.js'
+        sprintf('gksudo -S %1', node_cmd),
+        sprintf('kdesu %1', node_cmd)
     ];
+    console.log(cmd_list);
 
     async.filter(cmd_list, testExists, function(results) {
         console.log('found: ', results);
@@ -59,6 +88,10 @@ function startServer() {
         }
 
         var cmd = results[0].split(/\s+/);
+        var args = process.argv;
+        if (args.indexOf('-d') > -1 || args.indexOf('--debug') > -1) {
+            process.env.NODE_DEBUG = 1;
+        }
         installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: process.env});
 
         var fe_loaded = false;
@@ -72,6 +105,10 @@ function startServer() {
             }
             process.stdout.write(output);
         });
+
+        installer.stderr.on('data', function(data) {
+            process.stderr.write(data.toString());
+        });
     });
 }
 
@@ -80,7 +117,10 @@ function tryLoadFrontend() {
 
     var options = {};
     if (process.argv.length > 2) {
-        options.url = process.argv[2];
+        options.url = process.argv[process.argv.length - 1];
+        if (options.url.indexOf('-') === 0) {
+            options.url = null;
+        }
     }
 
     console.log(options);
@@ -95,10 +135,10 @@ function tryLoadFrontend() {
             process.exit(1);
         }
         var fe = spawn(results[0], [args], {cwd: __dirname, env: process.env});
-	fe.on('exit', function() { 
+	fe.on('exit', function() {
 	    if (installer && !installer.exitCode) {
                 console.log('try kill node');
-		
+
 		var req = require('http').request({
 		    host: 'localhost',
 		    port: 8080,
@@ -108,14 +148,14 @@ function tryLoadFrontend() {
 		    console.log(res);
 		    process.exit(0);
 		});
-		
+
 		req.on('error', function(err) {
 		    console.log('req: ', err.message);
 		});
 		req.end('immediately');
 	    }
 	});
-	
+
         process.on('exit', function() {
             if (!fe.exitCode) {
                 fe.kill('SIGKILL');
@@ -153,4 +193,3 @@ function sanityCheck() {
 
 sanityCheck();
 startServer();
-
