@@ -332,7 +332,7 @@ module.exports = (function(){
             // cleanup: umount newroot_mnt and rmdir it
             function(base_mnt, newroot_mnt, cb) {
                 unmountNeededPartitions(options.disks, function(err) {
-                    cb(err, newroot_mnt);
+                    cb(err, base_mnt, newroot_mnt);
                 });
             },
 
