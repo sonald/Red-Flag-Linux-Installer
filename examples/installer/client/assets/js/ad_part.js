@@ -16,7 +16,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             this.record = {
                 edit:[],
                 dirty:[],
-                mp:{"/":false,"/opt":false},
+                mp:[],
             };
             this.mp_tag = "";
         },
@@ -82,6 +82,11 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                             $disk.find('ul.logicals').prev('button.close').remove();
                         };
                     };
+                    if (part.number > 0 && _.include(["ext4","","swap"],part.fs) === false) {
+                        var $modal = $disk.find('ul.selectable').last().next('.modal');
+                        $modal.find("#fs").attr("disabled","true");
+                        $modal.find("#mp").attr("disabled","true");
+                    }
                     pindex++;
                 });
                 if ($disk.find('ul.logicals').prev('button.close').length > 0){
@@ -101,17 +106,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                                     "fs": fstype,
                                     "mp": mp,});
             var has_mp = _.pluck(that.record.edit, 'mp');
-            has_mp = _.intersection(has_mp, ["/", "/opt"]);
-            if (_.include(has_mp, "/")){
-                that.record.mp["/"] = true;
-            }else {
-                that.record.mp["/"] = false;
-            }
-            if (_.include(has_mp, "/opt")){
-                that.record.mp["/opt"] = true;
-            }else {
-                that.record.mp["/opt"] = false;
-            }
+            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
         },
 
         postSetup: function() {
@@ -136,10 +131,11 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).attr("value");
+                var mp = $(this).attr("mp");
                 $(this).next('b').remove();
-                if (that.record.mp[value]) {
+                if (_.include(that.record.mp, value)) {
                     $(this).after(i18n.gettext("<b>Sorry</b>"));
-                    $(this).val("");
+                    $(this).val(mp);
                 }
             });
 
@@ -175,6 +171,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 number = Number($(this).attr("number"));
                 fstype = $modal.find("#fs").val();
                 mp = $modal.find("#mp").val();
+                $modal.find("#mp").attr("mp",mp);
                 that.mp_conflict(path, number, fstype, mp);
 
                 $modal.prev('ul.part').find('b.partfs').text(fstype);
@@ -204,6 +201,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
                 if (el.mp !== ""){
                     $part.find('b.partmp').text("(" + el.mp + ")");
+                    $part.next('.modal').find('#mp').attr("mp",el.mp);
+                    $part.next('.modal').find('#mp').val(el.mp);
                 };
             });
         },
@@ -219,38 +218,31 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 //TODO ty==extended
                 that.record.dirty.push({"path":path,"number":number});
                 if (that.mp_tag !== "") {
-                    that.mp_conflict (path, number, "", that.mp_tag)
+                    that.mp_conflict (path, number, "", that.mp_tag);
                 }
             }else if (method === "del") {
-                //TODO ty==extended
-                that.record.dirty = _.reject(that.record.dirty, function(el) {
-                    return el.path === path && el.number === number;
-                });
-                that.record.edit = _.reject(that.record.edit,function(el){
-                    if (el.path === path && el.number === number){
-                        mp = el.mp;
-                        return true;
-                    }
-                    return false;
-                });
-                if( mp in that.record.mp ) {
-                    that.record.mp = false;
-                }
                 //in msdos,number of logical > 4
-                if(number > 4) {
-                    that.record.edit = _.map(that.record.edit,function(el){
-                        if (el.number > number && el.path === path) {
-                            el.number--;
-                        };
-                        return el;
-                    });
-                    that.record.dirty = _.map(that.record.dirty,function(el){
-                        if (el.number > number && el.path === path) {
-                            el.number--;
-                        };
-                        return el;
-                    });
-                };//if number > 4
+                that.record.edit = _.map(that.record.edit,function(el){
+                    if (number > 4 && el.number > number && el.path === path) {
+                        el.number--;
+                    }else if (el.number === number && el.path === path){
+                        mp = el.mp;
+                        return false;
+                    };
+                    return el;
+                });
+                that.record.edit = _.compact(that.record.edit);
+
+                that.record.dirty = _.map(that.record.dirty,function(el){
+                    if (number > 4 && el.number > number && el.path === path) {
+                        el.number--;
+                    }else if (el.number === number && el.path === path){
+                        return false;
+                    };
+                    return el;
+                });
+                that.record.dirty = _.compact(that.record.dirty);
+                that.record.mp = _.without(that.record.mp, mp);
             };
         },
 
@@ -258,13 +250,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             var that = this;
             var disks = that.options.disks;
             //validate~~
-            var root_mp, opt_mp, root_size;
-            root_mp = 0;
-            opt_mp = 0;
-            root_size = 0;
+            var root_size = 0;
             _.each(that.record.edit, function (el) {
                 if (el.mp === "/") {
-                    root_mp++;
                     var disk = _.find(disks, function (disk) {
                         return disk.path === el.path;
                     });
@@ -272,15 +260,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                         return part.number === el.number;
                     });
                     root_size = part.size;
-                }else if (el.mp === "/opt") {
-                    opt_mp++;
                 };
             });
-            if (root_mp === 0) {
+            if (_.include(that.record.mp, "/") === false) {
                 alert(i18n.gettext("You need specify a root partition."));
-                return;
-            } else if (root_mp > 1 || opt_mp > 1) {
-                alert(i18n.gettext("Select only one root partition."));
                 return;
             }else if (root_size < 6) {
                 alert(i18n.gettext("The root partition requires at least 6 GB space!"));

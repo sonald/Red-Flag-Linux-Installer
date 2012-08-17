@@ -153,11 +153,11 @@ table.colorinfo td[pty="extended"],
 }
 
 .part_table ul.part {
-    height: 50px;
+    height: 44px;
 }
 
 .part_table ul.logicals ul {
-    height: 40px;
+    height: 36px;
 }
 
 table.colorinfo td[pty="select"],
