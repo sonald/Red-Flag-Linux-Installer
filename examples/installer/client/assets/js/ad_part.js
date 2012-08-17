@@ -153,6 +153,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     $this.parents('.modal').find('#mp').val("");
                 }else {
                     $this.parents('.modal').find('#fs').removeAttr("disabled");
+                    $this.parents('.modal').find('#fs').val("ext4");
                     $this.parents('.modal').find('#mp').removeAttr("disabled");
                 };
             });
