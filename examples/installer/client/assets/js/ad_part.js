@@ -52,12 +52,12 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
-                    part["path"] = disk.path;
                     args = {
                                 pindex:pindex, 
                                 dindex:dindex,
                                 part:part,
                                 unit:disk.unit,
+                                path:disk.path,
                                 gettext:that.locals.gettext,
                             };
                     var actPage;
@@ -82,11 +82,15 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                             $disk.find('ul.logicals').prev('button.close').remove();
                         };
                     };
-                    if (part.number > 0 && _.include(["ext4","","swap"],part.fs) === false) {
+                    if (part.number > 0 && (_.include(["ext4",""],part.fs) === false || (part.fs).match(/swap/g))) {
                         var $modal = $disk.find('ul.selectable').last().next('.modal');
                         $modal.find("#fs").attr("disabled","true");
                         $modal.find("#mp").attr("disabled","true");
-                    }
+                    };
+                    if (part.number > 0 && (part.fs).match(/swap/g)) {
+                        var $modal = $disk.find('ul.selectable').last().next('.modal');
+                        $modal.find("#mp").attr("disabled","true");
+                    };
                     pindex++;
                 });
                 if ($disk.find('ul.logicals').prev('button.close').length > 0){
@@ -130,12 +134,38 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             });
 
             $('body').on('change', '.modal #mp', function (){
-                var value = $(this).attr("value");
+                var value = $(this).val();
                 var mp = $(this).attr("mp");
                 $(this).next('b').remove();
                 if (_.include(that.record.mp, value)) {
                     $(this).after(i18n.gettext("<b>Sorry</b>"));
                     $(this).val(mp);
+                }
+            });
+
+            $('body').on('change', '.modal #parttype', function (){
+                var $this = $(this);
+                var value = $this.val();
+                if ( value === "extended" ) {
+                    $this.parents('.modal').find('#fs').attr("disabled","true");
+                    $this.parents('.modal').find('#fs').val("");
+                    $this.parents('.modal').find('#mp').attr("disabled","true");
+                    $this.parents('.modal').find('#mp').val("");
+                }else {
+                    $this.parents('.modal').find('#fs').removeAttr("disabled");
+                    $this.parents('.modal').find('#fs').val("ext4");
+                    $this.parents('.modal').find('#mp').removeAttr("disabled");
+                };
+            });
+
+            $('body').on('change', '.modal #fs', function (){
+                var $this = $(this);
+                var value = $this.val();
+                if (value.match(/swap/g)) {
+                    $this.parents('.modal').find('#mp').attr("disabled","true");
+                    $this.parents('.modal').find('#mp').val("");
+                }else {
+                    $this.parents('.modal').find('#mp').removeAttr("disabled");
                 }
             });
 
@@ -158,7 +188,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 path = $(this).attr("path");
                 parttype = $modal.find('#parttype').val();
                 fstype = $modal.find('#fs').val();
-                that.mp_tag = $modal.find('#mp').val();
+                that.mp_tag = (parttype === "extended") ? "" : $modal.find('#mp').val();
 
                 Rpart.method('mkpart',[path, parttype, start, end, fstype],
                              $.proxy(that.partflesh, that));
@@ -302,13 +332,6 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
             });
 
-            disks = _.map(disks, function (disk) {
-                disk.table = _.map(disk.table, function(part) {
-                    delete part.path;
-                    return part;
-                });
-                return disk;
-            });
             that.options.disks = disks;
             that.options.grubinstall = grubinstall;
             callback();
