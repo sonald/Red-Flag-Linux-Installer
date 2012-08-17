@@ -81,8 +81,8 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 alert(i18n.gettext("Please select a partition to continue."));
                 return;
             }
-            pnum = $("#part_content").find('ul.select').attr("pnum");//TODO
-            dnum = $("#part_content").find('ul.select').attr("dnum");//TODO
+            pnum = $("#part_content").find('ul.select').attr("pindex");//TODO
+            dnum = $("#part_content").find('ul.select').attr("dindex");//TODO
             disk = this.options.disks[dnum];
             part = disk.table[pnum];
             if (part.size < 6) {
