@@ -82,7 +82,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                             $disk.find('ul.logicals').prev('button.close').remove();
                         };
                     };
-                    if (part.number > 0 && _.include(["ext4","","swap"],part.fs) === false) {
+                    if (part.number > 0 && (_.include(["ext4",""],part.fs) === false || part.fs.match(/swap/g))) {
                         var $modal = $disk.find('ul.selectable').last().next('.modal');
                         $modal.find("#fs").attr("disabled","true");
                         $modal.find("#mp").attr("disabled","true");
