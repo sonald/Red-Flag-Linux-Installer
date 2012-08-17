@@ -29,12 +29,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
-                    part["path"] = disk.path;
                     args = {
                                 pindex:pindex, 
                                 dindex:dindex,
                                 part:part,
                                 unit:disk.unit,
+                                path:disk.path,
                                 gettext:that.locals.gettext,
                             };
                     if (part.number < 0) {

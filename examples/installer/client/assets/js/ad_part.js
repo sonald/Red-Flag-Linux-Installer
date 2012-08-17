@@ -52,12 +52,12 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
-                    part["path"] = disk.path;
                     args = {
                                 pindex:pindex, 
                                 dindex:dindex,
                                 part:part,
                                 unit:disk.unit,
+                                path:disk.path,
                                 gettext:that.locals.gettext,
                             };
                     var actPage;
@@ -302,13 +302,6 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
             });
 
-            disks = _.map(disks, function (disk) {
-                disk.table = _.map(disk.table, function(part) {
-                    delete part.path;
-                    return part;
-                });
-                return disk;
-            });
             that.options.disks = disks;
             that.options.grubinstall = grubinstall;
             callback();

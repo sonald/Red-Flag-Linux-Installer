@@ -37,13 +37,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
         },
 
         validate: function(callback) {
+            var that = this;
             if ($("#part_content").find('ul.select').length === 0) {
                 alert(i18n.gettext("Select a disks please"));
                 return;
             }
             var dnum= $("#part_content").find('ul.select').attr("dnum");
             var dpath = that.options.disks[dnum].path;
-            var that = this;
             if (that.options.disks[dnum].size < 6) {
                 alert(i18n.gettext("Select a disk of at least 6 GB."));
                 return;
