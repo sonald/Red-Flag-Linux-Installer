@@ -45,10 +45,9 @@ function startServer() {
     'use strict';
 
     var cmd_list = [
-        'pkexec --user root node ' + pathlib.join(__dirname, 'app.js'),
-        'gksudo -t node app.js',
-        'gksu -t node app.js',
-        'kdesu node app.js'
+        'gksudo -S node app.js',
+        'kdesu node app.js',
+        'pkexec --user root node ' + pathlib.join(__dirname, 'app.js')
     ];
 
     async.filter(cmd_list, testExists, function(results) {
@@ -95,10 +94,10 @@ function tryLoadFrontend() {
             process.exit(1);
         }
         var fe = spawn(results[0], [args], {cwd: __dirname, env: process.env});
-	fe.on('exit', function() { 
+	fe.on('exit', function() {
 	    if (installer && !installer.exitCode) {
                 console.log('try kill node');
-		
+
 		var req = require('http').request({
 		    host: 'localhost',
 		    port: 8080,
@@ -108,14 +107,14 @@ function tryLoadFrontend() {
 		    console.log(res);
 		    process.exit(0);
 		});
-		
+
 		req.on('error', function(err) {
 		    console.log('req: ', err.message);
 		});
 		req.end('immediately');
 	    }
 	});
-	
+
         process.on('exit', function() {
             if (!fe.exitCode) {
                 fe.kill('SIGKILL');
@@ -153,4 +152,3 @@ function sanityCheck() {
 
 sanityCheck();
 startServer();
-
