@@ -76,7 +76,7 @@ function startServer() {
 
     var cmd_list = [
         sprintf('gksudo -S %1', node_cmd),
-        sprintf('kdesu %1', node_cmd)
+        sprintf('kdesu -t %1', node_cmd)
     ];
     console.log(cmd_list);
 
