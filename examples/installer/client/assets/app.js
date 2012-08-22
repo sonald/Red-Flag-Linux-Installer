@@ -160,7 +160,7 @@ var app = {
         $ul.after('<div class="arrow-container">'+
                   '<div class="survey-progress-arrow"></div>'+
                   '</div>'+'<div class="end-trail"><span>'+
-                 'Finished!'+'</span></div>');
+                 this.i18n.gettext('Finished!') + '</span></div>');
     },
 
     animateStage: function(stage) {

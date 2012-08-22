@@ -1,43 +1,35 @@
 define(["system"], 
 {
    "en": {
-      "Username": [
+      "CreateDisk": [
          null,
          ""
       ],
-      "Only letters, numbers, and underscores.": [
+      "Size": [
          null,
          ""
       ],
-      "Hostname": [
+      "PartType": [
          null,
          ""
       ],
-      "agree": [
+      "logical": [
          null,
          ""
       ],
-      "disagree": [
+      "primary": [
          null,
          ""
       ],
-      "MountPoint:": [
-         null,
-         ""
-      ],
-      "Edit": [
-         null,
-         ""
-      ],
-      "EditDisk": [
-         null,
-         ""
-      ],
-      "MountPoint": [
+      "extended": [
          null,
          ""
       ],
       "FileSystem": [
+         null,
+         ""
+      ],
+      "MountPoint": [
          null,
          ""
       ],
@@ -46,6 +38,14 @@ define(["system"],
          ""
       ],
       "Submit": [
+         null,
+         ""
+      ],
+      "Unknow": [
+         null,
+         ""
+      ],
+      "Select one disk: ": [
          null,
          ""
       ],
@@ -61,6 +61,10 @@ define(["system"],
          null,
          ""
       ],
+      "Not install": [
+         null,
+         ""
+      ],
       "Easy": [
          null,
          ""
@@ -73,43 +77,47 @@ define(["system"],
          null,
          ""
       ],
+      "disk": [
+         null,
+         ""
+      ],
       "free": [
          null,
          ""
       ],
-      "create": [
+      "selected": [
          null,
          ""
       ],
-      "CreateDisk": [
+      "agree": [
          null,
          ""
       ],
-      "Size": [
+      "disagree": [
          null,
          ""
       ],
-      "PartType": [
+      "Username": [
          null,
          ""
       ],
-      "primary": [
+      "Only letters, numbers, and underscores.": [
          null,
          ""
       ],
-      "logical": [
+      "Hostname": [
          null,
          ""
       ],
-      "extended": [
+      "EditDisk": [
          null,
          ""
       ],
-      "Alignment To Beginning": [
+      "Free": [
          null,
          ""
       ],
-      "Alignment To End": [
+      "Finished!": [
          null,
          ""
       ],
@@ -117,15 +125,15 @@ define(["system"],
          null,
          ""
       ],
-      "System Error!": [
+      "Select a disk of at least 6 GB.": [
          null,
          ""
       ],
-      "Set": [
+      "Select a disks please": [
          null,
          ""
       ],
-      "Welcome": [
+      "Operation fails": [
          null,
          ""
       ],
@@ -133,19 +141,43 @@ define(["system"],
          null,
          ""
       ],
-      "Install": [
+      "Welcome": [
          null,
          ""
       ],
-      "install": [
+      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
          null,
          ""
       ],
-      "Congratulations~You have finished installing the system.": [
+      "Select a partition of at least 6 GB.": [
          null,
          ""
       ],
-      "Select a disk of at least 6 GB.": [
+      "Please select a partition to continue.": [
+         null,
+         ""
+      ],
+      "Select a partition of at least 6 GB": [
+         null,
+         ""
+      ],
+      "Warning!": [
+         null,
+         ""
+      ],
+      "The mount point has been selected.": [
+         null,
+         ""
+      ],
+      "Please enter the number!": [
+         null,
+         ""
+      ],
+      "You need specify a root partition.": [
+         null,
+         ""
+      ],
+      "The root partition requires at least 6 GB space!": [
          null,
          ""
       ],
@@ -169,31 +201,23 @@ define(["system"],
          null,
          ""
       ],
-      "Number!!": [
+      "Set": [
          null,
          ""
       ],
-      "You need specify a root partition.": [
+      "Install": [
          null,
          ""
       ],
-      "Select only one root partition.": [
+      "install": [
          null,
          ""
       ],
-      "The root partition requires at least 6 GB space!": [
+      "close": [
          null,
          ""
       ],
-      "Select a partition of at least 6 GB.": [
-         null,
-         ""
-      ],
-      "Please select a partition to continue.": [
-         null,
-         ""
-      ],
-      "Select a partition of at least 6 GB": [
+      "Congratulations~You have finished installing the system.": [
          null,
          ""
       ],

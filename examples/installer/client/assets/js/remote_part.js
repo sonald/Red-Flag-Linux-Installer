@@ -20,7 +20,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 if (result.status && result.status === "success") {
                     that.getparts(result, callback);
                 }else {
-                    alert(i18n.gettext('System Error!'));
+                    alert(i18n.gettext('Operation fails'));
                     console.log(result);
                 }
             };
