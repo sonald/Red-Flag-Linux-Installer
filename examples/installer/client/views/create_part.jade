@@ -14,8 +14,9 @@ script(type="text/template", id="create_part_tmpl").
                     select.span3#parttype
                         - if (part.ty == "logical")
                             option(value="logical")= gettext('logical')
-                        -else
+                        -else if (disk.type == "gpt")
                             option(value="primary")= gettext('primary')
+                        -else
                             option(value="extended")= gettext('extended')
             div.control-group.form-horizontal
                 label.control-label(for="fs")= gettext('FileSystem')

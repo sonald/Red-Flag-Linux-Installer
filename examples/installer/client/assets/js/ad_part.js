@@ -215,12 +215,12 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
         partflesh: function(result, disks){
             var that = this;
+            that.options.disks = that.locals.disks = disks;
             if (result.handlepart){
                 //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
                 that.parthandler(result.handlepart);
             }
             that.mp_tag = "";
-            that.options.disks = that.locals.disks = disks;
             that.renderParts();
 
             //deal with record
@@ -243,6 +243,12 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             method = result.substring(0,3);
             path = result.substring(3,11);
             number = Number(result.substring(11));
+            var disks = that.options.disks;
+
+            var disk = _.find(disks, function (d) {
+                return d.path === path;
+            });
+            var type = disk.type;
 
             if (method === "add") {
                 //TODO ty==extended
@@ -253,7 +259,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             }else if (method === "del") {
                 //in msdos,number of logical > 4
                 that.record.edit = _.map(that.record.edit,function(el){
-                    if (number > 4 && el.number > number && el.path === path) {
+                    if (type === "msdos" && number > 4 && el.number > number && el.path === path) {
                         el.number--;
                     }else if (el.number === number && el.path === path){
                         mp = el.mp;
@@ -262,9 +268,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     return el;
                 });
                 that.record.edit = _.compact(that.record.edit);
-
                 that.record.dirty = _.map(that.record.dirty,function(el){
-                    if (number > 4 && el.number > number && el.path === path) {
+                    if (type === "msdos" && number > 4 && el.number > number && el.path === path) {
                         el.number--;
                     }else if (el.number === number && el.path === path){
                         return false;
