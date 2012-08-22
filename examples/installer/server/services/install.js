@@ -156,7 +156,11 @@ module.exports = (function(){
             'swap': 'mkswap '
         };
 
-        system(cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)] + part.path)(callback);
+        var cmd = cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)] + part.path;
+        if (!cmd) {
+            cmd = cmds[0];
+        }
+        system(cmd)( callback );
     }
 
     function formatDirtyPartitions(disks, callback) {
