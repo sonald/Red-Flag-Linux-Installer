@@ -117,14 +117,20 @@ module.exports = function() {
             server.configure(function() {
                 server.use(i18n.init)
                     .use(function(req, res, next) {
+                        var scope = i18n_host.scope;
                         if (req.language) {
-                            i18n_host.scope.locale = req.language.slice(0,2);
+                            scope.locale = req.language.slice(0,2);
                         }
 
                         var urlObj = require('url').parse(req.url, true);
                         if (urlObj.query.locale) {
-                            i18n_host.scope.locale = urlObj.query.locale;
+                            scope.locale = urlObj.query.locale;
                             i18n.overrideLocaleFromQuery(req);
+                        }
+
+                        scope.locale = scope.locale || 'en';
+                        if (scope.locale === 'POSIX' || scope.locale === 'C') {
+                            scope.locale = 'en';
                         }
 
                         next();
@@ -196,14 +202,14 @@ module.exports = function() {
             server.get('/', function(req, res, next) {
                 res.render(opts.appView);
             });
-	    
+
 	    server.post('/shutdown', function(req, res) {
 		//TODO: test if it's safe to exist now
 		console.log('request shutdown');
 		res.end('approved');
 		process.exit(0);
 	    });
-	    
+
             server.listen(opts.port);
             dnode(apis.apis).listen(server);
             return this;
@@ -227,4 +233,3 @@ module.exports = function() {
         process.exit();
     });
 });
-
