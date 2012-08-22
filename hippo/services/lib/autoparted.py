@@ -44,7 +44,7 @@ def easyhandler(dev, disk, parttype, start, end):
     fs = "ext4"
     start = parted.sizeToSectors(float(start), "GB", 512)
     end = parted.sizeToSectors(float(end), "GB", 512)
-    if parttype == "free":
+    if parttype == "free" and disk.type == "msdos":
         if disk.primaryPartitionCount == 4:
             raise Exception, "Too many primary partitions."
         elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
@@ -52,8 +52,10 @@ def easyhandler(dev, disk, parttype, start, end):
             parttype = "logical"
         elif disk.primaryPartitionCount < 4:
             parttype = "primary"
-    ###elif parttype == "logical"
-    ### nothing changed
+        ###elif parttype == "logical"
+        ### nothing changed
+    elif parttype == "free" and disk.type == "gpt":
+        parttype = "primary"
     partnumber = [ part.number for part in disk.partitions ]
     disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
     number = 0
@@ -85,7 +87,10 @@ def DevDisk():
         try:
             disks[dev.path] = parted.disk.Disk(dev)
         except:
-            disks[dev.path] = parted.freshDisk(dev,'msdos')
+            if dev.getSize('TB') >= 2:
+                disks[dev.path] = parted.freshDisk(dev,'gpt')
+            else:
+                disks[dev.path] = parted.freshDisk(dev,'msdos')
             continue
     return [disks, disks_tag]
 

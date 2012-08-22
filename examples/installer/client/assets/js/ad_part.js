@@ -147,9 +147,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var $this = $(this);
                 var value = $this.val();
                 if ( value === "extended" ) {
-                    $this.parents('.modal').find('#fs').attr("disabled","true");
+                    $this.parents('.modal').find('#fs').attr("disabled","");
                     $this.parents('.modal').find('#fs').val("");
-                    $this.parents('.modal').find('#mp').attr("disabled","true");
+                    $this.parents('.modal').find('#mp').attr("disabled","");
                     $this.parents('.modal').find('#mp').val("");
                 }else {
                     $this.parents('.modal').find('#fs').removeAttr("disabled");
@@ -162,7 +162,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var $this = $(this);
                 var value = $this.val();
                 if (value.match(/swap/g)) {
-                    $this.parents('.modal').find('#mp').attr("disabled","true");
+                    $this.parents('.modal').find('#mp').attr("disabled","");
                     $this.parents('.modal').find('#mp').val("");
                 }else {
                     $this.parents('.modal').find('#mp').removeAttr("disabled");

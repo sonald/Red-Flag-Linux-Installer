@@ -7,14 +7,16 @@ script(type="text/template", id="create_part_tmpl").
             div.control-group.form-horizontal
                 label.control-label(for="size")= gettext('Size')
                 .controls
-                    input.focused.input-xlarge#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
+                    input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
             div.control-group.form-horizontal
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
                     select.span3#parttype
-                        option(value="primary")= gettext('primary')
-                        option(value="logical")= gettext('logical')
-                        option(value="extended")= gettext('extended')
+                        - if (part.ty == "logical")
+                            option(value="logical")= gettext('logical')
+                        -else
+                            option(value="primary")= gettext('primary')
+                            option(value="extended")= gettext('extended')
             div.control-group.form-horizontal
                 label.control-label(for="fs")= gettext('FileSystem')
                 .controls
