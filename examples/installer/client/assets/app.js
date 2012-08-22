@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: 'js',    
+    baseUrl: 'js',
     paths: {
         dnode: '/dnode'
     },
@@ -46,7 +46,7 @@ Button.prototype.bind = function(evt, action) {
     if (this._evts[evt]) {
         this.$el.off(evt);
     }
-    
+
     this.$el.on(evt, function(evtObj) {
         console.log('button ' + self.id + ' emit ' + evt);
         if (self.enabled()) {
@@ -80,7 +80,7 @@ var app = {
 
         _list: {}
     },
-    
+
     // collect user configurations
     options: {
         username:'',
@@ -117,14 +117,14 @@ var app = {
         return this._currentPage;
     },
 
-    // load and (re)init page 
+    // load and (re)init page
     loadPage: function(pageId, reinit) {
         if (!this.pageValid(pageId))
             return;
 
         var self = this;
         var page = this.stages[pageId];
-        page.initialize(this, reinit, function() { 
+        page.initialize(this, reinit, function() {
             self.$el.html( page.loadView() );
             page.postSetup && page.postSetup();
         });
@@ -187,7 +187,7 @@ var app = {
         this.buttons.add('forward', this.i18n.gettext('Next'));
         this.buttons.get('forward').bind('click', $.proxy(this.forward, this));
         // this.buttons.add('help', 'Help');
-        
+
         this.currentPage = 0;
         console.log('app init');
     }
@@ -199,8 +199,8 @@ require(['jquery', 'i18n', 'license', 'userinfo', 'part', 'process'],
     app.stages.push(pageInfo);
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
-    app.i18n = i18n;        
-            
+    app.i18n = i18n;
+
     DNode.connect(function (remote) {
         // when DNode is (re)connected, register global apis object.
         window.apis = remote;
@@ -212,4 +212,3 @@ require(['jquery', 'i18n', 'license', 'userinfo', 'part', 'process'],
 
     console.log('load done!');
 });
-
