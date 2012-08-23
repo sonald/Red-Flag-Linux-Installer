@@ -30,11 +30,12 @@ body {
 .body-expand {
     position: absolute;
     width: 100%;
-    height: 370px; /* fallback without calc */
-    height: -webkit-calc(100% - 100px - 100px);
-    height: -moz-calc(100% - 100px - 100px);    
-    margin-bottom: 100px;
-    top: 120px;
+    height: 404px; /* fallback without calc */
+    /* height calc: 100% - top - bottom */
+    height: -webkit-calc(100% - 100px - 70px);
+    height: -moz-calc(100% - 100px - 70px);    
+    margin-bottom: 70px;
+    top: 115px;
 }
 
 #stage {
@@ -42,7 +43,7 @@ body {
     padding: 20px;
     border-top: 1px solid #D6E3E8;
     border-bottom: 1px solid #D6E3E8;
-    height: 328px; /* fallback without calc */    
+    height: 362px; /* fallback without calc */    
     height: -webkit-calc(100% - 42px);
     height: -moz-calc(100% - 42px);
     overflow: auto;
@@ -50,7 +51,7 @@ body {
 
 .footer {
     position: absolute;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
     bottom: 0;
     width: 100%;
 }
@@ -223,4 +224,9 @@ span.mycheckbox {
 
 span.mycheckbox.checked {
     background-position: 0px -46px;
+}
+
+// process.jade
+#install-log {
+    height: 18;
 }
