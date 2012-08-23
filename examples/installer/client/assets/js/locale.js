@@ -32,12 +32,14 @@
 		match = /\?locale=([^=]+)/.exec(window.location.search);
 		if (match) {
 		    lang = match[1];
-	            match = /([^-]+)(?:-([^-]+))?/.exec(lang);
+	            match = /([^_]+)(?:_([^-]+))?/.exec(lang);
                     lang = (match && match[1]) || 'en';
 		}
 
 	    } else {
 		lang = navigator.language || navigator.userLanguage;
+	        match = /([^-]+)(?:-([^-]+))?/.exec(lang);
+                lang = (match && match[1]) || 'en';
 	    }
 
             lang = lang || 'en';
