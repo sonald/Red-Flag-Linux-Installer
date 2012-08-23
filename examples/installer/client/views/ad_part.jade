@@ -5,10 +5,8 @@ script(type="text/template", id="advanced_part_tmpl").
             - disk = disks[i]
             p
                 = disk["path"]
-                ="("
-                = disk["size"].toFixed(2)
-                = disk["unit"]
-                =")"
+                = "(" + disk["size"].toFixed(2) + disk["unit"]
+                = "/"+ disk.type + ")"
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
         .warninfo
             br

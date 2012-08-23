@@ -4,10 +4,8 @@ script(type="text/template", id="easy_part_tmpl").
             - disk = disks[i]
             p.diskinfo
                 = disk["path"]
-                ="("
-                = disk["size"].toFixed(2)
-                = disk["unit"]
-                =")"
+                = "(" + disk["size"].toFixed(2) + disk["unit"]
+                = "/" + disk.type + ")"
             - var parts = disk["table"]
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
     .warninfo
