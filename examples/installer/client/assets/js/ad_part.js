@@ -177,8 +177,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
 
-                size = $modal.find("#size").attr("value");
-                if (size.match(/^(\d*)(\.?)(\d*)$/g) === null) {
+                size = Number($modal.find("#size").attr("value"));
+                if ( size===NaN && size < 0.01 ) {
                     alert(i18n.gettext('Please enter the number!'));
                     return;
                 }else {
@@ -309,7 +309,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 alert(i18n.gettext("The root partition requires at least 6 GB space!"));
                 return;
             }
-            //data control
+            if (Rpart.next() === false) {
+                return;
+            }
             _.each(that.record.dirty, function (el) {
                 var path = el.path;
                 var number = el.number;
