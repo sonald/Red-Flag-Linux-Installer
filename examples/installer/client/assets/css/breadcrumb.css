@@ -17,7 +17,7 @@ div.myicon-spacer {
 }
 
 ol#breadcrumb-trail {
-    top: -25px;
+    top: -19px;
     display: inline-block;
     overflow: visible;
     position: absolute;
@@ -30,14 +30,12 @@ ol#breadcrumb-trail .category {
     list-style-type: none;
     display: inline-block;
     padding: 0;
-    margin-left: 16%;
+    margin-left: 19%;
 }
 
 ol#breadcrumb-trail .category:first-child {
     margin-left: 0;
 }
-
-
 
 ol#breadcrumb-trail .survey-progress-label {
     display: block;
@@ -45,7 +43,7 @@ ol#breadcrumb-trail .survey-progress-label {
 }
 
 ol#breadcrumb-trail .category .myicon-container {
-    display: inline-block;
+    display: block;
     height: 22px;
     background-image: url("/images/circle.png");
     background-repeat: repeat-x;
@@ -96,5 +94,5 @@ ol#breadcrumb-trail .category.last {
 ol#breadcrumb-trail .category.last .breadcrumb-myicon{
     background-position: 0 0;
     position: absolute;
-    top: 25px;
+    top: 19px;
   }

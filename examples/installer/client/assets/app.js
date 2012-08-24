@@ -148,16 +148,12 @@ var app = {
     },
 
     setupStageNavigator: function() {
-        var $ul = $('ol#breadcrumb-trail');
-        this.stages.forEach(function(stage) {
-            var $li = $(document.createElement('li'));
-            $li.addClass("mybreadcrumb category incomplete");
-            $li.attr("data-stage",stage.name);
-            $li.html('<span class="survey-progress-label">'+stage.name+
-                     '</span><div class="myicon-container"><div class="breadcrumb-myicon"></div></div>');
-            $ul.append($li);
+        var $last_li = $('ol#breadcrumb-trail li.last');
+        var li_tmpl = $('#bread_li_tmpl')[0].innerHTML;
+        this.stages.forEach(function (stage) {
+            var $li = (jade.compile(li_tmpl)) ({name:stage.name});
+            $last_li.before($li);
         });
-        $ul.append('<li class="mybreadcrumb category last"><div class="myicon-container"><div class="breadcrumb-myicon"></div></div></li>');
     },
 
     animateStage: function(stage) {

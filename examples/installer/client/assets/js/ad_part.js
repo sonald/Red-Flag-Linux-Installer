@@ -138,11 +138,8 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var mp = $(this).attr("mp");
                 $(this).parents('.modal').find('.alert').parent().remove();
                 if (_.include(that.record.mp, value)) {
-                    var warnning = '<div class="control-group form-horizontal">' + 
-                                '<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button>' 
-                                + '<strong>' +i18n.gettext('Warning!') + '</strong>' +
-                                i18n.gettext('The mount point has been selected.') + '</div></div>';
-                    $(this).parents('.control-group').after(warnning);
+                    var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
+                    $(this).parents('.control-group').after(warning);
                     $(this).val(mp);
                 }
             });
