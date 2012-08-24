@@ -48,6 +48,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 alert(i18n.gettext("Select a disk of at least 6 GB."));
                 return;
             }
+            if (Rpart.next() === false) {
+                return;
+            }
 
             Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
                 that.locals["disks"] = that.options.disks = disks;

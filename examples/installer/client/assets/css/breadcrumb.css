@@ -1,91 +1,100 @@
 .breadcrumb-wrapper {
-  margin: 0;
-  margin-bottom: 10px;
+    margin: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    position: relative;
+    top: 35px;
 }
+
+div.myicon-spacer {
+    display: inline-block;
+    width: 70%;
+    height: 22px;
+    position: relative;
+    background-image: url("/images/line.png");
+    background-repeat: repeat-x;
+    margin-left:10%;
+}
+
 ol#breadcrumb-trail {
-  display: inline-block;
-  overflow: hidden;
-  margin: 20px;
-  margin-bottom: 0;
-  margin-right: 0;
-  padding-left: 0;
-  vertical-align: bottom;
+    top: -25px;
+    display: inline-block;
+    overflow: visible;
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 ol#breadcrumb-trail .category {
-  list-style-type: none;
-  display: inline-block;
-  padding: 0;
-  text-align: center;
+    list-style-type: none;
+    display: inline-block;
+    padding: 0;
+    margin-left: 16%;
 }
+
+ol#breadcrumb-trail .category:first-child {
+    margin-left: 0;
+}
+
+
 
 ol#breadcrumb-trail .survey-progress-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-ol#breadcrumb-trail .category .myicon-spacer {
-  display: inline-block;
-  width: 55px;
-  height: 22px;
-  background-image: url("/images/line.png");
-  background-repeat: repeat-x;
+    display: block;
+    margin-bottom: 5px;
 }
 
 ol#breadcrumb-trail .category .myicon-container {
-  display: inline-block;
-  height: 22px;
-  background-image: url("/images/line.png");
-  background-repeat: repeat-x;
+    display: inline-block;
+    height: 22px;
+    background-image: url("/images/circle.png");
+    background-repeat: repeat-x;
 }
 
-.survey-progress-arrow, ol#breadcrumb-trail .category.incomplete .breadcrumb-myicon, ol#breadcrumb-trail .category.checked .breadcrumb-myicon, ol#breadcrumb-trail .category.current .breadcrumb-myicon {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  text-align: center;
-  background: url('/images/circle.png') no-repeat;
+.survey-progress-arrow, ol#breadcrumb-trail .category .breadcrumb-myicon {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: url('/images/circle.png') no-repeat;
 }
 
 ol#breadcrumb-trail .category.incomplete .breadcrumb-myicon {
-  background-position: 0 -66px;
+    background-position: 0 -66px;
 }
 
 ol#breadcrumb-trail .category:first-child .myicon-container {
-  background-position: 11px 0;
-  background-repeat: no-repeat;
+    background-position: 11px 0;
+    background-repeat: no-repeat;
 }
 
 ol#breadcrumb-trail .category:first-child .myicon-spacer.left {
-  background-image: none;
+    background-image: none;
 }
 
 ol#breadcrumb-trail .category.current .breadcrumb-myicon {
-  background-position: 0 -110px;
+    background-position: 0 -110px;
 }
 
 ol#breadcrumb-trail .category.checked .breadcrumb-myicon {
-  background-position: 0 -22px;
-}
-
-.arrow-container {
-    display: inline-block;
-    margin: 0;
-    height: 22px;
-    vertical-align: baseline;
-}
-
-.survey-progress-arrow {
-    background-position: 0 0;
+    background-position: 0 -22px;
 }
 
 .end-trail {
     display: inline-block;
-    vertical-align: top;
-    padding-left: 10px;
-    padding-top: 47px;
     color: #EB7A24;
     text-size: 14px;
     font-weight: bold;
+    width: 10%;
+    padding-left: 27px;
 }
 
+ol#breadcrumb-trail .category.last {
+    margin: 0;
+    float: right;
+}
+
+ol#breadcrumb-trail .category.last .breadcrumb-myicon{
+    background-position: 0 0;
+    position: absolute;
+    top: 25px;
+  }

@@ -154,13 +154,10 @@ var app = {
             $li.addClass("mybreadcrumb category incomplete");
             $li.attr("data-stage",stage.name);
             $li.html('<span class="survey-progress-label">'+stage.name+
-                     '</span><div class="mybreadcon"><div class="myicon-spacer left"></div><div class="myicon-container"><div class="breadcrumb-myicon"></div></div><div class="myicon-spacer right"></div></div>');
+                     '</span><div class="myicon-container"><div class="breadcrumb-myicon"></div></div>');
             $ul.append($li);
         });
-        $ul.after('<div class="arrow-container">'+
-                  '<div class="survey-progress-arrow"></div>'+
-                  '</div>'+'<div class="end-trail"><span>'+
-                 'Finished!'+'</span></div>');
+        $ul.append('<li class="mybreadcrumb category last"><div class="myicon-container"><div class="breadcrumb-myicon"></div></div></li>');
     },
 
     animateStage: function(stage) {

@@ -89,8 +89,10 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 alert(i18n.gettext("Select a partition of at least 6 GB"));
                 return;
             }
+            if (Rpart.next() === false){
+                return;
+            }
             var dpath = disk.path;
-
             if (part.number < 0) {
                 Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
                     var new_number = Number(result.handlepart);

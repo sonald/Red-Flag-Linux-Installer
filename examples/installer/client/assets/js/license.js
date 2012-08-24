@@ -92,11 +92,10 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                 window.apis.services.install.minimalSufficient(devices, function (result) {
                     if (result.status === "success") {
                         callback();
-                    }else if (result.status === "warning"){
-                        alert(i18n.gettext(result.reason));
+                    }else if (result.status === "warning") {
+                        alert(i18n.gettext("Some disk size does not meet the minimum requirements or memory is less than 1 GB"));
+                        console.log(result.reaason);
                         callback ();
-                    }else {
-                        alert(i18n.gettext(result.reason));
                     }
                 });
             });

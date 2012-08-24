@@ -136,9 +136,13 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
-                $(this).next('b').remove();
+                $(this).parents('.modal').find('.alert').parent().remove();
                 if (_.include(that.record.mp, value)) {
-                    $(this).after(i18n.gettext("<b>Sorry</b>"));
+                    var warnning = '<div class="control-group form-horizontal">' + 
+                                '<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button>' 
+                                + '<strong>' +i18n.gettext('Warning!') + '</strong>' +
+                                i18n.gettext('The mount point has been selected.') + '</div></div>';
+                    $(this).parents('.control-group').after(warnning);
                     $(this).val(mp);
                 }
             });
@@ -173,9 +177,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
 
-                size = $modal.find("#size").attr("value");
-                if (size.match(/^(\d*)(\.?)(\d*)$/g) === null) {
-                    alert(i18n.gettext('Number!!'));
+                size = Number($modal.find("#size").attr("value"));
+                if ( size===NaN && size < 0.01 ) {
+                    alert(i18n.gettext('Please enter the number!'));
                     return;
                 }else {
                     size = Number($modal.find("#size").attr("value"));
@@ -197,6 +201,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').on('click','.js-edit-submit',function () {
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
+                $modal.find('.alert').parent().remove();
                 path = $(this).attr("path");
                 number = Number($(this).attr("number"));
                 fstype = $modal.find("#fs").val();
@@ -304,7 +309,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 alert(i18n.gettext("The root partition requires at least 6 GB space!"));
                 return;
             }
-            //data control
+            if (Rpart.next() === false) {
+                return;
+            }
             _.each(that.record.dirty, function (el) {
                 var path = el.path;
                 var number = el.number;

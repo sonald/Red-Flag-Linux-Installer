@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-07 17:40+0800",
+         "POT-Creation-Date": " 2012-08-23 18:06+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,45 +16,37 @@ define(["system"],
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "Username": [
+      "CreateDisk": [
          null,
-         "用户名"
+         "创建磁盘"
       ],
-      "Only letters, numbers, and underscores.": [
+      "Size": [
          null,
-         "只允许填入字母、数字和_。"
+         "大小(GB)"
       ],
-      "Hostname": [
+      "PartType": [
          null,
-         "主机名"
+         "分区类型"
       ],
-      "agree": [
+      "logical": [
          null,
-         "同意"
+         "逻辑分区"
       ],
-      "disagree": [
+      "primary": [
          null,
-         "不同意"
+         "主分区"
       ],
-      "MountPoint:": [
+      "extended": [
          null,
-         "挂载点："
-      ],
-      "Edit": [
-         null,
-         "编辑"
-      ],
-      "EditDisk": [
-         null,
-         "编辑磁盘"
-      ],
-      "MountPoint": [
-         null,
-         "挂载点"
+         "扩展分区"
       ],
       "FileSystem": [
          null,
          "文件系统"
+      ],
+      "MountPoint": [
+         null,
+         "挂载点"
       ],
       "Close": [
          null,
@@ -63,6 +55,14 @@ define(["system"],
       "Submit": [
          null,
          "提交"
+      ],
+      "Unknow": [
+         null,
+         ""
+      ],
+      "Select one disk: ": [
+         null,
+         "请选择一个磁盘："
       ],
       "Reset": [
          null,
@@ -76,6 +76,10 @@ define(["system"],
          null,
          "启动分区"
       ],
+      "Not install": [
+         null,
+         "不安装"
+      ],
       "Easy": [
          null,
          "简单"
@@ -88,81 +92,109 @@ define(["system"],
          null,
          "高级分区"
       ],
+      "disk": [
+         null,
+         "磁盘"
+      ],
       "free": [
          null,
          "空闲"
       ],
-      "create": [
+      "selected": [
          null,
-         "创建"
+         "已选择"
       ],
-      "CreateDisk": [
+      "agree": [
          null,
-         "创建磁盘"
+         "同意"
       ],
-      "Size": [
+      "disagree": [
          null,
-         "大小(GB)"
+         "不同意"
       ],
-      "PartType": [
+      "Username": [
          null,
-         "分区类型"
+         "用户名"
       ],
-      "primary": [
+      "Only letters, numbers, and underscores.": [
          null,
-         "主分区"
+         "只允许填入字母、数字和_。"
       ],
-      "logical": [
+      "Hostname": [
          null,
-         "逻辑分区"
+         "主机名"
       ],
-      "extended": [
+      "EditDisk": [
          null,
-         "扩展分区"
+         "编辑磁盘"
       ],
-      "Alignment To Beginning": [
+      "Free": [
          null,
-         "安装起始位置"
+         "空闲"
       ],
-      "Alignment To End": [
+      "Finished!": [
          null,
-         "安装结束位置"
+         "完成安装"
       ],
       "Next": [
          null,
          "下一步"
       ],
-      "System Error!": [
+      "Select a disk of at least 6 GB.": [
          null,
-         "系统错误！"
+         "选择一块至少6GB大小的磁盘。"
       ],
-      "Set": [
+      "Select a disks please": [
          null,
-         "设置"
+         "选择一块至少6GB大小的磁盘。"
       ],
-      "Welcome": [
+      "Operation fails": [
          null,
-         "欢迎"
+         "操作失败"
       ],
       "Part": [
          null,
          "分区"
       ],
-      "Install": [
+      "Welcome": [
          null,
-         "安装"
+         "欢迎"
       ],
-      "install": [
+      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
          null,
-         "安装"
+         "某些磁盘大小不足或者内存小于1GB"
       ],
-      "Congratulations~You have finished installing the system.": [
+      "Select a partition of at least 6 GB.": [
          null,
-         "恭喜，安装成功。"
+         "选择一个至少6GB大小的分区。"
       ],
-      "Select a disk of at least 6 GB.": [
+      "Please select a partition to continue.": [
          null,
-         "选择一块至少6GB大小的磁盘。"
+         "继续前，请选择一块分区。"
+      ],
+      "Select a partition of at least 6 GB": [
+         null,
+         "选择一个至少6GB大小的分区"
+      ],
+      "Warning!": [
+         null,
+         "提示："
+      ],
+      "The mount point has been selected.": [
+         null,
+         "此挂载点已经被选择。"
+      ],
+      "Please enter the number!": [
+         null,
+         "请输入数字！"
+      ],
+      "You need specify a root partition.": [
+         null,
+         "请指定一个根分区。"
+      ],
+      "The root partition requires at least 6 GB space!": [
+         null,
+         "根分区需要至少6GB空间！"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -184,33 +216,49 @@ define(["system"],
          null,
          "<b>长度不能超过%d个字母</b>"
       ],
+      "Set": [
+         null,
+         "设置"
+      ],
+      "Install": [
+         null,
+         "安装"
+      ],
+      "install": [
+         null,
+         "安装"
+      ],
+      "close": [
+         null,
+         "取消"
+      ],
+      "Congratulations~You have finished installing the system.": [
+         null,
+         "恭喜，安装成功。"
+      ],
+      "System Error!": [
+         null,
+         "系统错误！"
+      ],
+      "MountPoint:": [
+         null,
+         "挂载点："
+      ],
+      "Edit": [
+         null,
+         "编辑"
+      ],
+      "create": [
+         null,
+         "创建"
+      ],
       "Number!!": [
          null,
          "序号！！"
       ],
-      "You need specify a root partition.": [
-         null,
-         "请指定一个根分区。"
-      ],
       "Select only one root partition.": [
          null,
          "仅选择一个根分区。"
-      ],
-      "The root partition requires at least 6 GB space!": [
-         null,
-         "根分区需要至少6GB空间！"
-      ],
-      "Select a partition of at least 6 GB.": [
-         null,
-         "选择一个至少6GB大小的分区。"
-      ],
-      "Please select a partition to continue.": [
-         null,
-         "继续前，请选择一块分区。"
-      ],
-      "Select a partition of at least 6 GB": [
-         null,
-         "选择一个至少6GB大小的分区"
       ],
       "English": [
          null,
