@@ -129,9 +129,16 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.app.buttons.get("forward").enable();
             this.app.buttons.get("forward").change(i18n.gettext('install'));
 
+            this.app.buttons.add("close");
+            this.app.buttons.get("close").change(i18n.gettext('close'));
+            this.app.buttons.get("close").bind('click', function() {
+                window.installer && window.installer.closeInstaller();
+            });
+
             var that = this;
             this.app.buttons.get("forward").bind('click', function() {
                 that.app.buttons.get("forward").disable();
+                that.app.buttons.get("close").disable();
 
                 window.apis.services.partition.commit(function(result) {
                     if(result.status === "failure"){
@@ -147,7 +154,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
         onInstall: function() {
             console.log(this.app.options);
-            // mock_packAndUnpack(this.app.options, $.proxy(this.onProgress, this));
+            //mock_packAndUnpack(this.app.options, $.proxy(this.onProgress, this));
             window.apis.services.install.packAndUnpack(
                 this.app.options, $.proxy(this.onProgress, this));
         },
@@ -158,15 +165,6 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.$logs.html($msg);
         },
 
-        setupCloseButton: function() {
-            var btns = this.app.buttons;
-            btns.get("forward").enable();
-            btns.get("forward").change(i18n.gettext('close'));
-            btns.get("forward").bind('click', function() {
-                window.installer && window.installer.closeInstaller();
-            });
-        },
-        
         onProgress: (function() {
             var progress = 0;
 
@@ -186,13 +184,13 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     
                 } else if (respond.status === "failure") {
                     this.buildMessage(respond.reason, 'label-error');
-                    this.setupCloseButton();
+                    this.app.buttons.get("close").enable();
                     
                 } else if (respond.status === "success") {
                     this.buildMessage(
                         i18n.gettext('Congratulations~You have finished installing the system.'),
                         'label-important');
-                    this.setupCloseButton();
+                    this.app.buttons.get("close").enable();
 
                 } else {
                     this.buildMessage(respond.status, 'label-info');

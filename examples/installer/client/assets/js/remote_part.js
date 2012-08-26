@@ -56,7 +56,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             return new_disks;
         },
         next: function () {
-            var r = confirm(i18n.gettext("The selected will be formatted.Are you sure?"));
+            var r = confirm(i18n.gettext("The selected will be formatted. Press ok to continue"));
             return r;
         },
     };

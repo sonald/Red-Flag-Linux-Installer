@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-23 18:06+0800\n"
+"POT-Creation-Date: 2012-08-26 12:18+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,52 +20,80 @@ msgstr ""
 "X-Language: zh_CN\n"
 "X-Source-Language: C\n"
 
-#: client/views/create_part.jade:5
-msgid "CreateDisk"
-msgstr "创建磁盘"
+#: client/views/userinfo.jade:4
+msgid "Username"
+msgstr "用户名"
 
-#: client/views/create_part.jade:8 client/views/edit_part.jade:8
+#: client/views/userinfo.jade:7
+msgid "Only letters, numbers, and underscores."
+msgstr "只允许填入字母、数字和_。"
+
+#: client/views/userinfo.jade:10
+msgid "Hostname"
+msgstr "主机名"
+
+#: client/views/license.jade:160
+msgid "agree"
+msgstr "同意"
+
+#: client/views/license.jade:163
+msgid "disagree"
+msgstr "不同意"
+
+#: client/views/logical_part.jade:14 client/views/primary_part.jade:14
+msgid "Unknow"
+msgstr ""
+
+#: client/views/edit_part.jade:5
+msgid "EditDisk"
+msgstr "编辑磁盘"
+
+#: client/views/edit_part.jade:8 client/views/create_part.jade:8
 msgid "Size"
 msgstr "大小(GB)"
 
-#: client/views/create_part.jade:12 client/views/edit_part.jade:12
+#: client/views/edit_part.jade:12 client/views/create_part.jade:12
 msgid "PartType"
 msgstr "分区类型"
 
-#: client/views/create_part.jade:16 client/views/part.jade:20
-#: client/views/edit_part.jade:16
-msgid "logical"
-msgstr "逻辑分区"
-
-#: client/views/create_part.jade:18 client/views/part.jade:18
-#: client/views/edit_part.jade:15
+#: client/views/edit_part.jade:15 client/views/part.jade:18
+#: client/views/create_part.jade:18
 msgid "primary"
 msgstr "主分区"
 
-#: client/views/create_part.jade:20 client/views/part.jade:22
-#: client/views/edit_part.jade:17
+#: client/views/edit_part.jade:16 client/views/part.jade:20
+#: client/views/create_part.jade:16
+msgid "logical"
+msgstr "逻辑分区"
+
+#: client/views/edit_part.jade:17 client/views/part.jade:22
+#: client/views/create_part.jade:20
 msgid "extended"
 msgstr "扩展分区"
 
-#: client/views/create_part.jade:22 client/views/edit_part.jade:19
+#: client/views/edit_part.jade:19 client/views/create_part.jade:22
 msgid "FileSystem"
 msgstr "文件系统"
 
-#: client/views/create_part.jade:28 client/views/edit_part.jade:25
+#: client/views/edit_part.jade:25 client/views/create_part.jade:28
 msgid "MountPoint"
 msgstr "挂载点"
 
-#: client/views/create_part.jade:35 client/views/edit_part.jade:32
+#: client/views/edit_part.jade:32 client/views/create_part.jade:35
 msgid "Close"
-msgstr "取消"
+msgstr "关闭"
 
-#: client/views/create_part.jade:36 client/views/edit_part.jade:33
+#: client/views/edit_part.jade:33 client/views/create_part.jade:36
 msgid "Submit"
 msgstr "提交"
 
-#: client/views/primary_part.jade:14 client/views/logical_part.jade:14
-msgid "Unknow"
-msgstr ""
+#: client/views/partial.jade:10
+msgid "Warning!"
+msgstr "提示："
+
+#: client/views/partial.jade:11
+msgid "The mount point has been selected."
+msgstr "此挂载点已经被选择。"
 
 #: client/views/fd_part.jade:3
 msgid "Select one disk: "
@@ -84,7 +112,6 @@ msgid "Boot Partition"
 msgstr "启动分区"
 
 #: client/views/ad_part.jade:26
-#, fuzzy
 msgid "Not install"
 msgstr "不安装"
 
@@ -112,101 +139,67 @@ msgstr "空闲"
 msgid "selected"
 msgstr "已选择"
 
-#: client/views/license.jade:160
-msgid "agree"
-msgstr "同意"
-
-#: client/views/license.jade:163
-msgid "disagree"
-msgstr "不同意"
-
-#: client/views/userinfo.jade:4
-msgid "Username"
-msgstr "用户名"
-
-#: client/views/userinfo.jade:7
-msgid "Only letters, numbers, and underscores."
-msgstr "只允许填入字母、数字和_。"
-
-#: client/views/userinfo.jade:10
-msgid "Hostname"
-msgstr "主机名"
-
-#: client/views/edit_part.jade:5
-msgid "EditDisk"
-msgstr "编辑磁盘"
-
 #: client/views/free_part.jade:6
 msgid "Free"
 msgstr "空闲"
 
-#: client/assets/app.js:163
-msgid "Finished!"
-msgstr "完成安装"
+#: client/views/create_part.jade:5
+msgid "CreateDisk"
+msgstr "创建磁盘"
 
-#: client/assets/app.js:187
+#: client/assets/app.js:180
 msgid "Next"
 msgstr "下一步"
-
-#: client/assets/js/fd_part.js:33 client/assets/js/fd_part.js:48
-msgid "Select a disk of at least 6 GB."
-msgstr "选择一块至少6GB大小的磁盘。"
-
-#: client/assets/js/fd_part.js:42
-#, fuzzy
-msgid "Select a disks please"
-msgstr "选择一块至少6GB大小的磁盘。"
 
 #: client/assets/js/remote_part.js:23
 msgid "Operation fails"
 msgstr "操作失败"
 
-#: client/assets/js/part.js:8
-msgid "Part"
-msgstr "分区"
+#: client/assets/js/remote_part.js:59
+msgid "The selected will be formatted. Press ok to continue"
+msgstr "选择的分区将被格式化，确定请继续"
+
+#: client/assets/js/userinfo.js:8
+msgid "Set"
+msgstr "设置"
 
 #: client/assets/js/license.js:28
 msgid "Welcome"
 msgstr "欢迎"
 
 #: client/assets/js/license.js:96
-#, fuzzy
 msgid ""
 "Some disk size does not meet the minimum requirements or memory is less than "
 "1 GB"
 msgstr "某些磁盘大小不足或者内存小于1GB"
 
-#: client/assets/js/easy_part.js:71
-msgid "Select a partition of at least 6 GB."
-msgstr "选择一个至少6GB大小的分区。"
+#: client/assets/js/part.js:8
+msgid "Part"
+msgstr "分区"
 
-#: client/assets/js/easy_part.js:81
-msgid "Please select a partition to continue."
-msgstr "继续前，请选择一块分区。"
+#: client/assets/js/process.js:51
+msgid "Install"
+msgstr "安装"
 
-#: client/assets/js/easy_part.js:89
-msgid "Select a partition of at least 6 GB"
-msgstr "选择一个至少6GB大小的分区"
+#: client/assets/js/process.js:130
+msgid "install"
+msgstr "安装"
 
-#: client/assets/js/ad_part.js:143
-msgid "Warning!"
-msgstr "提示："
+#: client/assets/js/process.js:133
+msgid "close"
+msgstr "关闭"
 
-#: client/assets/js/ad_part.js:144
-msgid "The mount point has been selected."
-msgstr "此挂载点已经被选择。"
+#: client/assets/js/process.js:191
+msgid "Congratulations~You have finished installing the system."
+msgstr "恭喜，安装成功。"
 
-#: client/assets/js/ad_part.js:182
-msgid "Please enter the number!"
-msgstr "请输入数字！"
+#: client/assets/js/fd_part.js:33 client/assets/js/fd_part.js:48
+msgid "Select a disk of at least 6 GB."
+msgstr "选择一块至少6GB大小的磁盘。"
 
-#: client/assets/js/ad_part.js:306
-msgid "You need specify a root partition."
-msgstr "请指定一个根分区。"
-
-#: client/assets/js/ad_part.js:309
-msgid "The root partition requires at least 6 GB space!"
-msgstr "根分区需要至少6GB空间！"
+#: client/assets/js/fd_part.js:42
+msgid "Select a disks please"
+msgstr "选择一块至少6GB大小的磁盘。"
 
 #: client/assets/js/js_validate.js:5
 msgid "<b>This field is required. </b>"
@@ -230,26 +223,32 @@ msgstr "<b>长度最少为%d个字符</b>"
 msgid "<b>Please enter the same content again.</b>"
 msgstr "<b>长度不能超过%d个字母</b>"
 
-#: client/assets/js/userinfo.js:8
-msgid "Set"
-msgstr "设置"
+#: client/assets/js/ad_part.js:179
+msgid "Please enter the number!"
+msgstr "请输入数字！"
 
-#: client/assets/js/process.js:51
-msgid "Install"
-msgstr "安装"
+#: client/assets/js/ad_part.js:303
+msgid "You need specify a root partition."
+msgstr "请指定一个根分区。"
 
-#: client/assets/js/process.js:130
-msgid "install"
-msgstr "安装"
+#: client/assets/js/ad_part.js:306
+msgid "The root partition requires at least 6 GB space!"
+msgstr "根分区需要至少6GB空间！"
 
-#: client/assets/js/process.js:164
-#, fuzzy
-msgid "close"
-msgstr "取消"
+#: client/assets/js/easy_part.js:71
+msgid "Select a partition of at least 6 GB."
+msgstr "选择一个至少6GB大小的分区。"
 
-#: client/assets/js/process.js:193
-msgid "Congratulations~You have finished installing the system."
-msgstr "恭喜，安装成功。"
+#: client/assets/js/easy_part.js:81
+msgid "Please select a partition to continue."
+msgstr "继续前，请选择一块分区。"
+
+#: client/assets/js/easy_part.js:89
+msgid "Select a partition of at least 6 GB"
+msgstr "选择一个至少6GB大小的分区"
+
+#~ msgid "Finished!"
+#~ msgstr "完成安装"
 
 #~ msgid "System Error!"
 #~ msgstr "系统错误！"

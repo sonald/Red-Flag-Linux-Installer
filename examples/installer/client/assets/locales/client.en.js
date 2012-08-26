@@ -1,7 +1,31 @@
 define(["system"], 
 {
    "en": {
-      "CreateDisk": [
+      "Username": [
+         null,
+         ""
+      ],
+      "Only letters, numbers, and underscores.": [
+         null,
+         ""
+      ],
+      "Hostname": [
+         null,
+         ""
+      ],
+      "agree": [
+         null,
+         ""
+      ],
+      "disagree": [
+         null,
+         ""
+      ],
+      "Unknow": [
+         null,
+         ""
+      ],
+      "EditDisk": [
          null,
          ""
       ],
@@ -13,11 +37,11 @@ define(["system"],
          null,
          ""
       ],
-      "logical": [
+      "primary": [
          null,
          ""
       ],
-      "primary": [
+      "logical": [
          null,
          ""
       ],
@@ -41,7 +65,11 @@ define(["system"],
          null,
          ""
       ],
-      "Unknow": [
+      "Warning!": [
+         null,
+         ""
+      ],
+      "The mount point has been selected.": [
          null,
          ""
       ],
@@ -89,35 +117,11 @@ define(["system"],
          null,
          ""
       ],
-      "agree": [
-         null,
-         ""
-      ],
-      "disagree": [
-         null,
-         ""
-      ],
-      "Username": [
-         null,
-         ""
-      ],
-      "Only letters, numbers, and underscores.": [
-         null,
-         ""
-      ],
-      "Hostname": [
-         null,
-         ""
-      ],
-      "EditDisk": [
-         null,
-         ""
-      ],
       "Free": [
          null,
          ""
       ],
-      "Finished!": [
+      "CreateDisk": [
          null,
          ""
       ],
@@ -125,19 +129,15 @@ define(["system"],
          null,
          ""
       ],
-      "Select a disk of at least 6 GB.": [
-         null,
-         ""
-      ],
-      "Select a disks please": [
-         null,
-         ""
-      ],
       "Operation fails": [
          null,
          ""
       ],
-      "Part": [
+      "The selected will be formatted. Press ok to continue": [
+         null,
+         ""
+      ],
+      "Set": [
          null,
          ""
       ],
@@ -149,35 +149,31 @@ define(["system"],
          null,
          ""
       ],
-      "Select a partition of at least 6 GB.": [
+      "Part": [
          null,
          ""
       ],
-      "Please select a partition to continue.": [
+      "Install": [
          null,
          ""
       ],
-      "Select a partition of at least 6 GB": [
+      "install": [
          null,
          ""
       ],
-      "Warning!": [
+      "close": [
          null,
          ""
       ],
-      "The mount point has been selected.": [
+      "Congratulations~You have finished installing the system.": [
          null,
          ""
       ],
-      "Please enter the number!": [
+      "Select a disk of at least 6 GB.": [
          null,
          ""
       ],
-      "You need specify a root partition.": [
-         null,
-         ""
-      ],
-      "The root partition requires at least 6 GB space!": [
+      "Select a disks please": [
          null,
          ""
       ],
@@ -201,23 +197,27 @@ define(["system"],
          null,
          ""
       ],
-      "Set": [
+      "Please enter the number!": [
          null,
          ""
       ],
-      "Install": [
+      "You need specify a root partition.": [
          null,
          ""
       ],
-      "install": [
+      "The root partition requires at least 6 GB space!": [
          null,
          ""
       ],
-      "close": [
+      "Select a partition of at least 6 GB.": [
          null,
          ""
       ],
-      "Congratulations~You have finished installing the system.": [
+      "Please select a partition to continue.": [
+         null,
+         ""
+      ],
+      "Select a partition of at least 6 GB": [
          null,
          ""
       ],
