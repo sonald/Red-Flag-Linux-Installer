@@ -6,5 +6,4 @@ script(type="text/template", id="free_part_tmpl").
                     = gettext("Free")
             li
                 b
-                    = Number(part.size).toFixed(2)
-                    = unit
+                    = part.size + part.unit

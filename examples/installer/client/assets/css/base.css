@@ -200,12 +200,16 @@ ul.buttons a.smaller {
     padding: 9px 12px;
 }
 
+ul.buttons a:active {
+    background: #41862A;
+}
+
 ul.buttons a.disabled {
     background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);   
 }
 
-ul.buttons a:active {
-    background: #41862A;
+ul.buttons a.disabled:active {
+    background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);
 }
 
 .right {

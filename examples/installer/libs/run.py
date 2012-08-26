@@ -27,6 +27,7 @@ class Window(QWidget):
 
         self.splitter = QSplitter(self)
         self.splitter.setOrientation(Qt.Vertical)
+        self.setWindowTitle("Qomo Installer")
 
         layout = QVBoxLayout(self)
         layout.setMargin(0)
