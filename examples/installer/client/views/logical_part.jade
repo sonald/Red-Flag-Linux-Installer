@@ -4,16 +4,10 @@ script(type="text/template", id="logical_part_tmpl").
         ul.selectable.wat-cf.part(number=part.number,pty=part.ty,data-toggle="modal", href="#"+String(dindex)+String(pindex), pindex=pindex, dindex=dindex)
             li
                 b
-                    = path.slice(5) + part.number
+                    = part.ui_path
                 b.partmp
             li
                 b.partfs
-                    -if(part.fs.match("swap"))
-                        = "swap" 
-                    -else if (part.fs == "")
-                        = gettext("Unknow")
-                    -else
-                        = part.fs
+                    = part.fs
                 b
-                    = " "+Number(part.size).toFixed(2)
-                    = unit
+                    = " "+part.size + part.unit

@@ -59,6 +59,67 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             var r = confirm(i18n.gettext("The selected will be formatted. Press ok to continue"));
             return r;
         },
+
+        render: function (disks, act, locals) {
+            var that = this;
+            var tys, pindex, $disk, tmpPage, actPage, dindex = 0;
+            tys = ["primary", "free", "extended"];//logical is special
+
+            _.each(disks, function (disk) {
+                pindex = 0;
+                $disk = $('ul.disk[dpath="'+disk.path+'"]');
+                _.each(disk.table, function (part){
+                    part = that.part_proper(disk.path, disk.unit, part);
+                    var args = {
+                                pindex:pindex,
+                                dindex:dindex,
+                                part:part,
+                                path:disk.path,
+                                gettext:locals.gettext,
+                            };
+                    actPage = "";
+                    if (part.number < 0) {
+                        tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
+                        if (act === true) {
+                            actPage = (jade.compile($('#create_part_tmpl')[0].innerHTML))(args);
+                        }
+                    }else{
+                        tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
+                        if (act === true && part.ty !== "extended") {
+                            actPage = (jade.compile($('#edit_part_tmpl')[0].innerHTML))(args);
+                        }
+                    };
+                    if (_.indexOf(tys, part.ty) > -1) {
+                        $disk.append(tmpPage);
+                    }else {
+                        $disk.find('ul.logicals').append(tmpPage);
+                    };
+                    if (part.ty !== "extended") {
+                        $disk.find('ul.selectable').last().after(actPage);
+                    }
+                    if (act === false) {
+                        $disk.find('ul.selectable').last().tooltip({title: part.title});
+                        $disk.find('ul.part').prev('button.close').remove();
+                    }
+                    pindex++;
+                });
+                dindex++;
+            });
+        },
+
+        part_proper: function (path, unit, part){
+            part.unit = unit;
+            part.size = Number((part.size).toFixed(2));
+            if (part.number > 0) {
+                part.ui_path = path.slice(5)+part.number;
+                part.fs = part.fs || "Unknow";
+                part.fs = ((part.fs).match(/swap/g)) ? "swap" : part.fs;
+                part.title = part.ui_path + " " + part.fs + " " + part.size + unit;
+            }else {
+                part.title = i18n.gettext("Free") + " " + part.size+unit;
+            }
+            return part;
+        },
     };
     return partial;
 });

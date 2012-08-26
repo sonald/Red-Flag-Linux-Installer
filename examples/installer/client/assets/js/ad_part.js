@@ -44,53 +44,27 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
         renderPart: function () {
             var that = this;
-            var tys, pindex, $disk, tmpPage, args, dindex = 0;
+            var pindex, $disk, dindex = 0;
+
             var new_disks = Rpart.calc_percent(that.options.disks);
-            tys = ["primary", "free", "extended"];//logical is special
-            
+            Rpart.render(new_disks, true, that.locals);
+
             _.each(new_disks, function (disk) {
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
-                    args = {
-                                pindex:pindex, 
-                                dindex:dindex,
-                                part:part,
-                                unit:disk.unit,
-                                path:disk.path,
-                                gettext:that.locals.gettext,
-                            };
-                    var actPage;
-                    if (part.number < 0) {
-                        tmpPage = (jade.compile($('#free_part_tmpl')[0].innerHTML))(args);
-                        actPage = (jade.compile($('#create_part_tmpl')[0].innerHTML))(args);
-                    }else{
-                        tmpPage = (jade.compile($('#'+part.ty+'_part_tmpl')[0].innerHTML))(args);
-                        if (part.ty === "extended") {
-                            actPage = "";
-                        }else {
-                            actPage = (jade.compile($('#edit_part_tmpl')[0].innerHTML))(args);
-                        };
-                    };
-                    if (_.indexOf(tys, part.ty) > -1) {
-                        $disk.append(tmpPage);
-                        $disk.find('ul.part').last().after(actPage);
-                    }else {
-                        $disk.find('ul.logicals').append(tmpPage);
-                        $disk.find('ul.logicals ul.part').last().after(actPage);
-                        if(part.number > 0) {
-                            $disk.find('ul.logicals').prev('button.close').remove();
-                        };
-                    };
-                    if (part.number > 0 && (_.include(["ext4",""],part.fs) === false || (part.fs).match(/swap/g))) {
-                        var $modal = $disk.find('ul.selectable').last().next('.modal');
-                        $modal.find("#fs").attr("disabled","true");
-                        $modal.find("#mp").attr("disabled","true");
+                    if (part.number > 0 && (_.include(["ext4","Unknow"],part.fs) === false || (part.fs).match(/swap/g))) {
+                        var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
+                        $modal.find("#fs").attr("disabled","");
+                        $modal.find("#mp").attr("disabled","");
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
-                        var $modal = $disk.find('ul.selectable').last().next('.modal');
-                        $modal.find("#mp").attr("disabled","true");
+                        var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
+                        $modal.find("#mp").attr("disabled","");
                     };
+                    if (part.number > 0 && part.ty === "logical") {
+                        $disk.find('ul.logicals').prev('button.close').remove();
+                    }
                     pindex++;
                 });
                 if ($disk.find('ul.logicals').prev('button.close').length > 0){
@@ -136,7 +110,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
-                $(this).parents('.modal').find('.alert').parent().remove();
+                $(this).parents('.modal').find('.alert').remove();
                 if (_.include(that.record.mp, value)) {
                     var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
                     $(this).parents('.control-group').after(warning);
