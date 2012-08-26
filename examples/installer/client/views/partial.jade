@@ -1,0 +1,12 @@
+script(type="text/template", id="bread_li_tmpl").
+    li.mybreadcrumb.category.incomplete(data-stage=name)
+        span.survey-process-label= name
+        .myicon-container
+            .breadcrumb-myicon
+
+script(type="text/template", id="warning_tmpl").
+    .alert
+        button.close(type="button", data-dismiss="alert") x
+        strong= gettext('Warning!')
+        = gettext('The mount point has been selected.')
+

@@ -10,6 +10,9 @@ block content
     div.breadcrumb-wrapper
         .myicon-spacer
             ol#breadcrumb-trail
+                li.mybreadcrumb.category.last
+                    .myicon-container
+                        .breadcrumb-myicon
         .end-trail
             span= tr('Finished!')
 
@@ -24,3 +27,4 @@ block content
     include license_zh
     include part
     include process
+    include partial
