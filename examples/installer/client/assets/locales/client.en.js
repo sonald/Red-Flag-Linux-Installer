@@ -41,7 +41,11 @@ define(["system"],
          null,
          ""
       ],
-      "Unknow": [
+      "Warning!": [
+         null,
+         ""
+      ],
+      "The mount point has been selected.": [
          null,
          ""
       ],
@@ -89,6 +93,18 @@ define(["system"],
          null,
          ""
       ],
+      "Confirm": [
+         null,
+         ""
+      ],
+      "You have completed all the configurations and it is about to install the system. The partition selected will be formatted.": [
+         null,
+         ""
+      ],
+      "OK": [
+         null,
+         ""
+      ],
       "agree": [
          null,
          ""
@@ -114,10 +130,6 @@ define(["system"],
          ""
       ],
       "Free": [
-         null,
-         ""
-      ],
-      "Finished!": [
          null,
          ""
       ],
@@ -158,14 +170,6 @@ define(["system"],
          ""
       ],
       "Select a partition of at least 6 GB": [
-         null,
-         ""
-      ],
-      "Warning!": [
-         null,
-         ""
-      ],
-      "The mount point has been selected.": [
          null,
          ""
       ],

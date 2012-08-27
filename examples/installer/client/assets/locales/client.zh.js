@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-23 18:06+0800",
+         "POT-Creation-Date": " 2012-08-28 01:54+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -56,9 +56,13 @@ define(["system"],
          null,
          "提交"
       ],
-      "Unknow": [
+      "Warning!": [
          null,
-         ""
+         "提示："
+      ],
+      "The mount point has been selected.": [
+         null,
+         "此挂载点已经被选择。"
       ],
       "Select one disk: ": [
          null,
@@ -104,6 +108,18 @@ define(["system"],
          null,
          "已选择"
       ],
+      "Confirm": [
+         null,
+         "确认"
+      ],
+      "You have completed all the configurations and it is about to install the system. The partition selected will be formatted.": [
+         null,
+         "已经完成所有配置，即将安装系统，你所选择的分区即将格式化。"
+      ],
+      "Continue": [
+         null,
+         "继续"
+      ],
       "agree": [
          null,
          "同意"
@@ -131,10 +147,6 @@ define(["system"],
       "Free": [
          null,
          "空闲"
-      ],
-      "Finished!": [
-         null,
-         "完成安装"
       ],
       "Next": [
          null,
@@ -175,14 +187,6 @@ define(["system"],
       "Select a partition of at least 6 GB": [
          null,
          "选择一个至少6GB大小的分区"
-      ],
-      "Warning!": [
-         null,
-         "提示："
-      ],
-      "The mount point has been selected.": [
-         null,
-         "此挂载点已经被选择。"
       ],
       "Please enter the number!": [
          null,
@@ -236,6 +240,10 @@ define(["system"],
          null,
          "恭喜，安装成功。"
       ],
+      "Finished!": [
+         null,
+         "完成安装"
+      ],
       "System Error!": [
          null,
          "系统错误！"
@@ -279,10 +287,6 @@ define(["system"],
       "password": [
          null,
          "密码"
-      ],
-      "confirm": [
-         null,
-         "确认"
       ],
       "Start(GB)": [
          null,

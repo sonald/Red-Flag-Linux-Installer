@@ -15,53 +15,58 @@ msgstr ""
 msgid "logical"
 msgstr ""
 
-#: client/views/create_part.jade:18 client/views/part.jade:18
-#: client/views/edit_part.jade:15
+#: client/views/create_part.jade:18 client/views/create_part.jade:20
+#: client/views/part.jade:18 client/views/edit_part.jade:15
 msgid "primary"
 msgstr ""
 
-#: client/views/create_part.jade:20 client/views/part.jade:22
+#: client/views/create_part.jade:21 client/views/part.jade:22
 #: client/views/edit_part.jade:17
 msgid "extended"
 msgstr ""
 
-#: client/views/create_part.jade:22 client/views/edit_part.jade:19
+#: client/views/create_part.jade:23 client/views/edit_part.jade:19
 msgid "FileSystem"
 msgstr ""
 
-#: client/views/create_part.jade:28 client/views/edit_part.jade:25
+#: client/views/create_part.jade:29 client/views/edit_part.jade:25
 msgid "MountPoint"
 msgstr ""
 
-#: client/views/create_part.jade:35 client/views/edit_part.jade:32
+#: client/views/create_part.jade:36 client/views/part.jade:36
+#: client/views/edit_part.jade:32
 msgid "Close"
 msgstr ""
 
-#: client/views/create_part.jade:36 client/views/edit_part.jade:33
+#: client/views/create_part.jade:37 client/views/edit_part.jade:33
 msgid "Submit"
 msgstr ""
 
-#: client/views/primary_part.jade:14 client/views/logical_part.jade:14
-msgid "Unknow"
+#: client/views/partial.jade:10
+msgid "Warning!"
+msgstr ""
+
+#: client/views/partial.jade:11
+msgid "The mount point has been selected."
 msgstr ""
 
 #: client/views/fd_part.jade:3
 msgid "Select one disk: "
 msgstr ""
 
-#: client/views/ad_part.jade:15
+#: client/views/ad_part.jade:13
 msgid "Reset"
 msgstr ""
 
-#: client/views/ad_part.jade:19
+#: client/views/ad_part.jade:16
 msgid "Grub Install At:"
 msgstr ""
 
-#: client/views/ad_part.jade:25
+#: client/views/ad_part.jade:22
 msgid "Boot Partition"
 msgstr ""
 
-#: client/views/ad_part.jade:26
+#: client/views/ad_part.jade:23
 msgid "Not install"
 msgstr ""
 
@@ -89,6 +94,20 @@ msgstr ""
 msgid "selected"
 msgstr ""
 
+#: client/views/part.jade:31
+msgid "Confirm"
+msgstr ""
+
+#: client/views/part.jade:34
+msgid ""
+"You have completed all the configurations and it is about to install the "
+"system. The partition selected will be formatted."
+msgstr ""
+
+#: client/views/part.jade:37
+msgid "Continue"
+msgstr ""
+
 #: client/views/license.jade:160
 msgid "agree"
 msgstr ""
@@ -113,15 +132,11 @@ msgstr ""
 msgid "EditDisk"
 msgstr ""
 
-#: client/views/free_part.jade:6
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:115
 msgid "Free"
 msgstr ""
 
-#: client/assets/app.js:163
-msgid "Finished!"
-msgstr ""
-
-#: client/assets/app.js:187
+#: client/assets/app.js:179
 msgid "Next"
 msgstr ""
 
@@ -151,35 +166,27 @@ msgid ""
 "1 GB"
 msgstr ""
 
-#: client/assets/js/easy_part.js:71
+#: client/assets/js/easy_part.js:39
 msgid "Select a partition of at least 6 GB."
 msgstr ""
 
-#: client/assets/js/easy_part.js:81
+#: client/assets/js/easy_part.js:49
 msgid "Please select a partition to continue."
 msgstr ""
 
-#: client/assets/js/easy_part.js:89
+#: client/assets/js/easy_part.js:57
 msgid "Select a partition of at least 6 GB"
 msgstr ""
 
-#: client/assets/js/ad_part.js:143
-msgid "Warning!"
-msgstr ""
-
-#: client/assets/js/ad_part.js:144
-msgid "The mount point has been selected."
-msgstr ""
-
-#: client/assets/js/ad_part.js:182
+#: client/assets/js/ad_part.js:153
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:306
+#: client/assets/js/ad_part.js:277
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:309
+#: client/assets/js/ad_part.js:280
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
@@ -213,14 +220,14 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/process.js:130
+#: client/assets/js/process.js:125
 msgid "install"
 msgstr ""
 
-#: client/assets/js/process.js:164
+#: client/assets/js/process.js:158
 msgid "close"
 msgstr ""
 
-#: client/assets/js/process.js:193
+#: client/assets/js/process.js:187
 msgid "Congratulations~You have finished installing the system."
 msgstr ""
