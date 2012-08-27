@@ -296,7 +296,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     };
                 });
 
-                var grubinstall = $('#grub').find(':checked').attr("value");
+                var grubinstall = $('#grub').val();
                 _.each(that.record.edit, function (el) {
                     var path = el.path;
                     var number = el.number;

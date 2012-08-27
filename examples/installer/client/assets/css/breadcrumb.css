@@ -45,8 +45,6 @@ ol#breadcrumb-trail .survey-progress-label {
 ol#breadcrumb-trail .category .myicon-container {
     display: block;
     height: 22px;
-    background-image: url("/images/circle.png");
-    background-repeat: repeat-x;
 }
 
 .survey-progress-arrow, ol#breadcrumb-trail .category .breadcrumb-myicon {

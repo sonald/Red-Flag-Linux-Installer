@@ -2,8 +2,6 @@ script(type="text/template", id="free_part_tmpl").
     li.horizontal.free(style="width:"+part.percent+"%;")
         ul.selectable.wat-cf.part(pty="free",data-toggle="modal", href="#"+String(dindex)+String(pindex), pindex=pindex, dindex=dindex)
             li
-                b
-                    = gettext("Free")
+                span= gettext("Free")
             li
-                b
-                    = part.size + part.unit
+                span= part.size + part.unit

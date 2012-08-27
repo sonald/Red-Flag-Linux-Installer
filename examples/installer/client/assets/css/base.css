@@ -113,6 +113,7 @@ div#presentation .item img {
 
 .part_table ul.disk {
     width: 95%;
+    text-align: center;
 }
 
 .part_table ul.part {
@@ -150,6 +151,7 @@ table.colorinfo td[pty="extended"],
 
 .part_table li.horizontal {
     float: left;
+    overflow: hidden;
 }
 
 .part_table ul.part {
