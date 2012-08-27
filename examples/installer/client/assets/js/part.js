@@ -68,6 +68,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
         validate: function(callback) {
             var that = this;
             var page_id = $('ul#PartTabs').find('li.active a').attr("id");
+            $('#myconfirm').off('click', '.js-confirm');
             that.method[page_id].validate(callback);
             console.log(that.app.options);
         },

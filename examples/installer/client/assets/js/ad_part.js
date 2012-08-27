@@ -280,44 +280,44 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 alert(i18n.gettext("The root partition requires at least 6 GB space!"));
                 return;
             }
-            if (Rpart.next() === false) {
-                return;
-            }
-            _.each(that.record.dirty, function (el) {
-                var path = el.path;
-                var number = el.number;
-                var disk = _.find(disks, function (disk_el) {
-                    return disk_el.path === path;
+            $('#myconfirm').modal();
+            $('#myconfirm').on('click', '.js-confirm', function () {
+                _.each(that.record.dirty, function (el) {
+                    var path = el.path;
+                    var number = el.number;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === path;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === number;
+                    });
+                    if(part && part.ty !== "extended") {
+                        part["dirty"] = true;
+                    };
                 });
-                var part = _.find(disk.table, function (part_el) {
-                    return part_el.number === number;
-                });
-                if(part && part.ty !== "extended") {
+
+                var grubinstall = $('#grub').find(':checked').attr("value");
+                _.each(that.record.edit, function (el) {
+                    var path = el.path;
+                    var number = el.number;
+                    var disk = _.find(disks, function (disk_el) {
+                        return disk_el.path === path;
+                    });
+                    var part = _.find(disk.table, function (part_el) {
+                        return part_el.number === number;
+                    });
                     part["dirty"] = true;
-                };
-            });
-
-            var grubinstall = $('#grub').find(':checked').attr("value");
-            _.each(that.record.edit, function (el) {
-                var path = el.path;
-                var number = el.number;
-                var disk = _.find(disks, function (disk_el) {
-                    return disk_el.path === path;
+                    part["mountpoint"] = el.mp;
+                    part["fs"] = el.fs || part["fs"];
+                    if (el.mp === "/" && grubinstall === "/") {
+                        grubinstall = el.path + el.number;
+                    };
                 });
-                var part = _.find(disk.table, function (part_el) {
-                    return part_el.number === number;
-                });
-                part["dirty"] = true;
-                part["mountpoint"] = el.mp;
-                part["fs"] = el.fs || part["fs"];
-                if (el.mp === "/" && grubinstall === "/") {
-                    grubinstall = el.path + el.number;
-                };
-            });
 
-            that.options.disks = disks;
-            that.options.grubinstall = grubinstall;
-            callback();
+                that.options.disks = disks;
+                that.options.grubinstall = grubinstall;
+                callback();
+            });
         },
     };
     return page;

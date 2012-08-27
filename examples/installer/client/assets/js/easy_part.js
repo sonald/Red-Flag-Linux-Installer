@@ -57,30 +57,30 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 alert(i18n.gettext("Select a partition of at least 6 GB"));
                 return;
             }
-            if (Rpart.next() === false){
-                return;
-            }
-            var dpath = disk.path;
-            if (part.number < 0) {
-                Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
-                    var new_number = Number(result.handlepart);
-                    that.locals["disks"] = that.options.disks = disks;
-                    var disk = _.find(disks, function(el){
-                        return el.path === dpath;
+            $('#myconfirm').modal();
+            $('#myconfirm').on('click', '.js-confirm', function () {
+                var dpath = disk.path;
+                if (part.number < 0) {
+                    Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
+                        var new_number = Number(result.handlepart);
+                        that.locals["disks"] = that.options.disks = disks;
+                        var disk = _.find(disks, function(el){
+                            return el.path === dpath;
+                        });
+                        var part = _.find(disk.table, function (el) {
+                            return (el.number === new_number);
+                        });
+                        part["mountpoint"] = "/";
+                        part["dirty"] = true;
+                        callback();
                     });
-                    var part = _.find(disk.table, function (el) {
-                        return (el.number === new_number);
-                    });
-                    part["mountpoint"] = "/";
+                }else{
                     part["dirty"] = true;
+                    part["mountpoint"] = "/";
+                    part.fs = "ext4";
                     callback();
-                });
-            }else{
-                part["dirty"] = true;
-                part["mountpoint"] = "/";
-                part.fs = "ext4";
-                callback();
-            }
+                }
+            });
         },
     };
     return partial;
