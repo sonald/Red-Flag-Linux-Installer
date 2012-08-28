@@ -187,7 +187,7 @@ var app = {
         });
 
         this.buttons.add("close");
-        this.buttons.get("close").change(this.i18n.gettext('close'));
+        this.buttons.get("close").change(this.i18n.gettext('Exit'));
         this.buttons.get("close").bind('click', function() {
             window.installer && window.installer.closeInstaller();
         });

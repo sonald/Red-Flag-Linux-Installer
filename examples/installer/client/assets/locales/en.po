@@ -121,7 +121,7 @@ msgid "Username"
 msgstr ""
 
 #: client/views/userinfo.jade:7
-msgid "Only letters, numbers, and underscores."
+msgid "Only lower letters, numbers, and underscores."
 msgstr ""
 
 #: client/views/userinfo.jade:10
@@ -137,7 +137,7 @@ msgid "Free"
 msgstr ""
 
 #: client/assets/app.js:190
-msgid "close"
+msgid "Exit"
 msgstr ""
 
 #: client/assets/app.js:195
@@ -232,10 +232,14 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/process.js:130
+#: client/assets/js/process.js:129
 msgid "install"
 msgstr ""
 
-#: client/assets/js/process.js:190
+#: client/assets/js/process.js:187
 msgid "Congratulations~You have finished installing the system."
+msgstr ""
+
+#: client/assets/js/process.js:193
+msgid "Finished"
 msgstr ""

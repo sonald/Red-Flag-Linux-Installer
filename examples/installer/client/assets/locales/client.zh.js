@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-29 00:12+0800",
+         "POT-Creation-Date": " 2012-08-29 02:40+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -132,9 +132,9 @@ define(["system"],
          null,
          "用户名"
       ],
-      "Only letters, numbers, and underscores.": [
+      "Only lower letters, numbers, and underscores.": [
          null,
-         "只允许填入字母、数字和_。"
+         "只允许填入小写字母、数字和_。"
       ],
       "Hostname": [
          null,
@@ -148,9 +148,9 @@ define(["system"],
          null,
          "空闲"
       ],
-      "close": [
+      "Exit": [
          null,
-         "关闭"
+         "退出"
       ],
       "Next": [
          null,
@@ -216,9 +216,9 @@ define(["system"],
          null,
          "<b>请填写此项</b>"
       ],
-      "<b>Only letters, numbers, and underscores.</b>": [
+      "<b>Only lower letters, numbers, and underscores.</b>": [
          null,
-         "<b>只允许填入字母、数字和_</b>"
+         "<b>只允许填入小写字母、数字和_</b>"
       ],
       "<b>Please enter no more than %d characters.</b>": [
          null,
@@ -230,7 +230,7 @@ define(["system"],
       ],
       "<b>Please enter the same content again.</b>": [
          null,
-         "<b>长度不能超过%d个字母</b>"
+         ""
       ],
       "Set": [
          null,
@@ -248,13 +248,17 @@ define(["system"],
          null,
          "恭喜，安装成功。"
       ],
+      "Finished": [
+         null,
+         "完成安装"
+      ],
+      "close": [
+         null,
+         "关闭"
+      ],
       "The selected will be formatted. Press ok to continue": [
          null,
          "选择的分区将被格式化，确定请继续"
-      ],
-      "Finished!": [
-         null,
-         "完成安装"
       ],
       "System Error!": [
          null,

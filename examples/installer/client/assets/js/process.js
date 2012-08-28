@@ -187,6 +187,10 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                         i18n.gettext('Congratulations~You have finished installing the system.'),
                         'label-important');
                     this.app.buttons.get("close").enable();
+                    this.app.buttons.get("close").bind('click', function() {
+                        window.installer && window.installer.closeInstaller();
+                    });
+                    this.app.buttons.get("forward").change(i18n.gettext('Finished'));
 
                 } else {
                     this.buildMessage(respond.status, 'label-info');

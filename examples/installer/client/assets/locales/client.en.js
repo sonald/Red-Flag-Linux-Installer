@@ -117,7 +117,7 @@ define(["system"],
          null,
          ""
       ],
-      "Only letters, numbers, and underscores.": [
+      "Only lower letters, numbers, and underscores.": [
          null,
          ""
       ],
@@ -133,7 +133,7 @@ define(["system"],
          null,
          ""
       ],
-      "close": [
+      "Exit": [
          null,
          ""
       ],
@@ -201,7 +201,7 @@ define(["system"],
          null,
          ""
       ],
-      "<b>Only letters, numbers, and underscores.</b>": [
+      "<b>Only lower letters, numbers, and underscores.</b>": [
          null,
          ""
       ],
@@ -230,6 +230,10 @@ define(["system"],
          ""
       ],
       "Congratulations~You have finished installing the system.": [
+         null,
+         ""
+      ],
+      "Finished": [
          null,
          ""
       ],

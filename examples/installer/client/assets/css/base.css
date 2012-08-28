@@ -148,7 +148,6 @@ table.colorinfo td[pty="extended"],
 
 .part_table li.horizontal {
     float: left;
-    overflow: hidden;
 }
 
 .part_table .modal-header h3 {
@@ -157,6 +156,10 @@ table.colorinfo td[pty="extended"],
 
 .part_table ul.logicals ul {
     height: 36px;
+}
+
+.part_table ul.selectable li {
+    overflow: hidden;
 }
 
 table.colorinfo td[pty="select"],

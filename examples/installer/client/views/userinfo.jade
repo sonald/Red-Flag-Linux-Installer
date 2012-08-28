@@ -4,7 +4,7 @@ script(type="text/html", id="userinfo_tmpl").
             label.control-label(for="name")= gettext('Username')
             .controls
                 input.input-xlarge.js-alphanum#name(type="text", minlength="2", maxlength="20")
-                p.help-block= gettext('Only letters, numbers, and underscores.')
+                p.help-block= gettext('Only lower letters, numbers, and underscores.')
         hr
         div.control-group.form-horizontal
             label.control-label(for="hostname")= gettext('Hostname')

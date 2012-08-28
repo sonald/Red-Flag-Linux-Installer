@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-29 00:59+0800\n"
+"POT-Creation-Date: 2012-08-29 02:40+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -144,8 +144,9 @@ msgid "Username"
 msgstr "用户名"
 
 #: client/views/userinfo.jade:7
-msgid "Only letters, numbers, and underscores."
-msgstr "只允许填入字母、数字和_。"
+#, fuzzy
+msgid "Only lower letters, numbers, and underscores."
+msgstr "只允许填入小写字母、数字和_。"
 
 #: client/views/userinfo.jade:10
 msgid "Hostname"
@@ -160,8 +161,8 @@ msgid "Free"
 msgstr "空闲"
 
 #: client/assets/app.js:190
-msgid "close"
-msgstr "关闭"
+msgid "Exit"
+msgstr "退出"
 
 #: client/assets/app.js:195
 msgid "Next"
@@ -247,7 +248,7 @@ msgstr "<b>长度最少为%d个字符</b>"
 
 #: client/assets/js/js_validate.js:9
 msgid "<b>Please enter the same content again.</b>"
-msgstr "<b>长度不能超过%d个字母</b>"
+msgstr ""
 
 #: client/assets/js/userinfo.js:8
 msgid "Set"
@@ -257,19 +258,24 @@ msgstr "设置"
 msgid "Install"
 msgstr "安装"
 
-#: client/assets/js/process.js:130
+#: client/assets/js/process.js:129
 msgid "install"
 msgstr "安装"
 
-#: client/assets/js/process.js:190
+#: client/assets/js/process.js:187
 msgid "Congratulations~You have finished installing the system."
 msgstr "恭喜，安装成功。"
 
+#: client/assets/js/process.js:193
+#, fuzzy
+msgid "Finished"
+msgstr "完成安装"
+
+#~ msgid "close"
+#~ msgstr "关闭"
+
 #~ msgid "The selected will be formatted. Press ok to continue"
 #~ msgstr "选择的分区将被格式化，确定请继续"
-
-#~ msgid "Finished!"
-#~ msgstr "完成安装"
 
 #~ msgid "System Error!"
 #~ msgstr "系统错误！"
