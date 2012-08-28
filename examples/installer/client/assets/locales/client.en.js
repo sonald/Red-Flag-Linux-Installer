@@ -133,6 +133,10 @@ define(["system"],
          null,
          ""
       ],
+      "close": [
+         null,
+         ""
+      ],
       "Next": [
          null,
          ""
@@ -142,6 +146,14 @@ define(["system"],
          ""
       ],
       "Select a disks please": [
+         null,
+         ""
+      ],
+      "Too many primary partitions.": [
+         null,
+         ""
+      ],
+      "Too many extended partitions.": [
          null,
          ""
       ],
@@ -214,10 +226,6 @@ define(["system"],
          ""
       ],
       "install": [
-         null,
-         ""
-      ],
-      "close": [
          null,
          ""
       ],

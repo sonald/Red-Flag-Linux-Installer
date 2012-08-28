@@ -59,6 +59,15 @@ Button.prototype.bind = function(evt, action) {
 var app = {
     name: 'Pangu Installer',
     $el: null, // where page hosted at
+    myalert: function (msg, callback) {
+        var $alert = $('#myalert');
+        $alert.off('click', '.js-close');
+        $alert.find('p.content').text(msg);
+        $alert.modal();
+        if (callback) {
+            $alert.on('click','.js-close',callback);
+        }
+    },
 
     buttons: {
         get: function(btnid) {
@@ -179,7 +188,9 @@ var app = {
 
         this.buttons.add("close");
         this.buttons.get("close").change(this.i18n.gettext('close'));
-        this.buttons.get("close").disable();
+        this.buttons.get("close").bind('click', function() {
+            window.installer && window.installer.closeInstaller();
+        });
 
         this.buttons.add('forward', this.i18n.gettext('Next'));
         this.buttons.get('forward').bind('click', $.proxy(this.forward, this));

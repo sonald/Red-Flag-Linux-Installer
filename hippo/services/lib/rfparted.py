@@ -20,10 +20,10 @@ def msdos_validate_type(ty, disk):
 
     if (ty == parted.PARTITION_NORMAL or ty & parted.PARTITION_EXTENDED) \
         and disk.primaryPartitionCount == 4:
-        raise Exception, "Too many primary partitions."
+            raise Exception, "1@Too many primary partitions."
 
     if ty & parted.PARTITION_EXTENDED and disk.getExtendedPartition():
-        raise Exception, "Too many extended partitions."
+        raise Exception, "2@Too many extended partitions."
 
     if ty & parted.PARTITION_LOGICAL and disk.getExtendedPartition() == None:
         raise Exception, "Create extended partition first."

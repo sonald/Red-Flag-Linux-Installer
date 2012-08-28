@@ -5,10 +5,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
         view: '#easy_part_tmpl',
         options: null,
         locals: null,
+        myalert: null,
 
-        initialize: function (options, locals) {
+        initialize: function (options, locals, myalert) {
             this.options = options;
             this.locals = locals;
+            this.myalert = myalert;
             this.options.installmode = "easy";
             this.options.grubinstall = "/dev/sda";
         },
@@ -46,16 +48,16 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             var dnum, pnum, part, disk;
             var that = this;
             if ($("#part_content").find('ul.select').length < 1) {
-                alert(i18n.gettext("Please select a partition to continue."));
-                return;
+                that.myalert(i18n.gettext("Please select a partition to continue."));
+                return false;
             }
             pnum = $("#part_content").find('ul.select').attr("pindex");//TODO
             dnum = $("#part_content").find('ul.select').attr("dindex");//TODO
             disk = this.options.disks[dnum];
             part = disk.table[pnum];
             if (part.size < 6) {
-                alert(i18n.gettext("Select a partition of at least 6 GB"));
-                return;
+                that.myalert(i18n.gettext("Select a partition of at least 6 GB"));
+                return false;
             }
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {

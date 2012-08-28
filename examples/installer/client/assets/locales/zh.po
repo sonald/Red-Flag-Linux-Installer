@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-28 18:34+0800\n"
+"POT-Creation-Date: 2012-08-29 00:12+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -155,23 +155,36 @@ msgstr "主机名"
 msgid "EditDisk"
 msgstr "编辑磁盘"
 
-#: client/views/free_part.jade:5 client/assets/js/remote_part.js:115
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:132
 msgid "Free"
 msgstr "空闲"
 
-#: client/assets/app.js:180
+#: client/assets/app.js:190
+msgid "close"
+msgstr "关闭"
+
+#: client/assets/app.js:195
 msgid "Next"
 msgstr "下一步"
 
-#: client/assets/js/fd_part.js:33 client/assets/js/fd_part.js:48
+#: client/assets/js/fd_part.js:35 client/assets/js/fd_part.js:50
 msgid "Select a disk of at least 6 GB."
 msgstr "选择一块至少6GB大小的磁盘。"
 
-#: client/assets/js/fd_part.js:42
+#: client/assets/js/fd_part.js:44
 msgid "Select a disks please"
 msgstr "选择一块至少6GB大小的磁盘。"
 
-#: client/assets/js/remote_part.js:23
+#: client/assets/js/remote_part.js:27
+#, fuzzy
+msgid "Too many primary partitions."
+msgstr "只能建4个主分区"
+
+#: client/assets/js/remote_part.js:28
+msgid "Too many extended partitions."
+msgstr "只能建一个扩展分区"
+
+#: client/assets/js/remote_part.js:35
 msgid "Operation fails"
 msgstr "操作失败"
 
@@ -183,33 +196,33 @@ msgstr "分区"
 msgid "Welcome"
 msgstr "欢迎"
 
-#: client/assets/js/license.js:96
+#: client/assets/js/license.js:97
 msgid ""
 "Some disk size does not meet the minimum requirements or memory is less than "
 "1 GB"
 msgstr "某些磁盘大小不足或者内存小于1GB"
 
-#: client/assets/js/easy_part.js:39
+#: client/assets/js/easy_part.js:41
 msgid "Select a partition of at least 6 GB."
 msgstr "选择一个至少6GB大小的分区。"
 
-#: client/assets/js/easy_part.js:49
+#: client/assets/js/easy_part.js:51
 msgid "Please select a partition to continue."
 msgstr "继续前，请选择一块分区。"
 
-#: client/assets/js/easy_part.js:57
+#: client/assets/js/easy_part.js:59
 msgid "Select a partition of at least 6 GB"
 msgstr "选择一个至少6GB大小的分区"
 
-#: client/assets/js/ad_part.js:153
+#: client/assets/js/ad_part.js:156
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:277
+#: client/assets/js/ad_part.js:280
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:280
+#: client/assets/js/ad_part.js:283
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
 
@@ -247,11 +260,7 @@ msgstr "安装"
 msgid "install"
 msgstr "安装"
 
-#: client/assets/js/process.js:133
-msgid "close"
-msgstr "关闭"
-
-#: client/assets/js/process.js:191
+#: client/assets/js/process.js:186
 msgid "Congratulations~You have finished installing the system."
 msgstr "恭喜，安装成功。"
 

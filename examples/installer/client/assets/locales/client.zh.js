@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-28 18:34+0800",
+         "POT-Creation-Date": " 2012-08-29 00:12+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -148,6 +148,10 @@ define(["system"],
          null,
          "空闲"
       ],
+      "close": [
+         null,
+         "关闭"
+      ],
       "Next": [
          null,
          "下一步"
@@ -159,6 +163,14 @@ define(["system"],
       "Select a disks please": [
          null,
          "选择一块至少6GB大小的磁盘。"
+      ],
+      "Too many primary partitions.": [
+         null,
+         "只能建4个主分区"
+      ],
+      "Too many extended partitions.": [
+         null,
+         "只能建一个扩展分区"
       ],
       "Operation fails": [
          null,
@@ -231,10 +243,6 @@ define(["system"],
       "install": [
          null,
          "安装"
-      ],
-      "close": [
-         null,
-         "关闭"
       ],
       "Congratulations~You have finished installing the system.": [
          null,

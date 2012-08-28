@@ -11,6 +11,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
         options:null,
         record: null,
         mp_tag: null,
+        myalert: null,
 
         init_record: function () {
             this.record = {
@@ -21,9 +22,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             this.mp_tag = "";
         },
 
-        initialize: function (options, locals) {
+        initialize: function (options, locals, myalert) {
             this.options = options;
             this.locals = locals;
+            this.myalert = myalert;
             this.options.installmode = "advanced";
             this.init_record();
         },
@@ -111,6 +113,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
                 $(this).parents('.modal').find('.alert').remove();
+
                 if (_.include(that.record.mp, value)) {
                     var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
                     $(this).parents('.control-group').after(warning);
@@ -150,7 +153,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
                 size = Number($modal.find("#size").attr("value"));
                 if ( size===NaN && size < 0.01 ) {
-                    alert(i18n.gettext('Please enter the number!'));
+                    that.myalert(i18n.gettext('Please enter the number!'));
                     return;
                 }else {
                     size = Number($modal.find("#size").attr("value"));
@@ -172,7 +175,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             $('body').on('click','.js-edit-submit',function () {
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
-                $modal.find('.alert').parent().remove();
+                $modal.find('.alert').remove();
                 path = $(this).attr("path");
                 number = Number($(this).attr("number"));
                 fstype = $modal.find("#fs").val();
@@ -182,9 +185,9 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
 
                 $modal.prev('ul.part').find('b.partfs').text(fstype);
                 if(mp === "") {
-                    $modal.prev('ul.part').find('b.partmp').text("");
+                    $modal.prev('ul.part').find('.partmp').text("");
                 }else{
-                    $modal.prev('ul.part').find('b.partmp').text("("+mp+")");
+                    $modal.prev('ul.part').find('.partmp').text("("+mp+")");
                 }
             });
         },
@@ -206,7 +209,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     $part.find('b.partfs').text(el.fs);
                 };
                 if (el.mp !== ""){
-                    $part.find('b.partmp').text("(" + el.mp + ")");
+                    $part.find('.partmp').text("(" + el.mp + ")");
                     $part.next('.modal').find('#mp').attr("mp",el.mp);
                     $part.next('.modal').find('#mp').val(el.mp);
                 };
@@ -274,10 +277,10 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 };
             });
             if (_.include(that.record.mp, "/") === false) {
-                alert(i18n.gettext("You need specify a root partition."));
+                that.myalert(i18n.gettext('You need specify a root partition.'));
                 return;
             }else if (root_size < 6) {
-                alert(i18n.gettext("The root partition requires at least 6 GB space!"));
+                that.myalert(i18n.gettext('The root partition requires at least 6 GB space!'));
                 return;
             }
             $('#myconfirm').modal();
