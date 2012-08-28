@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-28 01:54+0800",
+         "POT-Creation-Date": " 2012-08-28 18:34+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,33 +16,9 @@ define(["system"],
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "Username": [
+      "CreateDisk": [
          null,
-         "用户名"
-      ],
-      "Only letters, numbers, and underscores.": [
-         null,
-         "只允许填入字母、数字和_。"
-      ],
-      "Hostname": [
-         null,
-         "主机名"
-      ],
-      "agree": [
-         null,
-         "同意"
-      ],
-      "disagree": [
-         null,
-         "不同意"
-      ],
-      "Unknow": [
-         null,
-         ""
-      ],
-      "EditDisk": [
-         null,
-         "编辑磁盘"
+         "创建磁盘"
       ],
       "Size": [
          null,
@@ -52,13 +28,13 @@ define(["system"],
          null,
          "分区类型"
       ],
-      "primary": [
-         null,
-         "主分区"
-      ],
       "logical": [
          null,
          "逻辑分区"
+      ],
+      "primary": [
+         null,
+         "主分区"
       ],
       "extended": [
          null,
@@ -138,7 +114,7 @@ define(["system"],
       ],
       "You have completed all the configurations and it is about to install the system. The partition selected will be formatted.": [
          null,
-         "已经完成所有配置，即将安装系统，你所选择的分区即将格式化。"
+         "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
       ],
       "Continue": [
          null,
@@ -172,25 +148,25 @@ define(["system"],
          null,
          "空闲"
       ],
-      "CreateDisk": [
-         null,
-         "创建磁盘"
-      ],
       "Next": [
          null,
          "下一步"
+      ],
+      "Select a disk of at least 6 GB.": [
+         null,
+         "选择一块至少6GB大小的磁盘。"
+      ],
+      "Select a disks please": [
+         null,
+         "选择一块至少6GB大小的磁盘。"
       ],
       "Operation fails": [
          null,
          "操作失败"
       ],
-      "The selected will be formatted. Press ok to continue": [
+      "Part": [
          null,
-         "选择的分区将被格式化，确定请继续"
-      ],
-      "Set": [
-         null,
-         "设置"
+         "分区"
       ],
       "Welcome": [
          null,
@@ -200,33 +176,29 @@ define(["system"],
          null,
          "某些磁盘大小不足或者内存小于1GB"
       ],
-      "Part": [
+      "Select a partition of at least 6 GB.": [
          null,
-         "分区"
+         "选择一个至少6GB大小的分区。"
       ],
-      "Install": [
+      "Please select a partition to continue.": [
          null,
-         "安装"
+         "继续前，请选择一块分区。"
       ],
-      "install": [
+      "Select a partition of at least 6 GB": [
          null,
-         "安装"
+         "选择一个至少6GB大小的分区"
       ],
-      "close": [
+      "Please enter the number!": [
          null,
-         "关闭"
+         "请输入数字！"
       ],
-      "Congratulations~You have finished installing the system.": [
+      "You need specify a root partition.": [
          null,
-         "恭喜，安装成功。"
+         "请指定一个根分区。"
       ],
-      "Select a disk of at least 6 GB.": [
+      "The root partition requires at least 6 GB space!": [
          null,
-         "选择一块至少6GB大小的磁盘。"
-      ],
-      "Select a disks please": [
-         null,
-         "选择一块至少6GB大小的磁盘。"
+         "根分区需要至少6GB空间！"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -248,33 +220,29 @@ define(["system"],
          null,
          "<b>长度不能超过%d个字母</b>"
       ],
-      "Please enter the number!": [
+      "Set": [
          null,
-         "请输入数字！"
+         "设置"
       ],
-      "You need specify a root partition.": [
+      "Install": [
          null,
-         "请指定一个根分区。"
+         "安装"
       ],
-      "The root partition requires at least 6 GB space!": [
+      "install": [
          null,
-         "根分区需要至少6GB空间！"
+         "安装"
       ],
-      "Select a partition of at least 6 GB.": [
+      "close": [
          null,
-         "选择一个至少6GB大小的分区。"
+         "关闭"
       ],
-      "Please select a partition to continue.": [
+      "Congratulations~You have finished installing the system.": [
          null,
-         "继续前，请选择一块分区。"
+         "恭喜，安装成功。"
       ],
-      "Select a partition of at least 6 GB": [
+      "The selected will be formatted. Press ok to continue": [
          null,
-         "选择一个至少6GB大小的分区"
-      ],
-      "Finished!": [
-         null,
-         "完成安装"
+         "选择的分区将被格式化，确定请继续"
       ],
       "Finished!": [
          null,
