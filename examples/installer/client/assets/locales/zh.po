@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-29 00:12+0800\n"
+"POT-Creation-Date: 2012-08-29 00:59+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,8 +231,9 @@ msgid "<b>This field is required. </b>"
 msgstr "<b>请填写此项</b>"
 
 #: client/assets/js/js_validate.js:6
-msgid "<b>Only letters, numbers, and underscores.</b>"
-msgstr "<b>只允许填入字母、数字和_</b>"
+#, fuzzy
+msgid "<b>Only lower letters, numbers, and underscores.</b>"
+msgstr "<b>只允许填入小写字母、数字和_</b>"
 
 #: client/assets/js/js_validate.js:7
 #, perl-format
@@ -260,7 +261,7 @@ msgstr "安装"
 msgid "install"
 msgstr "安装"
 
-#: client/assets/js/process.js:186
+#: client/assets/js/process.js:190
 msgid "Congratulations~You have finished installing the system."
 msgstr "恭喜，安装成功。"
 

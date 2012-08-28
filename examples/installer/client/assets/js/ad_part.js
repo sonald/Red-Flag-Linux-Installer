@@ -183,7 +183,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 $modal.find("#mp").attr("mp",mp);
                 that.mp_conflict(path, number, fstype, mp);
 
-                $modal.prev('ul.part').find('b.partfs').text(fstype);
+                $modal.prev('ul.part').find('.partfs').text(fstype);
                 if(mp === "") {
                     $modal.prev('ul.part').find('.partmp').text("");
                 }else{
@@ -206,7 +206,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
             _.each(that.record.edit, function(el) {
                 var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
                 if(el.fs !== "") {
-                    $part.find('b.partfs').text(el.fs);
+                    $part.find('.partfs').text(el.fs);
                 };
                 if (el.mp !== ""){
                     $part.find('.partmp').text("(" + el.mp + ")");

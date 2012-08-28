@@ -126,24 +126,22 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.setupPresentation();
             progressbar.init($('#install-progress'));
 
-            this.app.buttons.get("forward").enable();
             this.app.buttons.get("forward").change(i18n.gettext('install'));
 
 
             var that = this;
-            this.app.buttons.get("forward").bind('click', function() {
-                that.app.buttons.get("forward").disable();
-                that.app.buttons.get("close").disable();
+            that.app.buttons.get("forward").disable();
+            that.app.buttons.get("close").disable();
+            that.app.buttons.get("close").bind('click');
 
-                window.apis.services.partition.commit(function(result) {
-                    if(result.status === "failure"){
-                        console.log(result.reason);
-                    } else if (result.status === "success") {
-                        that.onInstall();
-                    } else {
-                        console.log(result);
-                    };
-                });
+            window.apis.services.partition.commit(function(result) {
+                if(result.status === "failure"){
+                    console.log(result.reason);
+                } else if (result.status === "success") {
+                    that.onInstall();
+                } else {
+                    console.log(result);
+                };
             });
         },
 
@@ -180,6 +178,9 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                 } else if (respond.status === "failure") {
                     this.buildMessage(respond.reason, 'label-error');
                     this.app.buttons.get("close").enable();
+                    this.app.buttons.get("close").bind('click', function() {
+                        window.installer && window.installer.closeInstaller();
+                    });
                     
                 } else if (respond.status === "success") {
                     this.buildMessage(

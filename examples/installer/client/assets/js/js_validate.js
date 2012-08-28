@@ -3,7 +3,7 @@ define(['jquery', 'system', 'locale!client'], function($, nil, i18n) {
 
     var errors = {
         'required': i18n.gettext('<b>This field is required. </b>'),
-        'alphanum': i18n.gettext('<b>Only letters, numbers, and underscores.</b>'),
+        'alphanum': i18n.gettext('<b>Only lower letters, numbers, and underscores.</b>'),
         'maxlen': i18n.gettext('<b>Please enter no more than %d characters.</b>'),
         'minlen': i18n.gettext('<b>Please enter at least %d characters.</b>'),
         'confirm': i18n.gettext('<b>Please enter the same content again.</b>'),
@@ -28,7 +28,7 @@ define(['jquery', 'system', 'locale!client'], function($, nil, i18n) {
                 if( str === ""){
                     $(this).after(errors['required']);
                     that.result = false;
-                }else if( str.match(/^[1-9a-zA-Z_]+$/g) === null){
+                }else if( str.match(/^[1-9a-z_]+$/g) === null){
                     $(this).after(errors['alphanum']);
                     that.result = false;
                 };

@@ -207,7 +207,7 @@ msgid "<b>This field is required. </b>"
 msgstr ""
 
 #: client/assets/js/js_validate.js:6
-msgid "<b>Only letters, numbers, and underscores.</b>"
+msgid "<b>Only lower letters, numbers, and underscores.</b>"
 msgstr ""
 
 #: client/assets/js/js_validate.js:7
@@ -236,6 +236,6 @@ msgstr ""
 msgid "install"
 msgstr ""
 
-#: client/assets/js/process.js:186
+#: client/assets/js/process.js:190
 msgid "Congratulations~You have finished installing the system."
 msgstr ""
