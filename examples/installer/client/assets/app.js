@@ -177,6 +177,10 @@ var app = {
             console.log(apis);
         });
 
+        this.buttons.add("close");
+        this.buttons.get("close").change(this.i18n.gettext('close'));
+        this.buttons.get("close").disable();
+
         this.buttons.add('forward', this.i18n.gettext('Next'));
         this.buttons.get('forward').bind('click', $.proxy(this.forward, this));
         // this.buttons.add('help', 'Help');
