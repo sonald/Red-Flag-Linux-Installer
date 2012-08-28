@@ -10,3 +10,11 @@ script(type="text/template", id="warning_tmpl").
         strong= gettext('Warning!')
         = gettext('The mount point has been selected.')
 
+.modal.fade.hide#myalert
+    .modal-header
+        button.close(type="button", data-dismiss="modal")×
+        h3= tr('Alert')
+    .modal-body
+        p.content
+    .modal-footer
+            button.btn.js-close(data-dismiss="modal")= tr('Close')

@@ -129,13 +129,11 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.app.buttons.get("forward").enable();
             this.app.buttons.get("forward").change(i18n.gettext('install'));
 
-            this.app.buttons.get("close").bind('click', function() {
-                window.installer && window.installer.closeInstaller();
-            });
 
             var that = this;
             this.app.buttons.get("forward").bind('click', function() {
                 that.app.buttons.get("forward").disable();
+                that.app.buttons.get("close").disable();
 
                 window.apis.services.partition.commit(function(result) {
                     if(result.status === "failure"){

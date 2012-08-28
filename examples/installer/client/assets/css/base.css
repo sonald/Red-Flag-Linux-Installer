@@ -97,11 +97,6 @@ div#presentation .item img {
     visibility: hidden;
 }
 
-.part_table b	{
-    color: black;
-    overflow: hidden;
-}
-
 .part_table ul {
     padding: 2px;
     list-style: none;
@@ -114,11 +109,11 @@ div#presentation .item img {
 
 .part_table ul.disk {
     width: 95%;
-    text-align: center;
 }
 
 .part_table ul.part {
     margin: 2px;
+    height: 44px;
 }
 
 table.colorinfo td[pty="primary"],
@@ -146,8 +141,9 @@ table.colorinfo td[pty="extended"],
     background:#7C48B5;
 }
 
-.part_table ul.part li {
+.part_table ul li {
     white-space: nowrap;
+    text-align: center;
 }
 
 .part_table li.horizontal {
@@ -155,8 +151,8 @@ table.colorinfo td[pty="extended"],
     overflow: hidden;
 }
 
-.part_table ul.part {
-    height: 44px;
+.part_table .modal-header h3 {
+    text-align: left;
 }
 
 .part_table ul.logicals ul {
