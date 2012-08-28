@@ -184,10 +184,7 @@ ul.buttons a {
     padding: 15px 20px;
     margin: 0 5px;
     font-size: 18px;
-    
-    background-image: -webkit-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: -moz-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: linear-gradient(top, #3FB745 50%,#149E3D);
+    background: #08C;
     
     border: 1px solid #DDD;
     -webkit-border-radius: 10px;
@@ -204,7 +201,7 @@ ul.buttons a.smaller {
 }
 
 ul.buttons a:active {
-    background: #41862A;
+    background: #003580;
 }
 
 ul.buttons a.disabled {
@@ -232,13 +229,6 @@ span.mycheckbox.checked {
     background-position: 0px -46px;
 }
 
-#PartTabs li.active a {
-    background-image: -webkit-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: -moz-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: linear-gradient(top, #3FB745 50%,#149E3D);
-    font-size: 13px;
-    padding: 9px 12px;
-}
 // process.jade
 #install-log {
     height: 18;
