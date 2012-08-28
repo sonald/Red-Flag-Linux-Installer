@@ -16,9 +16,33 @@ define(["system"],
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "CreateDisk": [
+      "Username": [
          null,
-         "创建磁盘"
+         "用户名"
+      ],
+      "Only letters, numbers, and underscores.": [
+         null,
+         "只允许填入字母、数字和_。"
+      ],
+      "Hostname": [
+         null,
+         "主机名"
+      ],
+      "agree": [
+         null,
+         "同意"
+      ],
+      "disagree": [
+         null,
+         "不同意"
+      ],
+      "Unknow": [
+         null,
+         ""
+      ],
+      "EditDisk": [
+         null,
+         "编辑磁盘"
       ],
       "Size": [
          null,
@@ -28,13 +52,13 @@ define(["system"],
          null,
          "分区类型"
       ],
-      "logical": [
-         null,
-         "逻辑分区"
-      ],
       "primary": [
          null,
          "主分区"
+      ],
+      "logical": [
+         null,
+         "逻辑分区"
       ],
       "extended": [
          null,
@@ -50,7 +74,7 @@ define(["system"],
       ],
       "Close": [
          null,
-         "取消"
+         "关闭"
       ],
       "Submit": [
          null,
@@ -148,25 +172,25 @@ define(["system"],
          null,
          "空闲"
       ],
+      "CreateDisk": [
+         null,
+         "创建磁盘"
+      ],
       "Next": [
          null,
          "下一步"
-      ],
-      "Select a disk of at least 6 GB.": [
-         null,
-         "选择一块至少6GB大小的磁盘。"
-      ],
-      "Select a disks please": [
-         null,
-         "选择一块至少6GB大小的磁盘。"
       ],
       "Operation fails": [
          null,
          "操作失败"
       ],
-      "Part": [
+      "The selected will be formatted. Press ok to continue": [
          null,
-         "分区"
+         "选择的分区将被格式化，确定请继续"
+      ],
+      "Set": [
+         null,
+         "设置"
       ],
       "Welcome": [
          null,
@@ -176,29 +200,33 @@ define(["system"],
          null,
          "某些磁盘大小不足或者内存小于1GB"
       ],
-      "Select a partition of at least 6 GB.": [
+      "Part": [
          null,
-         "选择一个至少6GB大小的分区。"
+         "分区"
       ],
-      "Please select a partition to continue.": [
+      "Install": [
          null,
-         "继续前，请选择一块分区。"
+         "安装"
       ],
-      "Select a partition of at least 6 GB": [
+      "install": [
          null,
-         "选择一个至少6GB大小的分区"
+         "安装"
       ],
-      "Please enter the number!": [
+      "close": [
          null,
-         "请输入数字！"
+         "关闭"
       ],
-      "You need specify a root partition.": [
+      "Congratulations~You have finished installing the system.": [
          null,
-         "请指定一个根分区。"
+         "恭喜，安装成功。"
       ],
-      "The root partition requires at least 6 GB space!": [
+      "Select a disk of at least 6 GB.": [
          null,
-         "根分区需要至少6GB空间！"
+         "选择一块至少6GB大小的磁盘。"
+      ],
+      "Select a disks please": [
+         null,
+         "选择一块至少6GB大小的磁盘。"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -220,25 +248,33 @@ define(["system"],
          null,
          "<b>长度不能超过%d个字母</b>"
       ],
-      "Set": [
+      "Please enter the number!": [
          null,
-         "设置"
+         "请输入数字！"
       ],
-      "Install": [
+      "You need specify a root partition.": [
          null,
-         "安装"
+         "请指定一个根分区。"
       ],
-      "install": [
+      "The root partition requires at least 6 GB space!": [
          null,
-         "安装"
+         "根分区需要至少6GB空间！"
       ],
-      "close": [
+      "Select a partition of at least 6 GB.": [
          null,
-         "取消"
+         "选择一个至少6GB大小的分区。"
       ],
-      "Congratulations~You have finished installing the system.": [
+      "Please select a partition to continue.": [
          null,
-         "恭喜，安装成功。"
+         "继续前，请选择一块分区。"
+      ],
+      "Select a partition of at least 6 GB": [
+         null,
+         "选择一个至少6GB大小的分区"
+      ],
+      "Finished!": [
+         null,
+         "完成安装"
       ],
       "Finished!": [
          null,

@@ -88,11 +88,11 @@ function startServer() {
         }
 
         var cmd = results[0].split(/\s+/);
-        var args = process.argv;
+        var args = process.argv, env = Object.create(process.env);
         if (args.indexOf('-d') > -1 || args.indexOf('--debug') > -1) {
-            process.env.NODE_DEBUG = 1;
+            env.NODE_DEBUG = 1;
         }
-        installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: process.env});
+        installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: env});
 
         var fe_loaded = false;
         installer.stdout.on('data', function(data) {

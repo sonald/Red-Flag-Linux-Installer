@@ -20,36 +20,43 @@
 /*global require: false, navigator: false, define: false, console:false */
 
 (function() {
-	'use strict';
+    'use strict';
 
-	define(['system', 'jed'], {
-			load: function(name, req, load, config) {
-				console.log('load client locale data');
+    define(['system', 'jed'], {
+	load: function(name, req, load, config) {
+	    console.log('load client locale data');
 
-				var match, lang;
+	    var match, lang;
 
-				if (window.location.search.length > 0) {
-					match = /\?locale=([^=]+)/.exec(window.location.search);
-					if (match) {
-						lang = match[1];
-					}
+	    if (window.location.search.length > 0) {
+		match = /\?locale=([^=]+)/.exec(window.location.search);
+		if (match) {
+		    lang = match[1];
+	            match = /([^_]+)(?:_([^-]+))?/.exec(lang);
+                    lang = (match && match[1]) || 'en';
+		}
 
-				} else {
-					lang = navigator.language || navigator.userLanguage;
-				}
+	    } else {
+		lang = navigator.language || navigator.userLanguage;
+	        match = /([^-]+)(?:-([^-]+))?/.exec(lang);
+                lang = (match && match[1]) || 'en';
+	    }
 
-				match = /([^-]+)(?:-([^-]+))?/.exec(lang);
-                config.locale = (match && match[1]) || 'en';
+            lang = lang || 'en';
+            if (lang === 'POSIX' || lang === 'C') {
+                lang = 'en';
+            }
 
-				// console.log('config: ', config);
-				req(['jed', '../locales/' + name + '.' + config.locale], function(Jed, value) {
+            config.locale = lang;
+	    console.log('config: ', config);
+	    req(['jed', '../locales/' + name + '.' + config.locale], function(Jed, value) {
 
-					//console.log(value);
-					load(new Jed({
-						'domain': config.locale,
-						'locale_data': value
-					}));
-				});
-			}
-		});
+		//console.log(value);
+		load(new Jed({
+		    'domain': config.locale,
+		    'locale_data': value
+		}));
+	    });
+	}
+    });
 }());
