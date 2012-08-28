@@ -1,8 +1,10 @@
 {
 	"Hippo": "Hippo",
-	"Welcome To Use Qomo Installer": "欢迎使用Qomo安装程序",
 	"← Back": "← 后退",
 	"Next →": "前进 →",
 	"Help": "Help",
-	"Finished!": "完成安装"
+	"Finished!": "完成安装",
+	"Welcome To Install Qomo 4.0": "欢迎安装Qomo 4.0",
+	"Alert": "警告",
+	"Close": "关闭"
 }

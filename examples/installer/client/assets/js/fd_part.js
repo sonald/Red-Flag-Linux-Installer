@@ -5,9 +5,11 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
         view: '#fulldisk_part_tmpl',
         locals:null,
         options:null,
+        myalert: null,
 
-        initialize: function (options, locals) {
+        initialize: function (options, locals, myalert) {
             this.options = options;
+            this.myalert = myalert;
             this.locals = locals;
             this.options.installmode = "fulldisk";
             this.options.grubinstall = "/dev/sda";
@@ -39,19 +41,17 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
         validate: function(callback) {
             var that = this;
             if ($("#part_content").find('ul.select').length === 0) {
-                alert(i18n.gettext("Select a disks please"));
-                return;
+                that.myalert(i18n.gettext("Select a disks please"));
+                return false;
             }
             var dnum= $("#part_content").find('ul.select').attr("dnum");
             var dpath = that.options.disks[dnum].path;
             if (that.options.disks[dnum].size < 6) {
-                alert(i18n.gettext("Select a disk of at least 6 GB."));
-                return;
+                that.myalert(i18n.gettext("Select a disk of at least 6 GB."));
+                return false;
             }
-            if (Rpart.next() === false) {
-                return;
-            }
-
+            $('#myconfirm').modal();
+            $('#myconfirm').on('click', '.js-confirm', function () {
             Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
                 that.locals["disks"] = that.options.disks = disks;
                 var disk = _.find(disks, function(el){
@@ -68,6 +68,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 });
                 part["mountpoint"] = "/";
                 callback();
+            });
             });
         },
     };

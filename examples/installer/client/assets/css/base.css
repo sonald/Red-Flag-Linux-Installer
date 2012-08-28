@@ -97,11 +97,6 @@ div#presentation .item img {
     visibility: hidden;
 }
 
-.part_table b	{
-    color: black;
-    overflow: hidden;
-}
-
 .part_table ul {
     padding: 2px;
     list-style: none;
@@ -118,6 +113,7 @@ div#presentation .item img {
 
 .part_table ul.part {
     margin: 2px;
+    height: 44px;
 }
 
 table.colorinfo td[pty="primary"],
@@ -145,16 +141,18 @@ table.colorinfo td[pty="extended"],
     background:#7C48B5;
 }
 
-.part_table ul.part li {
+.part_table ul li {
     white-space: nowrap;
+    text-align: center;
 }
 
 .part_table li.horizontal {
     float: left;
+    overflow: hidden;
 }
 
-.part_table ul.part {
-    height: 44px;
+.part_table .modal-header h3 {
+    text-align: left;
 }
 
 .part_table ul.logicals ul {
@@ -182,10 +180,7 @@ ul.buttons a {
     padding: 15px 20px;
     margin: 0 5px;
     font-size: 18px;
-    
-    background-image: -webkit-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: -moz-linear-gradient(top, #3FB745 50%,#149E3D);
-    background-image: linear-gradient(top, #3FB745 50%,#149E3D);
+    background: #08C;
     
     border: 1px solid #DDD;
     -webkit-border-radius: 10px;
@@ -202,7 +197,7 @@ ul.buttons a.smaller {
 }
 
 ul.buttons a:active {
-    background: #41862A;
+    background: #003580;
 }
 
 ul.buttons a.disabled {

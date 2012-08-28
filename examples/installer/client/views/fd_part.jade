@@ -5,8 +5,8 @@ script(type="text/template", id="fulldisk_part_tmpl").
             - disk = disks[i]
             ul.wat-cf.disk(dnum=i)
                 li
-                    b= disk["path"]
+                    span= disk["path"]
                 li
-                    b= disk["size"].toFixed(2) + disk["unit"]
+                    span= disk["size"].toFixed(2) + disk["unit"]
     .warninfo
         br

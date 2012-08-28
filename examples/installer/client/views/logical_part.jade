@@ -3,11 +3,8 @@ script(type="text/template", id="logical_part_tmpl").
         button.delete.close(type="button",number=part.number,path=path)×
         ul.selectable.wat-cf.part(number=part.number,pty=part.ty,data-toggle="modal", href="#"+String(dindex)+String(pindex), pindex=pindex, dindex=dindex)
             li
-                b
-                    = part.ui_path
-                b.partmp
+                span= part.ui_path
+                span.partmp
             li
-                b.partfs
-                    = part.fs
-                b
-                    = " "+part.size + part.unit
+                span.partfs= part.fs
+                span= " "+part.size + part.unit

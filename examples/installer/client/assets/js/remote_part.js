@@ -5,6 +5,13 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
         remote = remote || window.apis.services.partition;
     };
     var partial = {
+        myalert: function (msg) {
+            var $alert = $('#myalert');
+            $alert.off('click', '.js-close');
+            $alert.find('p.content').text(msg);
+            $alert.modal();
+        },
+
         getparts: function (data, reflash_parts) {
             remote.getPartitions(function (disks) {
                 disks = disks.reverse();
@@ -16,11 +23,21 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             init();
             var func = remote[action];
             var that = this;
+            var msgs = {
+                1: i18n.gettext('Too many primary partitions.'),
+                2: i18n.gettext('Too many extended partitions.'),
+            }
             var test = function (result) {
                 if (result.status && result.status === "success") {
                     that.getparts(result, callback);
                 }else {
-                    alert(i18n.gettext('Operation fails'));
+                    var msg_tmp = result.reason;
+                    var msg = i18n.gettext('Operation fails');
+                    if (msg_tmp.indexOf('@') === 1) {
+                        msg_tmp = msgs[msg_tmp[0]];
+                        msg = msg + ":" + msg_tmp;
+                    };
+                    that.myalert(msg);
                     console.log(result);
                 }
             };
@@ -54,10 +71,6 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 return disk;
             });
             return new_disks;
-        },
-        next: function () {
-            var r = confirm(i18n.gettext("The selected will be formatted. Press ok to continue"));
-            return r;
         },
 
         render: function (disks, act, locals) {

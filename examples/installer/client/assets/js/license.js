@@ -84,6 +84,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         },
 
         validate: function(callback) {
+            var that = this;
             if (!this.app.buttons.get('forward').enabled())
                 return;
             
@@ -93,9 +94,9 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                     if (result.status === "success") {
                         callback();
                     }else if (result.status === "warning") {
-                        alert(i18n.gettext("Some disk size does not meet the minimum requirements or memory is less than 1 GB"));
+                        that.app.myalert(i18n.gettext("Some disk size does not meet the minimum requirements or memory is less than 1 GB"),
+                                        callback);
                         console.log(result);
-                        callback ();
                     }
                 });
             });

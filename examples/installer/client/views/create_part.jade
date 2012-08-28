@@ -17,6 +17,7 @@ script(type="text/template", id="create_part_tmpl").
                         -else if (disk.type == "gpt")
                             option(value="primary")= gettext('primary')
                         -else
+                            option(value="primary")= gettext('primary')
                             option(value="extended")= gettext('extended')
             div.control-group.form-horizontal
                 label.control-label(for="fs")= gettext('FileSystem')

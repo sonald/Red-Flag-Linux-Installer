@@ -5,10 +5,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
         view: '#easy_part_tmpl',
         options: null,
         locals: null,
+        myalert: null,
 
-        initialize: function (options, locals) {
+        initialize: function (options, locals, myalert) {
             this.options = options;
             this.locals = locals;
+            this.myalert = myalert;
             this.options.installmode = "easy";
             this.options.grubinstall = "/dev/sda";
         },
@@ -46,41 +48,41 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             var dnum, pnum, part, disk;
             var that = this;
             if ($("#part_content").find('ul.select').length < 1) {
-                alert(i18n.gettext("Please select a partition to continue."));
-                return;
+                that.myalert(i18n.gettext("Please select a partition to continue."));
+                return false;
             }
             pnum = $("#part_content").find('ul.select').attr("pindex");//TODO
             dnum = $("#part_content").find('ul.select').attr("dindex");//TODO
             disk = this.options.disks[dnum];
             part = disk.table[pnum];
             if (part.size < 6) {
-                alert(i18n.gettext("Select a partition of at least 6 GB"));
-                return;
+                that.myalert(i18n.gettext("Select a partition of at least 6 GB"));
+                return false;
             }
-            if (Rpart.next() === false){
-                return;
-            }
-            var dpath = disk.path;
-            if (part.number < 0) {
-                Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
-                    var new_number = Number(result.handlepart);
-                    that.locals["disks"] = that.options.disks = disks;
-                    var disk = _.find(disks, function(el){
-                        return el.path === dpath;
+            $('#myconfirm').modal();
+            $('#myconfirm').on('click', '.js-confirm', function () {
+                var dpath = disk.path;
+                if (part.number < 0) {
+                    Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end], function (result, disks) {
+                        var new_number = Number(result.handlepart);
+                        that.locals["disks"] = that.options.disks = disks;
+                        var disk = _.find(disks, function(el){
+                            return el.path === dpath;
+                        });
+                        var part = _.find(disk.table, function (el) {
+                            return (el.number === new_number);
+                        });
+                        part["mountpoint"] = "/";
+                        part["dirty"] = true;
+                        callback();
                     });
-                    var part = _.find(disk.table, function (el) {
-                        return (el.number === new_number);
-                    });
-                    part["mountpoint"] = "/";
+                }else{
                     part["dirty"] = true;
+                    part["mountpoint"] = "/";
+                    part.fs = "ext4";
                     callback();
-                });
-            }else{
-                part["dirty"] = true;
-                part["mountpoint"] = "/";
-                part.fs = "ext4";
-                callback();
-            }
+                }
+            });
         },
     };
     return partial;
