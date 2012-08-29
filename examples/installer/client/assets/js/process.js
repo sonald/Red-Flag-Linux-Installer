@@ -121,10 +121,11 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             $p.find('.mygallery img').slidingGallery({
                 container: $p,
                 Lheight: 270,
+                gutterWidth:25,
             });
             function timedCount() {
                 $.galleryUtility.rightImage.image.trigger('click');
-                setTimeout(timedCount, 3000);
+                setTimeout(timedCount, 5000);
             };
             timedCount();
         },
