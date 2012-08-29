@@ -55,7 +55,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
-                    if (part.number > 0 && (_.include(["ext4","Unknow"],part.fs) === false || (part.fs).match(/swap/g))) {
+                    if (part.number > 0 && _.include(["ext4","Unknow"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
                         var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
                         $modal.find("#fs").attr("disabled","");
                         $modal.find("#mp").attr("disabled","");
@@ -63,6 +63,7 @@ define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
                         var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
                         $modal.find("#mp").attr("disabled","");
+                        $modal.find("#fs").val("swap");
                     };
                     if (part.number > 0 && part.ty === "logical") {
                         $disk.find('ul.logicals').prev('button.close').remove();
