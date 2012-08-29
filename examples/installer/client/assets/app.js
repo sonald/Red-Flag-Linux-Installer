@@ -5,8 +5,7 @@ require.config({
     },
     shim: {
         'bootstrap': ['jquery'],
-        'jquery.color':['jquery'],
-        'sitemap': ['jquery']
+        'jquery.slidingGallery':['jquery'],
     }
 });
 
