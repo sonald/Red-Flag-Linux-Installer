@@ -62,11 +62,8 @@ body {
 
 div#presentation {
     height: 300px;
-}
-
-div#presentation .item img {
     width: 100%;
-    height: 100%;
+    overflow: hidden;
 }
 
 #install-log {

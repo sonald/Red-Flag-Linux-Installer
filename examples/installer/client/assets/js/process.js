@@ -73,8 +73,8 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
         setupPresentation: function() {
             var $p = this.$presentation = $('#presentation');
-            var tmpl = '<div class="item"> <img src="$1" alt="$2"></img> </div>';
-            var tmpl_active = '<div class="item active"> <img src="$1" alt="$2"></img> </div>';
+            var tmpl = '<img src="$1" alt="$2"></img>';
+            var tmpl_active = '<img src="$1" alt="$2" class="start"></img>';
             
             var imgs = [
                 'installer-001.jpg', 
@@ -117,8 +117,16 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     items += tmpl.replace('$1', 'images/' + img).replace('$2', img);
             });
             
-            $p.find('.carousel-inner').html(items);
-            $p.carousel();
+            $p.find('.mygallery').html(items);
+            $p.find('.mygallery img').slidingGallery({
+                container: $p,
+                Lheight: 270,
+            });
+            function timedCount() {
+                $.galleryUtility.rightImage.image.trigger('click');
+                setTimeout(timedCount, 3000);
+            };
+            timedCount();
         },
         
         postSetup: function() {
