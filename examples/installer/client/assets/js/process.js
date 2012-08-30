@@ -44,7 +44,13 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
         }
 
         doReport();
-    }
+    };
+
+    var t;
+    function timedCount() {
+        $.galleryUtility.rightImage.image.trigger('click');
+        t = setTimeout(timedCount, 5000);
+    };
 
     console.log('load process');
     var page = {
@@ -77,35 +83,25 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             var tmpl_active = '<img src="$1" alt="$2" class="start"></img>';
             
             var imgs = [
-                'installer-001.jpg', 
-                'installer-002.jpg', 
-                'installer-003.jpg', 
-                'installer-004.jpg', 
-                'installer-005.jpg', 
-                'installer-006.jpg', 
-                'installer-007.jpg', 
-                'installer-008.jpg', 
-                'installer-009.jpg', 
-                'installer-010.jpg', 
-                'installer-011.jpg', 
-                'installer-012.jpg', 
-                'installer-013.jpg', 
-                'installer-014.jpg', 
-                'installer-015.jpg', 
-                'installer-016.jpg', 
-                'installer-017.jpg', 
-                'installer-018.jpg', 
-                'installer-019.jpg', 
-                'installer-020.jpg', 
-                'installer-021.jpg', 
-                'installer-022.jpg', 
-                'installer-023.jpg', 
-                'installer-024.jpg', 
-                'installer-025.jpg', 
-                'installer-026.jpg', 
-                'installer-027.jpg', 
-                'installer-028.jpg', 
-                'installer-029.jpg' 
+                'installer-001.png',
+                'installer-002.png',
+                'installer-003.png',
+                'installer-004.png',
+                'installer-005.png',
+                'installer-006.png',
+                'installer-007.png',
+                'installer-008.png',
+                'installer-009.png',
+                'installer-010.png',
+                'installer-011.png',
+                'installer-012.png',
+                'installer-013.png',
+                'installer-014.png',
+                'installer-015.png',
+                'installer-016.png',
+                'installer-017.png',
+                'installer-018.png',
+                'installer-019.png',
             ];
 
             var items = '', active_set = false;
@@ -123,10 +119,6 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                 Lheight: 270,
                 gutterWidth:25,
             });
-            function timedCount() {
-                $.galleryUtility.rightImage.image.trigger('click');
-                setTimeout(timedCount, 5000);
-            };
             timedCount();
         },
         
@@ -136,7 +128,6 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             progressbar.init($('#install-progress'));
 
             this.app.buttons.get("forward").change(i18n.gettext('install'));
-
 
             var that = this;
             that.app.buttons.get("forward").disable();
@@ -190,17 +181,17 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     this.app.buttons.get("close").bind('click', function() {
                         window.installer && window.installer.closeInstaller();
                     });
-                    
+                    clearTimeout(t);
                 } else if (respond.status === "success") {
                     this.buildMessage(
                         i18n.gettext('Congratulations~You have finished installing the system.'),
                         'label-important');
-                    this.app.buttons.get("close").enable();
-                    this.app.buttons.get("close").bind('click', function() {
+                    this.app.buttons.get("forward").enable();
+                    this.app.buttons.get("forward").bind('click', function() {
                         window.installer && window.installer.closeInstaller();
                     });
                     this.app.buttons.get("forward").change(i18n.gettext('Finished'));
-
+                    clearTimeout(t);
                 } else {
                     this.buildMessage(respond.status, 'label-info');
                 }
