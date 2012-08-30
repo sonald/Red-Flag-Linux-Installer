@@ -7,6 +7,7 @@ define(['jquery', 'system', 'locale!client'], function($, nil, i18n) {
         'maxlen': i18n.gettext('<b>Please enter no more than %d characters.</b>'),
         'minlen': i18n.gettext('<b>Please enter at least %d characters.</b>'),
         'confirm': i18n.gettext('<b>Please enter the same content again.</b>'),
+        'useradd': i18n.gettext('<b>Incorrect format.</b>'),
     };
 
 
@@ -44,6 +45,20 @@ define(['jquery', 'system', 'locale!client'], function($, nil, i18n) {
                 };
             });
         },
+        useradd: function () {
+            var that = this;
+            $('.js-useradd').each( function(){
+                var str = $(this).attr('value');
+                if( str === ""){
+                    $(this).after(errors['required']);
+                    that.result = false;
+                }else if( str.match(/^[a-z_][a-z0-9_-]*[$]?$/g) === null){
+                    $(this).after(errors['useradd']);
+                    that.result = false;
+                };
+            });
+        },
+
         minlength: function(){
             var that = this;
             $('.js-required[minlength]').each( function(){
@@ -57,6 +72,7 @@ define(['jquery', 'system', 'locale!client'], function($, nil, i18n) {
         execu: function(){
             this.required();
             this.alphanum();
+            this.useradd();
             this.maxlength();
             this.minlength();
             this.confirm();

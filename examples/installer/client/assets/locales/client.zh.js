@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-29 02:40+0800",
+         "POT-Creation-Date": " 2012-08-30 22:39+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -132,10 +132,6 @@ define(["system"],
          null,
          "用户名"
       ],
-      "Only lower letters, numbers, and underscores.": [
-         null,
-         "只允许填入小写字母、数字和_。"
-      ],
       "Hostname": [
          null,
          "主机名"
@@ -232,6 +228,10 @@ define(["system"],
          null,
          ""
       ],
+      "<b>Incorrect format.</b>": [
+         null,
+         "<b>用户名格式不正确。</b>"
+      ],
       "Set": [
          null,
          "设置"
@@ -251,6 +251,18 @@ define(["system"],
       "Finished": [
          null,
          "完成安装"
+      ],
+      "Usernames must start with a lower case letter or an underscore,": [
+         null,
+         "用户名必须以一个小写字母或下划线开始，"
+      ],
+      "followed by lower case letters, digits, underscores, or dashes.": [
+         null,
+         "跟随小写字符、数字、下划线或连字符的组合。"
+      ],
+      "#~ \"They can end with a dollar sign and only be up to 32 characters long.\"": [
+         null,
+         "可以以美元符号结束。用户名不能超过 32 个字符长。"
       ],
       "close": [
          null,
