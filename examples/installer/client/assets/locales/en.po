@@ -120,11 +120,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: client/views/userinfo.jade:7
-msgid "Only lower letters, numbers, and underscores."
-msgstr ""
-
-#: client/views/userinfo.jade:10
+#: client/views/userinfo.jade:9
 msgid "Hostname"
 msgstr ""
 
@@ -136,11 +132,11 @@ msgstr ""
 msgid "Free"
 msgstr ""
 
-#: client/assets/app.js:190
+#: client/assets/app.js:189
 msgid "Exit"
 msgstr ""
 
-#: client/assets/app.js:195
+#: client/assets/app.js:194
 msgid "Next"
 msgstr ""
 
@@ -190,15 +186,15 @@ msgstr ""
 msgid "Select a partition of at least 6 GB"
 msgstr ""
 
-#: client/assets/js/ad_part.js:156
+#: client/assets/js/ad_part.js:157
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:280
+#: client/assets/js/ad_part.js:281
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:283
+#: client/assets/js/ad_part.js:284
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
@@ -224,15 +220,19 @@ msgstr ""
 msgid "<b>Please enter the same content again.</b>"
 msgstr ""
 
+#: client/assets/js/js_validate.js:10
+msgid "<b>Incorrect format.</b>"
+msgstr ""
+
 #: client/assets/js/userinfo.js:8
 msgid "Set"
 msgstr ""
 
-#: client/assets/js/process.js:51
+#: client/assets/js/process.js:57
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/process.js:129
+#: client/assets/js/process.js:130
 msgid "install"
 msgstr ""
 

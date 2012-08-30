@@ -26,7 +26,6 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
                 };
                 pageCache = (jade.compile($(this.view)[0].innerHTML))(this.locals);
             }
-
             return pageCache;
         },
 
@@ -35,8 +34,10 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
             $('body').off('keyup', 'input#name');
 
             $('body').on('keyup', 'input#name', function() {
+                $('fieldset').find('b').remove();
                 var value = $(this).attr("value");
                 $('input#hostname').attr("value", value+"-qomo");
+                jsvalidate.execu();
             });
         },
 
@@ -57,5 +58,4 @@ define(['jquery', 'system', 'js_validate', 'i18n'], function($, _system, jsvalid
 
     return page;
 });
-
 

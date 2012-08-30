@@ -117,10 +117,6 @@ define(["system"],
          null,
          ""
       ],
-      "Only lower letters, numbers, and underscores.": [
-         null,
-         ""
-      ],
       "Hostname": [
          null,
          ""
@@ -214,6 +210,10 @@ define(["system"],
          ""
       ],
       "<b>Please enter the same content again.</b>": [
+         null,
+         ""
+      ],
+      "<b>Incorrect format.</b>": [
          null,
          ""
       ],

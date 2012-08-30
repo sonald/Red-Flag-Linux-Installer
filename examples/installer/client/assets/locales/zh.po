@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-29 02:40+0800\n"
+"POT-Creation-Date: 2012-08-30 22:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,12 +143,7 @@ msgstr "不同意"
 msgid "Username"
 msgstr "用户名"
 
-#: client/views/userinfo.jade:7
-#, fuzzy
-msgid "Only lower letters, numbers, and underscores."
-msgstr "只允许填入小写字母、数字和_。"
-
-#: client/views/userinfo.jade:10
+#: client/views/userinfo.jade:9
 msgid "Hostname"
 msgstr "主机名"
 
@@ -160,11 +155,11 @@ msgstr "编辑磁盘"
 msgid "Free"
 msgstr "空闲"
 
-#: client/assets/app.js:190
+#: client/assets/app.js:189
 msgid "Exit"
 msgstr "退出"
 
-#: client/assets/app.js:195
+#: client/assets/app.js:194
 msgid "Next"
 msgstr "下一步"
 
@@ -215,15 +210,15 @@ msgstr "继续前，请选择一块分区。"
 msgid "Select a partition of at least 6 GB"
 msgstr "选择一个至少6GB大小的分区"
 
-#: client/assets/js/ad_part.js:156
+#: client/assets/js/ad_part.js:157
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:280
+#: client/assets/js/ad_part.js:281
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:283
+#: client/assets/js/ad_part.js:284
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
 
@@ -250,15 +245,19 @@ msgstr "<b>长度最少为%d个字符</b>"
 msgid "<b>Please enter the same content again.</b>"
 msgstr ""
 
+#: client/assets/js/js_validate.js:10
+msgid "<b>Incorrect format.</b>"
+msgstr "<b>用户名格式不正确。</b>"
+
 #: client/assets/js/userinfo.js:8
 msgid "Set"
 msgstr "设置"
 
-#: client/assets/js/process.js:51
+#: client/assets/js/process.js:57
 msgid "Install"
 msgstr "安装"
 
-#: client/assets/js/process.js:129
+#: client/assets/js/process.js:130
 msgid "install"
 msgstr "安装"
 
@@ -270,6 +269,17 @@ msgstr "恭喜，安装成功。"
 #, fuzzy
 msgid "Finished"
 msgstr "完成安装"
+
+#~ msgid "Usernames must start with a lower case letter or an underscore,"
+#~ msgstr "用户名必须以一个小写字母或下划线开始，"
+
+#, fuzzy
+#~ msgid "followed by lower case letters, digits, underscores, or dashes."
+#~ msgstr "跟随小写字符、数字、下划线或连字符的组合。"
+
+#~ msgid ""
+#~ "They can end with a dollar sign and only be up to 32 characters long."
+#~ msgstr "可以以美元符号结束。用户名不能超过 32 个字符长。"
 
 #~ msgid "close"
 #~ msgstr "关闭"
