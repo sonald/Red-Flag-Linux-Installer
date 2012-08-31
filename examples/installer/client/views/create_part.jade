@@ -14,7 +14,7 @@ script(type="text/template", id="create_part_tmpl").
                     select.span3#parttype
                         - if (part.ty == "logical")
                             option(value="logical")= gettext('logical')
-                        -else if (disk.type == "gpt")
+                        -else if (type == "gpt")
                             option(value="primary")= gettext('primary')
                         -else
                             option(value="primary")= gettext('primary')
