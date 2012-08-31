@@ -109,6 +109,13 @@ function startServer() {
         installer.stderr.on('data', function(data) {
             process.stderr.write(data.toString());
         });
+
+		installer.on ('exit', function(data) {
+			if (data === 0) {
+				var clear = spawn('sudo',['rm', '/var/run/qomo-installer.pid']);
+			}
+			process.exit(0);
+		})
     });
 }
 

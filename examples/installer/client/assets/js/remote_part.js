@@ -88,6 +88,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                                 dindex:dindex,
                                 part:part,
                                 path:disk.path,
+                                type:disk.type,
                                 gettext:locals.gettext,
                             };
                     actPage = "";
