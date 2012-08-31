@@ -11,7 +11,7 @@ script(type="text/template", id="edit_part_tmpl").
             div.control-group.form-horizontal
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
-                    select.span3#parttype(value=part.ty,disabled)
+                    select.span3#parttype(disabled)
                         option(value="primary")= gettext('primary')
                         option(value="logical")= gettext('logical')
                         option(value="extended")= gettext('extended')
