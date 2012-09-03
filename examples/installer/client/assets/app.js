@@ -91,8 +91,6 @@ var app = {
 
     // collect user configurations
     options: {
-        username:'',
-        hostname:'qomo',
         grubinstall:'',
         installmode:'easy',
         disks: []
@@ -200,10 +198,9 @@ var app = {
     }
 };
 
-require(['jquery', 'i18n', 'license', 'userinfo', 'part', 'process'],
-        function($, i18n,  pageLicense, pageInfo, pagePart, pageProcess) {
+require(['jquery', 'i18n', 'license', 'part', 'process'],
+        function($, i18n,  pageLicense, pagePart, pageProcess) {
     app.stages.push(pageLicense);
-    app.stages.push(pageInfo);
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
     app.i18n = i18n;

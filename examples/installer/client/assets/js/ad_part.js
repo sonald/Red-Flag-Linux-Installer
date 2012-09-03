@@ -1,5 +1,5 @@
-define(['jquery', 'system', 'js_validate', 'i18n', 'remote_part'],
-       function($, _system, jsvalidate, i18n, Rpart) {
+define(['jquery', 'system', 'i18n', 'remote_part'],
+       function($, _system, i18n, Rpart) {
     'use strict';
 
     var partialCache;
