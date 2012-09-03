@@ -20,7 +20,7 @@ class Window(QWidget):
         # self.setWindowFlags(Qt.FramelessWindowHint)
         self.view = QWebView(self)
         self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
-        QtCore.QObject.connect(self.view,QWebFrame.SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
+        QObject.connect(self.view.page().mainFrame(),SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
 
         installer = Installer()
         self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)

@@ -55,13 +55,16 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 pindex = 0;
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
+                    var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
+                    if($modal) {
+                        if (part.number > 0)$modal.find("#parttype").val(part.ty);
+                        $modal.find("#fs").val(part.fs);
+                    }
                     if (part.number > 0 && _.include(["ext4","Unknow"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
-                        var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
                         $modal.find("#fs").attr("disabled","");
                         $modal.find("#mp").attr("disabled","");
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
-                        var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("swap");
                     };
@@ -208,6 +211,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
                 if(el.fs !== "") {
                     $part.find('.partfs').text(el.fs);
+                    $part.next('.modal').find('#fs').val(el.fs);
                 };
                 if (el.mp !== ""){
                     $part.find('.partmp').text("(" + el.mp + ")");
