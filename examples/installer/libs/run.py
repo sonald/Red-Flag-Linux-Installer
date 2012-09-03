@@ -20,7 +20,8 @@ class Window(QWidget):
         # self.setWindowFlags(Qt.FramelessWindowHint)
         self.view = QWebView(self)
         self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
-        
+        QtCore.QObject.connect(self.view,QWebFrame.SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
+
         installer = Installer()
         self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
         self.setupInspector()
@@ -55,6 +56,11 @@ class Window(QWidget):
 
     def toggleInspector(self):
         self.webInspector.setVisible(not self.webInspector.isVisible())
+
+    def reload_js(self):
+        installer = Installer()
+        self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
+
 
 def main():
     app = QApplication(sys.argv)
