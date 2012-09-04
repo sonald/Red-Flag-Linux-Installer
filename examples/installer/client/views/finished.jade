@@ -1,0 +1,14 @@
+script(type="text/template", id="finished_tmpl").
+    #finished
+        span
+            = gettext("Congratulations~You have finished installing Qomo Linux.")
+            = gettext("Restart the computer for further configuration.")
+        label.radio
+            input(type="radio", name="finished", id="later", value="later", checked)
+            = gettext("Reboot later.")
+        label.radio
+            input(type="radio", name="finished", id="reboot", value="reboot")
+            = gettext("Reboot right now.")
+        label.radio
+            input(type="radio", name="finished", id="shutdown", value="shutdown")
+            = gettext("Shutdown.")

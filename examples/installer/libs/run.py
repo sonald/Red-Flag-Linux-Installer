@@ -2,6 +2,7 @@
 
 import os
 import sys
+import dbus
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -12,6 +13,17 @@ from webpage import WebPage
 class Installer(QObject):
     @pyqtSlot()
     def closeInstaller(self):
+        sys.exit(0)
+
+    @pyqtSlot(str)
+    def reboot(self,msg):
+        print msg
+        bus = dbus.SessionBus()
+        proxy = bus.get_object('org.kde.ksmserver', '/KSMServer')
+        if msg == "reboot":
+            proxy.logout(0,1,1)
+        elif msg == "shutdown":
+            proxy.logout(0,2,0)
         sys.exit(0)
 
 class Window(QWidget):
