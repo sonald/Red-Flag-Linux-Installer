@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 22:39+0800\n"
+"POT-Creation-Date: 2012-09-05 06:55+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,49 +20,17 @@ msgstr ""
 "X-Language: zh_CN\n"
 "X-Source-Language: C\n"
 
-#: client/views/create_part.jade:5
-msgid "CreateDisk"
-msgstr "创建磁盘"
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:133
+msgid "Free"
+msgstr "空闲"
 
-#: client/views/create_part.jade:8 client/views/edit_part.jade:8
-msgid "Size"
-msgstr "大小(GB)"
+#: client/views/license.jade:160
+msgid "agree"
+msgstr "同意"
 
-#: client/views/create_part.jade:12 client/views/edit_part.jade:12
-msgid "PartType"
-msgstr "分区类型"
-
-#: client/views/create_part.jade:16 client/views/part.jade:20
-#: client/views/edit_part.jade:16
-msgid "logical"
-msgstr "逻辑分区"
-
-#: client/views/create_part.jade:18 client/views/create_part.jade:20
-#: client/views/part.jade:18 client/views/edit_part.jade:15
-msgid "primary"
-msgstr "主分区"
-
-#: client/views/create_part.jade:21 client/views/part.jade:22
-#: client/views/edit_part.jade:17
-msgid "extended"
-msgstr "扩展分区"
-
-#: client/views/create_part.jade:23 client/views/edit_part.jade:19
-msgid "FileSystem"
-msgstr "文件系统"
-
-#: client/views/create_part.jade:29 client/views/edit_part.jade:25
-msgid "MountPoint"
-msgstr "挂载点"
-
-#: client/views/create_part.jade:36 client/views/part.jade:36
-#: client/views/edit_part.jade:32
-msgid "Close"
-msgstr "关闭"
-
-#: client/views/create_part.jade:37 client/views/edit_part.jade:33
-msgid "Submit"
-msgstr "提交"
+#: client/views/license.jade:163
+msgid "disagree"
+msgstr "不同意"
 
 #: client/views/partial.jade:10
 msgid "Warning!"
@@ -71,10 +39,6 @@ msgstr "提示："
 #: client/views/partial.jade:11
 msgid "The mount point has been selected."
 msgstr "此挂载点已经被选择。"
-
-#: client/views/fd_part.jade:3
-msgid "Select one disk: "
-msgstr "请选择一个磁盘："
 
 #: client/views/ad_part.jade:13
 msgid "Reset"
@@ -108,6 +72,21 @@ msgstr "高级分区"
 msgid "disk"
 msgstr "磁盘"
 
+#: client/views/part.jade:18 client/views/edit_part.jade:15
+#: client/views/create_part.jade:18 client/views/create_part.jade:20
+msgid "primary"
+msgstr "主分区"
+
+#: client/views/part.jade:20 client/views/edit_part.jade:16
+#: client/views/create_part.jade:16
+msgid "logical"
+msgstr "逻辑分区"
+
+#: client/views/part.jade:22 client/views/edit_part.jade:17
+#: client/views/create_part.jade:21
+msgid "extended"
+msgstr "扩展分区"
+
 #: client/views/part.jade:24
 msgid "free"
 msgstr "空闲"
@@ -127,39 +106,73 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
 
+#: client/views/part.jade:36 client/views/edit_part.jade:32
+#: client/views/create_part.jade:36
+msgid "Close"
+msgstr "关闭"
+
 #: client/views/part.jade:37
 msgid "Continue"
 msgstr "继续"
 
-#: client/views/license.jade:160
-msgid "agree"
-msgstr "同意"
+#: client/views/finished.jade:4
+#, fuzzy
+msgid "Congratulations~You have completed installation."
+msgstr "恭喜，安装成功。"
 
-#: client/views/license.jade:163
-msgid "disagree"
-msgstr "不同意"
+#: client/views/finished.jade:5
+msgid "Reboot for more configurations."
+msgstr "重启计算机进行进一步配置。"
 
-#: client/views/userinfo.jade:4
-msgid "Username"
-msgstr "用户名"
+#: client/views/finished.jade:9
+msgid "Reboot Later"
+msgstr "稍后重启"
 
-#: client/views/userinfo.jade:9
-msgid "Hostname"
-msgstr "主机名"
+#: client/views/finished.jade:12
+msgid "Reboot"
+msgstr "重启"
+
+#: client/views/finished.jade:15
+msgid "Shutdown"
+msgstr "关机"
 
 #: client/views/edit_part.jade:5
 msgid "EditDisk"
 msgstr "编辑磁盘"
 
-#: client/views/free_part.jade:5 client/assets/js/remote_part.js:132
-msgid "Free"
-msgstr "空闲"
+#: client/views/edit_part.jade:8 client/views/create_part.jade:8
+msgid "Size"
+msgstr "大小(GB)"
 
-#: client/assets/app.js:189
+#: client/views/edit_part.jade:12 client/views/create_part.jade:12
+msgid "PartType"
+msgstr "分区类型"
+
+#: client/views/edit_part.jade:19 client/views/create_part.jade:23
+msgid "FileSystem"
+msgstr "文件系统"
+
+#: client/views/edit_part.jade:25 client/views/create_part.jade:29
+msgid "MountPoint"
+msgstr "挂载点"
+
+#: client/views/edit_part.jade:33 client/views/create_part.jade:37
+msgid "Submit"
+msgstr "提交"
+
+#: client/views/fd_part.jade:3
+msgid "Select one disk: "
+msgstr "请选择一个磁盘："
+
+#: client/views/create_part.jade:5
+msgid "CreateDisk"
+msgstr "创建磁盘"
+
+#: client/assets/app.js:187
 msgid "Exit"
 msgstr "退出"
 
-#: client/assets/app.js:194
+#: client/assets/app.js:192
 msgid "Next"
 msgstr "下一步"
 
@@ -170,6 +183,33 @@ msgstr "选择一块至少6GB大小的磁盘。"
 #: client/assets/js/fd_part.js:44
 msgid "Select a disks please"
 msgstr "选择一块至少6GB大小的磁盘。"
+
+#: client/assets/js/part.js:8
+#, fuzzy
+msgid "Partition"
+msgstr "启动分区"
+
+#: client/assets/js/easy_part.js:41
+msgid "Select a partition of at least 6 GB."
+msgstr "选择一个至少6GB大小的分区。"
+
+#: client/assets/js/easy_part.js:51
+msgid "Please select a partition to continue."
+msgstr "继续前，请选择一块分区。"
+
+#: client/assets/js/easy_part.js:59
+msgid "Select a partition of at least 6 GB"
+msgstr "选择一个至少6GB大小的分区"
+
+#: client/assets/js/license.js:28
+msgid "Welcome"
+msgstr "欢迎"
+
+#: client/assets/js/license.js:97
+msgid ""
+"Some disk size does not meet the minimum requirements or memory is less than "
+"1 GB"
+msgstr "某些磁盘大小不足或者内存小于1GB"
 
 #: client/assets/js/remote_part.js:27
 #, fuzzy
@@ -184,74 +224,14 @@ msgstr "只能建一个扩展分区"
 msgid "Operation fails"
 msgstr "操作失败"
 
-#: client/assets/js/part.js:8
-msgid "Part"
-msgstr "分区"
+#: client/assets/js/finished.js:8
+msgid "Complete"
+msgstr "完成"
 
-#: client/assets/js/license.js:28
-msgid "Welcome"
-msgstr "欢迎"
-
-#: client/assets/js/license.js:97
-msgid ""
-"Some disk size does not meet the minimum requirements or memory is less than "
-"1 GB"
-msgstr "某些磁盘大小不足或者内存小于1GB"
-
-#: client/assets/js/easy_part.js:41
-msgid "Select a partition of at least 6 GB."
-msgstr "选择一个至少6GB大小的分区。"
-
-#: client/assets/js/easy_part.js:51
-msgid "Please select a partition to continue."
-msgstr "继续前，请选择一块分区。"
-
-#: client/assets/js/easy_part.js:59
-msgid "Select a partition of at least 6 GB"
-msgstr "选择一个至少6GB大小的分区"
-
-#: client/assets/js/ad_part.js:157
-msgid "Please enter the number!"
-msgstr "请输入数字！"
-
-#: client/assets/js/ad_part.js:281
-msgid "You need specify a root partition."
-msgstr "请指定一个根分区。"
-
-#: client/assets/js/ad_part.js:284
-msgid "The root partition requires at least 6 GB space!"
-msgstr "根分区需要至少6GB空间！"
-
-#: client/assets/js/js_validate.js:5
-msgid "<b>This field is required. </b>"
-msgstr "<b>请填写此项</b>"
-
-#: client/assets/js/js_validate.js:6
+#: client/assets/js/finished.js:30
 #, fuzzy
-msgid "<b>Only lower letters, numbers, and underscores.</b>"
-msgstr "<b>只允许填入小写字母、数字和_</b>"
-
-#: client/assets/js/js_validate.js:7
-#, perl-format
-msgid "<b>Please enter no more than %d characters.</b>"
-msgstr "<b>长度不能超过%d个字母</b>"
-
-#: client/assets/js/js_validate.js:8
-#, perl-format
-msgid "<b>Please enter at least %d characters.</b>"
-msgstr "<b>长度最少为%d个字符</b>"
-
-#: client/assets/js/js_validate.js:9
-msgid "<b>Please enter the same content again.</b>"
-msgstr ""
-
-#: client/assets/js/js_validate.js:10
-msgid "<b>Incorrect format.</b>"
-msgstr "<b>用户名格式不正确。</b>"
-
-#: client/assets/js/userinfo.js:8
-msgid "Set"
-msgstr "设置"
+msgid "Finished"
+msgstr "完成安装"
 
 #: client/assets/js/process.js:57
 msgid "Install"
@@ -261,14 +241,45 @@ msgstr "安装"
 msgid "install"
 msgstr "安装"
 
-#: client/assets/js/process.js:187
-msgid "Congratulations~You have finished installing the system."
-msgstr "恭喜，安装成功。"
+#: client/assets/js/ad_part.js:160
+msgid "Please enter the number!"
+msgstr "请输入数字！"
 
-#: client/assets/js/process.js:193
+#: client/assets/js/ad_part.js:285
+msgid "You need specify a root partition."
+msgstr "请指定一个根分区。"
+
+#: client/assets/js/ad_part.js:288
+msgid "The root partition requires at least 6 GB space!"
+msgstr "根分区需要至少6GB空间！"
+
+#~ msgid "Username"
+#~ msgstr "用户名"
+
+#~ msgid "Hostname"
+#~ msgstr "主机名"
+
+#~ msgid "Part"
+#~ msgstr "分区"
+
+#~ msgid "<b>This field is required. </b>"
+#~ msgstr "<b>请填写此项</b>"
+
 #, fuzzy
-msgid "Finished"
-msgstr "完成安装"
+#~ msgid "<b>Only lower letters, numbers, and underscores.</b>"
+#~ msgstr "<b>只允许填入小写字母、数字和_</b>"
+
+#~ msgid "<b>Please enter no more than %d characters.</b>"
+#~ msgstr "<b>长度不能超过%d个字母</b>"
+
+#~ msgid "<b>Please enter at least %d characters.</b>"
+#~ msgstr "<b>长度最少为%d个字符</b>"
+
+#~ msgid "<b>Incorrect format.</b>"
+#~ msgstr "<b>用户名格式不正确。</b>"
+
+#~ msgid "Set"
+#~ msgstr "设置"
 
 #~ msgid "Usernames must start with a lower case letter or an underscore,"
 #~ msgstr "用户名必须以一个小写字母或下划线开始，"
