@@ -72,6 +72,7 @@ class Window(QWidget):
     def reload_js(self):
         installer = Installer()
         self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
+        self.view.page().history().clear()
 
 
 def main():
