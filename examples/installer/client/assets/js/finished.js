@@ -5,7 +5,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
     console.log('load finished');
 
     var page = {
-        name: i18n.gettext('Finished'),
+        name: i18n.gettext('Complete'),
         view: '#finished_tmpl',
         app: null,
 
@@ -32,6 +32,11 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                 var result = $('#finished').find(':checked').attr("value");
                 console.log(result);
                 window.installer && window.installer.reboot(result);
+            });
+            var that = this;
+            $('#finished').on('click', 'label.label_radio', function () {
+                $('#finished').find('label.label_radio').removeClass("label_checked");
+                $(this).addClass("label_checked");
             });
         },
 

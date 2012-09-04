@@ -233,3 +233,38 @@ span.mycheckbox.checked {
 #install-log {
     height: 18;
 }
+
+//finished.jade
+#finished {
+    border: 0; 
+    padding-bottom: 9px;
+}
+
+#finished h2 {
+    color: #EB7A24;
+}
+
+#finished label {
+    display: block;
+    cursor: pointer;
+    line-height: 20px;
+    padding-bottom: 9px;
+    padding-left: 34px;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+}
+
+#finished .label_radio input {
+    margin-right: 5px;
+}
+
+#finished .label_radio {
+    background:url(/images/radio-off.png) no-repeat;
+}
+#finished .label_radio.label_checked {
+    background: url(/images/radio-on.png) no-repeat;
+}
+#finished .label_radio input {
+    position: absolute;
+    left: -9999px;
+}
+
