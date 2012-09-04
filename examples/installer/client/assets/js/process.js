@@ -130,6 +130,8 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.app.buttons.get("forward").change(i18n.gettext('install'));
 
             var that = this;
+            that.app.buttons.get("forward").disable();
+            that.app.buttons.get("forward").bind('click');
             that.app.buttons.get("close").disable();
             that.app.buttons.get("close").bind('click');
 
