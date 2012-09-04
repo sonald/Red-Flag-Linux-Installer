@@ -174,7 +174,7 @@ define(["system"],
       ],
       "Partition": [
          null,
-         "启动分区"
+         "分区"
       ],
       "Select a partition of at least 6 GB.": [
          null,

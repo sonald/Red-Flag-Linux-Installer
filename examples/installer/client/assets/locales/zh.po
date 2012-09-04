@@ -187,7 +187,7 @@ msgstr "选择一块至少6GB大小的磁盘。"
 #: client/assets/js/part.js:8
 #, fuzzy
 msgid "Partition"
-msgstr "启动分区"
+msgstr "分区"
 
 #: client/assets/js/easy_part.js:41
 msgid "Select a partition of at least 6 GB."
