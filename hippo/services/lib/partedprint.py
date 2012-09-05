@@ -6,7 +6,7 @@ import sys
 import json
 
 
-def print_disk_helper_to_json_format(parts):
+def print_disk_helper_to_json_format(parts, disk_type):
     """Return the stat of part given."""
     parts_data = []
     for part in parts:
@@ -42,6 +42,8 @@ def print_disk_helper_to_json_format(parts):
                 "ty": partty,
                 "fs": fstype,
                 }
+        if disk_type == "gpt" and part.number > 0:
+            tmp["biosgrub"] = part.getFlag(parted.PARTITION_BIOS_GRUB)
         parts_data.append(tmp)
     return parts_data
 
@@ -55,7 +57,7 @@ def print_disk_to_json_format(disk,free):
             part = part.nextPartition()
     else:
         parts = disk.partitions
-    disk_data = print_disk_helper_to_json_format(parts)
+    disk_data = print_disk_helper_to_json_format(parts, disk.type)
     return disk_data
 
 def print_disks_to_json_format(disks,free):

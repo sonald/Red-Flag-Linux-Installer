@@ -52,23 +52,23 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             }
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {
-            Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
-                that.locals["disks"] = that.options.disks = disks;
-                var disk = _.find(disks, function(el){
-                    return el.path === dpath;
+                Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
+                    that.locals["disks"] = that.options.disks = disks;
+                    var disk = _.find(disks, function(el){
+                        return el.path === dpath;
+                    });
+                    disk.table = _.map(disk.table, function (el) {
+                        if (el.number > 0 && el.biosgrub === false) {
+                            el["dirty"]=true;
+                        }
+                        return el;
+                    });
+                    var part = _.find(disk.table, function (el) {
+                        return (el.fs!="linux-swap(v1)" && el.number > 0 && el.dirty === true);
+                    });
+                    part["mountpoint"] = "/";
+                    callback();
                 });
-                disk.table = _.map(disk.table, function (el) {
-                    if (el.number > 0) {
-                        el["dirty"]=true;
-                    }
-                    return el;
-                });
-                var part = _.find(disk.table, function (el) {
-                    return (el.fs!="linux-swap(v1)" && el.number > 0);
-                });
-                part["mountpoint"] = "/";
-                callback();
-            });
             });
         },
     };

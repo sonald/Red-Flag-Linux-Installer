@@ -20,9 +20,14 @@ def fdhandler(dev,mem):
     disk = parted.disk.Disk(dev)
     parttype = "primary"
     disk.deleteAllPartitions()
+    start = parted.sizeToSectors(0, "GB", 512)
+    if disk.type == "gpt":
+        end = parted.sizeToSectors(1,'MB',512)
+        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'ext4')
+        disk.partitions[0].setFlag(parted.PARTITION_BIOS_GRUB)
+        start = end + 10
 
     if size > 10:
-        start = parted.sizeToSectors(0, "GB", 512)
         end = parted.sizeToSectors(mem,'B',512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
         start = end + 100
@@ -33,7 +38,6 @@ def fdhandler(dev,mem):
         end = sizeL - 100
         disk = rfparted.mkpart(dev, disk, parttype, start, end, "ext4")
     elif size >= 6:
-        start = parted.sizeToSectors(0, "GB", 512)
         end = sizeL - 100
         disk = rfparted.mkpart(dev, disk, parttype, start, end, "ext4")
     else:
