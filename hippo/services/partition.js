@@ -131,9 +131,9 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.EasyHandler = function (devpath, parttype, start, end, cb) {
+    PartitionStub.EasyHandler = function (devpath, parttype, start, end, number, cb) {
         if (sock && sock.socket.connected) {
-            sock.emit('easyhandler', devpath, parttype, start, end);
+            sock.emit('easyhandler', devpath, parttype, start, end, number);
             sock.once('easyhandler', function (result) {
                 cb(JSON.parse(result));
             });

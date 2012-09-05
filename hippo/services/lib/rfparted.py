@@ -63,10 +63,12 @@ def mkpart(dev, disk, parttype, start, end, fstype):
     new_geo = adjust_geometry(disk,parttype,new_geometry)
 
     fs = None
-    if not (parttype & parted.PARTITION_EXTENDED):
+    if not (parttype & parted.PARTITION_EXTENDED) and fstype != "bios_grub":
         fs = parted.filesystem.FileSystem(fstype,new_geo)
         
     new_part = parted.partition.Partition(disk,parttype,fs,new_geo)
+    if fstype == "bios_grub":
+        new_part.setFlag(parted.PARTITION_BIOS_GRUB)
     cons = dev.getConstraint()
     disk.addPartition(new_part, cons)
     return disk

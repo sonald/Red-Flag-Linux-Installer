@@ -58,7 +58,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                         return el.path === dpath;
                     });
                     disk.table = _.map(disk.table, function (el) {
-                        if (el.number > 0 && el.biosgrub === false) {
+                        if (el.number > 0 && el.fs !== "bios_grub") {
                             el["dirty"]=true;
                         }
                         return el;

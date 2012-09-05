@@ -42,8 +42,8 @@ def print_disk_helper_to_json_format(parts, disk_type):
                 "ty": partty,
                 "fs": fstype,
                 }
-        if disk_type == "gpt" and part.number > 0:
-            tmp["biosgrub"] = part.getFlag(parted.PARTITION_BIOS_GRUB)
+        if disk_type == "gpt" and part.number > 0 and part.getFlag(parted.PARTITION_BIOS_GRUB):
+            tmp["fs"]="bios_grub"
         parts_data.append(tmp)
     return parts_data
 

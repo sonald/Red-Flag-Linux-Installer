@@ -23,8 +23,7 @@ def fdhandler(dev,mem):
     start = parted.sizeToSectors(0, "GB", 512)
     if disk.type == "gpt":
         end = parted.sizeToSectors(1,'MB',512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'ext4')
-        disk.partitions[0].setFlag(parted.PARTITION_BIOS_GRUB)
+        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'bios_grub')
         start = end + 10
 
     if size > 10:
@@ -44,24 +43,26 @@ def fdhandler(dev,mem):
         raise Exception, "Error, select a disk of at least 6 GB ."
     return disk
 
-def easyhandler(dev, disk, parttype, start, end):
+def gpt_easyhandler(dev, disk, start, end, number):
     fs = "ext4"
-    start = parted.sizeToSectors(float(start), "GB", 512)
-    end = parted.sizeToSectors(float(end), "GB", 512)
-    if parttype == "free" and disk.type == "msdos":
-        if disk.primaryPartitionCount == 4:
-            raise Exception, "Too many primary partitions."
-        elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
-            disk = rfparted.mkpart(dev, disk, "extended", start, end, fs)
-            parttype = "logical"
-        elif disk.primaryPartitionCount < 4:
-            parttype = "primary"
-        ###elif parttype == "logical"
-        ### nothing changed
-    elif parttype == "free" and disk.type == "gpt":
-        parttype = "primary"
+    bios_grub = False
+    for p in disk.partitions:
+        if p.number !== number and p.getFlag(parted.PARTITION_BIOS_GRUB):
+            bios_grub = True
+            break
+    if bios_grub and number > 0:
+        return [disk, number]
+
+    if bios_grub == False:
+        if number > 0:
+            disk = rfparted.rmpart(disk, number)
+        tmp_end = parted.sizeToSectors(1, "MB", 512)
+        partnumber = [ part.number for part in disk.partitions ]
+        disk = rfparted.mkpart(dev, disk, "primary", start, tmp_end, 'bios_grub')
+        start = tmp_end + 100
+
     partnumber = [ part.number for part in disk.partitions ]
-    disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+    disk = rfparted.mkpart(dev, disk, "primary", start, end, fs)
     number = 0
     for p in disk.partitions:
         if p.number in partnumber:
@@ -71,6 +72,35 @@ def easyhandler(dev, disk, parttype, start, end):
 
     return [disk, number]
 
+def msdos_easyhandler(dev, disk, parttype, start, end):
+    fs = "ext4"
+    start = parted.sizeToSectors(float(start), "GB", 512)
+    end = parted.sizeToSectors(float(end), "GB", 512)
+    if parttype == "free":
+        if disk.primaryPartitionCount == 4:
+            raise Exception, "Too many primary partitions."
+        elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
+            disk = rfparted.mkpart(dev, disk, "extended", start, end, fs)
+            parttype = "logical"
+        elif disk.primaryPartitionCount < 4:
+            parttype = "primary"
+        ###elif parttype == "logical"
+        ### nothing changed
+    partnumber = [ part.number for part in disk.partitions ]
+    disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+    number = 0
+    for p in disk.partitions:
+        if p.number in partnumber:
+            continue
+        number = p.number
+        break;
+    return [disk, number]
+
+def easyhandler(dev, disk, parttype, start, end, number):
+    if disk.type == "msdos":
+        return msdos_easyhandler(dev, disk, parttype, start, end)
+    elif disk.type == "gpt":
+        return gpt_easyhandler(dev, disk, start, end, number)
 
 def test(str, list):
     result = True

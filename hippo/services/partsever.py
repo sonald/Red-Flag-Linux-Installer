@@ -103,12 +103,12 @@ class PartSocket(BaseNamespace):
             data = self.error_handle(e, None)
         self.emit('fdhandler', data)
 
-    def on_easyhandler(self, devpath, parttype, start, end):
+    def on_easyhandler(self, devpath, parttype, start, end, number):
         data = self.error_handle(None,None)
         try :
             dev = parted.getDevice(devpath)
             disk = self.disks[devpath]
-            easyresult = lib.autoparted.easyhandler(dev, disk, parttype, start, end)
+            easyresult = lib.autoparted.easyhandler(dev, disk, parttype, start, end, number)
             self.disks[devpath] = easyresult[0]
             number = easyresult[1]
             self.disks_tag[devpath] = True
