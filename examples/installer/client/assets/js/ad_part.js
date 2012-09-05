@@ -60,13 +60,18 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                         if (part.number > 0)$modal.find("#parttype").val(part.ty);
                         $modal.find("#fs").val(part.fs);
                     }
-                    if (part.number > 0 && _.include(["ext4","Unknow"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
+                    if (part.number > 0 && _.include(["ext4","Unknow", "bios_grub"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
                         $modal.find("#fs").attr("disabled","");
                         $modal.find("#mp").attr("disabled","");
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("swap");
+                    };
+                    if (part.number > 0 && part.fs === "bios_grub") {
+                        $modal.find("#mp").attr("disabled","");
+                        $modal.find("#fs").val("bios_grub");
+                        $modal.find("#fs").attr('fs', 'bios_grub');
                     };
                     if (part.number > 0 && part.ty === "logical") {
                         $disk.find('ul.logicals').prev('button.close').remove();
@@ -143,7 +148,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             $('body').on('change', '.modal #fs', function (){
                 var $this = $(this);
                 var value = $this.val();
-                if (value.match(/swap/g)) {
+                if (value.match(/swap/g) || value === "bios_grub") {
                     $this.parents('.modal').find('#mp').attr("disabled","");
                     $this.parents('.modal').find('#mp').val("");
                 }else {
@@ -156,7 +161,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 var $modal = $(this).parents('.modal');
 
                 size = Number($modal.find("#size").attr("value"));
-                if ( size===NaN && size < 0.01 ) {
+                if ( size===NaN && size < 0.001 ) {
                     that.myalert(i18n.gettext('Please enter the number!'));
                     return;
                 }else {
@@ -185,13 +190,21 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 fstype = $modal.find("#fs").val();
                 mp = $modal.find("#mp").val();
                 $modal.find("#mp").attr("mp",mp);
-                that.mp_conflict(path, number, fstype, mp);
-
-                $modal.prev('ul.part').find('.partfs').text(fstype);
-                if(mp === "") {
-                    $modal.prev('ul.part').find('.partmp').text("");
-                }else{
-                    $modal.prev('ul.part').find('.partmp').text("("+mp+")");
+                var fs_pre = $modal.find('#fs').attr('fs');
+                if(fstype === "bios_grub") {
+                    Rpart.method('setFlag', [path, number,fstype, true],
+                                 $.proxy(that.partflesh, that));
+                } else if (fs_pre && fs_pre === "bios_grub" && fstype !== "bios_grub"){
+                    that.mp_conflict(path, number, fstype, mp); 
+                    Rpart.method('setFlag', [path, number,fs_pre, false],
+                                 $.proxy(that.partflesh, that));
+                } else {
+                    $modal.prev('ul.part').find('.partfs').text(fstype);
+                    if(mp === "") {
+                        $modal.prev('ul.part').find('.partmp').text("");
+                    }else{
+                        $modal.prev('ul.part').find('.partmp').text("("+mp+")");
+                    }
                 }
             });
         },

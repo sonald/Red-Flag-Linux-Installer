@@ -95,6 +95,18 @@ module.exports = (function() {
         }
     };
 
+    PartitionStub.setFlag = function(devpath, partnumber, name, status, cb) {
+        if(sock && sock.socket.connected){
+            sock.emit('setFlag',devpath, partnumber, name, status);
+            sock.once('setFlag',function(data){
+                data = JSON.parse(data);
+                cb(data);
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
     PartitionStub.reset = function(cb) {
         if(sock && sock.socket.connected){
             sock.emit('reset');

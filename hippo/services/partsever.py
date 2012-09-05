@@ -93,6 +93,15 @@ class PartSocket(BaseNamespace):
         data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
 
+    def on_setFlag(self, devpath, number, name, status):
+        data = self.error_handle (None, None)
+        try:
+            disk = self.disks[devpath]
+            lib.rfparted.setFlag(disk, number, name, status)
+        except Exception, e:
+            data = self.error_handle(e,None)
+        self.emit('setFlag',data)
+
     def on_fdhandler(self, devpath, mem):
         data = self.error_handle(None, None)
         try :

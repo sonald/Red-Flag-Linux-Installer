@@ -47,7 +47,7 @@ def gpt_easyhandler(dev, disk, start, end, number):
     fs = "ext4"
     bios_grub = False
     for p in disk.partitions:
-        if p.number !== number and p.getFlag(parted.PARTITION_BIOS_GRUB):
+        if p.number != number and p.getFlag(parted.PARTITION_BIOS_GRUB):
             bios_grub = True
             break
     if bios_grub and number > 0:

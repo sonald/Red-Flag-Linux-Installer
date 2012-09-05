@@ -14,6 +14,10 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
+flag_map = {
+    'bios_grub': parted.PARTITION_BIOS_GRUB,
+}
+
 def msdos_validate_type(ty, disk):
     """Given the disk and the partiton type. Raise exception
     if a wrong partition type is given."""
@@ -91,6 +95,24 @@ def rmpart(disk, number):
                 disk.deletePartition(p)
 
     disk.deletePartition(part)
+    return disk
+
+def setFlag(disk, number, name, status):
+    parts = disk.partitions
+    n = 0
+    for p in parts:
+        if p.number == int(number):
+            break;
+        n = n + 1
+    if n == len(parts):
+        raise Exception, "Error arguments, no partition specified."
+
+    part = parts[n]
+    flagname = flag_map[name]
+    if status == True:
+        part.setFlag(flagname)
+    else:
+        part.unsetFlag(flagname)
     return disk
 
 def mklabel(dev, disktype):
