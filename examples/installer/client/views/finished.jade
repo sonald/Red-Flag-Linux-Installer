@@ -1,0 +1,15 @@
+script(type="text/template", id="finished_tmpl").
+    #finished
+        .hero-unit
+            h2= gettext("Congratulations~You have completed installation.")
+            p= gettext("Reboot for more configurations.")
+            p
+                label.label_radio.label_checked
+                    input(type="radio", name="finished", id="later", value="later", checked)
+                    = gettext("Reboot Later")
+                label.label_radio
+                    input(type="radio", name="finished", id="reboot", value="reboot")
+                    = gettext("Reboot")
+                label.label_radio
+                    input(type="radio", name="finished", id="shutdown", value="shutdown")
+                    = gettext("Shutdown")

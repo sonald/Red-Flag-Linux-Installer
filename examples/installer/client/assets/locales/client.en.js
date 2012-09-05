@@ -1,43 +1,15 @@
 define(["system"], 
 {
    "en": {
-      "CreateDisk": [
+      "Free": [
          null,
          ""
       ],
-      "Size": [
+      "agree": [
          null,
          ""
       ],
-      "PartType": [
-         null,
-         ""
-      ],
-      "logical": [
-         null,
-         ""
-      ],
-      "primary": [
-         null,
-         ""
-      ],
-      "extended": [
-         null,
-         ""
-      ],
-      "FileSystem": [
-         null,
-         ""
-      ],
-      "MountPoint": [
-         null,
-         ""
-      ],
-      "Close": [
-         null,
-         ""
-      ],
-      "Submit": [
+      "disagree": [
          null,
          ""
       ],
@@ -46,10 +18,6 @@ define(["system"],
          ""
       ],
       "The mount point has been selected.": [
-         null,
-         ""
-      ],
-      "Select one disk: ": [
          null,
          ""
       ],
@@ -85,6 +53,18 @@ define(["system"],
          null,
          ""
       ],
+      "primary": [
+         null,
+         ""
+      ],
+      "logical": [
+         null,
+         ""
+      ],
+      "extended": [
+         null,
+         ""
+      ],
       "free": [
          null,
          ""
@@ -101,23 +81,31 @@ define(["system"],
          null,
          ""
       ],
+      "Close": [
+         null,
+         ""
+      ],
       "Continue": [
          null,
          ""
       ],
-      "agree": [
+      "Congratulations~You have completed installation.": [
          null,
          ""
       ],
-      "disagree": [
+      "Reboot for more configurations.": [
          null,
          ""
       ],
-      "Username": [
+      "Reboot Later": [
          null,
          ""
       ],
-      "Hostname": [
+      "Reboot": [
+         null,
+         ""
+      ],
+      "Shutdown": [
          null,
          ""
       ],
@@ -125,7 +113,31 @@ define(["system"],
          null,
          ""
       ],
-      "Free": [
+      "Size": [
+         null,
+         ""
+      ],
+      "PartType": [
+         null,
+         ""
+      ],
+      "FileSystem": [
+         null,
+         ""
+      ],
+      "MountPoint": [
+         null,
+         ""
+      ],
+      "Submit": [
+         null,
+         ""
+      ],
+      "Select one disk: ": [
+         null,
+         ""
+      ],
+      "CreateDisk": [
          null,
          ""
       ],
@@ -145,27 +157,7 @@ define(["system"],
          null,
          ""
       ],
-      "Too many primary partitions.": [
-         null,
-         ""
-      ],
-      "Too many extended partitions.": [
-         null,
-         ""
-      ],
-      "Operation fails": [
-         null,
-         ""
-      ],
-      "Part": [
-         null,
-         ""
-      ],
-      "Welcome": [
-         null,
-         ""
-      ],
-      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
+      "Partition": [
          null,
          ""
       ],
@@ -181,43 +173,31 @@ define(["system"],
          null,
          ""
       ],
-      "Please enter the number!": [
+      "Welcome": [
          null,
          ""
       ],
-      "You need specify a root partition.": [
+      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
          null,
          ""
       ],
-      "The root partition requires at least 6 GB space!": [
+      "Too many primary partitions.": [
          null,
          ""
       ],
-      "<b>This field is required. </b>": [
+      "Too many extended partitions.": [
          null,
          ""
       ],
-      "<b>Only lower letters, numbers, and underscores.</b>": [
+      "Operation fails": [
          null,
          ""
       ],
-      "<b>Please enter no more than %d characters.</b>": [
+      "Complete": [
          null,
          ""
       ],
-      "<b>Please enter at least %d characters.</b>": [
-         null,
-         ""
-      ],
-      "<b>Please enter the same content again.</b>": [
-         null,
-         ""
-      ],
-      "<b>Incorrect format.</b>": [
-         null,
-         ""
-      ],
-      "Set": [
+      "Finished": [
          null,
          ""
       ],
@@ -229,11 +209,15 @@ define(["system"],
          null,
          ""
       ],
-      "Congratulations~You have finished installing the system.": [
+      "Please enter the number!": [
          null,
          ""
       ],
-      "Finished": [
+      "You need specify a root partition.": [
+         null,
+         ""
+      ],
+      "The root partition requires at least 6 GB space!": [
          null,
          ""
       ],

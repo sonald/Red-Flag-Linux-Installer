@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-08-30 22:39+0800",
+         "POT-Creation-Date": " 2012-09-05 06:55+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,45 +16,17 @@ define(["system"],
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "CreateDisk": [
+      "Free": [
          null,
-         "创建磁盘"
+         "空闲"
       ],
-      "Size": [
+      "agree": [
          null,
-         "大小(GB)"
+         "同意"
       ],
-      "PartType": [
+      "disagree": [
          null,
-         "分区类型"
-      ],
-      "logical": [
-         null,
-         "逻辑分区"
-      ],
-      "primary": [
-         null,
-         "主分区"
-      ],
-      "extended": [
-         null,
-         "扩展分区"
-      ],
-      "FileSystem": [
-         null,
-         "文件系统"
-      ],
-      "MountPoint": [
-         null,
-         "挂载点"
-      ],
-      "Close": [
-         null,
-         "关闭"
-      ],
-      "Submit": [
-         null,
-         "提交"
+         "不同意"
       ],
       "Warning!": [
          null,
@@ -63,10 +35,6 @@ define(["system"],
       "The mount point has been selected.": [
          null,
          "此挂载点已经被选择。"
-      ],
-      "Select one disk: ": [
-         null,
-         "请选择一个磁盘："
       ],
       "Reset": [
          null,
@@ -100,6 +68,18 @@ define(["system"],
          null,
          "磁盘"
       ],
+      "primary": [
+         null,
+         "主分区"
+      ],
+      "logical": [
+         null,
+         "逻辑分区"
+      ],
+      "extended": [
+         null,
+         "扩展分区"
+      ],
       "free": [
          null,
          "空闲"
@@ -116,33 +96,65 @@ define(["system"],
          null,
          "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
       ],
+      "Close": [
+         null,
+         "关闭"
+      ],
       "Continue": [
          null,
          "继续"
       ],
-      "agree": [
+      "Congratulations~You have completed installation.": [
          null,
-         "同意"
+         "恭喜，安装成功。"
       ],
-      "disagree": [
+      "Reboot for more configurations.": [
          null,
-         "不同意"
+         "重启计算机进行进一步配置。"
       ],
-      "Username": [
+      "Reboot Later": [
          null,
-         "用户名"
+         "稍后重启"
       ],
-      "Hostname": [
+      "Reboot": [
          null,
-         "主机名"
+         "重启"
+      ],
+      "Shutdown": [
+         null,
+         "关机"
       ],
       "EditDisk": [
          null,
          "编辑磁盘"
       ],
-      "Free": [
+      "Size": [
          null,
-         "空闲"
+         "大小(GB)"
+      ],
+      "PartType": [
+         null,
+         "分区类型"
+      ],
+      "FileSystem": [
+         null,
+         "文件系统"
+      ],
+      "MountPoint": [
+         null,
+         "挂载点"
+      ],
+      "Submit": [
+         null,
+         "提交"
+      ],
+      "Select one disk: ": [
+         null,
+         "请选择一个磁盘："
+      ],
+      "CreateDisk": [
+         null,
+         "创建磁盘"
       ],
       "Exit": [
          null,
@@ -160,29 +172,9 @@ define(["system"],
          null,
          "选择一块至少6GB大小的磁盘。"
       ],
-      "Too many primary partitions.": [
-         null,
-         "只能建4个主分区"
-      ],
-      "Too many extended partitions.": [
-         null,
-         "只能建一个扩展分区"
-      ],
-      "Operation fails": [
-         null,
-         "操作失败"
-      ],
-      "Part": [
+      "Partition": [
          null,
          "分区"
-      ],
-      "Welcome": [
-         null,
-         "欢迎"
-      ],
-      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
-         null,
-         "某些磁盘大小不足或者内存小于1GB"
       ],
       "Select a partition of at least 6 GB.": [
          null,
@@ -196,6 +188,42 @@ define(["system"],
          null,
          "选择一个至少6GB大小的分区"
       ],
+      "Welcome": [
+         null,
+         "欢迎"
+      ],
+      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
+         null,
+         "某些磁盘大小不足或者内存小于1GB"
+      ],
+      "Too many primary partitions.": [
+         null,
+         "只能建4个主分区"
+      ],
+      "Too many extended partitions.": [
+         null,
+         "只能建一个扩展分区"
+      ],
+      "Operation fails": [
+         null,
+         "操作失败"
+      ],
+      "Complete": [
+         null,
+         "完成"
+      ],
+      "Finished": [
+         null,
+         "完成安装"
+      ],
+      "Install": [
+         null,
+         "安装"
+      ],
+      "install": [
+         null,
+         "安装"
+      ],
       "Please enter the number!": [
          null,
          "请输入数字！"
@@ -207,6 +235,18 @@ define(["system"],
       "The root partition requires at least 6 GB space!": [
          null,
          "根分区需要至少6GB空间！"
+      ],
+      "Username": [
+         null,
+         "用户名"
+      ],
+      "Hostname": [
+         null,
+         "主机名"
+      ],
+      "Part": [
+         null,
+         "分区"
       ],
       "<b>This field is required. </b>": [
          null,
@@ -224,10 +264,6 @@ define(["system"],
          null,
          "<b>长度最少为%d个字符</b>"
       ],
-      "<b>Please enter the same content again.</b>": [
-         null,
-         ""
-      ],
       "<b>Incorrect format.</b>": [
          null,
          "<b>用户名格式不正确。</b>"
@@ -235,22 +271,6 @@ define(["system"],
       "Set": [
          null,
          "设置"
-      ],
-      "Install": [
-         null,
-         "安装"
-      ],
-      "install": [
-         null,
-         "安装"
-      ],
-      "Congratulations~You have finished installing the system.": [
-         null,
-         "恭喜，安装成功。"
-      ],
-      "Finished": [
-         null,
-         "完成安装"
       ],
       "Usernames must start with a lower case letter or an underscore,": [
          null,

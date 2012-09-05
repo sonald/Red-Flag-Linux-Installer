@@ -198,11 +198,12 @@ var app = {
     }
 };
 
-require(['jquery', 'i18n', 'license', 'part', 'process'],
-        function($, i18n,  pageLicense, pagePart, pageProcess) {
+require(['jquery', 'i18n', 'license', 'part', 'process', 'finished'],
+        function($, i18n,  pageLicense, pagePart, pageProcess, pageFinished) {
     app.stages.push(pageLicense);
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
+    app.stages.push(pageFinished);
     app.i18n = i18n;
 
     DNode.connect(function (remote) {

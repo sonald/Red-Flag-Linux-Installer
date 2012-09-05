@@ -5,7 +5,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
     var pageCache;
     console.log('load partition');
     var page = {
-	      name: i18n.gettext('Part'),
+	      name: i18n.gettext('Partition'),
         view: '#part_tmpl',
         locals: null,
         app: null,
