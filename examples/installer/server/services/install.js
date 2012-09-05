@@ -223,14 +223,21 @@ module.exports = (function(){
         return null;
     }
 
-    //interpolate part path into itself for convience, and record
-    //install device ( where / roots)
+    //1. interpolate part path into itself for convience,
+    //2. and record install device ( where / roots),
+    //3. flag all swap partitions dirty (according to design.md, we need to
+    //   clear and mount all swaps)
     function preprocessOptions(opts) {
         opts.disks.map(function(disk) {
             disk.table.map(function(part) {
                 part.path = part.path || disk.path + part.number;
+
                 if (part.mountpoint === '/') {
                     opts.installdevice = disk;
+                }
+
+                if (part.fs.toLowerCase().indexOf('swap') > -1) {
+                    part.dirty = true;
                 }
             });
         });
@@ -397,7 +404,7 @@ module.exports = (function(){
             }
 
             var swaps = filterAndFlattenPartitions(opts.disks, function(entry) {
-                return entry.dirty && entry.fs.indexOf('swap') != -1;
+                return entry.dirty && entry.fs.toLowerCase().indexOf('swap') != -1;
             }).map(function(part) {
                 return {
                     fs: 'swap',
