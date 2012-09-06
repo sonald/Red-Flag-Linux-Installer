@@ -89,11 +89,11 @@ define(["system"],
          null,
          ""
       ],
-      "Congratulations~You have completed installation.": [
+      "Congratulations~": [
          null,
          ""
       ],
-      "Reboot for more configurations.": [
+      "You have completed installation. Reboot for more configurations.": [
          null,
          ""
       ],
@@ -194,10 +194,6 @@ define(["system"],
          ""
       ],
       "Complete": [
-         null,
-         ""
-      ],
-      "Finished": [
          null,
          ""
       ],

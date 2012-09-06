@@ -25,6 +25,8 @@ script(type="text/template", id="create_part_tmpl").
                     select.span3#fs
                         option(value="ext4") ext4
                         option(value="linux-swap(v1)") swap
+                        -if (type == "gpt")
+                            option(value="bios_grub") bios_grub
             div.control-group.form-horizontal
                 label.control-label(for="mp")= gettext('MountPoint')
                 .controls

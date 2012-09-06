@@ -93,11 +93,11 @@ msgid "Continue"
 msgstr ""
 
 #: client/views/finished.jade:4
-msgid "Congratulations~You have completed installation."
+msgid "Congratulations~"
 msgstr ""
 
 #: client/views/finished.jade:5
-msgid "Reboot for more configurations."
+msgid "You have completed installation. Reboot for more configurations."
 msgstr ""
 
 #: client/views/finished.jade:9
@@ -198,12 +198,8 @@ msgstr ""
 msgid "Operation fails"
 msgstr ""
 
-#: client/assets/js/finished.js:8
+#: client/assets/js/finished.js:8 client/assets/js/finished.js:30
 msgid "Complete"
-msgstr ""
-
-#: client/assets/js/finished.js:30
-msgid "Finished"
 msgstr ""
 
 #: client/assets/js/process.js:57

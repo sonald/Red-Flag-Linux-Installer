@@ -27,7 +27,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
 
         postSetup: function () {
             this.app.buttons.get('forward').enable();
-            this.app.buttons.get('forward').change(i18n.gettext('Finished'));
+            this.app.buttons.get('forward').change(i18n.gettext('Complete'));
             this.app.buttons.get('forward').bind('click', function () {
                 var result = $('#finished').find(':checked').attr("value");
                 console.log(result);

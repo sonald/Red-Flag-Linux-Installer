@@ -95,6 +95,18 @@ module.exports = (function() {
         }
     };
 
+    PartitionStub.setFlag = function(devpath, partnumber, name, status, cb) {
+        if(sock && sock.socket.connected){
+            sock.emit('setFlag',devpath, partnumber, name, status);
+            sock.once('setFlag',function(data){
+                data = JSON.parse(data);
+                cb(data);
+            });
+        }else{
+            cb({error:"sever is loading",});
+        }
+    };
+
     PartitionStub.reset = function(cb) {
         if(sock && sock.socket.connected){
             sock.emit('reset');
@@ -131,9 +143,9 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.EasyHandler = function (devpath, parttype, start, end, cb) {
+    PartitionStub.EasyHandler = function (devpath, parttype, start, end, number, cb) {
         if (sock && sock.socket.connected) {
-            sock.emit('easyhandler', devpath, parttype, start, end);
+            sock.emit('easyhandler', devpath, parttype, start, end, number);
             sock.once('easyhandler', function (result) {
                 cb(JSON.parse(result));
             });

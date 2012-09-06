@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-05 06:55+0800\n"
+"POT-Creation-Date: 2012-09-05 09:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,13 +116,13 @@ msgid "Continue"
 msgstr "继续"
 
 #: client/views/finished.jade:4
-#, fuzzy
-msgid "Congratulations~You have completed installation."
-msgstr "恭喜，安装成功。"
+msgid "Congratulations~"
+msgstr "恭喜~"
 
 #: client/views/finished.jade:5
-msgid "Reboot for more configurations."
-msgstr "重启计算机进行进一步配置。"
+#, fuzzy
+msgid "You have completed installation. Reboot for more configurations."
+msgstr "安装成功。重启计算机进行进一步配置。"
 
 #: client/views/finished.jade:9
 msgid "Reboot Later"
@@ -224,14 +224,9 @@ msgstr "只能建一个扩展分区"
 msgid "Operation fails"
 msgstr "操作失败"
 
-#: client/assets/js/finished.js:8
+#: client/assets/js/finished.js:8 client/assets/js/finished.js:30
 msgid "Complete"
 msgstr "完成"
-
-#: client/assets/js/finished.js:30
-#, fuzzy
-msgid "Finished"
-msgstr "完成安装"
 
 #: client/assets/js/process.js:57
 msgid "Install"
@@ -252,6 +247,14 @@ msgstr "请指定一个根分区。"
 #: client/assets/js/ad_part.js:288
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
+
+#, fuzzy
+#~ msgid "Congratulations~You have completed installation."
+#~ msgstr "恭喜，安装成功。"
+
+#, fuzzy
+#~ msgid "Finished"
+#~ msgstr "完成安装"
 
 #~ msgid "Username"
 #~ msgstr "用户名"

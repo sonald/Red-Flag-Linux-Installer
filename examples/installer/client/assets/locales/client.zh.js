@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-05 06:55+0800",
+         "POT-Creation-Date": " 2012-09-05 09:03+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -104,13 +104,13 @@ define(["system"],
          null,
          "继续"
       ],
-      "Congratulations~You have completed installation.": [
+      "Congratulations~": [
          null,
-         "恭喜，安装成功。"
+         "恭喜~"
       ],
-      "Reboot for more configurations.": [
+      "You have completed installation. Reboot for more configurations.": [
          null,
-         "重启计算机进行进一步配置。"
+         "安装成功。重启计算机进行进一步配置。"
       ],
       "Reboot Later": [
          null,
@@ -212,10 +212,6 @@ define(["system"],
          null,
          "完成"
       ],
-      "Finished": [
-         null,
-         "完成安装"
-      ],
       "Install": [
          null,
          "安装"
@@ -235,6 +231,14 @@ define(["system"],
       "The root partition requires at least 6 GB space!": [
          null,
          "根分区需要至少6GB空间！"
+      ],
+      "Congratulations~You have completed installation.": [
+         null,
+         "恭喜，安装成功。"
+      ],
+      "Finished": [
+         null,
+         "完成安装"
       ],
       "Username": [
          null,
