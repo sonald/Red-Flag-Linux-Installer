@@ -177,7 +177,7 @@ define(["system"],
          null,
          ""
       ],
-      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
+      "Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install.": [
          null,
          ""
       ],
