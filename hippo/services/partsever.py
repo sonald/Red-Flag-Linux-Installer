@@ -106,7 +106,7 @@ class PartSocket(BaseNamespace):
         data = self.error_handle(None, None)
         try :
             dev = parted.getDevice(devpath)
-            self.disks[devpath] = lib.autoparted.fdhandler(dev,mem)
+            self.disks[devpath] = lib.autoparted.fdhandler(dev,mem, self.disks)
             self.disks_tag[devpath] = True
         except Exception, e:
             data = self.error_handle(e, None)

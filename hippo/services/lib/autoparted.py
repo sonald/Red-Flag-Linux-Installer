@@ -14,7 +14,21 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
-def fdhandler(dev,mem):
+def find_swap(mydev, disks):
+    disks[mydev.path] = None
+    has_swap = False
+    for disk in disks.values():
+        if disk is None:
+            continue
+        for p in disk.partitions:
+            if p.fileSystem and p.fileSystem.type.find("swap") > -1:
+                has_swap = True
+                break
+        if has_swap:
+            break
+    return has_swap
+
+def fdhandler(dev,mem, disks):
     sizeL = dev.getLength()
     size = dev.getSize('GB')
     disk = parted.disk.Disk(dev)
@@ -27,9 +41,10 @@ def fdhandler(dev,mem):
         start = end + 10
 
     if size > 10:
-        end = parted.sizeToSectors(mem,'B',512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
-        start = end + 100
+        if find_swap(dev, disks) is False:
+            end = parted.sizeToSectors(mem,'B',512)
+            disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
+            start = end + 100
         if size > 30:
             end = parted.sizeToSectors(30, "GB", 512)
             disk = rfparted.mkpart(dev, disk, parttype, start, end, "ext4")
