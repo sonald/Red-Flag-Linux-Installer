@@ -14,6 +14,10 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
+flag_map = {
+    'bios_grub': parted.PARTITION_BIOS_GRUB,
+}
+
 def msdos_validate_type(ty, disk):
     """Given the disk and the partiton type. Raise exception
     if a wrong partition type is given."""
@@ -63,10 +67,12 @@ def mkpart(dev, disk, parttype, start, end, fstype):
     new_geo = adjust_geometry(disk,parttype,new_geometry)
 
     fs = None
-    if not (parttype & parted.PARTITION_EXTENDED):
+    if not (parttype & parted.PARTITION_EXTENDED) and fstype != "bios_grub":
         fs = parted.filesystem.FileSystem(fstype,new_geo)
         
     new_part = parted.partition.Partition(disk,parttype,fs,new_geo)
+    if fstype == "bios_grub":
+        new_part.setFlag(parted.PARTITION_BIOS_GRUB)
     cons = dev.getConstraint()
     disk.addPartition(new_part, cons)
     return disk
@@ -89,6 +95,24 @@ def rmpart(disk, number):
                 disk.deletePartition(p)
 
     disk.deletePartition(part)
+    return disk
+
+def setFlag(disk, number, name, status):
+    parts = disk.partitions
+    n = 0
+    for p in parts:
+        if p.number == int(number):
+            break;
+        n = n + 1
+    if n == len(parts):
+        raise Exception, "Error arguments, no partition specified."
+
+    part = parts[n]
+    flagname = flag_map[name]
+    if status == True:
+        part.setFlag(flagname)
+    else:
+        part.unsetFlag(flagname)
     return disk
 
 def mklabel(dev, disktype):

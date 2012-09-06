@@ -93,22 +93,31 @@ class PartSocket(BaseNamespace):
         data = lib.partedprint.parted_print(self.disks,True,True)
         self.emit('getpartitions',data)
 
+    def on_setFlag(self, devpath, number, name, status):
+        data = self.error_handle (None, None)
+        try:
+            disk = self.disks[devpath]
+            lib.rfparted.setFlag(disk, number, name, status)
+        except Exception, e:
+            data = self.error_handle(e,None)
+        self.emit('setFlag',data)
+
     def on_fdhandler(self, devpath, mem):
         data = self.error_handle(None, None)
         try :
             dev = parted.getDevice(devpath)
-            self.disks[devpath] = lib.autoparted.fdhandler(dev,mem)
+            self.disks[devpath] = lib.autoparted.fdhandler(dev,mem, self.disks)
             self.disks_tag[devpath] = True
         except Exception, e:
             data = self.error_handle(e, None)
         self.emit('fdhandler', data)
 
-    def on_easyhandler(self, devpath, parttype, start, end):
+    def on_easyhandler(self, devpath, parttype, start, end, number):
         data = self.error_handle(None,None)
         try :
             dev = parted.getDevice(devpath)
             disk = self.disks[devpath]
-            easyresult = lib.autoparted.easyhandler(dev, disk, parttype, start, end)
+            easyresult = lib.autoparted.easyhandler(dev, disk, parttype, start, end, number)
             self.disks[devpath] = easyresult[0]
             number = easyresult[1]
             self.disks_tag[devpath] = True
