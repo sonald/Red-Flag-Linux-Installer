@@ -17,13 +17,22 @@ class Installer(QObject):
 
     @pyqtSlot(str)
     def reboot(self,msg):
-        print msg
+        desktop_os = 'kde'
         bus = dbus.SessionBus()
-        proxy = bus.get_object('org.kde.ksmserver', '/KSMServer')
-        if msg == "reboot":
-            proxy.logout(0,1,1)
-        elif msg == "shutdown":
-            proxy.logout(0,2,0)
+        args = ['org.kde.ksmserver', 'org.gnome.SessionManager']
+        for arg in args:
+            if arg in bus.list_names() and arg.find('kde') < 0:
+                desktop_os = 'gnome'
+        if desktop_os == 'kde':
+            proxy = bus.get_object('org.kde.ksmserver', '/KSMServer')
+            if msg == "reboot":
+                proxy.logout(0,1,1)
+            elif msg == "shutdown":
+                proxy.logout(0,2,0)
+        else:
+            proxy = bus.get_object('org.gnome.SessionManager','/org/gnome/SessionManager')
+            if msg == "reboot" or msg == "shutdown":
+                proxy.Shutdown()
         sys.exit(0)
 
 class Window(QWidget):
