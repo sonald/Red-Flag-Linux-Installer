@@ -40,7 +40,7 @@ def fdhandler(dev,mem, disks):
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'bios_grub')
         start = end + 10
 
-    if size > 50:
+    if size > 54:
         end = parted.sizeToSectors(50, "GB", 512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'ext3')
         start = end + 10
