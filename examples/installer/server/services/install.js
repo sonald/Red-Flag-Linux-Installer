@@ -153,6 +153,7 @@ module.exports = (function(){
     function formatPartition(part, callback) {
         var cmds = {
             'ext4': 'mkfs.ext4 ',
+            'ext3': 'mkfs.ext3 ',
             'swap': 'mkswap '
         };
 
@@ -393,7 +394,6 @@ module.exports = (function(){
                         if (stdout[len-1] === '\n')
                             stdout = stdout.slice(0, len-1);
 
-                        //FIXME: ext4 is hardcoded
                         var pass = part.mountpoint === '/' ? '1': '0';
                         contents += stdout + "\t" + part.mountpoint + "\t" +
                             part.fs + "\tdefaults\t0\t" + pass + "\n";
@@ -467,7 +467,7 @@ module.exports = (function(){
                     swapsize = 1<<30;
                 }
 
-                postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + (swapsize/(1<<20)) + '\n';
+                postscript += 'dd if=/dev/zero of=/swapfile bs=1048576 count=' + Math.round(swapsize/(1<<20)) + '\n';
                 postscript += 'mkswap /swapfile\n';
                 postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
             }
