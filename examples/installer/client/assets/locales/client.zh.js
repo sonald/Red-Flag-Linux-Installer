@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-05 09:03+0800",
+         "POT-Creation-Date": " 2012-09-06 10:16+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -192,9 +192,9 @@ define(["system"],
          null,
          "欢迎"
       ],
-      "Some disk size does not meet the minimum requirements or memory is less than 1 GB": [
+      "Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install.": [
          null,
-         "某些磁盘大小不足或者内存小于1GB"
+         "磁盘大小不足或者内存小于1GB，安装可能失败。"
       ],
       "Too many primary partitions.": [
          null,

@@ -94,7 +94,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
                     if (result.status === "success") {
                         callback();
                     }else if (result.status === "warning") {
-                        that.app.myalert(i18n.gettext("Some disk size does not meet the minimum requirements or memory is less than 1 GB"),
+                        that.app.myalert(i18n.gettext("Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install."),
                                         callback);
                         console.log(result);
                     }
