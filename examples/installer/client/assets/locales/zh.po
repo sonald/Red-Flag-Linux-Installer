@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-05 09:03+0800\n"
+"POT-Creation-Date: 2012-09-06 10:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,8 +106,8 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
 
-#: client/views/part.jade:36 client/views/edit_part.jade:32
-#: client/views/create_part.jade:36
+#: client/views/part.jade:36 client/views/edit_part.jade:34
+#: client/views/create_part.jade:38
 msgid "Close"
 msgstr "关闭"
 
@@ -152,11 +152,11 @@ msgstr "分区类型"
 msgid "FileSystem"
 msgstr "文件系统"
 
-#: client/views/edit_part.jade:25 client/views/create_part.jade:29
+#: client/views/edit_part.jade:27 client/views/create_part.jade:31
 msgid "MountPoint"
 msgstr "挂载点"
 
-#: client/views/edit_part.jade:33 client/views/create_part.jade:37
+#: client/views/edit_part.jade:35 client/views/create_part.jade:39
 msgid "Submit"
 msgstr "提交"
 
@@ -206,10 +206,11 @@ msgid "Welcome"
 msgstr "欢迎"
 
 #: client/assets/js/license.js:97
+#, fuzzy
 msgid ""
-"Some disk size does not meet the minimum requirements or memory is less than "
-"1 GB"
-msgstr "某些磁盘大小不足或者内存小于1GB"
+"Disk space does not meet the minimum requirements or memory is less than 1 "
+"GB.You may fail to install."
+msgstr "磁盘大小不足或者内存小于1GB，安装可能失败。"
 
 #: client/assets/js/remote_part.js:27
 #, fuzzy
@@ -236,15 +237,15 @@ msgstr "安装"
 msgid "install"
 msgstr "安装"
 
-#: client/assets/js/ad_part.js:160
+#: client/assets/js/ad_part.js:165
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:285
+#: client/assets/js/ad_part.js:298
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:288
+#: client/assets/js/ad_part.js:301
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
 
