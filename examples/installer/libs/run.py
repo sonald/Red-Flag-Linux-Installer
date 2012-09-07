@@ -29,7 +29,8 @@ class Installer(QObject):
 class Window(QWidget):
     def __init__(self):
         super(Window, self).__init__()
-        # self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint)
+        #self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
         self.view = QWebView(self)
         self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
         QObject.connect(self.view.page().mainFrame(),SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
