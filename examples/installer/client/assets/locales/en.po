@@ -3,11 +3,11 @@ msgid "Free"
 msgstr ""
 
 #: client/views/license.jade:160
-msgid "agree"
+msgid "Agree"
 msgstr ""
 
 #: client/views/license.jade:163
-msgid "disagree"
+msgid "Disagree"
 msgstr ""
 
 #: client/views/partial.jade:10
@@ -202,12 +202,8 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: client/assets/js/process.js:57
+#: client/assets/js/process.js:57 client/assets/js/process.js:130
 msgid "Install"
-msgstr ""
-
-#: client/assets/js/process.js:130
-msgid "install"
 msgstr ""
 
 #: client/assets/js/ad_part.js:165
