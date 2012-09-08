@@ -55,10 +55,9 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
         updateActions: function() {
             var btns = this.app.buttons;
             
-            if ( $("#choose").find(".checked").attr("value")==="agree" ){
+            if ( $("#choose").find(".checked").length > 0 ){
                 btns.get('forward').enable();
-                
-            } else if ( $("#choose").find(".checked").attr("value")==="disagree"){
+            } else {
                 btns.get('forward').disable();
             }
         },
@@ -68,8 +67,7 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             self.app.buttons.get('forward').disable();
             
             $('body').on('click', '#choose li', function(){
-                $(this).parent().find('span').removeClass("checked")
-                $(this).find('span').addClass("checked");
+                $(this).parent().find('span').toggleClass("checked")
                 self.updateActions();
             });
 
