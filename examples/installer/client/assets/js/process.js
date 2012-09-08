@@ -127,7 +127,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.setupPresentation();
             progressbar.init($('#install-progress'));
 
-            this.app.buttons.get("forward").change(i18n.gettext('install'));
+            this.app.buttons.get("forward").change(i18n.gettext('Install'));
 
             var that = this;
             that.app.buttons.get("forward").disable();

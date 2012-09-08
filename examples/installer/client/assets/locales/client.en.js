@@ -5,11 +5,11 @@ define(["system"],
          null,
          ""
       ],
-      "agree": [
+      "Agree": [
          null,
          ""
       ],
-      "disagree": [
+      "Disagree": [
          null,
          ""
       ],
