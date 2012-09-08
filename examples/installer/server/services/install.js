@@ -395,8 +395,14 @@ module.exports = (function(){
                             stdout = stdout.slice(0, len-1);
 
                         var pass = part.mountpoint === '/' ? '1': '0';
-                        contents += stdout + "\t" + part.mountpoint + "\t" +
-                            part.fs + "\tdefaults\t0\t" + pass + "\n";
+                        var mnt_opts = 'defaults';
+                        if (part.fs === 'ext4') {
+                            mnt_opts += ',noatime';
+                        }
+                        contents += sprintf('%1\t%2\t%3\t%4\t0\t%5\n', stdout,
+                            part.mountpoint, part.fs, mnt_opts, pass);
+                        // contents += stdout + "\t" + part.mountpoint + "\t" +
+                        //     part.fs + "\t" + mnt_opts + "\t0\t" + pass + "\n";
 
                         callback(null);
                     }
