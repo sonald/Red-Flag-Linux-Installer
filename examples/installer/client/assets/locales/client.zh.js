@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-06 10:16+0800",
+         "POT-Creation-Date": " 2012-09-08 06:19+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -20,11 +20,11 @@ define(["system"],
          null,
          "空闲"
       ],
-      "agree": [
+      "Agree": [
          null,
          "同意"
       ],
-      "disagree": [
+      "Disagree": [
          null,
          "不同意"
       ],

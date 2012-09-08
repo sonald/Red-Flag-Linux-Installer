@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-06 10:16+0800\n"
+"POT-Creation-Date: 2012-09-08 06:24+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,13 @@ msgid "Free"
 msgstr "空闲"
 
 #: client/views/license.jade:160
-msgid "agree"
+#, fuzzy
+msgid "Agree"
 msgstr "同意"
 
 #: client/views/license.jade:163
-msgid "disagree"
+#, fuzzy
+msgid "Disagree"
 msgstr "不同意"
 
 #: client/views/partial.jade:10
@@ -229,12 +231,8 @@ msgstr "操作失败"
 msgid "Complete"
 msgstr "完成"
 
-#: client/assets/js/process.js:57
+#: client/assets/js/process.js:57 client/assets/js/process.js:130
 msgid "Install"
-msgstr "安装"
-
-#: client/assets/js/process.js:130
-msgid "install"
 msgstr "安装"
 
 #: client/assets/js/ad_part.js:165
@@ -248,6 +246,9 @@ msgstr "请指定一个根分区。"
 #: client/assets/js/ad_part.js:301
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
+
+#~ msgid "install"
+#~ msgstr "安装"
 
 #, fuzzy
 #~ msgid "Congratulations~You have completed installation."
