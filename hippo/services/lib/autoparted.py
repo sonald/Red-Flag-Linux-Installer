@@ -43,7 +43,9 @@ def fdhandler(dev,mem, disks):
     if size > 54:
         end = parted.sizeToSectors(50, "GB", 512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'ext4')
-        p=disk.partitions[0]
+        p = disk.partitions[0]
+        if disk.type == "gpt":
+            p = disk.partitions[1]
         if p.setFlag(parted.PARTITION_BOOT) is False:
             raise Exception, "Set flag boot error"
         start = end + 10
