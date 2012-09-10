@@ -40,7 +40,7 @@ var fsutil = {
 
         exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
-                debug('stat failed: ', err)
+                debug('stat failed: ', err);
                 callback(err);
                 return;
             }
@@ -191,8 +191,10 @@ module.exports = (function(){
 
         async.forEachSeries(mounts.sort(),
             function(mnt, cb) {
-                system('mount -t ' + mnt.fs + ' ' + mnt.path + ' ' +
-                       pathlib.join(destdir, mnt.mountpoint))(cb);
+                var mntdir = pathlib.join(destdir, mnt.mountpoint);
+                system('mkdir -p ' + mntdir)(function(err) {
+                    system(sprintf('mount -t %1 %2 %3', mnt.fs, mnt.path, mntdir))(cb);
+                });
             }, callback);
     }
 
