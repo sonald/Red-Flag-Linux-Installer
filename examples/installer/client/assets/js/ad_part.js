@@ -199,6 +199,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     Rpart.method('setFlag', [path, number,fs_pre, false],
                                  $.proxy(that.partflesh, that));
                 } else {
+                    that.mp_conflict(path, number, fstype, mp); 
                     $modal.prev('ul.part').find('.partfs').text(fstype);
                     if(mp === "") {
                         $modal.prev('ul.part').find('.partmp').text("");
