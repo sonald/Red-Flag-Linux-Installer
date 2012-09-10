@@ -575,11 +575,11 @@ module.exports = (function(){
 
                         var size = +stdout.trim();
                         if (size / Math.pow(10,9) < 6) {
-                            cb({status: 'warning', reason: reasons['diskmin']});
+                            cb(null, {status: 'warning', target: 'disk', reason: reasons['diskmin']});
                             return;
                         }
 
-                        cb(null);
+                        cb(null, {status: 'success'});
                     });
                 };
             }
@@ -591,19 +591,44 @@ module.exports = (function(){
 
             checklist.push( function(cb) {
                 if (require('os').totalmem() < Math.pow(10,9)) {
-                    cb({status: 'failure', reason: reasons['memory']});
+                    cb(null, {status: 'failure', target: 'memory', reason: reasons['memory']});
 
                 } else {
-                    cb(null);
+                    cb(null, {status: 'success'});
                 }
             } );
 
-            async.waterfall(checklist, function(err) {
+            async.parallel(checklist, function(err, results) {
+                debug('minimalSufficient: ', results);
                 if (err) {
                     debug(err);
                     reporter(err);
+
                 } else {
-                    reporter({status: 'success'});
+                    var reason = '',
+                    disk_err_cnt = 0,
+                    mem_err = false;
+
+                    results.forEach(function(result) {
+                        var target = result.target;
+
+                        if (target && target === 'disk') {
+                            disk_err_cnt++;
+                            reason = result.reason;
+                        } else if (target === 'memory') {
+                            mem_err = true;
+                        }
+                    });
+
+                    if (reason.length > 0) {
+                        if (mem_err) {
+                            reason += ' and ' + reasons['memory'];
+                        }
+                        reporter({status: 'failure', reason: reason});
+
+                    } else {
+                        reporter({status: 'success'});
+                    }
                 }
             });
         },
