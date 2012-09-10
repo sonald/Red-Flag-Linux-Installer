@@ -40,6 +40,7 @@ var fsutil = {
 
         exec('stat -f -c "%s %b %f" ' + path, {encoding: 'utf8'}, function(err, stdout, stderr) {
             if (err) {
+                debug('stat failed: ', err)
                 callback(err);
                 return;
             }
@@ -47,7 +48,7 @@ var fsutil = {
             var re = /(\d+) (\d+) (\d+)/;
             var info = re.exec(stdout);
             if (!info) {
-                callback(new Error('stat result is invalid: ' + stdout));
+                callback('stat result is invalid: ' + stdout);
                 return;
             }
 
@@ -310,6 +311,12 @@ module.exports = (function(){
                 var progId;
 
                 debug('run ' + helper);
+                child.stdout.on('data', function(data) {
+                    process.stdout.write(data);
+                });
+                child.stderr.on('data', function(data) {
+                    process.stdout.write(data);
+                });
                 child.on('exit', function(code, signal) {
                     progId.stop();
                     if (code === 0) {

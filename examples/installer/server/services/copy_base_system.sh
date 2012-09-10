@@ -6,6 +6,15 @@
 # Usage: $0 src_dir dest_dir
 # precondition: dest_dir is for mounted dest dev
 
+exec &>/tmp/copy_base_system.log
+
+function handle_exit() {
+    unlink $fifo1
+    unlink $fifo2
+    echo 'clean up fifo'
+    exit
+}
+
 if [[ $# -ne 2 ]]; then
     echo "Usage: $0 src_dev dest_dev"
     exit 1
@@ -33,16 +42,13 @@ mkfifo $fifo1
 mkfifo $fifo2
 check_result
 
+trap handle_exit SIGHUP SIGTERM SIGINT
+echo "star copying"
 
 tar --numeric-owner --one-file-system -C $src_dir -cSf $fifo1 ./ | dd if=$fifo1 of=$fifo2 bs=1048576 | tar --numeric-owner -C $dest_dir -xSf $fifo2 ./
 
 sync
 check_result
+echo "copying finished"
 
-# if we pass copying, the rest is trivial, so we mark installation as success
-done=0
-
-unlink $fifo1
-unlink $fifo2
-
-exit $done
+handle_exit
