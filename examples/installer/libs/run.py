@@ -51,6 +51,8 @@ class Window(QWidget):
         self.splitter = QSplitter(self)
         self.splitter.setOrientation(Qt.Vertical)
         self.setWindowTitle("Qomo Installer")
+        if os.path.exists('/etc/qomo-release') is False:
+            self.setWindowTitle("inWise Installer")
 
         layout = QVBoxLayout(self)
         layout.setMargin(0)
