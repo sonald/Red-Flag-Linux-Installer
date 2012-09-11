@@ -1,4 +1,4 @@
-define(['jquery', 'system', 'remove_part'], function($, _system, Rpart) {
+define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
     'use strict';
     var autoStart = {
         run: function (app) {

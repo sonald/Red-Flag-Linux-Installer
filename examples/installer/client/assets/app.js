@@ -216,7 +216,7 @@ require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'
             var str = location.search.substr(1);
             var str_array = str.split("&");
 
-            if (_.indexOf(str_array, "autostart=true") ) {
+            if (_.indexOf(str_array, "autorun=true") > -1 ) {
                 autoStart.run(app);
             }
         });
