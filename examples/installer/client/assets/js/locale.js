@@ -40,8 +40,8 @@
                         break;
                     }
                 }
-
-            } else {
+            }
+            if (lang === undefined){
                 lang = navigator.language || navigator.userLanguage;
                 match = /([^-]+)(?:-([^-]+))?/.exec(lang);
                 lang = (match && match[1]) || 'en';

@@ -210,7 +210,6 @@ require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'
 
         $(function() {
             app.init();
-            console.log(location.href)
             var str = location.search.substr(1);
             var str_array = str.split("&");
 
