@@ -50,7 +50,7 @@ module.exports = function() {
 
         systemAppView: __dirname + '/index.html',
         systemAssets: [ __dirname + '/static' ],
-        systemServicePaths : [__dirname + '/services'],
+        systemServicePaths : [__dirname + '/services']
     };
 
     var opts = arguments[0] && (typeof arguments[0] === 'object') ? arguments[0] : {};
@@ -125,6 +125,8 @@ module.exports = function() {
                         var urlObj = require('url').parse(req.url, true);
                         if (urlObj.query.locale) {
                             scope.locale = urlObj.query.locale;
+                            var match = /([^_]+)(?:_([^-]+))?/.exec(scope.locale);
+                            scope.locale = (match && match[1]) || 'en';
                             i18n.overrideLocaleFromQuery(req);
                         }
 

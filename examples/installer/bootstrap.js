@@ -130,7 +130,11 @@ function tryLoadFrontend() {
     var options = {};
     options.url = program.url || 'http://127.0.0.1:8080';
     if (program.autorun) {
-        options.url += '?autorun=true';
+        if (options.url.indexOf('?') > -1) {
+            options.url += '&autorun=true';
+        } else {
+            options.url += '?autorun=true';
+        }
     }
 
     console.log(options);
