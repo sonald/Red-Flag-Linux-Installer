@@ -21,6 +21,7 @@
 // 2. try to popup a web browser
 
 /*jslint node: true*/
+var program = require('commander');
 
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
@@ -31,6 +32,8 @@ var installer = null;
 // require('longjohn');
 
 function sprintf(fmt) {
+    'use strict';
+
     fmt = fmt || "";
     if (arguments.length <= 1) {
         return fmt;
@@ -73,9 +76,9 @@ function startServer() {
     'use strict';
 
     var node_cmd = 'node app.js';
-    var args = process.argv;
+
     var debug = '';
-    if (args.indexOf('-d') > -1 || args.indexOf('--debug') > -1) {
+    if (program.debug) {
         debug = 'NODE_DEBUG=1';
     }
 
@@ -117,7 +120,7 @@ function startServer() {
 				var clear = spawn('sudo',['rm', '/var/run/qomo-installer.pid']);
 			}
 			process.exit(0);
-		})
+		});
     });
 }
 
@@ -125,16 +128,12 @@ function tryLoadFrontend() {
     'use strict';
 
     var options = {};
-    if (process.argv.length > 2) {
-        options.url = process.argv[process.argv.length - 1];
-        if (options.url.indexOf('-') === 0) {
-            options.url = null;
-        }
+    options.url = program.url || 'http://127.0.0.1:8080';
+    if (program.autorun) {
+        options.url += '?autorun=true';
     }
 
     console.log(options);
-
-    var args = [ options.url || 'http://127.0.0.1:8080'];
     var candidates = [__dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
 
     async.filter(candidates, testExists, function(results) {
@@ -143,27 +142,27 @@ function tryLoadFrontend() {
             console.log('no appropriate frontend found');
             process.exit(1);
         }
-        var fe = spawn(results[0], [args], {cwd: __dirname, env: process.env});
-	fe.on('exit', function() {
-	    if (installer && !installer.exitCode) {
-                console.log('try kill node');
+        var fe = spawn(results[0], [options.url], {cwd: __dirname, env: process.env});
+        fe.on('exit', function() {
+           if (installer && !installer.exitCode) {
+            console.log('try kill node');
 
-		var req = require('http').request({
-		    host: 'localhost',
-		    port: 8080,
-		    method: 'POST',
-		    path: '/shutdown'
-		}, function(res) {
-		    console.log(res);
-		    process.exit(0);
-		});
+            var req = require('http').request({
+              host: 'localhost',
+              port: 8080,
+              method: 'POST',
+              path: '/shutdown'
+          }, function(res) {
+              console.log(res);
+              process.exit(0);
+          });
 
-		req.on('error', function(err) {
-		    console.log('req: ', err.message);
-		});
-		req.end('immediately');
-	    }
-	});
+            req.on('error', function(err) {
+              console.log('req: ', err.message);
+          });
+            req.end('immediately');
+        }
+    });
 
         process.on('exit', function() {
             if (!fe.exitCode) {
@@ -194,11 +193,19 @@ function sanityCheck() {
 }
 
 ['SIGTERM', 'SIGINT', "SIGHUP", "SIGQUIT"].forEach( function(sig) {
+    'use strict';
+
     process.on(sig, function() {
         console.log(sig);
         process.exit(0);
     });
 });
+
+program
+    .option('-d, --debug', 'output debug infomation from server')
+    .option('-a, --autorun', 'initiate autorun mode of installer')
+    .option('-u, --url <url>', 'url of install server')
+    .parse(process.argv);
 
 sanityCheck();
 startServer();
