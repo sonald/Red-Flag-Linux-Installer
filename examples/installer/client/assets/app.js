@@ -198,8 +198,8 @@ var app = {
     }
 };
 
-require(['jquery', 'i18n', 'license', 'part', 'process', 'finished'],
-        function($, i18n,  pageLicense, pagePart, pageProcess, pageFinished) {
+require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'],
+        function($, i18n,  pageLicense, pagePart, pageProcess, pageFinished, autoStart) {
     app.stages.push(pageLicense);
     app.stages.push(pagePart);
     app.stages.push(pageProcess);
@@ -212,6 +212,13 @@ require(['jquery', 'i18n', 'license', 'part', 'process', 'finished'],
 
         $(function() {
             app.init();
+            console.log(location.href)
+            var str = location.search.substr(1);
+            var str_array = str.split("&");
+
+            if (_.indexOf(str_array, "autostart=true") ) {
+                autoStart.run(app);
+            }
         });
     });
 
