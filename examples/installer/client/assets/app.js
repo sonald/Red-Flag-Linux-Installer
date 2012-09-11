@@ -167,11 +167,9 @@ var app = {
         console.log('animate ' + stage.name);
 
         var $ul = $('ol#breadcrumb-trail');
-        if($ul.find('li.current').length > 0) {
-            $ul.find('li.current').addClass("checked")
-            $ul.find('li.current').removeClass("incomplete current")
-        }
         $ul.find('li[data-stage=' + name + ']').addClass("current");
+        $ul.find('li[data-stage=' + name + ']').prevAll('li').addClass("checked")
+        $ul.find('li[data-stage=' + name + ']').prevAll('li').removeClass("incomplete current")
     },
 
     // when app is ready, call this
