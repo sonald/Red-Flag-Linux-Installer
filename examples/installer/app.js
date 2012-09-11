@@ -5,7 +5,7 @@ var fs = require('fs');
 var spawn = require('child_process').spawn;
 
 function processCheck() {
-    var pid = 0;
+    var pid = 0, mypid = process.pid;
     var filename = '/var/run/qomo-installer.pid';
     if (fs.existsSync(filename)) {
         pid = Number(fs.readFileSync(filename, 'utf8'));
@@ -13,10 +13,17 @@ function processCheck() {
     if (pid && pid > 0 && fs.existsSync ('/proc/'+pid+'/cmdline')) {
         return false
     }else {
-        pid = process.pid;
-		fs.writeFileSync(filename, pid, 'utf8');
+		    fs.writeFileSync(filename, mypid, 'utf8');
     }
     return true;
+}
+
+function SysName() {
+    var filename = '/etc/qomo-release';
+    if (fs.existsSync(filename)) {
+        return "Qomo";
+    }
+    return "inWise";
 }
 
 if (processCheck() === false) {
@@ -34,5 +41,10 @@ var options = {
     localeDir: 'assets/locales'
 };
 
-var app = hippo(options).loadServices().start();
+
+var app = hippo(options).loadServices();
+app.start();
+app.server.helpers({
+    name: SysName()
+});
 console.log('app started at 127.0.0.1:%d', options.port);
