@@ -15,11 +15,8 @@ partty_map = {
 }
 
 def find_swap(mydev, disks):
-    disks[mydev.path] = None
     has_swap = False
     for disk in disks.values():
-        if disk is None:
-            continue
         for p in disk.partitions:
             if p.fileSystem and p.fileSystem.type.find("swap") > -1:
                 has_swap = True
