@@ -31,6 +31,8 @@ def fdhandler(dev,mem, disks):
     disk = disks[dev.path]
     parttype = "primary"
     disk.deleteAllPartitions()
+    disks[dev.path] = disk
+
     start = parted.sizeToSectors(0, "GB", 512)
     if disk.type == "gpt":
         end = parted.sizeToSectors(1,'MB',512)
