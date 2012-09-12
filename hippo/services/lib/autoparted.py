@@ -31,7 +31,7 @@ def find_swap(mydev, disks):
 def fdhandler(dev,mem, disks):
     sizeL = dev.getLength()
     size = dev.getSize('GB')
-    disk = parted.disk.Disk(dev)
+    disk = disks[dev.path]
     parttype = "primary"
     disk.deleteAllPartitions()
     start = parted.sizeToSectors(0, "GB", 512)
