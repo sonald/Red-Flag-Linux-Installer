@@ -16,6 +16,7 @@ partty_map = {
 
 flag_map = {
     'bios_grub': parted.PARTITION_BIOS_GRUB,
+    'boot': parted.PARTITION_BOOT,
 }
 
 def msdos_validate_type(ty, disk):
