@@ -31,14 +31,16 @@ def fdhandler(dev,mem, disks):
     disk = disks[dev.path]
     parttype = "primary"
     disk.deleteAllPartitions()
+    disks[dev.path] = disk
+
     start = parted.sizeToSectors(0, "GB", 512)
     if disk.type == "gpt":
-        end = parted.sizeToSectors(1,'MB',512)
+        end = start + parted.sizeToSectors(1,'MB',512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'bios_grub')
         start = end + 10
 
     if size > 54:
-        end = parted.sizeToSectors(50, "GB", 512)
+        end = start + parted.sizeToSectors(50, "GB", 512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'ext4')
         p = disk.partitions[0]
         if disk.type == "gpt":
@@ -46,15 +48,15 @@ def fdhandler(dev,mem, disks):
         if p.setFlag(parted.PARTITION_BOOT) is False:
             raise Exception, "Set flag boot error"
         start = end + 10
-        end = parted.sizeToSectors(54, "GB", 512)
+        end = start + parted.sizeToSectors(4, "GB", 512)
         disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
     elif size > 10:
         if find_swap(dev, disks) is False:
-            end = parted.sizeToSectors(mem,'B',512)
+            end = start + parted.sizeToSectors(mem,'B',512)
             disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
             start = end + 100
         if size > 30:
-            end = parted.sizeToSectors(30, "GB", 512)
+            end = parted.sizeToSectors(30, "GB", 512) ##rootsize = 30 - swap
             disk = rfparted.mkpart(dev, disk, parttype, start, end, "ext4")
             start = end + 100;
         end = sizeL - 100
