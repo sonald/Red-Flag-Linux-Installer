@@ -525,7 +525,8 @@ module.exports = (function(){
                 system("umount " + root_dir + "/dev"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
-                system("umount " + root_dir)
+                system("umount " + root_dir),
+                system("bash /etc/postjobs &> /tmp/postjobs.log")
             ],
 
             function(err) {
