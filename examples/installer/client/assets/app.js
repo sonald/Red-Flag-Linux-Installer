@@ -93,7 +93,8 @@ var app = {
     options: {
         grubinstall:'',
         installmode:'easy',
-        disks: []
+        disks: [],
+        sysflag:''
     },
 
     resetDatas: function () {
@@ -212,6 +213,9 @@ require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'
             app.init();
             var str = location.search.substr(1);
             var str_array = str.split("&");
+            if (_.indexOf(str_array, "sony=true") > -1 ) {
+                app.options.sysflag = 'sony';
+            }
 
             if (_.indexOf(str_array, "autorun=true") > -1 ) {
                 autoStart.run(app);

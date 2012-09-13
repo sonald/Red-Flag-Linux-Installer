@@ -131,10 +131,10 @@ module.exports = (function() {
         }
     };
 
-    PartitionStub.FulldiskHandler = function (devpath, cb) {
+    PartitionStub.FulldiskHandler = function (devpath, sysflag, cb) {
         var mem = require("os").totalmem();
         if (sock && sock.socket.connected) {
-            sock.emit('fdhandler', devpath, mem);
+            sock.emit('fdhandler', devpath, mem, sysflag);
             sock.once('fdhandler', function (result) {
                 cb(JSON.parse(result));
             });

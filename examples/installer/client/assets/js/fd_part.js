@@ -52,8 +52,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             }
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {
-                Rpart.method('FulldiskHandler', [dpath], function (result, disks) {
+                Rpart.method('FulldiskHandler', [dpath,that.options.sysflag], function (result, disks) {
                     that.locals["disks"] = that.options.disks = disks;
+                    var new_number = Number(result.handlepart);
                     var disk = _.find(disks, function(el){
                         return el.path === dpath;
                     });
@@ -64,7 +65,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                         return el;
                     });
                     var part = _.find(disk.table, function (el) {
-                        return (el.fs!="linux-swap(v1)" && el.number > 0 && el.dirty === true);
+                        return (el.number === new_number);
                     });
                     part["mountpoint"] = "/";
                     callback();

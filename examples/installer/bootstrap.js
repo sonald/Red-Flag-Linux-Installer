@@ -136,6 +136,13 @@ function tryLoadFrontend() {
             options.url += '?autorun=true';
         }
     }
+    if (program.sony) {
+        if (options.url.indexOf('?') > -1) {
+            options.url += '&sony=true';
+        } else {
+            options.url += '?sony=true';
+        }
+    }
 
     console.log(options);
     var candidates = [__dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
@@ -208,6 +215,7 @@ function sanityCheck() {
 program
     .option('-d, --debug', 'output debug infomation from server')
     .option('-a, --autorun', 'initiate autorun mode of installer')
+    .option('-s, --sony', 'initiate sony mode of installer')
     .option('-u, --url <url>', 'url of install server')
     .parse(process.argv);
 
