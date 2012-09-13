@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-08 06:19+0800",
+         "POT-Creation-Date": " 2012-09-14 03:20+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -23,10 +23,6 @@ define(["system"],
       "Agree": [
          null,
          "同意"
-      ],
-      "Disagree": [
-         null,
-         "不同意"
       ],
       "Warning!": [
          null,
@@ -144,6 +140,10 @@ define(["system"],
          null,
          "挂载点"
       ],
+      "Remove": [
+         null,
+         "删除"
+      ],
       "Submit": [
          null,
          "提交"
@@ -216,10 +216,6 @@ define(["system"],
          null,
          "安装"
       ],
-      "install": [
-         null,
-         "安装"
-      ],
       "Please enter the number!": [
          null,
          "请输入数字！"
@@ -231,6 +227,14 @@ define(["system"],
       "The root partition requires at least 6 GB space!": [
          null,
          "根分区需要至少6GB空间！"
+      ],
+      "Disagree": [
+         null,
+         "不同意"
+      ],
+      "install": [
+         null,
+         "安装"
       ],
       "Congratulations~You have completed installation.": [
          null,

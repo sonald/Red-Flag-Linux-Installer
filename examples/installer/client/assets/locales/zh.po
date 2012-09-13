@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-08 06:24+0800\n"
+"POT-Creation-Date: 2012-09-14 03:20+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,11 +28,6 @@ msgstr "空闲"
 #, fuzzy
 msgid "Agree"
 msgstr "同意"
-
-#: client/views/license.jade:163
-#, fuzzy
-msgid "Disagree"
-msgstr "不同意"
 
 #: client/views/partial.jade:10
 msgid "Warning!"
@@ -108,7 +103,7 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
 
-#: client/views/part.jade:36 client/views/edit_part.jade:34
+#: client/views/part.jade:36 client/views/edit_part.jade:35
 #: client/views/create_part.jade:38
 msgid "Close"
 msgstr "关闭"
@@ -158,7 +153,11 @@ msgstr "文件系统"
 msgid "MountPoint"
 msgstr "挂载点"
 
-#: client/views/edit_part.jade:35 client/views/create_part.jade:39
+#: client/views/edit_part.jade:34
+msgid "Remove"
+msgstr "删除"
+
+#: client/views/edit_part.jade:36 client/views/create_part.jade:39
 msgid "Submit"
 msgstr "提交"
 
@@ -170,11 +169,11 @@ msgstr "请选择一个磁盘："
 msgid "CreateDisk"
 msgstr "创建磁盘"
 
-#: client/assets/app.js:187
+#: client/assets/app.js:186
 msgid "Exit"
 msgstr "退出"
 
-#: client/assets/app.js:192
+#: client/assets/app.js:191
 msgid "Next"
 msgstr "下一步"
 
@@ -207,7 +206,7 @@ msgstr "选择一个至少6GB大小的分区"
 msgid "Welcome"
 msgstr "欢迎"
 
-#: client/assets/js/license.js:97
+#: client/assets/js/license.js:95
 #, fuzzy
 msgid ""
 "Disk space does not meet the minimum requirements or memory is less than 1 "
@@ -235,17 +234,21 @@ msgstr "完成"
 msgid "Install"
 msgstr "安装"
 
-#: client/assets/js/ad_part.js:165
+#: client/assets/js/ad_part.js:169
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:298
+#: client/assets/js/ad_part.js:306
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:301
+#: client/assets/js/ad_part.js:309
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
+
+#, fuzzy
+#~ msgid "Disagree"
+#~ msgstr "不同意"
 
 #~ msgid "install"
 #~ msgstr "安装"
