@@ -2,25 +2,27 @@
 
 var hippo = require('../../hippo');
 var fs = require('fs');
+var pathlib = require('path');
 var spawn = require('child_process').spawn;
 
 function processCheck() {
     var pid = 0, mypid = process.pid;
     var filename = '/var/run/qomo-installer.pid';
-    if (fs.existsSync(filename)) {
+    if (pathlib.existsSync(filename)) {
         pid = Number(fs.readFileSync(filename, 'utf8'));
     }
-    if (pid && pid > 0 && fs.existsSync ('/proc/'+pid+'/cmdline')) {
-        return false
+    if (pid && pid > 0 && pathlib.existsSync ('/proc/'+pid+'/cmdline')) {
+        return false;
+        
     }else {
-		    fs.writeFileSync(filename, mypid, 'utf8');
+        fs.writeFileSync(filename, mypid, 'utf8');
     }
     return true;
 }
 
 function SysName() {
     var filename = '/etc/qomo-release';
-    if (fs.existsSync(filename)) {
+    if (pathlib.existsSync(filename)) {
         return "Qomo";
     }
     return "inWise";

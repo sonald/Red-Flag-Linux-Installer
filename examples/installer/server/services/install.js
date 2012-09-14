@@ -607,24 +607,35 @@ module.exports = (function(){
 
                 } else {
                     var reason = '',
-                    disk_err_cnt = 0,
-                    mem_err = false;
+                        disk_err_cnt = 0,
+                        disk_err = true,
+                        mem_err = false;
 
                     results.forEach(function(result) {
                         var target = result.target;
 
                         if (target && target === 'disk') {
                             disk_err_cnt++;
-                            reason = result.reason;
+
                         } else if (target === 'memory') {
                             mem_err = true;
                         }
                     });
 
+                    // only report when all disks fail the test
+                    if (disk_err_cnt < devices.length) {
+                        disk_err = false;
+                    }
+
+                    if (disk_err) {
+                        reason += (reason.length>0?' and ': ' ') + reasons.diskmin;
+                    } 
+
+                    if (mem_err) {
+                        reason += (reason.length>0?' and ': ' ') + reasons.memory;
+                    }
+
                     if (reason.length > 0) {
-                        if (mem_err) {
-                            reason += ' and ' + reasons['memory'];
-                        }
                         reporter({status: 'failure', reason: reason});
 
                     } else {
