@@ -9,10 +9,6 @@ define(["system"],
          null,
          ""
       ],
-      "Disagree": [
-         null,
-         ""
-      ],
       "Warning!": [
          null,
          ""
@@ -129,6 +125,10 @@ define(["system"],
          null,
          ""
       ],
+      "Remove": [
+         null,
+         ""
+      ],
       "Submit": [
          null,
          ""
@@ -198,10 +198,6 @@ define(["system"],
          ""
       ],
       "Install": [
-         null,
-         ""
-      ],
-      "install": [
          null,
          ""
       ],

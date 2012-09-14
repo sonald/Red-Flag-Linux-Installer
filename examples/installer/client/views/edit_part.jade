@@ -31,6 +31,7 @@ script(type="text/template", id="edit_part_tmpl").
                         option(value="/")= "/"
                         option(value="/opt")= "/opt"
         .modal-footer
+                button.btn.delete(data-dismiss="modal", number=part.number, path=path,style="float:left;")= gettext('Remove')
                 button.btn(data-dismiss="modal")= gettext('Close')
                 button.btn.btn-primary.js-edit-submit(data-dismiss="modal",path=path,number=part.number)= gettext('Submit')
 

@@ -89,12 +89,11 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             window.apis.services.partition.getPartitions(function(disks) {
                 var devices = _.pluck(disks, 'path');
                 window.apis.services.install.minimalSufficient(devices, function (result) {
+                    console.log(result)
                     if (result.status === "success") {
                         callback();
-                    }else if (result.status === "warning") {
-                        that.app.myalert(i18n.gettext("Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install."),
-                                        callback);
-                        console.log(result);
+                    }else if (result.status === "failure") {
+                        that.app.myalert(i18n.gettext("Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install."));
                     }
                 });
             });

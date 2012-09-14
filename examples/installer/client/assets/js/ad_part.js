@@ -61,8 +61,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                         $modal.find("#fs").val(part.fs);
                     }
                     if (part.number > 0 && _.include(["ext4","Unknow", "bios_grub"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
+                        $modal.find("#fs").append("<option value=''>"+part.fs+"</option>");
+                        $modal.find("#fs").val("");
                         $modal.find("#fs").attr("disabled","");
                         $modal.find("#mp").attr("disabled","");
+                        $modal.find(".js-edit-submit").addClass("disabled");
+                        $modal.find(".js-edit-submit").removeAttr("data-dismiss");
+
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
                         $modal.find("#mp").attr("disabled","");
@@ -182,6 +187,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             });
 
             $('body').on('click','.js-edit-submit',function () {
+                if ($(this).hasClass("disabled")){
+                    return;
+                }
                 var mp, fstype, path, number;
                 var $modal = $(this).parents('.modal');
                 $modal.find('.alert').remove();

@@ -6,10 +6,6 @@ msgstr ""
 msgid "Agree"
 msgstr ""
 
-#: client/views/license.jade:163
-msgid "Disagree"
-msgstr ""
-
 #: client/views/partial.jade:10
 msgid "Warning!"
 msgstr ""
@@ -83,7 +79,7 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr ""
 
-#: client/views/part.jade:36 client/views/edit_part.jade:34
+#: client/views/part.jade:36 client/views/edit_part.jade:35
 #: client/views/create_part.jade:38
 msgid "Close"
 msgstr ""
@@ -132,7 +128,11 @@ msgstr ""
 msgid "MountPoint"
 msgstr ""
 
-#: client/views/edit_part.jade:35 client/views/create_part.jade:39
+#: client/views/edit_part.jade:34
+msgid "Remove"
+msgstr ""
+
+#: client/views/edit_part.jade:36 client/views/create_part.jade:39
 msgid "Submit"
 msgstr ""
 
@@ -144,11 +144,11 @@ msgstr ""
 msgid "CreateDisk"
 msgstr ""
 
-#: client/assets/app.js:187
+#: client/assets/app.js:186
 msgid "Exit"
 msgstr ""
 
-#: client/assets/app.js:192
+#: client/assets/app.js:191
 msgid "Next"
 msgstr ""
 
@@ -180,7 +180,7 @@ msgstr ""
 msgid "Welcome"
 msgstr ""
 
-#: client/assets/js/license.js:97
+#: client/assets/js/license.js:95
 msgid ""
 "Disk space does not meet the minimum requirements or memory is less than 1 "
 "GB.You may fail to install."
@@ -206,14 +206,14 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/ad_part.js:165
+#: client/assets/js/ad_part.js:169
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:298
+#: client/assets/js/ad_part.js:306
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:301
+#: client/assets/js/ad_part.js:309
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
