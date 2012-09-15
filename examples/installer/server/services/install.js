@@ -7,6 +7,8 @@ var exec = require('child_process').exec;
 
 // simple sprintf stuff
 function sprintf(fmt) {
+    'use strict';
+
     fmt = fmt || "";
     if (arguments.length <= 1) {
         return fmt;
@@ -463,10 +465,17 @@ module.exports = (function(){
             opts.keyboard = opts.keyboard || 'en_US';
             postSetVar("KEYBOARD", opts.keyboard);
 
+            // info postinstall all swap partitions
+            var swap_list = filterAndFlattenPartitions(opts.disks, function(entry) {
+                return entry.fs && entry.fs.toLowerCase().indexOf('swap') != -1;
+            }).map(function(part) {
+                return part.path;
+            }).sort();
+
+            postSetVar("SWAPS", sprintf("(%1)", swap_list.join(" ")));
+
             // handle swap file
-            var need_swap_file = filterAndFlattenPartitions(opts.disks, function(entry) {
-                return entry.fs && entry.fs.indexOf('swap') != -1;
-            }).length === 0;
+            var need_swap_file = swap_list.length === 0;
 
             if (need_swap_file && opts.installmode !== 'advanced') {
                 //TODO: check if space is big enough to create swapfile
@@ -486,6 +495,8 @@ module.exports = (function(){
                 postscript += 'mkswap /swapfile\n';
                 postscript += 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab \n';
             }
+
+
 
             var grubpos = opts.grubinstall || "null";
             postSetVar("GRUB_VERSION", "2");
@@ -629,7 +640,7 @@ module.exports = (function(){
 
                     if (disk_err) {
                         reason += (reason.length>0?' and ': ' ') + reasons.diskmin;
-                    } 
+                    }
 
                     if (mem_err) {
                         reason += (reason.length>0?' and ': ' ') + reasons.memory;
