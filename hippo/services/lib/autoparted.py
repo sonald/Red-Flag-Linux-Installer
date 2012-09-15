@@ -164,7 +164,7 @@ def DevDisk():
         try:
             disks[dev.path] = parted.disk.Disk(dev)
         except:
-            if dev.getSize('TB') >= 2:
+            if parted.formatBytes(dev.getLength()*512,'GB') > 2000:
                 disks[dev.path] = parted.freshDisk(dev,'gpt')
             else:
                 disks[dev.path] = parted.freshDisk(dev,'msdos')
