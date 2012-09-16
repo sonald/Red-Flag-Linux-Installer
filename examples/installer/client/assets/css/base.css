@@ -205,7 +205,8 @@ ul.buttons a:active {
 }
 
 ul.buttons a.disabled {
-    background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);   
+    background-image: -webkit-linear-gradient(top, #879288 50%,#6E8A76);
+    cursor: default;
 }
 
 ul.buttons a.disabled:active {
