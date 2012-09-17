@@ -80,6 +80,7 @@ def fdhandler(dev,mem, disks, sysflag):
         disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
     elif size >= 6:
         number = number + 1
+        boot_number = number 
         end = sizeL - 100
         disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
     else:
