@@ -77,7 +77,8 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             return pageCache;
         },
 
-        setupPresentation: function() {
+        setupPresentation: function(useExternal) {
+            console.log('useExternal: ', useExternal);
             var $p = this.$presentation = $('#presentation');
             var tmpl = '<img src="$1" alt="$2"></img>';
             var tmpl_active = '<img src="$1" alt="$2" class="start"></img>';
@@ -104,13 +105,14 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                 'installer-019.png',
             ];
 
+            var location = useExternal ? 'theme/' : 'images/';
             var items = '', active_set = false;
             imgs.forEach(function(img) {
                 if (!active_set) {
-                    items += tmpl_active.replace('$1', 'images/' + img).replace('$2', img);
+                    items += tmpl_active.replace('$1', location + img).replace('$2', img);
                     active_set = true;
                 } else
-                    items += tmpl.replace('$1', 'images/' + img).replace('$2', img);
+                    items += tmpl.replace('$1', location + img).replace('$2', img);
             });
             
             $p.find('.mygallery').html(items);
@@ -123,8 +125,13 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
         },
         
         postSetup: function() {
+            var self = this;
             this.$logs = $('#install-log');
-            this.setupPresentation();
+
+            window.apis.services.install.loadExternalImages(function(res) {
+                self.setupPresentation(res.status);
+            });
+
             progressbar.init($('#install-progress'));
 
             this.app.buttons.get("forward").change(i18n.gettext('Install'));
