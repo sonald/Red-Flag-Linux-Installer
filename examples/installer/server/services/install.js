@@ -131,7 +131,7 @@ module.exports = (function(){
     function system(cmd) {
         return function(err_cb) {
             debug('exec ' + cmd);
-            var child = exec(cmd);
+            var child = exec(cmd, { maxBuffer: (1<<20)*4 });
             child.on('exit', function(code, signal) {
                 if (code === 0) {
                     err_cb(null);
