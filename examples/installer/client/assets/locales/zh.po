@@ -139,7 +139,7 @@ msgstr "编辑磁盘"
 
 #: client/views/edit_part.jade:8 client/views/create_part.jade:8
 msgid "Size"
-msgstr "大小(GB)"
+msgstr "大小"
 
 #: client/views/edit_part.jade:12 client/views/create_part.jade:12
 msgid "PartType"

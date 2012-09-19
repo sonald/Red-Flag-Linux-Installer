@@ -25,7 +25,7 @@ function SysName() {
     if (pathlib.existsSync(filename)) {
         return "Qomo";
     }
-    return "inWise";
+    return "Red Flag inWise";
 }
 
 if (processCheck() === false) {

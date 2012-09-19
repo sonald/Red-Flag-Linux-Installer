@@ -126,7 +126,7 @@ define(["system"],
       ],
       "Size": [
          null,
-         "大小(GB)"
+         "大小"
       ],
       "PartType": [
          null,

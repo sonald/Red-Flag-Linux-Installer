@@ -5,7 +5,7 @@ script(type="text/template", id="edit_part_tmpl").
             h3= gettext('EditDisk')
         .modal-body
             div.control-group.form-horizontal
-                label.control-label(for="size")= gettext('Size')
+                label.control-label(for="size")= gettext('Size')+'(GB)'
                 .controls
                     input.disabled#size(disabled, placeholder=(part.size).toFixed(2))
             div.control-group.form-horizontal

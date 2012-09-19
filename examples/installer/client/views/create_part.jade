@@ -5,7 +5,7 @@ script(type="text/template", id="create_part_tmpl").
             h3= gettext('CreateDisk')
         .modal-body
             div.control-group.form-horizontal
-                label.control-label(for="size")= gettext('Size')
+                label.control-label(for="size")= gettext('Size')+'(GB)'
                 .controls
                     input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
             div.control-group.form-horizontal

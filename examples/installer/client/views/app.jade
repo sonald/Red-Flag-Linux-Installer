@@ -5,7 +5,7 @@ block header
     title= tr('Hippo')
 
 block content
-    h1: center= tr('Welcome To Install ') + name
+    h1: center= tr('Welcome To ') + tr(name)+ tr(' Installer') 
     
     div.breadcrumb-wrapper
         .myicon-spacer
@@ -14,7 +14,7 @@ block content
                     .myicon-container
                         .breadcrumb-myicon
         .end-trail
-            span= tr("Let's ") + name
+            span= tr("Let's ") + tr(name)
 
     .body-expand
         #stage
