@@ -61,19 +61,20 @@ def adjust_geometry(disk,ty,new_geometry):
 
 def mkpart(dev, disk, parttype, start, end, fstype):
     parttype = partty_map[parttype]
-    start = int(start)
-    end = int(end)
+    if disk.type == 'msdos':
+        msdos_validate_type(parttype, disk)
+
+    new_geometry = parted.geometry.Geometry(dev, start, None, end)
+    new_geo = adjust_geometry(disk,parttype,new_geometry)
+
+    start = int(new_geo.start)+1
+    end = int(new_geo.end)
     if start < 64L:
         start = 64L
     physector = dev.physicalSectorSize/512
     if physector > 1 and start%physector > 0:
         start = (start/physector + 1)*physector 
-
-    if disk.type == 'msdos':
-        msdos_validate_type(parttype, disk)
-        
     new_geo = parted.geometry.Geometry(dev, start, None, end)
-    #new_geo = adjust_geometry(disk,parttype,new_geometry)
 
     fs = None
     if not (parttype & parted.PARTITION_EXTENDED) and fstype != "bios_grub":
