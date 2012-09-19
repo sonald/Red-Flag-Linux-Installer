@@ -213,6 +213,10 @@ define(["system"],
          null,
          ""
       ],
+      "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>": [
+         null,
+         ""
+      ],
       "": {}
    }
 }

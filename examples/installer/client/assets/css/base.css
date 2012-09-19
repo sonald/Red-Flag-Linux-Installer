@@ -269,3 +269,6 @@ span.mycheckbox.checked {
     left: -9999px;
 }
 
+#myconfirm .modal-body p.warning {
+    color: red;
+}

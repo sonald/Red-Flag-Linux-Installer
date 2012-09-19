@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-14 03:20+0800",
+         "POT-Creation-Date": " 2012-09-20 03:12+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -227,6 +227,10 @@ define(["system"],
       "The root partition requires at least 6 GB space!": [
          null,
          "根分区需要至少6GB空间！"
+      ],
+      "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>": [
+         null,
+         "<p class='warning'>GPT磁盘没有BIOS_GRUB分区，安装或者启动系统可能失败。</p>"
       ],
       "Disagree": [
          null,
