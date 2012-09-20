@@ -719,6 +719,26 @@ module.exports = (function(){
                 }
                 console.log( 'install done' );
             });
+        },
+
+        // check if external images are exists, if does, link into assets/
+        loadExternalImages: function(reporter) {
+            var theme_loc = '/usr/share/apps/installer/images';
+
+            if (pathlib.existsSync(theme_loc)) {
+                var assets_path = pathlib.join(__dirname, "../../client/assets");
+                var dest = pathlib.join(assets_path, 'theme');
+
+                try {
+                    if (pathlib.existsSync(dest)) {
+                        fs.unlinkSync(dest);
+                    }
+                    fs.symlinkSync(theme_loc, dest);
+                } catch(ex) {
+                }
+            }
+
+            reporter( {'status': pathlib.existsSync(dest)} );
         }
     };
 
