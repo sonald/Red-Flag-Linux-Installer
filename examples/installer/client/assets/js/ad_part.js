@@ -310,6 +310,20 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 that.myalert(i18n.gettext('The root partition requires at least 6 GB space!'));
                 return;
             }
+            $('#myconfirm').find('.modal-body p.warning').remove();
+            var disk = _.find(disks, function (disk) {
+                return disk.type === "gpt";
+            });
+            if (disk !== undefined) {
+                var part = _.find (disk.table, function (part) {
+                    return (part.fs === "bios_grub" && part.number > 0)
+                })
+                if(part === undefined) {
+                    var grub_msg = i18n.gettext("<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>");
+                    $('#myconfirm').find('.modal-body p').before(grub_msg);
+                }
+            }
+
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {
                 _.each(that.record.dirty, function (el) {
