@@ -255,18 +255,37 @@ span.mycheckbox.checked {
 }
 
 #finished .label_radio input {
-    margin-right: 5px;
+    background-color: #ddd;
+    background-image: -webkit-linear-gradient(hsla(0,0%,100%,.1), hsla(0,0%,0%,.1));
+    border-radius: 100%;
+    box-shadow: inset 0 1px 1px 1px hsla(0,0%,100%,1),
+                inset 0 -1px 1px 1px hsla(0,0%,0%,.25),
+                0 1px 3px 1px hsla(0,0%,0%,.5),
+                0 0 2px hsla(0,0%,0%,.25);
+    display: inline-block;
+    cursor: pointer;
+    height: 20px;
+    margin-right: 15px;
+    position: relative;
+    width: 20px;
+    -webkit-appearance: none;
 }
 
-#finished .label_radio {
-    background:url(/images/radio-off.png) no-repeat;
-}
-#finished .label_radio.label_checked {
-    background: url(/images/radio-on.png) no-repeat;
-}
-#finished .label_radio input {
-    position: absolute;
-    left: -9999px;
+#finished .label_radio.label_checked input:after {
+    text-align: center;
+    background-color: #08c;
+    content: '';
+    border-radius: 100%;
+    display: block;
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    position: relative;
+    top: 3px;
+    box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.4),
+                inset 0 2px 2px hsla(0,0%,100%,.4),
+                0 1px 1px hsla(0,0%,100%,.8),
+                0 0 2px 2px hsla(68,69%,76%,.4);
 }
 
 #myconfirm .modal-body p.warning {
