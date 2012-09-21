@@ -82,27 +82,27 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             var $p = this.$presentation = $('#presentation');
             var tmpl = '<img src="$1" alt="$2"></img>';
             var tmpl_active = '<img src="$1" alt="$2" class="start"></img>';
-            
+
             var imgs = [
-                'installer-001.png',
-                'installer-002.png',
-                'installer-003.png',
-                'installer-004.png',
-                'installer-005.png',
-                'installer-006.png',
-                'installer-007.png',
-                'installer-008.png',
-                'installer-009.png',
-                'installer-010.png',
-                'installer-011.png',
-                'installer-012.png',
-                'installer-013.png',
-                'installer-014.png',
-                'installer-015.png',
-                'installer-016.png',
-                'installer-017.png',
-                'installer-018.png',
-                'installer-019.png',
+                'install-001.png',
+                'install-002.png',
+                'install-003.png',
+                'install-004.png',
+                'install-005.png',
+                'install-006.png',
+                'install-007.png',
+                'install-008.png',
+                'install-009.png',
+                'install-010.png',
+                'install-011.png',
+                'install-012.png',
+                'install-013.png',
+                'install-014.png',
+                'install-015.png',
+                'install-016.png',
+                'install-017.png',
+                'install-018.png',
+                'install-019.png'
             ];
 
             var location = useExternal ? 'theme/' : 'images/';
@@ -114,7 +114,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                 } else
                     items += tmpl.replace('$1', location + img).replace('$2', img);
             });
-            
+
             $p.find('.mygallery').html(items);
             $p.find('.mygallery img').slidingGallery({
                 container: $p,
@@ -123,7 +123,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             });
             timedCount();
         },
-        
+
         postSetup: function() {
             var self = this;
             this.$logs = $('#install-log');
@@ -172,7 +172,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             return function(respond) {
                 if (respond.status === "progress") {
                     var percentage = parseInt(respond.data, 10);
-                    
+
                     percentage = isNaN(percentage) ? 0: percentage;
                     percentage = Math.min(percentage, 100);
 
@@ -182,7 +182,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
                     this.buildMessage('install progress: ' + respond.data + '%', '');
                     progressbar.update(respond.data);
-                    
+
                 } else if (respond.status === "failure") {
                     this.buildMessage(respond.reason, 'label-error');
                     this.app.buttons.get("close").enable();
