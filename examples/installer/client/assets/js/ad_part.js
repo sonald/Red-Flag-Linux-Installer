@@ -95,12 +95,21 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             that.record.edit = _.reject(that.record.edit,function(el){
                 return (el.path === path && el.number === number);
             });
+            var disk = _.find(that.options.disks, function (disk){
+                return disk.path === path;
+            });
+            var part = _.find(disk.table, function(part) {
+                return part.number === number;
+            });
+            var has_mp = _.pluck(that.record.edit, 'mp');
+            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
+            if (part.fs === fstype && mp === "") {
+                return;
+            }
             that.record.edit.push({"path":path,
                                     "number":number,
                                     "fs": fstype,
                                     "mp": mp,});
-            var has_mp = _.pluck(that.record.edit, 'mp');
-            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
         },
 
         postSetup: function() {
@@ -128,7 +137,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 var mp = $(this).attr("mp");
                 $(this).parents('.modal').find('.alert').remove();
 
-                if (_.include(that.record.mp, value)) {
+                if (_.include(that.record.mp, value) && mp !== value) {
                     var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
                     $(this).parents('.control-group').after(warning);
                     $(this).val(mp);
@@ -207,7 +216,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     Rpart.method('setFlag', [path, number,fs_pre, false],
                                  $.proxy(that.partflesh, that));
                 } else {
-                    that.mp_conflict(path, number, fstype, mp); 
+                    that.mp_conflict(path, number, fstype, mp);
                     $modal.prev('ul.part').find('.partfs').text(fstype);
                     if(mp === "") {
                         $modal.prev('ul.part').find('.partmp').text("");
