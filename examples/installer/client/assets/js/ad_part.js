@@ -183,7 +183,6 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     size = Number(size.toFixed(2));
                     start = Number($modal.find("#size").attr("start"));
                     end = Number($modal.find("#size").attr("end"));
-                    end = (start + size > end) ? end : start + size;
                 };
 
                 path = $(this).attr("path");
@@ -191,7 +190,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 fstype = $modal.find('#fs').val();
                 that.mp_tag = (parttype === "extended") ? "" : $modal.find('#mp').val();
 
-                Rpart.method('mkpart',[path, parttype, start, end, fstype],
+                Rpart.method('mkpart',[path, parttype, start, size, end, fstype],
                              $.proxy(that.partflesh, that));
             });
 

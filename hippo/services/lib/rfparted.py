@@ -59,22 +59,35 @@ def adjust_geometry(disk,ty,new_geometry):
         raise Exception, "Can't have overlapping partitions."
     return new_geo
 
-def mkpart(dev, disk, parttype, start, end, fstype):
+def mkpart(dev, disk, parttype, start, size, end, fstype):
     parttype = partty_map[parttype]
+    if end >= dev.getLength() or size+start>= dev.getLength():
+        end = dev.getLength()-1
+        size = 0
     if disk.type == 'msdos':
         msdos_validate_type(parttype, disk)
 
-    new_geometry = parted.geometry.Geometry(dev, start, None, end)
-    new_geo = adjust_geometry(disk,parttype,new_geometry)
-
-    start = int(new_geo.start)+1
-    end = int(new_geo.end)
     if start < 64L:
         start = 64L
     physector = dev.physicalSectorSize/512
     if physector > 1 and start%physector > 0:
-        start = (start/physector + 1)*physector 
-    new_geo = parted.geometry.Geometry(dev, start, None, end)
+        start = (start/physector + 1)*physector
+    if size > 0:
+        new_geometry = parted.geometry.Geometry(dev, start, size, None)
+    elif end > 0:
+        new_geometry = parted.geometry.Geometry(dev, start, None, end)
+    new_geo = adjust_geometry(disk,parttype,new_geometry)
+
+    start = int(new_geo.start)
+    if start < new_geo.start:
+        start = start + 1
+    if physector > 1 and start%physector > 0:
+        start = (start/physector + 1)*physector
+    if end ==0:
+        new_geo = parted.geometry.Geometry(dev, start, size, None)
+    else:
+        end = int(new_geo.end)
+        new_geo = parted.geometry.Geometry(dev, start, None, end)
 
     fs = None
     if not (parttype & parted.PARTITION_EXTENDED) and fstype != "bios_grub":
