@@ -559,9 +559,45 @@ module.exports = (function(){
             });
         },
 
-        hdinstallMode: function(cb) {
-            //TODO: detect it
-            cb(false);
+        installMedia: function(reporter) {
+            var cmd = 'cat /proc/mounts | awk \'$2 == "/run/redflagiso/bootmnt" { print $1 }\'';
+            exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
+                if (err) {
+                    reporter({mode: 'cd'});
+                    return;
+                }
+
+                var iso_root_dev = stdout.trim();
+
+                var re_hd = /\/dev\/[sh]d[a-z]([0-9]*)/;
+                var re_usb_signature = /native-path:.*\/usb/;
+
+                function hd_probe() {
+                    function line_test(line) {
+                        return re_usb_signature.test(line);
+                    }
+
+                    // check if usb or disk
+                    exec('udisks --show-info ' + iso_root_dev, {encoding: 'utf8'},
+                     function(err, stdout) {
+                        var mode;
+                        var lines = stdout.split('\n');
+                        if (lines.some(line_test)) {
+                            mode = 'usb';
+                        } else {
+                            mode = 'hd';
+                        }
+                        reporter({"mode": mode, "device": iso_root_dev});
+                    });
+                }
+
+                if (re_hd.test(iso_root_dev)) {
+                    hd_probe();
+
+                } else {
+                    reporter({mode: 'cd'});
+                }
+            });
         },
 
         // [ '/dev/sda', '/dev/sdb' ]
