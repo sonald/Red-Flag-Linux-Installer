@@ -52,7 +52,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             }
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {
-                Rpart.method('FulldiskHandler', [dpath,that.options.sysflag], function (result, disks) {
+                Rpart.method('FulldiskHandler', that.options.iso,
+                              [dpath,that.options.sysflag],
+                              function (result, disks) {
                     that.locals["disks"] = that.options.disks = disks;
                     var new_number = Number(result.handlepart);
                     var disk = _.find(disks, function(el){

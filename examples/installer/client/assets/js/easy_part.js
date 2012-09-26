@@ -63,7 +63,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
             $('#myconfirm').on('click', '.js-confirm', function () {
                 var dpath = disk.path;
                 if (part.number < 0 || disk.type === "gpt") {
-                    Rpart.method('EasyHandler', [dpath, part.ty, part.start, part.end, part.number], function (result, disks) {
+                    Rpart.method('EasyHandler', that.options.iso,
+                                [dpath, part.ty, part.start, part.end, part.number],
+                                function (result, disks) {
                         var new_number = Number(result.handlepart);
                         that.locals["disks"] = that.options.disks = disks;
                         var disk = _.find(disks, function(el){

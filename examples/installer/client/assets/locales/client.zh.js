@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-20 03:12+0800",
+         "POT-Creation-Date": " 2012-09-27 08:10+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -83,6 +83,18 @@ define(["system"],
       "selected": [
          null,
          "已选择"
+      ],
+      "The image is on device ": [
+         null,
+         "安装镜像在设备"
+      ],
+      "!": [
+         null,
+         "上！"
+      ],
+      "Please do not have any change with it, or the installation may fail.": [
+         null,
+         "请不要对该设备做任何变动，否则安装可能失败。"
       ],
       "Confirm": [
          null,
