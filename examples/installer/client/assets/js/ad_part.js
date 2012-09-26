@@ -91,7 +91,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         },
 
         mp_conflict: function (path, number, fstype, mp) {
-            var that = this;
+            var that = this, has_mp;
             that.record.edit = _.reject(that.record.edit,function(el){
                 return (el.path === path && el.number === number);
             });
@@ -101,15 +101,17 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             var part = _.find(disk.table, function(part) {
                 return part.number === number;
             });
-            var has_mp = _.pluck(that.record.edit, 'mp');
-            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
             if (part.fs === fstype && mp === "") {
+                has_mp = _.pluck(that.record.edit, 'mp');
+                that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
                 return;
             }
             that.record.edit.push({"path":path,
                                     "number":number,
                                     "fs": fstype,
                                     "mp": mp,});
+            has_mp = _.pluck(that.record.edit, 'mp');
+            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
         },
 
         postSetup: function() {
@@ -183,7 +185,6 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     size = Number(size.toFixed(2));
                     start = Number($modal.find("#size").attr("start"));
                     end = Number($modal.find("#size").attr("end"));
-                    end = (start + size > end) ? end : start + size;
                 };
 
                 path = $(this).attr("path");
@@ -191,7 +192,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 fstype = $modal.find('#fs').val();
                 that.mp_tag = (parttype === "extended") ? "" : $modal.find('#mp').val();
 
-                Rpart.method('mkpart',[path, parttype, start, end, fstype],
+                Rpart.method('mkpart',[path, parttype, start, size, end, fstype],
                              $.proxy(that.partflesh, that));
             });
 

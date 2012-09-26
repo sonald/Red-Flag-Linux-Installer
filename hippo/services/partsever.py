@@ -34,17 +34,15 @@ class PartSocket(BaseNamespace):
                 return True
         return False
 
-    def on_mkpart(self, devpath, parttype, start, end, fs):
+    def on_mkpart(self, devpath, parttype, start, size, end, fs):
         data = {}
-        start = parted.sizeToSectors(float(start), "GB", 512)
-        end = parted.sizeToSectors(float(end), "GB", 512)
-
         if self.has_disk(devpath):
             disk = self.disks[devpath]
             dev = parted.getDevice(devpath)
             partnumber = [ part.number for part in disk.partitions ]
+            size = parted.sizeToSectors(size, "GB", 512)
             try:
-                self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start, end, fs)
+                self.disks[devpath] = lib.rfparted.mkpart(dev, disk, parttype, start,size, end, fs)
                 self.disks_tag[devpath] = True
             except Exception, e:
                 data = self.error_handle(e,None)

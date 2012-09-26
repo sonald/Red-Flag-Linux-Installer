@@ -26,8 +26,8 @@ def find_swap(mydev, disks):
     return has_swap
 
 def fdhandler(dev,mem, disks, sysflag):
-    sizeL = dev.getLength()
-    size = dev.getSize('GB')
+    DsizeL = dev.getLength()
+    Dsize = dev.getLength('GB')
     parttype = "primary"
     fs='ext4'
     number = 0
@@ -38,51 +38,52 @@ def fdhandler(dev,mem, disks, sysflag):
     disks[dev.path] = disk
 
     start = parted.sizeToSectors(0, "GB", 512)
+    end = 0
     if disk.type == "gpt":
         number = number + 1
-        end = start + parted.sizeToSectors(1,'MB',512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'bios_grub')
-        start = end + 10
+        size = parted.sizeToSectors(1,'MB',512)
+        disk = rfparted.mkpart(dev, disk, parttype, start, size, end, 'bios_grub')
+        start = start + size + 1
 
     if sysflag == "sony":
         number = number + 1
         fs = 'ext3'
-        end = start + parted.sizeToSectors(10, "GB", 512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
-        start = end + 10
+        size = parted.sizeToSectors(10, "GB", 512)
+        disk = rfparted.mkpart(dev, disk, parttype, start, size , end, fs)
+        start = start + size + 1
 
-    if size > 54:
+    if Dsize > 54:
         number = number +1
         boot_number = number
-        end = start + parted.sizeToSectors(50, "GB", 512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+        size = parted.sizeToSectors(50, "GB", 512)
+        disk = rfparted.mkpart(dev, disk, parttype, start, size, end, fs)
         rfparted.setFlag(disk, number, 'boot', True)
-        start = end + 10
+        start = start + size + 1
         number = number + 1
-        end = start + parted.sizeToSectors(4, "GB", 512)
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
-    elif size > 10:
+        size = parted.sizeToSectors(4, "GB", 512)
+        disk = rfparted.mkpart(dev, disk, parttype, start, size, end, 'linux-swap(v1)')
+    elif Dsize > 10:
         if find_swap(dev, disks) is False:
             number = number + 1
-            end = start + parted.sizeToSectors(mem,'B',512)
+            size = parted.sizeToSectors(mem,'B',512)
             disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
-            start = end + 100
-        if size > 30:
+            start = start + size  + 1
+        if Dsize > 30:
             number = number + 1
             boot_number = number
             end = parted.sizeToSectors(30, "GB", 512) ##rootsize = 30 - swap
-            disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
-            start = end + 100
+            disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
+            start = end + 1
         number = number + 1
         if boot_number == 0:
             boot_number = number
-        end = sizeL - 100
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
-    elif size >= 6:
+        end = DsizeL
+        disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
+    elif Dsize >= 6:
         number = number + 1
         boot_number = number 
-        end = sizeL - 100
-        disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+        end = DsizeL
+        disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
     else:
         raise Exception, "Error, select a disk of at least 6 GB ."
     return [disk, boot_number]
@@ -100,13 +101,12 @@ def gpt_easyhandler(dev, disk, start, end, number):
     if bios_grub == False:
         if number > 0:
             disk = rfparted.rmpart(disk, number)
-        tmp_end = start + parted.sizeToSectors(1, "MB", 512)
-        partnumber = [ part.number for part in disk.partitions ]
-        disk = rfparted.mkpart(dev, disk, "primary", start, tmp_end, 'bios_grub')
-        start = tmp_end + 100
+        size = parted.sizeToSectors(1, "MB", 512)
+        disk = rfparted.mkpart(dev, disk, "primary", start, size, end, 'bios_grub')
+        start = start + size + 1
 
     partnumber = [ part.number for part in disk.partitions ]
-    disk = rfparted.mkpart(dev, disk, "primary", start, end, fs)
+    disk = rfparted.mkpart(dev, disk, "primary", start, 0, end, fs)
     number = 0
     for p in disk.partitions:
         if p.number in partnumber:
@@ -122,14 +122,14 @@ def msdos_easyhandler(dev, disk, parttype, start, end):
         if disk.primaryPartitionCount == 4:
             raise Exception, "Too many primary partitions."
         elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
-            disk = rfparted.mkpart(dev, disk, "extended", start, end, fs)
+            disk = rfparted.mkpart(dev, disk, "extended", start, 0, end, fs)
             parttype = "logical"
         elif disk.primaryPartitionCount < 4:
             parttype = "primary"
         ###elif parttype == "logical"
         ### nothing changed
     partnumber = [ part.number for part in disk.partitions ]
-    disk = rfparted.mkpart(dev, disk, parttype, start, end, fs)
+    disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
     number = 0
     for p in disk.partitions:
         if p.number in partnumber:
@@ -139,8 +139,6 @@ def msdos_easyhandler(dev, disk, parttype, start, end):
     return [disk, number]
 
 def easyhandler(dev, disk, parttype, start, end, number):
-    start = parted.sizeToSectors(float(start), "GB", 512)
-    end = parted.sizeToSectors(float(end), "GB", 512)
     if disk.type == "msdos":
         return msdos_easyhandler(dev, disk, parttype, start, end)
     elif disk.type == "gpt":

@@ -59,9 +59,9 @@ module.exports = (function() {
         process.nextTick(next);
     };
 
-    PartitionStub.mkpart = function(devpath, parttype, start, end, fs, cb) {
+    PartitionStub.mkpart = function(devpath, parttype, start, size, end, fs, cb) {
         if(sock && sock.socket.connected){
-            sock.emit('mkpart',devpath, parttype, start, end, fs);
+            sock.emit('mkpart',devpath, parttype, start, size, end, fs);
             sock.once('mkpart',function(data){
                 data = JSON.parse(data);
                 cb(data);
