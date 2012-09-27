@@ -560,16 +560,18 @@ module.exports = (function(){
         },
 
         installMedia: function(reporter) {
+            var res = {mode: 'cd'};
             var cmd = 'cat /proc/mounts | awk \'$2 == "/run/redflagiso/bootmnt" { print $1 }\'';
             exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
                 if (err) {
-                    reporter({mode: 'cd'});
+                    reporter(res);
                     return;
                 }
 
                 var iso_root_dev = stdout.trim();
 
                 var re_hd = /\/dev\/[sh]d[a-z]([0-9]*)/;
+                var re_loop = /\/dev\/loop[0-9]+/;
                 var re_usb_signature = /native-path:.*\/usb/;
 
                 function hd_probe() {
@@ -579,23 +581,49 @@ module.exports = (function(){
 
                     // check if usb or disk
                     exec('udisks --show-info ' + iso_root_dev, {encoding: 'utf8'},
-                     function(err, stdout) {
-                        var mode;
-                        var lines = stdout.split('\n');
-                        if (lines.some(line_test)) {
-                            mode = 'usb';
-                        } else {
-                            mode = 'hd';
+                       function(err, stdout) {
+                            var mode;
+                            var lines = stdout.split('\n');
+                            if (lines.some(line_test)) {
+                                mode = 'usb';
+                            } else {
+                                mode = 'hd';
+                            }
+                            reporter({"mode": mode, "device": iso_root_dev});
+                        });
+                }
+
+                function hdmap(num) {
+                    return 'abcdefghijklmnopqrstuvwxyz'.charAt(+num);
+                }
+
+                function kern_cmdline_probe() {
+                    var cmd = 'awk \'BEGIN{RS=" "; FS="=";} ' +
+                        '$1 == "iso" {print $2}\' /proc/cmdline';
+
+                    exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
+                        var matches = /\w+(\d+),\w+(\d+):/.exec(stdout);
+                        if (err || !matches) {
+                            reporter(res);
+                            return;
                         }
-                        reporter({"mode": mode, "device": iso_root_dev});
+
+                        var part = sprintf("/dev/sd%1%2", hdmap(matches[1]), matches[2]);
+                        if (pathlib.existsSync(part)) {
+                            reporter({"mode": 'hd', "device": part});
+                            return;
+                        }
                     });
                 }
 
                 if (re_hd.test(iso_root_dev)) {
                     hd_probe();
 
+                } else if (re_loop.test(iso_root_dev)) {
+                    kern_cmdline_probe();
+
                 } else {
-                    reporter({mode: 'cd'});
+                    reporter(res);
                 }
             });
         },
