@@ -5,7 +5,7 @@ define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
             var dpath = '/dev/sda';
             app.options.grubinstall = dpath;
             app.options.installmode = 'fulldisk';
-            Rpart.method('FulldiskHandler', [dpath,app.options.sysflag],function (result, disks) {
+            Rpart.method('FulldiskHandler', null, [dpath,app.options.sysflag],function (result, disks) {
                 app.options.disks = disks;
                 var new_number = Number(result.handlepart);
                 var disk = _.find(disks, function(el){
