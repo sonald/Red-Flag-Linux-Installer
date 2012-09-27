@@ -69,6 +69,18 @@ define(["system"],
          null,
          ""
       ],
+      "The image is on device ": [
+         null,
+         ""
+      ],
+      "!": [
+         null,
+         ""
+      ],
+      "Please do not have any change with it, or the installation may fail.": [
+         null,
+         ""
+      ],
       "Confirm": [
          null,
          ""

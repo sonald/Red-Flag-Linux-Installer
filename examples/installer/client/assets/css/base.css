@@ -291,3 +291,8 @@ span.mycheckbox.checked {
 #myconfirm .modal-body p.warning {
     color: red;
 }
+
+#hd_warning {
+    font-size: 14px;
+    white-space: normal;
+}

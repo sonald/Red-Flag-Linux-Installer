@@ -25,6 +25,11 @@ script(type="text/template", id="part_tmpl").
                 td(pty="select",height="15",width="15")
                 td= gettext("selected")
     #part_content
+    -if (iso.mode == 'hd')
+        span.label.label-important#hd_warning
+            =gettext('The image is on device ')
+            =iso.device + gettext('!')
+            =gettext('Please do not have any change with it, or the installation may fail.')
     .modal.fade.hide#myconfirm
         .modal-header
             button.close(type="button", data-dismiss="modal")×

@@ -5,7 +5,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
     var pageCache;
     console.log('load partition');
     var page = {
-	      name: i18n.gettext('Partition'),
+        name: i18n.gettext('Partition'),
         view: '#part_tmpl',
         locals: null,
         app: null,
@@ -25,13 +25,17 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
                 gettext:function(msgid){ return i18n.gettext(msgid);}
             };
             pageCache = undefined;
-            callback();
-            console.log('part initialized');
+            window.apis.services.install.installMedia(function(data){
+                that.app.options["iso"] = data;
+                that.locals["iso"] = data;
+                callback();
+                console.log('part initialized');
+            });
         },
 
         getparts: function(load_parts){
             var that = this;
-            Rpart.method('reset',[], function (result, disks) {
+            Rpart.method('reset',that.app.options.iso, [], function (result, disks) {
                 that.app.resetDatas();
                 that.locals.disks = that.app.options.disks = disks;
                 load_parts();
@@ -62,7 +66,6 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
                     partial_page.postSetup && partial_page.postSetup();
                 });
             });
-
             $('ul#PartTabs li a#easy').trigger("click");
         },
 

@@ -12,6 +12,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         record: null,
         mp_tag: null,
         myalert: null,
+        tmp_isoMedia:null,
 
         init_record: function () {
             this.record = {
@@ -20,6 +21,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 mp:[],
             };
             this.mp_tag = "";
+            this.tmp_isoMedia = this.options.iso;
         },
 
         initialize: function (options, locals, myalert) {
@@ -124,14 +126,14 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             var that = this;
             $('body').on('click','.delete', function () {
                 var $this = $(this);
-                Rpart.method('rmpart',
+                Rpart.method('rmpart',that.tmp_isoMedia,
                              [$this.attr("path"), $this.attr("number")],
                     $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','#reset',function () {
                 that.init_record ();
-                Rpart.method('reset',[], $.proxy(that.partflesh, that));
+                Rpart.method('reset',that.tmp_isoMedia, [], $.proxy(that.partflesh, that));
             });
 
             $('body').on('change', '.modal #mp', function (){
@@ -192,8 +194,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 fstype = $modal.find('#fs').val();
                 that.mp_tag = (parttype === "extended") ? "" : $modal.find('#mp').val();
 
-                Rpart.method('mkpart',[path, parttype, start, size, end, fstype],
-                             $.proxy(that.partflesh, that));
+                Rpart.method('mkpart',that.tmp_isoMedia,
+                              [path, parttype, start, size, end, fstype],
+                              $.proxy(that.partflesh, that));
             });
 
             $('body').on('click','.js-edit-submit',function () {
@@ -210,11 +213,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 $modal.find("#mp").attr("mp",mp);
                 var fs_pre = $modal.find('#fs').attr('fs');
                 if(fstype === "bios_grub") {
-                    Rpart.method('setFlag', [path, number,fstype, true],
+                  Rpart.method('setFlag', that.tmp_isoMedia,
+                                [path, number,fstype, true],
                                  $.proxy(that.partflesh, that));
                 } else if (fs_pre && fs_pre === "bios_grub" && fstype !== "bios_grub"){
                     that.mp_conflict(path, number, fstype, mp); 
-                    Rpart.method('setFlag', [path, number,fs_pre, false],
+                    Rpart.method('setFlag', that.tmp_isoMedia,
+                                  [path, number,fs_pre, false],
                                  $.proxy(that.partflesh, that));
                 } else {
                     that.mp_conflict(path, number, fstype, mp);

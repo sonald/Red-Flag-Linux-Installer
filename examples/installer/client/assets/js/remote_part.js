@@ -12,14 +12,20 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             $alert.modal();
         },
 
-        getparts: function (data, reflash_parts) {
+        getparts: function (data, iso, reflash_parts) {
             remote.getPartitions(function (disks) {
                 disks = disks.reverse();
+                var path = iso.device.slice(0,8);
+                if(iso.mode === "usb" ) {
+                    disks = _.reject(disks, function (disk) {
+                        return disk.path === path;
+                    })
+                }
                 reflash_parts (data, disks);
             });
         },
 
-        method: function (action, args, callback) {
+        method: function (action, iso, args,callback) {
             init();
             var func = remote[action];
             var that = this;
@@ -29,7 +35,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             }
             var test = function (result) {
                 if (result.status && result.status === "success") {
-                    that.getparts(result, callback);
+                    that.getparts(result, iso, callback);
                 }else {
                     var msg_tmp = result.reason;
                     var msg = i18n.gettext('Operation fails');
