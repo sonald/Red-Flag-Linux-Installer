@@ -360,11 +360,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             }
             var format_parts = "";
+            $('#myconfirm').find('.modal-body p.format').remove();
             _.each(that.record.dirty, function(el) {
                 format_parts = format_parts + (el.path.slice(5)+el.number) + ",";
             });
-            format_parts = format_parts.slice(0, format_parts.length-1);
-            if (format_parts !== []) {
+            if (format_parts !== "") {
+                format_parts = format_parts.slice(0, format_parts.length-1);
                 var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
                 $('#myconfirm').find('.modal-body').append(formatted);
             }
