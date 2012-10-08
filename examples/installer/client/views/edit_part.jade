@@ -3,19 +3,19 @@ script(type="text/template", id="edit_part_tmpl").
         .modal-header
             button.close(type="button", data-dismiss="modal")×
             h3= gettext('EditDisk')
-        .modal-body
-            div.control-group.form-horizontal
+        .modal-body.form-horizontal
+            div.control-group
                 label.control-label(for="size")= gettext('Size')+'(GB)'
                 .controls
                     input.disabled#size(disabled, placeholder=(part.size).toFixed(2))
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
                     select.span3#parttype(disabled)
                         option(value="primary")= gettext('primary')
                         option(value="logical")= gettext('logical')
                         option(value="extended")= gettext('extended')
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="fs")= gettext('FileSystem')
                 .controls
                     select.span3#fs
@@ -23,13 +23,18 @@ script(type="text/template", id="edit_part_tmpl").
                         option(value="swap") swap
                         -if (type == "gpt")
                             option(value="bios_grub") bios_grub
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="mp")= gettext('MountPoint')
                 .controls
                     select.span3#mp(mp="")
                         option(value="")= ""
                         option(value="/")= "/"
                         option(value="/opt")= "/opt"
+            div.control-group
+                .controls
+                    label.checkbox
+                        input(type="checkbox")
+                        = gettext("Formatted")
         .modal-footer
                 button.btn.delete(data-dismiss="modal", number=part.number, path=path,style="float:left;")= gettext('Remove')
                 button.btn(data-dismiss="modal")= gettext('Close')
