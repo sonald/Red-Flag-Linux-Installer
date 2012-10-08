@@ -359,6 +359,15 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     $('#myconfirm').find('.modal-body p').before(grub_msg);
                 }
             }
+            var format_parts = "";
+            _.each(that.record.dirty, function(el) {
+                format_parts = format_parts + (el.path.slice(5)+el.number) + ",";
+            });
+            format_parts = format_parts.slice(0, format_parts.length-1);
+            if (format_parts !== []) {
+                var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
+                $('#myconfirm').find('.modal-body').append(formatted);
+            }
 
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {

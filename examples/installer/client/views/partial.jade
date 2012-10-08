@@ -10,6 +10,11 @@ script(type="text/template", id="warning_tmpl").
         strong= gettext('Warning!')
         = gettext('The mount point has been selected.')
 
+script(type="text/template", id="format_tmpl").
+    p
+        = gettext('Partitions that will be formatted:')
+        = format_parts
+
 .modal.fade.hide#myalert
     .modal-header
         button.close(type="button", data-dismiss="modal")×

@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-09-27 08:10+0800",
+         "POT-Creation-Date": " 2012-10-09 06:49+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -31,6 +31,10 @@ define(["system"],
       "The mount point has been selected.": [
          null,
          "此挂载点已经被选择。"
+      ],
+      "Partitions that will be formatted:": [
+         null,
+         "将会被格式化的分区有："
       ],
       "Reset": [
          null,
@@ -151,6 +155,10 @@ define(["system"],
       "MountPoint": [
          null,
          "挂载点"
+      ],
+      "Formatted": [
+         null,
+         "格式化"
       ],
       "Remove": [
          null,
