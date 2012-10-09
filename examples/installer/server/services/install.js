@@ -634,10 +634,9 @@ module.exports = (function(){
          * @arg devices
          */
         minimalSufficient: function(devices, reporter) {
-            var reasons = {
-                'diskmin': 'disk size does not suffcient minimal request',
-                'memory': 'need at least 1GB memory'
-            };
+            function sizeInM(size) {
+                return size / Math.pow(10, 6);
+            }
 
             function diskminCheck(device) {
                 return function(cb) {
@@ -645,17 +644,13 @@ module.exports = (function(){
                     var cmd = 'echo $(( `cat /sys/block/' + devname + '/size` * 512 ))';
                     exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
                         if (err) {
-                            cb({status: 'warning', reason: err });
+                            // if err happens, assume size is 0
+                            cb(null, {target: 'disk', size: 0});
                             return;
                         }
 
                         var size = +stdout.trim();
-                        if (size / Math.pow(10,9) < 6) {
-                            cb(null, {status: 'warning', target: 'disk', reason: reasons['diskmin']});
-                            return;
-                        }
-
-                        cb(null, {status: 'success'});
+                        cb(null, {target: 'disk', size: sizeInM(size)});
                     });
                 };
             }
@@ -666,57 +661,13 @@ module.exports = (function(){
             });
 
             checklist.push( function(cb) {
-                if (require('os').totalmem() < Math.pow(10,9)) {
-                    cb(null, {status: 'failure', target: 'memory', reason: reasons['memory']});
+                cb(null, {target: 'memory', size: sizeInM(require('os').totalmem())});
 
-                } else {
-                    cb(null, {status: 'success'});
-                }
             } );
 
             async.parallel(checklist, function(err, results) {
                 debug('minimalSufficient: ', results);
-                if (err) {
-                    debug(err);
-                    reporter(err);
-
-                } else {
-                    var reason = '',
-                        disk_err_cnt = 0,
-                        disk_err = true,
-                        mem_err = false;
-
-                    results.forEach(function(result) {
-                        var target = result.target;
-
-                        if (target && target === 'disk') {
-                            disk_err_cnt++;
-
-                        } else if (target === 'memory') {
-                            mem_err = true;
-                        }
-                    });
-
-                    // only report when all disks fail the test
-                    if (disk_err_cnt < devices.length) {
-                        disk_err = false;
-                    }
-
-                    if (disk_err) {
-                        reason += (reason.length>0?' and ': ' ') + reasons.diskmin;
-                    }
-
-                    if (mem_err) {
-                        reason += (reason.length>0?' and ': ' ') + reasons.memory;
-                    }
-
-                    if (reason.length > 0) {
-                        reporter({status: 'failure', reason: reason});
-
-                    } else {
-                        reporter({status: 'success'});
-                    }
-                }
+                reporter(results);
             });
         },
 
