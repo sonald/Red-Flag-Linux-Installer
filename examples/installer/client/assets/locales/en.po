@@ -1,4 +1,4 @@
-#: client/views/free_part.jade:5 client/assets/js/remote_part.js:139
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:138
 msgid "Free"
 msgstr ""
 
@@ -12,6 +12,10 @@ msgstr ""
 
 #: client/views/partial.jade:11
 msgid "The mount point has been selected."
+msgstr ""
+
+#: client/views/partial.jade:15
+msgid "Partitions that will be formatted:"
 msgstr ""
 
 #: client/views/ad_part.jade:13
@@ -91,7 +95,7 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr ""
 
-#: client/views/part.jade:41 client/views/edit_part.jade:35
+#: client/views/part.jade:41 client/views/edit_part.jade:40
 #: client/views/create_part.jade:38
 msgid "Close"
 msgstr ""
@@ -140,11 +144,15 @@ msgstr ""
 msgid "MountPoint"
 msgstr ""
 
-#: client/views/edit_part.jade:34
+#: client/views/edit_part.jade:37
+msgid "Formatted"
+msgstr ""
+
+#: client/views/edit_part.jade:39
 msgid "Remove"
 msgstr ""
 
-#: client/views/edit_part.jade:36 client/views/create_part.jade:39
+#: client/views/edit_part.jade:41 client/views/create_part.jade:39
 msgid "Submit"
 msgstr ""
 
@@ -198,15 +206,15 @@ msgid ""
 "GB.You may fail to install."
 msgstr ""
 
-#: client/assets/js/remote_part.js:33
+#: client/assets/js/remote_part.js:32
 msgid "Too many primary partitions."
 msgstr ""
 
-#: client/assets/js/remote_part.js:34
+#: client/assets/js/remote_part.js:33
 msgid "Too many extended partitions."
 msgstr ""
 
-#: client/assets/js/remote_part.js:41
+#: client/assets/js/remote_part.js:40
 msgid "Operation fails"
 msgstr ""
 
@@ -218,19 +226,19 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/ad_part.js:183
+#: client/assets/js/ad_part.js:189
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:322
+#: client/assets/js/ad_part.js:343
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:325
+#: client/assets/js/ad_part.js:346
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:337
+#: client/assets/js/ad_part.js:358
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"

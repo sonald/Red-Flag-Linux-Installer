@@ -17,6 +17,10 @@ define(["system"],
          null,
          ""
       ],
+      "Partitions that will be formatted:": [
+         null,
+         ""
+      ],
       "Reset": [
          null,
          ""
@@ -134,6 +138,10 @@ define(["system"],
          ""
       ],
       "MountPoint": [
+         null,
+         ""
+      ],
+      "Formatted": [
          null,
          ""
       ],

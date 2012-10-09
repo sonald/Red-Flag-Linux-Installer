@@ -146,7 +146,9 @@ table.colorinfo td[pty="extended"],
     white-space: nowrap;
     text-align: center;
 }
-
+.part_table .modal .modal-body{
+    text-align: left;
+}
 .part_table li.horizontal {
     float: left;
 }

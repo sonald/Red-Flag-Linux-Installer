@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-27 08:10+0800\n"
+"POT-Creation-Date: 2012-10-09 06:49+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Language: zh_CN\n"
 "X-Source-Language: C\n"
 
-#: client/views/free_part.jade:5 client/assets/js/remote_part.js:139
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:138
 msgid "Free"
 msgstr "空闲"
 
@@ -36,6 +36,10 @@ msgstr "提示："
 #: client/views/partial.jade:11
 msgid "The mount point has been selected."
 msgstr "此挂载点已经被选择。"
+
+#: client/views/partial.jade:15
+msgid "Partitions that will be formatted:"
+msgstr "将会被格式化的分区有："
 
 #: client/views/ad_part.jade:13
 msgid "Reset"
@@ -116,7 +120,7 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
 
-#: client/views/part.jade:41 client/views/edit_part.jade:35
+#: client/views/part.jade:41 client/views/edit_part.jade:40
 #: client/views/create_part.jade:38
 msgid "Close"
 msgstr "关闭"
@@ -166,11 +170,15 @@ msgstr "文件系统"
 msgid "MountPoint"
 msgstr "挂载点"
 
-#: client/views/edit_part.jade:34
+#: client/views/edit_part.jade:37
+msgid "Formatted"
+msgstr "格式化"
+
+#: client/views/edit_part.jade:39
 msgid "Remove"
 msgstr "删除"
 
-#: client/views/edit_part.jade:36 client/views/create_part.jade:39
+#: client/views/edit_part.jade:41 client/views/create_part.jade:39
 msgid "Submit"
 msgstr "提交"
 
@@ -226,16 +234,16 @@ msgid ""
 "GB.You may fail to install."
 msgstr "磁盘大小不足或者内存小于1GB，安装可能失败。"
 
-#: client/assets/js/remote_part.js:33
+#: client/assets/js/remote_part.js:32
 #, fuzzy
 msgid "Too many primary partitions."
 msgstr "只能建4个主分区"
 
-#: client/assets/js/remote_part.js:34
+#: client/assets/js/remote_part.js:33
 msgid "Too many extended partitions."
 msgstr "只能建一个扩展分区"
 
-#: client/assets/js/remote_part.js:41
+#: client/assets/js/remote_part.js:40
 msgid "Operation fails"
 msgstr "操作失败"
 
@@ -247,19 +255,19 @@ msgstr "完成"
 msgid "Install"
 msgstr "安装"
 
-#: client/assets/js/ad_part.js:183
+#: client/assets/js/ad_part.js:189
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:322
+#: client/assets/js/ad_part.js:343
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:325
+#: client/assets/js/ad_part.js:346
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
 
-#: client/assets/js/ad_part.js:337
+#: client/assets/js/ad_part.js:358
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"

@@ -139,12 +139,18 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
-                $(this).parents('.modal').find('.alert').remove();
+                var $modal = $(this).parents('.modal');
+                $modal.find('.alert').remove();
 
                 if (_.include(that.record.mp, value) && mp !== value) {
                     var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
-                    $(this).parents('.control-group').after(warning);
+                    $modal.find('.control-group').last().after(warning);
                     $(this).val(mp);
+                }
+                if (value !== "") {
+                    $modal.find('input[type=checkbox]').attr("checked","");
+                }else if ($modal.find('input[type=checkbox]').attr("disabled") === undefined){
+                    $modal.find('input[type=checkbox]').removeAttr("checked");
                 }
             });
 
@@ -212,8 +218,16 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 mp = $modal.find("#mp").val();
                 $modal.find("#mp").attr("mp",mp);
                 var fs_pre = $modal.find('#fs').attr('fs');
-                if(fstype === "bios_grub") {
-                  Rpart.method('setFlag', that.tmp_isoMedia,
+                var is_format=$modal.find("input[type=checkbox]").attr("checked");
+                if (is_format === "checked") {
+                    that.record.dirty.push({"path":path,"number":number})
+                }else {
+                    that.record.dirty = _.reject(that.record.dirty, function(el) {
+                        return (el.path === path && el.number === number);
+                    })
+                }
+                if (fstype === "bios_grub") {
+                    Rpart.method('setFlag', that.tmp_isoMedia,
                                 [path, number,fstype, true],
                                  $.proxy(that.partflesh, that));
                 } else if (fs_pre && fs_pre === "bios_grub" && fstype !== "bios_grub"){
@@ -256,6 +270,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     $part.next('.modal').find('#mp').val(el.mp);
                 };
             });
+            _.each(that.record.dirty, function(el) {
+                var $part = $('ul.disk[dpath="'+el.path+'"]').find('ul.part[number="'+el.number+'"]');
+                $part.next('.modal').find("input[type=checkbox]").attr("checked","")
+                if(el.new === true) {
+                    $part.next('.modal').find("input[type=checkbox]").attr("disabled","")
+                }
+            });
         },
 
         parthandler: function(result) {
@@ -273,7 +294,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
 
             if (method === "add") {
                 //TODO ty==extended
-                that.record.dirty.push({"path":path,"number":number});
+                that.record.dirty.push({"path":path,"number":number, "new":true});
                 if (that.mp_tag !== "") {
                     that.mp_conflict (path, number, "", that.mp_tag);
                 }
@@ -337,6 +358,16 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     var grub_msg = i18n.gettext("<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>");
                     $('#myconfirm').find('.modal-body p').before(grub_msg);
                 }
+            }
+            var format_parts = "";
+            $('#myconfirm').find('.modal-body p.format').remove();
+            _.each(that.record.dirty, function(el) {
+                format_parts = format_parts + (el.path.slice(5)+el.number) + ",";
+            });
+            if (format_parts !== "") {
+                format_parts = format_parts.slice(0, format_parts.length-1);
+                var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
+                $('#myconfirm').find('.modal-body').append(formatted);
             }
 
             $('#myconfirm').modal();

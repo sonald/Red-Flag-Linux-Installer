@@ -3,12 +3,12 @@ script(type="text/template", id="create_part_tmpl").
         .modal-header
             button.close(type="button", data-dismiss="modal")×
             h3= gettext('CreateDisk')
-        .modal-body
-            div.control-group.form-horizontal
+        .modal-body.form-horizontal
+            div.control-group
                 label.control-label(for="size")= gettext('Size')+'(GB)'
                 .controls
                     input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
                     select.span3#parttype
@@ -19,7 +19,7 @@ script(type="text/template", id="create_part_tmpl").
                         -else
                             option(value="primary")= gettext('primary')
                             option(value="extended")= gettext('extended')
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="fs")= gettext('FileSystem')
                 .controls
                     select.span3#fs
@@ -27,7 +27,7 @@ script(type="text/template", id="create_part_tmpl").
                         option(value="linux-swap(v1)") swap
                         -if (type == "gpt")
                             option(value="bios_grub") bios_grub
-            div.control-group.form-horizontal
+            div.control-group
                 label.control-label(for="mp")= gettext('MountPoint')
                 .controls
                     select.span3#mp
