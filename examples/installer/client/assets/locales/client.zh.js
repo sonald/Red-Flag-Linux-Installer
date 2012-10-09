@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-09 09:30+0800",
+         "POT-Creation-Date": " 2012-10-10 02:22+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -35,6 +35,10 @@ define(["system"],
       "Partitions that will be formatted:": [
          null,
          "将会被格式化的分区有："
+      ],
+      "Click the partition to operate:": [
+         null,
+         "请点击分区进行操作："
       ],
       "Reset": [
          null,
@@ -115,6 +119,10 @@ define(["system"],
       "Continue": [
          null,
          "继续"
+      ],
+      "Select one partition: ": [
+         null,
+         "请选择一个分区。"
       ],
       "Congratulations~": [
          null,
@@ -359,10 +367,6 @@ define(["system"],
       "Number!!": [
          null,
          "序号！！"
-      ],
-      "Select only one root partition.": [
-         null,
-         "仅选择一个根分区。"
       ],
       "English": [
          null,

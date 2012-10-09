@@ -1,5 +1,6 @@
 script(type="text/template", id="easy_part_tmpl").
     .part_table#easy_part_table
+        p= gettext('Select one partition: ')
         -for (var i in disks)
             - disk = disks[i]
             p.diskinfo

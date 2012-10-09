@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 09:30+0800\n"
+"POT-Creation-Date: 2012-10-10 02:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,19 +41,23 @@ msgstr "此挂载点已经被选择。"
 msgid "Partitions that will be formatted:"
 msgstr "将会被格式化的分区有："
 
-#: client/views/ad_part.jade:13
+#: client/views/ad_part.jade:2
+msgid "Click the partition to operate:"
+msgstr "请点击分区进行操作："
+
+#: client/views/ad_part.jade:14
 msgid "Reset"
 msgstr "重置"
 
-#: client/views/ad_part.jade:16
+#: client/views/ad_part.jade:17
 msgid "Grub Install At:"
 msgstr "安装grub位置："
 
-#: client/views/ad_part.jade:22
+#: client/views/ad_part.jade:23
 msgid "Boot Partition"
 msgstr "启动分区"
 
-#: client/views/ad_part.jade:23
+#: client/views/ad_part.jade:24
 msgid "Not install"
 msgstr "不安装"
 
@@ -128,6 +132,11 @@ msgstr "关闭"
 #: client/views/part.jade:42
 msgid "Continue"
 msgstr "继续"
+
+#: client/views/easy_part.jade:3
+#, fuzzy
+msgid "Select one partition: "
+msgstr "请选择一个分区。"
 
 #: client/views/finished.jade:4
 msgid "Congratulations~"
@@ -367,9 +376,6 @@ msgstr ""
 
 #~ msgid "Number!!"
 #~ msgstr "序号！！"
-
-#~ msgid "Select only one root partition."
-#~ msgstr "仅选择一个根分区。"
 
 #~ msgid "English"
 #~ msgstr "英语"

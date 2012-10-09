@@ -18,19 +18,23 @@ msgstr ""
 msgid "Partitions that will be formatted:"
 msgstr ""
 
-#: client/views/ad_part.jade:13
+#: client/views/ad_part.jade:2
+msgid "Click the partition to operate:"
+msgstr ""
+
+#: client/views/ad_part.jade:14
 msgid "Reset"
 msgstr ""
 
-#: client/views/ad_part.jade:16
+#: client/views/ad_part.jade:17
 msgid "Grub Install At:"
 msgstr ""
 
-#: client/views/ad_part.jade:22
+#: client/views/ad_part.jade:23
 msgid "Boot Partition"
 msgstr ""
 
-#: client/views/ad_part.jade:23
+#: client/views/ad_part.jade:24
 msgid "Not install"
 msgstr ""
 
@@ -102,6 +106,10 @@ msgstr ""
 
 #: client/views/part.jade:42
 msgid "Continue"
+msgstr ""
+
+#: client/views/easy_part.jade:3
+msgid "Select one partition: "
 msgstr ""
 
 #: client/views/finished.jade:4

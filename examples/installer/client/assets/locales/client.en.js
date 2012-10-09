@@ -21,6 +21,10 @@ define(["system"],
          null,
          ""
       ],
+      "Click the partition to operate:": [
+         null,
+         ""
+      ],
       "Reset": [
          null,
          ""
@@ -98,6 +102,10 @@ define(["system"],
          ""
       ],
       "Continue": [
+         null,
+         ""
+      ],
+      "Select one partition: ": [
          null,
          ""
       ],
