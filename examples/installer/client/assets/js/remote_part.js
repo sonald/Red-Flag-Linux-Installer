@@ -16,9 +16,8 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             remote.getPartitions(function (disks) {
                 disks = disks.reverse();
                 if(iso && iso.mode === "usb" ) {
-                    var path = iso.device.slice(0,8);
                     disks = _.reject(disks, function (disk) {
-                        return disk.path === path;
+                        return disk.path === iso.device.slice(0,8);
                     })
                 }
                 reflash_parts (data, disks);
