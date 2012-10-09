@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 06:49+0800\n"
+"POT-Creation-Date: 2012-10-09 09:30+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -227,12 +227,25 @@ msgstr "选择一个至少6GB大小的分区"
 msgid "Welcome"
 msgstr "欢迎"
 
-#: client/assets/js/license.js:96
+#: client/assets/js/license.js:90 client/assets/js/license.js:93
 #, fuzzy
 msgid ""
-"Disk space does not meet the minimum requirements or memory is less than 1 "
-"GB.You may fail to install."
-msgstr "磁盘大小不足或者内存小于1GB，安装可能失败。"
+"Recommend memory of more than 1GB.Insufficient memory may cause installation "
+"failures."
+msgstr "建议内存大小1GB以上，内存不足易导致安装失败。"
+
+#: client/assets/js/license.js:91
+msgid "Installation on disk of less than 6GB may fail. Disk less than  6GB:"
+msgstr "在不足6GB大小的磁盘上安装可能失败。下列磁盘不足6GB："
+
+#: client/assets/js/license.js:94
+msgid ""
+"Installation on disk of less than 6GB may also fail.Disk less than  6GB:"
+msgstr "在不足6GB大小的磁盘上安装也可能失败。下列磁盘不足6GB："
+
+#: client/assets/js/license.js:95
+msgid "There is no disk for installations."
+msgstr "没有磁盘可以用来安装。"
 
 #: client/assets/js/remote_part.js:32
 #, fuzzy
@@ -273,6 +286,12 @@ msgid ""
 "may fail to install.</p>"
 msgstr ""
 "<p class='warning'>GPT磁盘没有BIOS_GRUB分区，安装或者启动系统可能失败。</p>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Disk space does not meet the minimum requirements or memory is less than "
+#~ "1 GB.You may fail to install."
+#~ msgstr "磁盘大小不足或者内存小于1GB，安装可能失败。"
 
 #, fuzzy
 #~ msgid "Disagree"

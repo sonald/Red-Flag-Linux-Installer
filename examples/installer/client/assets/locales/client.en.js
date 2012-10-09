@@ -197,7 +197,19 @@ define(["system"],
          null,
          ""
       ],
-      "Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install.": [
+      "Recommend memory of more than 1GB.Insufficient memory may cause installation failures.": [
+         null,
+         ""
+      ],
+      "Installation on disk of less than 6GB may fail. Disk less than  6GB:": [
+         null,
+         ""
+      ],
+      "Installation on disk of less than 6GB may also fail.Disk less than  6GB:": [
+         null,
+         ""
+      ],
+      "There is no disk for installations.": [
          null,
          ""
       ],

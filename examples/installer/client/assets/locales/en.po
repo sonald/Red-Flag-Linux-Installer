@@ -200,10 +200,23 @@ msgstr ""
 msgid "Welcome"
 msgstr ""
 
-#: client/assets/js/license.js:96
+#: client/assets/js/license.js:90 client/assets/js/license.js:93
 msgid ""
-"Disk space does not meet the minimum requirements or memory is less than 1 "
-"GB.You may fail to install."
+"Recommend memory of more than 1GB.Insufficient memory may cause installation "
+"failures."
+msgstr ""
+
+#: client/assets/js/license.js:91
+msgid "Installation on disk of less than 6GB may fail. Disk less than  6GB:"
+msgstr ""
+
+#: client/assets/js/license.js:94
+msgid ""
+"Installation on disk of less than 6GB may also fail.Disk less than  6GB:"
+msgstr ""
+
+#: client/assets/js/license.js:95
+msgid "There is no disk for installations."
 msgstr ""
 
 #: client/assets/js/remote_part.js:32

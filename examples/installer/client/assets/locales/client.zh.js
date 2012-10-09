@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-09 06:49+0800",
+         "POT-Creation-Date": " 2012-10-09 09:30+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -212,9 +212,21 @@ define(["system"],
          null,
          "欢迎"
       ],
-      "Disk space does not meet the minimum requirements or memory is less than 1 GB.You may fail to install.": [
+      "Recommend memory of more than 1GB.Insufficient memory may cause installation failures.": [
          null,
-         "磁盘大小不足或者内存小于1GB，安装可能失败。"
+         "建议内存大小1GB以上，内存不足易导致安装失败。"
+      ],
+      "Installation on disk of less than 6GB may fail. Disk less than  6GB:": [
+         null,
+         "在不足6GB大小的磁盘上安装可能失败。下列磁盘不足6GB："
+      ],
+      "Installation on disk of less than 6GB may also fail.Disk less than  6GB:": [
+         null,
+         "在不足6GB大小的磁盘上安装也可能失败。下列磁盘不足6GB："
+      ],
+      "There is no disk for installations.": [
+         null,
+         "没有磁盘可以用来安装。"
       ],
       "Too many primary partitions.": [
          null,
@@ -251,6 +263,10 @@ define(["system"],
       "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>": [
          null,
          "<p class='warning'>GPT磁盘没有BIOS_GRUB分区，安装或者启动系统可能失败。</p>"
+      ],
+      "#~ \"Disk space does not meet the minimum requirements or memory is less than \"#~ \"1 GB.You may fail to install.\"": [
+         null,
+         "磁盘大小不足或者内存小于1GB，安装可能失败。"
       ],
       "Disagree": [
          null,
