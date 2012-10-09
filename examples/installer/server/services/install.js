@@ -645,12 +645,12 @@ module.exports = (function(){
                     exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
                         if (err) {
                             // if err happens, assume size is 0
-                            cb(null, {target: 'disk', size: 0});
+                            cb(null, {target: 'disk', size: 0, path: device});
                             return;
                         }
 
                         var size = +stdout.trim();
-                        cb(null, {target: 'disk', size: sizeInM(size)});
+                        cb(null, {target: 'disk', size: sizeInM(size), path: device});
                     });
                 };
             }
