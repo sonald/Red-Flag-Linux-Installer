@@ -241,6 +241,10 @@ define(["system"],
          null,
          ""
       ],
+      "SORRY, INSTALLATION FAILS.": [
+         null,
+         ""
+      ],
       "Please enter the number!": [
          null,
          ""

@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-10 02:22+0800",
+         "POT-Creation-Date": " 2012-10-10 03:06+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -255,6 +255,10 @@ define(["system"],
       "Install": [
          null,
          "安装"
+      ],
+      "SORRY, INSTALLATION FAILS.": [
+         null,
+         "安装失败。"
       ],
       "Please enter the number!": [
          null,
