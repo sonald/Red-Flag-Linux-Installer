@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-10 03:06+0800\n"
+"POT-Creation-Date: 2012-10-11 02:24+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,18 +77,18 @@ msgstr "高级分区"
 msgid "disk"
 msgstr "磁盘"
 
-#: client/views/part.jade:18 client/views/edit_part.jade:15
-#: client/views/create_part.jade:18 client/views/create_part.jade:20
+#: client/views/part.jade:18 client/views/edit_part.jade:11
+#: client/views/create_part.jade:14 client/views/create_part.jade:16
 msgid "primary"
 msgstr "主分区"
 
-#: client/views/part.jade:20 client/views/edit_part.jade:16
-#: client/views/create_part.jade:16
+#: client/views/part.jade:20 client/views/edit_part.jade:12
+#: client/views/create_part.jade:12
 msgid "logical"
 msgstr "逻辑分区"
 
-#: client/views/part.jade:22 client/views/edit_part.jade:17
-#: client/views/create_part.jade:21
+#: client/views/part.jade:22 client/views/edit_part.jade:13
+#: client/views/create_part.jade:17
 msgid "extended"
 msgstr "扩展分区"
 
@@ -125,7 +125,7 @@ msgid ""
 msgstr "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
 
 #: client/views/part.jade:41 client/views/edit_part.jade:45
-#: client/views/create_part.jade:38
+#: client/views/create_part.jade:48
 msgid "Close"
 msgstr "关闭"
 
@@ -137,6 +137,10 @@ msgstr "继续"
 #, fuzzy
 msgid "Select one partition: "
 msgstr "请选择一个分区。"
+
+#: client/views/easy_part.jade:12
+msgid "The swap partition will be used if there is one."
+msgstr "简易安装会自动挂载已经存在的swap分区。"
 
 #: client/views/finished.jade:4
 msgid "Congratulations~"
@@ -164,22 +168,22 @@ msgid "EditDisk"
 msgstr "编辑磁盘"
 
 #: client/views/edit_part.jade:8 client/views/create_part.jade:8
-msgid "Size"
-msgstr "大小"
-
-#: client/views/edit_part.jade:12 client/views/create_part.jade:12
 msgid "PartType"
 msgstr "分区类型"
 
-#: client/views/edit_part.jade:19 client/views/create_part.jade:23
+#: client/views/edit_part.jade:15 client/views/create_part.jade:19
 msgid "FileSystem"
 msgstr "文件系统"
 
-#: client/views/edit_part.jade:27 client/views/create_part.jade:31
+#: client/views/edit_part.jade:23 client/views/create_part.jade:27
 msgid "MountPoint"
 msgstr "挂载点"
 
-#: client/views/edit_part.jade:42
+#: client/views/edit_part.jade:35 client/views/create_part.jade:39
+msgid "Size"
+msgstr "大小"
+
+#: client/views/edit_part.jade:42 client/views/create_part.jade:46
 msgid "Formatted"
 msgstr "格式化"
 
@@ -187,13 +191,17 @@ msgstr "格式化"
 msgid "Remove"
 msgstr "删除"
 
-#: client/views/edit_part.jade:46 client/views/create_part.jade:39
+#: client/views/edit_part.jade:46 client/views/create_part.jade:49
 msgid "Submit"
 msgstr "提交"
 
 #: client/views/fd_part.jade:3
 msgid "Select one disk: "
 msgstr "请选择一个磁盘："
+
+#: client/views/fd_part.jade:11
+msgid "Recommend full disk installation in a virtual machine."
+msgstr "推荐在虚拟机中使用全磁盘安装。"
 
 #: client/views/create_part.jade:5
 msgid "CreateDisk"
@@ -281,19 +289,19 @@ msgstr "安装"
 msgid "SORRY, INSTALLATION FAILS."
 msgstr "安装失败。"
 
-#: client/assets/js/ad_part.js:189
+#: client/assets/js/ad_part.js:190
 msgid "Please enter the number!"
 msgstr "请输入数字！"
 
-#: client/assets/js/ad_part.js:343
+#: client/assets/js/ad_part.js:344
 msgid "You need specify a root partition."
 msgstr "请指定一个根分区。"
 
-#: client/assets/js/ad_part.js:346
+#: client/assets/js/ad_part.js:347
 msgid "The root partition requires at least 6 GB space!"
 msgstr "根分区需要至少6GB空间！"
 
-#: client/assets/js/ad_part.js:358
+#: client/assets/js/ad_part.js:359
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"

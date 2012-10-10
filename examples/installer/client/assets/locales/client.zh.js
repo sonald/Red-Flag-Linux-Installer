@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-10 03:06+0800",
+         "POT-Creation-Date": " 2012-10-11 02:24+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -124,6 +124,10 @@ define(["system"],
          null,
          "请选择一个分区。"
       ],
+      "The swap partition will be used if there is one.": [
+         null,
+         "简易安装会自动挂载已经存在的swap分区。"
+      ],
       "Congratulations~": [
          null,
          "恭喜~"
@@ -148,10 +152,6 @@ define(["system"],
          null,
          "编辑磁盘"
       ],
-      "Size": [
-         null,
-         "大小"
-      ],
       "PartType": [
          null,
          "分区类型"
@@ -163,6 +163,10 @@ define(["system"],
       "MountPoint": [
          null,
          "挂载点"
+      ],
+      "Size": [
+         null,
+         "大小"
       ],
       "Formatted": [
          null,
@@ -179,6 +183,10 @@ define(["system"],
       "Select one disk: ": [
          null,
          "请选择一个磁盘："
+      ],
+      "Recommend full disk installation in a virtual machine.": [
+         null,
+         "推荐在虚拟机中使用全磁盘安装。"
       ],
       "CreateDisk": [
          null,

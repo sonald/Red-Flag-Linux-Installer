@@ -9,5 +9,6 @@ script(type="text/template", id="easy_part_tmpl").
                 = "/" + disk.type + ")"
             - var parts = disk["table"]
             ul.wat-cf.disk(dpath=disk["path"],dnum=i)
+        p= gettext('The swap partition will be used if there is one.')
     .warninfo
         br
