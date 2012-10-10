@@ -5,10 +5,6 @@ script(type="text/template", id="create_part_tmpl").
             h3= gettext('CreateDisk')
         .modal-body.form-horizontal
             div.control-group
-                label.control-label(for="size")= gettext('Size')+'(GB)'
-                .controls
-                    input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
-            div.control-group
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
                     select.span3#parttype
@@ -33,7 +29,21 @@ script(type="text/template", id="create_part_tmpl").
                     select.span3#mp
                         option(value="")= ""
                         option(value="/")= "/"
+                        option(value="/boot")= "/boot"
+                        option(value="/home")= "/home"
                         option(value="/opt")= "/opt"
+                        option(value="/root")= "/root"
+                        option(value="/usr")= "/usr"
+                        option(value="/var")= "/var"
+            div.control-group
+                label.control-label(for="size")= gettext('Size')+'(GB)'
+                .controls
+                    input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
+            div.control-group
+                .controls
+                    label.checkbox
+                        input(type="checkbox",disabled,checked)
+                        = gettext("Formatted")
         .modal-footer
                 button.btn(data-dismiss="modal")= gettext('Close')
                 button.btn.btn-primary.js-create-submit(data-dismiss="modal", path=path)= gettext('Submit')

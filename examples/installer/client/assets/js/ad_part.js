@@ -94,6 +94,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
 
         mp_conflict: function (path, number, fstype, mp) {
             var that = this, has_mp;
+            var mpset = ['/','/boot','/home','/opt','/root','/usr','/var']
             that.record.edit = _.reject(that.record.edit,function(el){
                 return (el.path === path && el.number === number);
             });
@@ -105,7 +106,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             });
             if (part.fs === fstype && mp === "") {
                 has_mp = _.pluck(that.record.edit, 'mp');
-                that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
+                that.record.mp = _.intersection(has_mp, mpset);
                 return;
             }
             that.record.edit.push({"path":path,
@@ -113,7 +114,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                                     "fs": fstype,
                                     "mp": mp,});
             has_mp = _.pluck(that.record.edit, 'mp');
-            that.record.mp = _.intersection(has_mp, ["/", "/opt"]);
+            that.record.mp = _.intersection(has_mp, mpset);
         },
 
         postSetup: function() {
