@@ -76,11 +76,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                         });
                         part["mountpoint"] = "/";
                         part["dirty"] = true;
+                        part["label"]=dpath.slice(5).toUpperCase()+part.number;
                         callback();
                     });
                 }else {
                     part["dirty"] = true;
                     part["mountpoint"] = "/";
+                    part["label"]=dpath.slice(5).toUpperCase()+part.number;
                     part.fs = "ext4";
                     callback();
                 }

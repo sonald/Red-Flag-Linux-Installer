@@ -67,6 +67,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                         $modal.find("#fs").val("");
                         $modal.find("#fs").attr("disabled","");
                         $modal.find("#mp").attr("disabled","");
+                        $modal.find("input[type=checkbox]").attr("disabled","");
                         $modal.find(".js-edit-submit").addClass("disabled");
                         $modal.find(".js-edit-submit").removeAttr("data-dismiss");
 
@@ -230,7 +231,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 var fs_pre = $modal.find('#fs').attr('fs');
                 var is_format=$modal.find("input[type=checkbox]").attr("checked");
                 if (is_format === "checked") {
-                    that.record.dirty.push({"path":path,"number":number})
+                    var has_dirty = _.find(that.record.dirty, function(el) {
+                        return (el.path === path && el.number === number);
+                    });
+                    if(has_dirty === undefined) {
+                        that.record.dirty.push({"path":path,"number":number});
+                    }
                 }else {
                     that.record.dirty = _.reject(that.record.dirty, function(el) {
                         return (el.path === path && el.number === number);
@@ -369,13 +375,13 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     $('#myconfirm').find('.modal-body p').before(grub_msg);
                 }
             }
-            var format_parts = "";
+            var format_parts = [];
             $('#myconfirm').find('.modal-body p.format').remove();
             _.each(that.record.dirty, function(el) {
-                format_parts = format_parts + (el.path.slice(5)+el.number) + ",";
+                format_parts.push(el.path.slice(5)+el.number);
             });
-            if (format_parts !== "") {
-                format_parts = format_parts.slice(0, format_parts.length-1);
+            if (format_parts.length > 0) {
+                format_parts.join(',');
                 var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
                 $('#myconfirm').find('.modal-body').append(formatted);
             }
@@ -409,7 +415,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     });
                     part["dirty"] = true;
                     part["label"] = ( el.mp && el.mp.length>1 ) ? el.mp.slice(1).toUpperCase() : path.slice(5).toUpperCase() + part.number;
-                    part["label"] = (el.fs === "swap") ? "SWAP" : part.label;
+                    part["label"] = (el.fs === "swap" || el.fs+part.fs === "swap") ? "SWAP" : part.label;
                     part["mountpoint"] = el.mp;
                     part["fs"] = el.fs || part["fs"];
                     if (el.mp === "/" && grubinstall === "/") {

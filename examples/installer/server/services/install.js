@@ -160,10 +160,12 @@ module.exports = (function(){
             'swap': 'mkswap '
         };
 
-        var cmd = cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)] + part.path;
+        var cmd = cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)];
+        cmd = part.label ? cmd+"-L "+part["label"]+" ": cmd;
         if (!cmd) {
-            cmd = part.label ? cmds[0]+" -L "+part["label"] : cmds[0];
+            cmd = part.label ? cmds[0]+"-L "+part["label"]+" ": cmds[0];
         }
+        cmd = cmd + part.path;
         system(cmd)( callback );
     }
 
