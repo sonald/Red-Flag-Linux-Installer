@@ -38,7 +38,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
                 }else {
                     var msg_tmp = result.reason;
                     var msg = i18n.gettext('Operation fails');
-                    if (msg_tmp.indexOf('@') === 1) {
+                    if (msg_tmp && msg_tmp.indexOf('@') === 1) {
                         msg_tmp = msgs[msg_tmp[0]];
                         msg = msg + ":" + msg_tmp;
                     };
