@@ -14,7 +14,7 @@ script(type="text/template", id="edit_part_tmpl").
             div.control-group
                 label.control-label(for="fs")= gettext('FileSystem')
                 .controls
-                    select.span3#fs
+                    select.span3#fs(fs=part.fs)
                         option(value="ext4") ext4
                         option(value="swap") swap
                         -if (type == "gpt")

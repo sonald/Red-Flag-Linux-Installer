@@ -172,12 +172,21 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
 
             $('body').on('change', '.modal #fs', function (){
                 var $this = $(this);
+                var fstype = $(this).attr("fs");
                 var value = $this.val();
+                var $modal = $this.parents('.modal');
                 if (value.match(/swap/g) || value === "bios_grub") {
-                    $this.parents('.modal').find('#mp').attr("disabled","");
-                    $this.parents('.modal').find('#mp').val("");
+                    $modal.find('#mp').attr("disabled","");
+                    $modal.find('#mp').val("");
                 }else {
                     $this.parents('.modal').find('#mp').removeAttr("disabled");
+                }
+                if (fstype !== value) {
+                    $modal.find('input[type=checkbox]').attr("checked", "");
+                    $modal.find('input[type=checkbox]').attr("disabled", "");
+                }else if ($modal.find('#mp').val() === "") {
+                    $modal.find('input[type=checkbox]').removeAttr("disabled");
+                    $modal.find('input[type=checkbox]').removeAttr("checked");
                 }
             });
 
@@ -384,6 +393,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     });
                     if(part && part.ty !== "extended") {
                         part["dirty"] = true;
+                        part["label"] = path.slice(5).toUpperCase() + part.number;
                     };
                 });
 
@@ -398,6 +408,8 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                         return part_el.number === number;
                     });
                     part["dirty"] = true;
+                    part["label"] = ( el.mp && el.mp.length>1 ) ? el.mp.slice(1).toUpperCase() : path.slice(5).toUpperCase() + part.number;
+                    part["label"] = (el.fs === "swap") ? "SWAP" : part.label;
                     part["mountpoint"] = el.mp;
                     part["fs"] = el.fs || part["fs"];
                     if (el.mp === "/" && grubinstall === "/") {

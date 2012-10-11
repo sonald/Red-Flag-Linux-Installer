@@ -162,7 +162,7 @@ module.exports = (function(){
 
         var cmd = cmds[(part.fs.indexOf('swap') != -1?'swap':part.fs)] + part.path;
         if (!cmd) {
-            cmd = cmds[0];
+            cmd = part.label ? cmds[0]+" -L "+part["label"] : cmds[0];
         }
         system(cmd)( callback );
     }
