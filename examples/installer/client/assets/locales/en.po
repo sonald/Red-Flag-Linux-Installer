@@ -18,19 +18,23 @@ msgstr ""
 msgid "Partitions that will be formatted:"
 msgstr ""
 
-#: client/views/ad_part.jade:13
+#: client/views/ad_part.jade:2
+msgid "Click the partition to operate:"
+msgstr ""
+
+#: client/views/ad_part.jade:14
 msgid "Reset"
 msgstr ""
 
-#: client/views/ad_part.jade:16
+#: client/views/ad_part.jade:17
 msgid "Grub Install At:"
 msgstr ""
 
-#: client/views/ad_part.jade:22
+#: client/views/ad_part.jade:23
 msgid "Boot Partition"
 msgstr ""
 
-#: client/views/ad_part.jade:23
+#: client/views/ad_part.jade:24
 msgid "Not install"
 msgstr ""
 
@@ -95,13 +99,17 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr ""
 
-#: client/views/part.jade:41 client/views/edit_part.jade:40
+#: client/views/part.jade:41 client/views/edit_part.jade:45
 #: client/views/create_part.jade:38
 msgid "Close"
 msgstr ""
 
 #: client/views/part.jade:42
 msgid "Continue"
+msgstr ""
+
+#: client/views/easy_part.jade:3
+msgid "Select one partition: "
 msgstr ""
 
 #: client/views/finished.jade:4
@@ -144,15 +152,15 @@ msgstr ""
 msgid "MountPoint"
 msgstr ""
 
-#: client/views/edit_part.jade:37
+#: client/views/edit_part.jade:42
 msgid "Formatted"
 msgstr ""
 
-#: client/views/edit_part.jade:39
+#: client/views/edit_part.jade:44
 msgid "Remove"
 msgstr ""
 
-#: client/views/edit_part.jade:41 client/views/create_part.jade:39
+#: client/views/edit_part.jade:46 client/views/create_part.jade:39
 msgid "Submit"
 msgstr ""
 
@@ -237,6 +245,10 @@ msgstr ""
 
 #: client/assets/js/process.js:57
 msgid "Install"
+msgstr ""
+
+#: client/assets/js/process.js:187
+msgid "SORRY, INSTALLATION FAILS."
 msgstr ""
 
 #: client/assets/js/ad_part.js:189

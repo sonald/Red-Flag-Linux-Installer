@@ -5,10 +5,6 @@ script(type="text/template", id="edit_part_tmpl").
             h3= gettext('EditDisk')
         .modal-body.form-horizontal
             div.control-group
-                label.control-label(for="size")= gettext('Size')+'(GB)'
-                .controls
-                    input.disabled#size(disabled, placeholder=(part.size).toFixed(2))
-            div.control-group
                 label.control-label(for="parttype")= gettext('PartType')
                 .controls
                     select.span3#parttype(disabled)
@@ -29,7 +25,16 @@ script(type="text/template", id="edit_part_tmpl").
                     select.span3#mp(mp="")
                         option(value="")= ""
                         option(value="/")= "/"
+                        option(value="/boot")= "/boot"
+                        option(value="/home")= "/home"
                         option(value="/opt")= "/opt"
+                        option(value="/root")= "/root"
+                        option(value="/usr")= "/usr"
+                        option(value="/var")= "/var"
+            div.control-group
+                label.control-label(for="size")= gettext('Size')+'(GB)'
+                .controls
+                    input.disabled#size(disabled, placeholder=(part.size).toFixed(2))
             div.control-group
                 .controls
                     label.checkbox

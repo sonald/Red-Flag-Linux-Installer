@@ -184,6 +184,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     progressbar.update(respond.data);
 
                 } else if (respond.status === "failure") {
+                    respond.reason = respond.reason | i18n.gettext("SORRY, INSTALLATION FAILS.");
                     this.buildMessage(respond.reason, 'label-error');
                     this.app.buttons.get("close").enable();
                     this.app.buttons.get("close").bind('click', function() {
