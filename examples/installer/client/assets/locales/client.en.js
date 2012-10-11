@@ -109,6 +109,10 @@ define(["system"],
          null,
          ""
       ],
+      "The swap partition will be used if there is one.": [
+         null,
+         ""
+      ],
       "Congratulations~": [
          null,
          ""
@@ -133,10 +137,6 @@ define(["system"],
          null,
          ""
       ],
-      "Size": [
-         null,
-         ""
-      ],
       "PartType": [
          null,
          ""
@@ -146,6 +146,10 @@ define(["system"],
          ""
       ],
       "MountPoint": [
+         null,
+         ""
+      ],
+      "Size": [
          null,
          ""
       ],
@@ -162,6 +166,10 @@ define(["system"],
          ""
       ],
       "Select one disk: ": [
+         null,
+         ""
+      ],
+      "Recommend full disk installation in a virtual machine.": [
          null,
          ""
       ],

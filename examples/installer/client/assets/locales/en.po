@@ -54,18 +54,18 @@ msgstr ""
 msgid "disk"
 msgstr ""
 
-#: client/views/part.jade:18 client/views/edit_part.jade:15
-#: client/views/create_part.jade:18 client/views/create_part.jade:20
+#: client/views/part.jade:18 client/views/edit_part.jade:11
+#: client/views/create_part.jade:14 client/views/create_part.jade:16
 msgid "primary"
 msgstr ""
 
-#: client/views/part.jade:20 client/views/edit_part.jade:16
-#: client/views/create_part.jade:16
+#: client/views/part.jade:20 client/views/edit_part.jade:12
+#: client/views/create_part.jade:12
 msgid "logical"
 msgstr ""
 
-#: client/views/part.jade:22 client/views/edit_part.jade:17
-#: client/views/create_part.jade:21
+#: client/views/part.jade:22 client/views/edit_part.jade:13
+#: client/views/create_part.jade:17
 msgid "extended"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgid ""
 msgstr ""
 
 #: client/views/part.jade:41 client/views/edit_part.jade:45
-#: client/views/create_part.jade:38
+#: client/views/create_part.jade:48
 msgid "Close"
 msgstr ""
 
@@ -110,6 +110,10 @@ msgstr ""
 
 #: client/views/easy_part.jade:3
 msgid "Select one partition: "
+msgstr ""
+
+#: client/views/easy_part.jade:12
+msgid "The swap partition will be used if there is one."
 msgstr ""
 
 #: client/views/finished.jade:4
@@ -137,22 +141,22 @@ msgid "EditDisk"
 msgstr ""
 
 #: client/views/edit_part.jade:8 client/views/create_part.jade:8
-msgid "Size"
-msgstr ""
-
-#: client/views/edit_part.jade:12 client/views/create_part.jade:12
 msgid "PartType"
 msgstr ""
 
-#: client/views/edit_part.jade:19 client/views/create_part.jade:23
+#: client/views/edit_part.jade:15 client/views/create_part.jade:19
 msgid "FileSystem"
 msgstr ""
 
-#: client/views/edit_part.jade:27 client/views/create_part.jade:31
+#: client/views/edit_part.jade:23 client/views/create_part.jade:27
 msgid "MountPoint"
 msgstr ""
 
-#: client/views/edit_part.jade:42
+#: client/views/edit_part.jade:35 client/views/create_part.jade:39
+msgid "Size"
+msgstr ""
+
+#: client/views/edit_part.jade:42 client/views/create_part.jade:46
 msgid "Formatted"
 msgstr ""
 
@@ -160,12 +164,16 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: client/views/edit_part.jade:46 client/views/create_part.jade:39
+#: client/views/edit_part.jade:46 client/views/create_part.jade:49
 msgid "Submit"
 msgstr ""
 
 #: client/views/fd_part.jade:3
 msgid "Select one disk: "
+msgstr ""
+
+#: client/views/fd_part.jade:11
+msgid "Recommend full disk installation in a virtual machine."
 msgstr ""
 
 #: client/views/create_part.jade:5
@@ -251,19 +259,19 @@ msgstr ""
 msgid "SORRY, INSTALLATION FAILS."
 msgstr ""
 
-#: client/assets/js/ad_part.js:189
+#: client/assets/js/ad_part.js:190
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:343
+#: client/assets/js/ad_part.js:344
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:346
+#: client/assets/js/ad_part.js:347
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:358
+#: client/assets/js/ad_part.js:359
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"

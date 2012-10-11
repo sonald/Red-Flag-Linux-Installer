@@ -8,5 +8,6 @@ script(type="text/template", id="fulldisk_part_tmpl").
                     span= disk["path"]
                 li
                     span= disk["size"].toFixed(2) + disk["unit"]
+        p= gettext('Recommend full disk installation in a virtual machine.')
     .warninfo
         br

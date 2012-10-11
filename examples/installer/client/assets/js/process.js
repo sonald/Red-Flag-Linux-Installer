@@ -144,6 +144,9 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
             window.apis.services.partition.commit(function(result) {
                 if(result.status === "failure"){
+                    that.app.myalert(i18n.gettext("SORRY,INSTALLATION FAILS."), function () {
+                        window.installer && window.installer.closeInstaller();
+                    })
                     console.log(result.reason);
                 } else if (result.status === "success") {
                     that.onInstall();
@@ -188,6 +191,9 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     this.buildMessage(respond.reason, 'label-error');
                     this.app.buttons.get("close").enable();
                     this.app.buttons.get("close").bind('click', function() {
+                        window.installer && window.installer.closeInstaller();
+                    });
+                    this.app.myalert(i18n.gettext("SORRY, INSTALLATION FAILS."), function () {
                         window.installer && window.installer.closeInstaller();
                     });
                     clearTimeout(t);
