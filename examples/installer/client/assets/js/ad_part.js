@@ -383,7 +383,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             if (format_parts.length > 0) {
                 format_parts.join(',');
                 var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
-                $('#myconfirm').find('.modal-body').append(formatted);
+                $('#myconfirm').find('.modal-body p.content').after(formatted);
             }
 
             $('#myconfirm').modal();
