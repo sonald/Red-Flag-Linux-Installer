@@ -43,6 +43,7 @@ class Window(QWidget):
         self.view = QWebView(self)
         self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
         QObject.connect(self.view.page().mainFrame(),SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
+        self.setWindowIcon(QIcon("/usr/share/icons/installer-logo"))
 
         installer = Installer()
         self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
