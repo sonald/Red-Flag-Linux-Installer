@@ -4,11 +4,17 @@ script(type="text/template", id="bread_li_tmpl").
         .myicon-container
             .breadcrumb-myicon
 
-script(type="text/template", id="warning_tmpl").
+script(type="text/template", id="warning_mp_tmpl").
     .alert
         button.close(type="button", data-dismiss="alert") x
         strong= gettext('Warning!')
         = gettext('The mount point has been selected.')
+
+script(type="text/template", id="warning_size_tmpl").
+    .alert
+        button.close(type="button", data-dismiss="alert") x
+        strong= gettext('Warning!')
+        = gettext('Please enter the number!')
 
 script(type="text/template", id="format_tmpl").
     p.format

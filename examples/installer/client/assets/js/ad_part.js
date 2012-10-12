@@ -145,7 +145,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 $modal.find('.alert').remove();
 
                 if (_.include(that.record.mp, value) && mp !== value) {
-                    var warning = (jade.compile($('#warning_tmpl')[0].innerHTML)) (that.locals);
+                    var warning = (jade.compile($('#warning_mp_tmpl')[0].innerHTML)) (that.locals);
                     $modal.find('.control-group').last().after(warning);
                     $(this).val(mp);
                 }
@@ -191,20 +191,27 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             });
 
+            $('body').on('keyup', '.modal #size', function () {
+                var str = $(this).val();
+                var num = Number(str);
+                var size = $(this).attr('psize');
+                var $modal = $(this).parents('.modal');
+                $modal.find('.alert').remove();
+                if (!num && num !== 0 ) {
+                    var warning = (jade.compile($('#warning_size_tmpl')[0].innerHTML)) (that.locals);
+                    $modal.find('.control-group').last().after(warning);
+                    $(this).val(size);
+                }
+            });
+
             $('body').on('click','.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
 
                 size = Number($modal.find("#size").attr("value"));
-                if ( size===NaN && size < 0.001 ) {
-                    that.myalert(i18n.gettext('Please enter the number!'));
-                    return;
-                }else {
-                    size = Number($modal.find("#size").attr("value"));
-                    size = Number(size.toFixed(2));
-                    start = Number($modal.find("#size").attr("start"));
-                    end = Number($modal.find("#size").attr("end"));
-                };
+                size = Number(size.toFixed(2));
+                start = Number($modal.find("#size").attr("start"));
+                end = Number($modal.find("#size").attr("end"));
 
                 path = $(this).attr("path");
                 parttype = $modal.find('#parttype').val();
