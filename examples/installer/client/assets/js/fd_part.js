@@ -63,6 +63,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                     disk.table = _.map(disk.table, function (el) {
                         if (el.number > 0 && el.fs !== "bios_grub") {
                             el["dirty"]=true;
+                            el["label"]=dpath.slice(5).toUpperCase()+el.number;
                         }
                         return el;
                     });
