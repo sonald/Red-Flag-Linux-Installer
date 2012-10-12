@@ -97,6 +97,10 @@ define(["system"],
          null,
          ""
       ],
+      "Do not mount the partitions selected.": [
+         null,
+         ""
+      ],
       "Close": [
          null,
          ""

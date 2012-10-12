@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-11 02:24+0800",
+         "POT-Creation-Date": " 2012-10-12 08:44+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -111,6 +111,10 @@ define(["system"],
       "You have completed all the configurations and it is about to install the system. The partition selected will be formatted.": [
          null,
          "已完成所有配置，即将开始安装系统，且你所选择的分区即将格式化。"
+      ],
+      "Do not mount the partitions selected.": [
+         null,
+         "请不要挂载你所选择的分区。"
       ],
       "Close": [
          null,

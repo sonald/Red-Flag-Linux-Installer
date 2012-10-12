@@ -99,12 +99,16 @@ msgid ""
 "system. The partition selected will be formatted."
 msgstr ""
 
-#: client/views/part.jade:41 client/views/edit_part.jade:45
+#: client/views/part.jade:41
+msgid "Do not mount the partitions selected."
+msgstr ""
+
+#: client/views/part.jade:43 client/views/edit_part.jade:45
 #: client/views/create_part.jade:48
 msgid "Close"
 msgstr ""
 
-#: client/views/part.jade:42
+#: client/views/part.jade:44
 msgid "Continue"
 msgstr ""
 
@@ -255,23 +259,23 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/process.js:187
+#: client/assets/js/process.js:190 client/assets/js/process.js:196
 msgid "SORRY, INSTALLATION FAILS."
 msgstr ""
 
-#: client/assets/js/ad_part.js:190
+#: client/assets/js/ad_part.js:200
 msgid "Please enter the number!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:344
+#: client/assets/js/ad_part.js:359
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:347
+#: client/assets/js/ad_part.js:362
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:359
+#: client/assets/js/ad_part.js:374
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"
