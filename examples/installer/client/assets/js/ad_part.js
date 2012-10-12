@@ -313,9 +313,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             var disk = _.find(disks, function (d) {
                 return d.path === path;
             });
+            var part = _.find(disk.table, function (p) {
+                return p.number === number;
+            })
             var type = disk.type;
 
-            if (method === "add") {
+            if (method === "add" && part.ty !== "extended") {
                 //TODO ty==extended
                 that.record.dirty.push({"path":path,"number":number, "new":true});
                 if (that.mp_tag !== "") {
