@@ -66,7 +66,7 @@ def fdhandler(dev,mem, disks, sysflag):
         if find_swap(dev, disks) is False:
             number = number + 1
             size = parted.sizeToSectors(mem,'B',512)
-            disk = rfparted.mkpart(dev, disk, parttype, start, end, 'linux-swap(v1)')
+            disk = rfparted.mkpart(dev, disk, parttype, start, size, end, 'linux-swap(v1)')
             start = start + size  + 1
         if Dsize > 30:
             number = number + 1
