@@ -38,7 +38,7 @@ script(type="text/template", id="create_part_tmpl").
             div.control-group
                 label.control-label(for="size")= gettext('Size')+'(GB)'
                 .controls
-                    input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end)
+                    input.focused#size(value=(part.size).toFixed(2), start=part.start, end=part.end, psize=(part.size).toFixed(2))
             div.control-group
                 .controls
                     label.checkbox
