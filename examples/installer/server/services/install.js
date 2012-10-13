@@ -185,6 +185,26 @@ module.exports = (function(){
         return mounts;
     }
 
+    function sortByMnt(part1, part2) {
+        var r = /\/[^\/]+/g;
+        var order1 = 0, order2 = 0;
+        var mnt1 = part1.mountpoint, mnt2 = part2.mountpoint;
+
+        if (mnt1 && mnt2) {
+            while (r.exec(mnt1)) {
+                ++order1;
+            }
+
+            while (r.exec(mnt2)) {
+                ++order2;
+            }
+
+            return order1 > order2 ? 1 : (order1 < order2 ? -1: 0);
+        } else {
+            return 0;
+        }
+
+    }
     //FIXME: recursive mounting is evil and hard
     // mount /dev/sdb1 tmproot/
     // mkdir tmproot/usr
@@ -193,7 +213,7 @@ module.exports = (function(){
     function mountNeededPartitions(disks, destdir, callback) {
         var mounts = enumMountPoints(disks);
 
-        async.forEachSeries(mounts.sort(),
+        async.forEachSeries(mounts.sort(sortByMnt),
             function(mnt, cb) {
                 var mntdir = pathlib.join(destdir, mnt.mountpoint);
                 system('mkdir -p ' + mntdir)(function(err) {
@@ -206,7 +226,7 @@ module.exports = (function(){
     function unmountNeededPartitions(disks, callback) {
         var mounts = enumMountPoints(disks);
 
-        async.forEachSeries(mounts.sort().reverse(),
+        async.forEachSeries(mounts.sort(sortByMnt).reverse(),
             function(mnt, cb) {
                 system('umount ' + mnt.path)(cb);
             }, callback);
@@ -235,23 +255,23 @@ module.exports = (function(){
     //2. and record install device ( where / roots),
     //3. flag all swap partitions dirty (according to design.md, we need to
     //   clear and mount all swaps)
-    function preprocessOptions(opts) {
-        opts.disks.map(function(disk) {
-            disk.table.map(function(part) {
-                part.path = part.path || disk.path + part.number;
+function preprocessOptions(opts) {
+    opts.disks.map(function(disk) {
+        disk.table.map(function(part) {
+            part.path = part.path || disk.path + part.number;
 
-                if (part.mountpoint === '/') {
-                    opts.installdevice = disk;
-                }
+            if (part.mountpoint === '/') {
+                opts.installdevice = disk;
+            }
 
-                if (part.fs.toLowerCase().indexOf('swap') > -1) {
-                    part.dirty = true;
-                }
-            });
+            if (part.fs.toLowerCase().indexOf('swap') > -1) {
+                part.dirty = true;
+            }
         });
+    });
 
-        return opts;
-    }
+    return opts;
+}
 
     // install routines
 
@@ -310,7 +330,7 @@ module.exports = (function(){
 
             function(base_mnt, newroot_mnt, total_size, cb) {
                 var helper = sprintf('%1 %2 %3', pathlib.join(__dirname, 'copy_base_system.sh'),
-                                     base_mnt, newroot_mnt);
+                   base_mnt, newroot_mnt);
                 var child = exec(helper);
 
                 var percentage = 0;
@@ -376,14 +396,14 @@ module.exports = (function(){
             function(newroot_mnt, cb) {
                 system('rmdir ' + newroot_mnt)(cb);
             }
-        ],
-        function(err) {
-            if (err) {
-                debug(err);
-                watcher({status: 'failure', reason: errors['ECOPYBASE']});
-            }
-            next(err);
-        });
+            ],
+            function(err) {
+                if (err) {
+                    debug(err);
+                    watcher({status: 'failure', reason: errors['ECOPYBASE']});
+                }
+                next(err);
+            });
     } //~ copyBaseSystem
 
     function postInstall(opts, watcher, next) {
@@ -524,13 +544,13 @@ module.exports = (function(){
 
         async.waterfall(
             [
-                system("mkdir -p " + root_dir),
-                system("mount " + opts.newroot + " " + root_dir),
-                function(err_cb) {
-                    generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
-                },
-                generatePostscript,
-                system("mount --bind /dev " + root_dir + "/dev"),
+            system("mkdir -p " + root_dir),
+            system("mount " + opts.newroot + " " + root_dir),
+            function(err_cb) {
+                generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
+            },
+            generatePostscript,
+            system("mount --bind /dev " + root_dir + "/dev"),
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
@@ -540,16 +560,16 @@ module.exports = (function(){
                 system("rm -rf " + root_dir + "/postscript.sh"),
                 system("umount " + root_dir),
                 system("bash /etc/postjobs &> /tmp/postjobs.log")
-            ],
+                ],
 
-            function(err) {
-                if (err) {
-                    watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
-                    console.error('postInstall failed: ', err);
-                }
+                function(err) {
+                    if (err) {
+                        watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
+                        console.error('postInstall failed: ', err);
+                    }
 
-                next(err);
-            });
+                    next(err);
+                });
     } // ~ postInstall
 
 
@@ -583,16 +603,16 @@ module.exports = (function(){
 
                     // check if usb or disk
                     exec('udisks --show-info ' + iso_root_dev, {encoding: 'utf8'},
-                       function(err, stdout) {
-                            var mode;
-                            var lines = stdout.split('\n');
-                            if (lines.some(line_test)) {
-                                mode = 'usb';
-                            } else {
-                                mode = 'hd';
-                            }
-                            reporter({"mode": mode, "device": iso_root_dev});
-                        });
+                     function(err, stdout) {
+                        var mode;
+                        var lines = stdout.split('\n');
+                        if (lines.some(line_test)) {
+                            mode = 'usb';
+                        } else {
+                            mode = 'hd';
+                        }
+                        reporter({"mode": mode, "device": iso_root_dev});
+                    });
                 }
 
                 function hdmap(num) {
@@ -601,7 +621,7 @@ module.exports = (function(){
 
                 function kern_cmdline_probe() {
                     var cmd = 'awk \'BEGIN{RS=" "; FS="=";} ' +
-                        '$1 == "iso" {print $2}\' /proc/cmdline';
+                    '$1 == "iso" {print $2}\' /proc/cmdline';
 
                     exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
                         var matches = /\w+(\d+),\w+(\d+):/.exec(stdout);
@@ -628,14 +648,14 @@ module.exports = (function(){
                     reporter(res);
                 }
             });
-        },
+},
 
         // [ '/dev/sda', '/dev/sdb' ]
         /**
          * @return {JSON} status of checking
          * @arg devices
          */
-        minimalSufficient: function(devices, reporter) {
+         minimalSufficient: function(devices, reporter) {
             function sizeInM(size) {
                 return size / Math.pow(10, 6);
             }
@@ -700,7 +720,7 @@ module.exports = (function(){
             ]
          }
          */
-        packAndUnpack: function(options, reporter) {
+         packAndUnpack: function(options, reporter) {
             options = preprocessOptions( options );
             options.newroot = options.newroot || guessNewRoot(options.disks);
             debug(options);
@@ -727,16 +747,16 @@ module.exports = (function(){
                         next( err, {status: 'success'} );
                     });
                 }
-            ], function(err, result) {
-                if (err) {
-                    debug(err);
-                    reporter(err);
-                } else {
-                    reporter( result );
-                }
-                console.log( 'install done' );
-            });
-        },
+                ], function(err, result) {
+                    if (err) {
+                        debug(err);
+                        reporter(err);
+                    } else {
+                        reporter( result );
+                    }
+                    console.log( 'install done' );
+                });
+},
 
         // check if external images are exists, if does, link into assets/
         loadExternalImages: function(reporter) {
