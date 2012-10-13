@@ -545,7 +545,12 @@ function preprocessOptions(opts) {
         async.waterfall(
             [
             system("mkdir -p " + root_dir),
-            system("mount " + opts.newroot + " " + root_dir),
+            function(err_cb) {
+                mountNeededPartitions(opts.disks, root_dir, function(err) {
+                    err_cb(err);
+                });
+            },
+            // system("mount " + opts.newroot + " " + root_dir),
             function(err_cb) {
                 generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
             },
@@ -558,7 +563,12 @@ function preprocessOptions(opts) {
                 system("umount " + root_dir + "/dev"),
                 // delete postscript
                 system("rm -rf " + root_dir + "/postscript.sh"),
-                system("umount " + root_dir),
+                function(err_cb) {
+                    unmountNeededPartitions(opts.disks, function(err) {
+                        err_cb(err);
+                    });
+                },
+                // system("umount " + root_dir),
                 system("bash /etc/postjobs &> /tmp/postjobs.log")
                 ],
 
