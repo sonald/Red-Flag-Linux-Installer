@@ -423,7 +423,6 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     var part = _.find(disk.table, function (part_el) {
                         return part_el.number === number;
                     });
-                    part["dirty"] = true;
                     part["label"] = ( el.mp && el.mp.length>1 ) ? el.mp.slice(1).toUpperCase() : path.slice(5).toUpperCase() + part.number;
                     part["label"] = (el.fs === "swap" || el.fs+part.fs === "swap") ? "SWAP" : part.label;
                     part["mountpoint"] = el.mp;
