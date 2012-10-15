@@ -4,7 +4,7 @@ define(["system"],
       "": {
          "Project-Id-Version": " PACKAGE VERSION",
          "Report-Msgid-Bugs-To": " ",
-         "POT-Creation-Date": " 2012-10-12 08:44+0800",
+         "POT-Creation-Date": " 2012-10-15 18:03+0800",
          "PO-Revision-Date": " YEAR-MO-DA HO:MI+ZONE",
          "Last-Translator": " FULL NAME <EMAIL@ADDRESS>",
          "Language-Team": " LANGUAGE <LL@li.org>",
@@ -16,46 +16,6 @@ define(["system"],
          "X-Language": " zh_CN",
          "X-Source-Language": " C"
       },
-      "Free": [
-         null,
-         "空闲"
-      ],
-      "Agree": [
-         null,
-         "同意"
-      ],
-      "Warning!": [
-         null,
-         "提示："
-      ],
-      "The mount point has been selected.": [
-         null,
-         "此挂载点已经被选择。"
-      ],
-      "Partitions that will be formatted:": [
-         null,
-         "将会被格式化的分区有："
-      ],
-      "Click the partition to operate:": [
-         null,
-         "请点击分区进行操作："
-      ],
-      "Reset": [
-         null,
-         "重置"
-      ],
-      "Grub Install At:": [
-         null,
-         "安装grub位置："
-      ],
-      "Boot Partition": [
-         null,
-         "启动分区"
-      ],
-      "Not install": [
-         null,
-         "不安装"
-      ],
       "Easy": [
          null,
          "简单"
@@ -124,37 +84,9 @@ define(["system"],
          null,
          "继续"
       ],
-      "Select one partition: ": [
+      "CreateDisk": [
          null,
-         "请选择一个分区。"
-      ],
-      "The swap partition will be used if there is one.": [
-         null,
-         "简易安装会自动挂载已经存在的swap分区。"
-      ],
-      "Congratulations~": [
-         null,
-         "恭喜~"
-      ],
-      "You have completed installation. Reboot for more configurations.": [
-         null,
-         "安装成功。重启计算机进行进一步配置。"
-      ],
-      "Reboot Later": [
-         null,
-         "稍后重启"
-      ],
-      "Reboot": [
-         null,
-         "重启"
-      ],
-      "Shutdown": [
-         null,
-         "关机"
-      ],
-      "EditDisk": [
-         null,
-         "编辑磁盘"
+         "创建磁盘"
       ],
       "PartType": [
          null,
@@ -176,13 +108,17 @@ define(["system"],
          null,
          "格式化"
       ],
-      "Remove": [
-         null,
-         "删除"
-      ],
       "Submit": [
          null,
          "提交"
+      ],
+      "Select one partition: ": [
+         null,
+         "请选择一个分区。"
+      ],
+      "The swap partition will be used if there is one.": [
+         null,
+         "简易安装会自动挂载已经存在的swap分区。"
       ],
       "Select one disk: ": [
          null,
@@ -192,9 +128,77 @@ define(["system"],
          null,
          "推荐在虚拟机中使用全磁盘安装。"
       ],
-      "CreateDisk": [
+      "Click the partition to operate:": [
          null,
-         "创建磁盘"
+         "请点击分区进行操作："
+      ],
+      "Reset": [
+         null,
+         "重置"
+      ],
+      "Grub Install At:": [
+         null,
+         "安装grub位置："
+      ],
+      "Boot Partition": [
+         null,
+         "启动分区"
+      ],
+      "Not install": [
+         null,
+         "不安装"
+      ],
+      "EditDisk": [
+         null,
+         "编辑磁盘"
+      ],
+      "Remove": [
+         null,
+         "删除"
+      ],
+      "Agree": [
+         null,
+         "同意"
+      ],
+      "Free": [
+         null,
+         "空闲"
+      ],
+      "Congratulations~": [
+         null,
+         "恭喜~"
+      ],
+      "You have completed installation. Reboot for more configurations.": [
+         null,
+         "安装成功。重启计算机进行进一步配置。"
+      ],
+      "Reboot Later": [
+         null,
+         "稍后重启"
+      ],
+      "Reboot": [
+         null,
+         "重启"
+      ],
+      "Shutdown": [
+         null,
+         "关机"
+      ],
+      "Warning!": [
+         null,
+         "提示："
+      ],
+      "The mount point has been selected.": [
+         null,
+         "此挂载点已经被选择。"
+      ],
+      "Please enter the number!": [
+         null,
+         "请输入数字！"
+      ],
+      "Partitions that will be formatted:": [
+         null,
+         "将会被格式化的分区有："
       ],
       "Exit": [
          null,
@@ -212,10 +216,6 @@ define(["system"],
          null,
          "选择一块至少6GB大小的磁盘。"
       ],
-      "Partition": [
-         null,
-         "分区"
-      ],
       "Select a partition of at least 6 GB.": [
          null,
          "选择一个至少6GB大小的分区。"
@@ -227,6 +227,18 @@ define(["system"],
       "Select a partition of at least 6 GB": [
          null,
          "选择一个至少6GB大小的分区"
+      ],
+      "Too many primary partitions.": [
+         null,
+         "只能建4个主分区"
+      ],
+      "Too many extended partitions.": [
+         null,
+         "只能建一个扩展分区"
+      ],
+      "Operation fails": [
+         null,
+         "操作失败"
       ],
       "Welcome": [
          null,
@@ -248,21 +260,37 @@ define(["system"],
          null,
          "没有磁盘可以用来安装。"
       ],
-      "Too many primary partitions.": [
+      "Partition": [
          null,
-         "只能建4个主分区"
-      ],
-      "Too many extended partitions.": [
-         null,
-         "只能建一个扩展分区"
-      ],
-      "Operation fails": [
-         null,
-         "操作失败"
+         "分区"
       ],
       "Complete": [
          null,
          "完成"
+      ],
+      "no install destination specified": [
+         null,
+         "没有指定根分区"
+      ],
+      "copy base system failed": [
+         null,
+         "复制系统出错"
+      ],
+      "postscript setup failed": [
+         null,
+         "安装配置失败"
+      ],
+      "formatting partitions": [
+         null,
+         "只能建一个扩展分区"
+      ],
+      "start copying data...": [
+         null,
+         "开始复制数据"
+      ],
+      "do post install processing": [
+         null,
+         "正在进行系统配置"
       ],
       "Install": [
          null,
@@ -271,10 +299,6 @@ define(["system"],
       "SORRY, INSTALLATION FAILS.": [
          null,
          "安装失败。"
-      ],
-      "Please enter the number!": [
-         null,
-         "请输入数字！"
       ],
       "You need specify a root partition.": [
          null,
@@ -288,43 +312,55 @@ define(["system"],
          null,
          "<p class='warning'>GPT磁盘没有BIOS_GRUB分区，安装或者启动系统可能失败。</p>"
       ],
-      "#~ \"Disk space does not meet the minimum requirements or memory is less than \"#~ \"1 GB.You may fail to install.\"": [
-         null,
-         "磁盘大小不足或者内存小于1GB，安装可能失败。"
-      ],
-      "Disagree": [
-         null,
-         "不同意"
-      ],
-      "install": [
-         null,
-         "安装"
-      ],
-      "Congratulations~You have completed installation.": [
-         null,
-         "恭喜，安装成功。"
-      ],
-      "Finished": [
-         null,
-         "完成安装"
-      ],
       "Username": [
          null,
          "用户名"
+      ],
+      "Only letters, numbers, and underscores.": [
+         null,
+         "<b>只允许填入小写字母、数字和_</b>"
       ],
       "Hostname": [
          null,
          "主机名"
       ],
+      "disagree": [
+         null,
+         "不同意"
+      ],
+      "The selected will be formatted. Press ok to continue": [
+         null,
+         "选择的分区将被格式化，确定请继续"
+      ],
+      "Set": [
+         null,
+         "设置"
+      ],
+      "#~ \"Some disk size does not meet the minimum requirements or memory is less \"#~ \"than 1 GB\"": [
+         null,
+         "磁盘大小不足或者内存小于1GB，安装可能失败。"
+      ],
       "Part": [
          null,
          "分区"
+      ],
+      "install": [
+         null,
+         "安装"
+      ],
+      "close": [
+         null,
+         "关闭"
+      ],
+      "Congratulations~You have finished installing the system.": [
+         null,
+         "恭喜，安装成功。"
       ],
       "<b>This field is required. </b>": [
          null,
          "<b>请填写此项</b>"
       ],
-      "<b>Only lower letters, numbers, and underscores.</b>": [
+      "<b>Only letters, numbers, and underscores.</b>": [
          null,
          "<b>只允许填入小写字母、数字和_</b>"
       ],
@@ -336,13 +372,17 @@ define(["system"],
          null,
          "<b>长度最少为%d个字符</b>"
       ],
+      "<b>Please enter the same content again.</b>": [
+         null,
+         "<b>长度不能超过%d个字母</b>"
+      ],
+      "Finished": [
+         null,
+         "完成安装"
+      ],
       "<b>Incorrect format.</b>": [
          null,
          "<b>用户名格式不正确。</b>"
-      ],
-      "Set": [
-         null,
-         "设置"
       ],
       "Usernames must start with a lower case letter or an underscore,": [
          null,
@@ -355,14 +395,6 @@ define(["system"],
       "#~ \"They can end with a dollar sign and only be up to 32 characters long.\"": [
          null,
          "可以以美元符号结束。用户名不能超过 32 个字符长。"
-      ],
-      "close": [
-         null,
-         "关闭"
-      ],
-      "The selected will be formatted. Press ok to continue": [
-         null,
-         "选择的分区将被格式化，确定请继续"
       ],
       "System Error!": [
          null,

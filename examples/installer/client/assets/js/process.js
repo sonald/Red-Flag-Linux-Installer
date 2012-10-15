@@ -20,6 +20,14 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
     'use strict';
 
     var pageCache;
+    var install_msgs = {
+        ENOROOT: i18n.gettext('no install destination specified'),
+        ECOPYBASE: i18n.gettext('copy base system failed'),
+        EPOSTSCRIPT: i18n.gettext('postscript setup failed'),
+        FORMAT: i18n.gettext('formatting partitions'),
+        COPY: i18n.gettext('start copying data...'),
+        POST: i18n.gettext('do post install processing'),
+    }
     function mock_packAndUnpack(options, callback) {
         var msgs = [
             {status: 'formatting /dev/sdb1'},
@@ -129,7 +137,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.$logs = $('#install-log');
 
             window.apis.services.install.loadExternalImages(function(res) {
-                self.setupPresentation(res.status);
+                self.setupPresentation(install_msgs[res.status]);
             });
 
             progressbar.init($('#install-progress'));
@@ -188,7 +196,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
                 } else if (respond.status === "failure") {
                     respond.reason = respond.reason | i18n.gettext("SORRY, INSTALLATION FAILS.");
-                    this.buildMessage(respond.reason, 'label-error');
+                    this.buildMessage(install_msgs[respond.reason], 'label-error');
                     this.app.buttons.get("close").enable();
                     this.app.buttons.get("close").bind('click', function() {
                         window.installer && window.installer.closeInstaller();
@@ -201,7 +209,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                     clearTimeout(t);
                     this.app.forward();
                 } else {
-                    this.buildMessage(respond.status, 'label-info');
+                    this.buildMessage(install_msgs[respond.status], 'label-info');
                 }
             };
         }()),

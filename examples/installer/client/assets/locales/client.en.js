@@ -1,46 +1,6 @@
 define(["system"], 
 {
    "en": {
-      "Free": [
-         null,
-         ""
-      ],
-      "Agree": [
-         null,
-         ""
-      ],
-      "Warning!": [
-         null,
-         ""
-      ],
-      "The mount point has been selected.": [
-         null,
-         ""
-      ],
-      "Partitions that will be formatted:": [
-         null,
-         ""
-      ],
-      "Click the partition to operate:": [
-         null,
-         ""
-      ],
-      "Reset": [
-         null,
-         ""
-      ],
-      "Grub Install At:": [
-         null,
-         ""
-      ],
-      "Boot Partition": [
-         null,
-         ""
-      ],
-      "Not install": [
-         null,
-         ""
-      ],
       "Easy": [
          null,
          ""
@@ -109,35 +69,7 @@ define(["system"],
          null,
          ""
       ],
-      "Select one partition: ": [
-         null,
-         ""
-      ],
-      "The swap partition will be used if there is one.": [
-         null,
-         ""
-      ],
-      "Congratulations~": [
-         null,
-         ""
-      ],
-      "You have completed installation. Reboot for more configurations.": [
-         null,
-         ""
-      ],
-      "Reboot Later": [
-         null,
-         ""
-      ],
-      "Reboot": [
-         null,
-         ""
-      ],
-      "Shutdown": [
-         null,
-         ""
-      ],
-      "EditDisk": [
+      "CreateDisk": [
          null,
          ""
       ],
@@ -161,11 +93,15 @@ define(["system"],
          null,
          ""
       ],
-      "Remove": [
+      "Submit": [
          null,
          ""
       ],
-      "Submit": [
+      "Select one partition: ": [
+         null,
+         ""
+      ],
+      "The swap partition will be used if there is one.": [
          null,
          ""
       ],
@@ -177,7 +113,75 @@ define(["system"],
          null,
          ""
       ],
-      "CreateDisk": [
+      "Click the partition to operate:": [
+         null,
+         ""
+      ],
+      "Reset": [
+         null,
+         ""
+      ],
+      "Grub Install At:": [
+         null,
+         ""
+      ],
+      "Boot Partition": [
+         null,
+         ""
+      ],
+      "Not install": [
+         null,
+         ""
+      ],
+      "EditDisk": [
+         null,
+         ""
+      ],
+      "Remove": [
+         null,
+         ""
+      ],
+      "Agree": [
+         null,
+         ""
+      ],
+      "Free": [
+         null,
+         ""
+      ],
+      "Congratulations~": [
+         null,
+         ""
+      ],
+      "You have completed installation. Reboot for more configurations.": [
+         null,
+         ""
+      ],
+      "Reboot Later": [
+         null,
+         ""
+      ],
+      "Reboot": [
+         null,
+         ""
+      ],
+      "Shutdown": [
+         null,
+         ""
+      ],
+      "Warning!": [
+         null,
+         ""
+      ],
+      "The mount point has been selected.": [
+         null,
+         ""
+      ],
+      "Please enter the number!": [
+         null,
+         ""
+      ],
+      "Partitions that will be formatted:": [
          null,
          ""
       ],
@@ -197,10 +201,6 @@ define(["system"],
          null,
          ""
       ],
-      "Partition": [
-         null,
-         ""
-      ],
       "Select a partition of at least 6 GB.": [
          null,
          ""
@@ -210,6 +210,18 @@ define(["system"],
          ""
       ],
       "Select a partition of at least 6 GB": [
+         null,
+         ""
+      ],
+      "Too many primary partitions.": [
+         null,
+         ""
+      ],
+      "Too many extended partitions.": [
+         null,
+         ""
+      ],
+      "Operation fails": [
          null,
          ""
       ],
@@ -233,19 +245,35 @@ define(["system"],
          null,
          ""
       ],
-      "Too many primary partitions.": [
-         null,
-         ""
-      ],
-      "Too many extended partitions.": [
-         null,
-         ""
-      ],
-      "Operation fails": [
+      "Partition": [
          null,
          ""
       ],
       "Complete": [
+         null,
+         ""
+      ],
+      "no install destination specified": [
+         null,
+         ""
+      ],
+      "copy base system failed": [
+         null,
+         ""
+      ],
+      "postscript setup failed": [
+         null,
+         ""
+      ],
+      "formatting partitions": [
+         null,
+         ""
+      ],
+      "start copying data...": [
+         null,
+         ""
+      ],
+      "do post install processing": [
          null,
          ""
       ],
@@ -254,10 +282,6 @@ define(["system"],
          ""
       ],
       "SORRY, INSTALLATION FAILS.": [
-         null,
-         ""
-      ],
-      "Please enter the number!": [
          null,
          ""
       ],
