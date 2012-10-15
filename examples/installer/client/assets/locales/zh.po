@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-15 18:03+0800\n"
+"POT-Creation-Date: 2012-10-15 19:13+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -318,6 +318,11 @@ msgstr "正在进行系统配置"
 #: client/assets/js/process.js:65
 msgid "Install"
 msgstr "安装"
+
+#: client/assets/js/process.js:194
+#, fuzzy
+msgid "install progress: "
+msgstr "安装进度："
 
 #: client/assets/js/process.js:198 client/assets/js/process.js:204
 msgid "SORRY, INSTALLATION FAILS."

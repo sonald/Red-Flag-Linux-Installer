@@ -287,6 +287,10 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
+#: client/assets/js/process.js:194
+msgid "install progress: "
+msgstr ""
+
 #: client/assets/js/process.js:198 client/assets/js/process.js:204
 msgid "SORRY, INSTALLATION FAILS."
 msgstr ""

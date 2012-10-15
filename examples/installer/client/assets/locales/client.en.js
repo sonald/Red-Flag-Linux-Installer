@@ -281,6 +281,10 @@ define(["system"],
          null,
          ""
       ],
+      "install progress: ": [
+         null,
+         ""
+      ],
       "SORRY, INSTALLATION FAILS.": [
          null,
          ""

@@ -191,7 +191,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                         return;
                     progress = percentage;
 
-                    this.buildMessage('install progress: ' + respond.data + '%', '');
+                    this.buildMessage(i18n.gettext('install progress: ') + respond.data + '%', '');
                     progressbar.update(respond.data);
 
                 } else if (respond.status === "failure") {
