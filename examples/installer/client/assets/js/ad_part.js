@@ -176,6 +176,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 var fstype = $(this).attr("fs");
                 var value = $this.val();
                 var $modal = $this.parents('.modal');
+                var new_part = $this.attr("new_part");
                 if (value.match(/swap/g) || value === "bios_grub") {
                     $modal.find('#mp').attr("disabled","");
                     $modal.find('#mp').val("");
@@ -185,7 +186,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 if (fstype !== value) {
                     $modal.find('input[type=checkbox]').attr("checked", "");
                     $modal.find('input[type=checkbox]').attr("disabled", "");
-                }else if ($modal.find('#mp').val() === "") {
+                }else if ($modal.find('#mp').val() === "" && !new_part) {
                     $modal.find('input[type=checkbox]').removeAttr("disabled");
                     $modal.find('input[type=checkbox]').removeAttr("checked");
                 }
@@ -298,6 +299,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 $part.next('.modal').find("input[type=checkbox]").attr("checked","")
                 if(el.new === true) {
                     $part.next('.modal').find("input[type=checkbox]").attr("disabled","")
+                    $part.next('.modal').find("#fs").attr("new_part","true")
                 }
             });
         },
@@ -423,7 +425,6 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     var part = _.find(disk.table, function (part_el) {
                         return part_el.number === number;
                     });
-                    part["dirty"] = true;
                     part["label"] = ( el.mp && el.mp.length>1 ) ? el.mp.slice(1).toUpperCase() : path.slice(5).toUpperCase() + part.number;
                     part["label"] = (el.fs === "swap" || el.fs+part.fs === "swap") ? "SWAP" : part.label;
                     part["mountpoint"] = el.mp;
