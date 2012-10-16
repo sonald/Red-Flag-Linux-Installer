@@ -599,11 +599,13 @@ function preprocessOptions(opts) {
 
                 var iso_root_dev = stdout.trim();
 
+                var re_cd = /\/dev\/sr[0-9]*/;
                 var re_hd = /\/dev\/[sh]d[a-z]([0-9]*)/;
                 var re_loop = /\/dev\/loop[0-9]+/;
                 var re_usb_signature = /native-path:.*\/usb/;
 
                 function hd_probe() {
+                    debug('installMedia: hd_probe: ', iso_root_dev);
                     function line_test(line) {
                         return re_usb_signature.test(line);
                     }
@@ -631,16 +633,29 @@ function preprocessOptions(opts) {
                     '$1 == "iso" {print $2}\' /proc/cmdline';
 
                     exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
-                        var matches = /\w+(\d+),\w+(\d+):/.exec(stdout);
-                        if (err || !matches) {
+                        if (err) {
                             reporter(res);
                             return;
                         }
 
-                        var part = sprintf("/dev/sd%1%2", hdmap(matches[1]), matches[2]);
+                        // format1: hd0,msdos1:/path/to/iso
+                        var matches = /\w+(\d+),\w+(\d+):/.exec(stdout);
+                        var part = "";
+                        if (matches) {
+                            part = sprintf("/dev/sd%1%2", hdmap(matches[1]), matches[2]);
+                        } else {
+                            // format2: /dev/sda2:/path/to/iso
+                            matches = /(\/dev\/\w+):/.exec(stdout);
+                            if (matches) {
+                                part = matches[1];
+                            }
+                        }
+
                         if (pathlib.existsSync(part)) {
                             reporter({"mode": 'hd', "device": part});
-                            return;
+
+                        } else {
+                            reporter(res);
                         }
                     });
                 }
@@ -655,7 +670,7 @@ function preprocessOptions(opts) {
                     reporter(res);
                 }
             });
-},
+        },
 
         // [ '/dev/sda', '/dev/sdb' ]
         /**
