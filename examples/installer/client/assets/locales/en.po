@@ -1,43 +1,3 @@
-#: client/views/free_part.jade:5 client/assets/js/remote_part.js:138
-msgid "Free"
-msgstr ""
-
-#: client/views/license.jade:160
-msgid "Agree"
-msgstr ""
-
-#: client/views/partial.jade:10
-msgid "Warning!"
-msgstr ""
-
-#: client/views/partial.jade:11
-msgid "The mount point has been selected."
-msgstr ""
-
-#: client/views/partial.jade:15
-msgid "Partitions that will be formatted:"
-msgstr ""
-
-#: client/views/ad_part.jade:2
-msgid "Click the partition to operate:"
-msgstr ""
-
-#: client/views/ad_part.jade:14
-msgid "Reset"
-msgstr ""
-
-#: client/views/ad_part.jade:17
-msgid "Grub Install At:"
-msgstr ""
-
-#: client/views/ad_part.jade:23
-msgid "Boot Partition"
-msgstr ""
-
-#: client/views/ad_part.jade:24
-msgid "Not install"
-msgstr ""
-
 #: client/views/part.jade:5
 msgid "Easy"
 msgstr ""
@@ -54,18 +14,18 @@ msgstr ""
 msgid "disk"
 msgstr ""
 
-#: client/views/part.jade:18 client/views/edit_part.jade:11
-#: client/views/create_part.jade:14 client/views/create_part.jade:16
+#: client/views/part.jade:18 client/views/create_part.jade:14
+#: client/views/create_part.jade:16 client/views/edit_part.jade:11
 msgid "primary"
 msgstr ""
 
-#: client/views/part.jade:20 client/views/edit_part.jade:12
-#: client/views/create_part.jade:12
+#: client/views/part.jade:20 client/views/create_part.jade:12
+#: client/views/edit_part.jade:12
 msgid "logical"
 msgstr ""
 
-#: client/views/part.jade:22 client/views/edit_part.jade:13
-#: client/views/create_part.jade:17
+#: client/views/part.jade:22 client/views/create_part.jade:17
+#: client/views/edit_part.jade:13
 msgid "extended"
 msgstr ""
 
@@ -103,13 +63,41 @@ msgstr ""
 msgid "Do not mount the partitions selected."
 msgstr ""
 
-#: client/views/part.jade:43 client/views/edit_part.jade:45
-#: client/views/create_part.jade:48
+#: client/views/part.jade:43 client/views/create_part.jade:48
+#: client/views/edit_part.jade:45
 msgid "Close"
 msgstr ""
 
 #: client/views/part.jade:44
 msgid "Continue"
+msgstr ""
+
+#: client/views/create_part.jade:5
+msgid "CreateDisk"
+msgstr ""
+
+#: client/views/create_part.jade:8 client/views/edit_part.jade:8
+msgid "PartType"
+msgstr ""
+
+#: client/views/create_part.jade:19 client/views/edit_part.jade:15
+msgid "FileSystem"
+msgstr ""
+
+#: client/views/create_part.jade:27 client/views/edit_part.jade:23
+msgid "MountPoint"
+msgstr ""
+
+#: client/views/create_part.jade:39 client/views/edit_part.jade:35
+msgid "Size"
+msgstr ""
+
+#: client/views/create_part.jade:46 client/views/edit_part.jade:42
+msgid "Formatted"
+msgstr ""
+
+#: client/views/create_part.jade:49 client/views/edit_part.jade:46
+msgid "Submit"
 msgstr ""
 
 #: client/views/easy_part.jade:3
@@ -118,6 +106,50 @@ msgstr ""
 
 #: client/views/easy_part.jade:12
 msgid "The swap partition will be used if there is one."
+msgstr ""
+
+#: client/views/fd_part.jade:3
+msgid "Select one disk: "
+msgstr ""
+
+#: client/views/fd_part.jade:11
+msgid "Recommend full disk installation in a virtual machine."
+msgstr ""
+
+#: client/views/ad_part.jade:2
+msgid "Click the partition to operate:"
+msgstr ""
+
+#: client/views/ad_part.jade:14
+msgid "Reset"
+msgstr ""
+
+#: client/views/ad_part.jade:17
+msgid "Grub Install At:"
+msgstr ""
+
+#: client/views/ad_part.jade:23
+msgid "Boot Partition"
+msgstr ""
+
+#: client/views/ad_part.jade:24
+msgid "Not install"
+msgstr ""
+
+#: client/views/edit_part.jade:5
+msgid "EditDisk"
+msgstr ""
+
+#: client/views/edit_part.jade:44
+msgid "Remove"
+msgstr ""
+
+#: client/views/license.jade:160
+msgid "Agree"
+msgstr ""
+
+#: client/views/free_part.jade:5 client/assets/js/remote_part.js:138
+msgid "Free"
 msgstr ""
 
 #: client/views/finished.jade:4
@@ -140,48 +172,20 @@ msgstr ""
 msgid "Shutdown"
 msgstr ""
 
-#: client/views/edit_part.jade:5
-msgid "EditDisk"
+#: client/views/partial.jade:10 client/views/partial.jade:16
+msgid "Warning!"
 msgstr ""
 
-#: client/views/edit_part.jade:8 client/views/create_part.jade:8
-msgid "PartType"
+#: client/views/partial.jade:11
+msgid "The mount point has been selected."
 msgstr ""
 
-#: client/views/edit_part.jade:15 client/views/create_part.jade:19
-msgid "FileSystem"
+#: client/views/partial.jade:17
+msgid "Please enter the number!"
 msgstr ""
 
-#: client/views/edit_part.jade:23 client/views/create_part.jade:27
-msgid "MountPoint"
-msgstr ""
-
-#: client/views/edit_part.jade:35 client/views/create_part.jade:39
-msgid "Size"
-msgstr ""
-
-#: client/views/edit_part.jade:42 client/views/create_part.jade:46
-msgid "Formatted"
-msgstr ""
-
-#: client/views/edit_part.jade:44
-msgid "Remove"
-msgstr ""
-
-#: client/views/edit_part.jade:46 client/views/create_part.jade:49
-msgid "Submit"
-msgstr ""
-
-#: client/views/fd_part.jade:3
-msgid "Select one disk: "
-msgstr ""
-
-#: client/views/fd_part.jade:11
-msgid "Recommend full disk installation in a virtual machine."
-msgstr ""
-
-#: client/views/create_part.jade:5
-msgid "CreateDisk"
+#: client/views/partial.jade:21
+msgid "Partitions that will be formatted:"
 msgstr ""
 
 #: client/assets/app.js:186
@@ -200,10 +204,6 @@ msgstr ""
 msgid "Select a disks please"
 msgstr ""
 
-#: client/assets/js/part.js:8
-msgid "Partition"
-msgstr ""
-
 #: client/assets/js/easy_part.js:41
 msgid "Select a partition of at least 6 GB."
 msgstr ""
@@ -214,6 +214,18 @@ msgstr ""
 
 #: client/assets/js/easy_part.js:59
 msgid "Select a partition of at least 6 GB"
+msgstr ""
+
+#: client/assets/js/remote_part.js:32
+msgid "Too many primary partitions."
+msgstr ""
+
+#: client/assets/js/remote_part.js:33
+msgid "Too many extended partitions."
+msgstr ""
+
+#: client/assets/js/remote_part.js:40
+msgid "Operation fails"
 msgstr ""
 
 #: client/assets/js/license.js:28
@@ -239,43 +251,59 @@ msgstr ""
 msgid "There is no disk for installations."
 msgstr ""
 
-#: client/assets/js/remote_part.js:32
-msgid "Too many primary partitions."
-msgstr ""
-
-#: client/assets/js/remote_part.js:33
-msgid "Too many extended partitions."
-msgstr ""
-
-#: client/assets/js/remote_part.js:40
-msgid "Operation fails"
+#: client/assets/js/part.js:8
+msgid "Partition"
 msgstr ""
 
 #: client/assets/js/finished.js:8 client/assets/js/finished.js:30
 msgid "Complete"
 msgstr ""
 
-#: client/assets/js/process.js:57
+#: client/assets/js/process.js:24
+msgid "no install destination specified"
+msgstr ""
+
+#: client/assets/js/process.js:25
+msgid "copy base system failed"
+msgstr ""
+
+#: client/assets/js/process.js:26
+msgid "postscript setup failed"
+msgstr ""
+
+#: client/assets/js/process.js:27
+msgid "formatting partitions"
+msgstr ""
+
+#: client/assets/js/process.js:28
+msgid "start copying data..."
+msgstr ""
+
+#: client/assets/js/process.js:29
+msgid "do post install processing"
+msgstr ""
+
+#: client/assets/js/process.js:65
 msgid "Install"
 msgstr ""
 
-#: client/assets/js/process.js:190 client/assets/js/process.js:196
+#: client/assets/js/process.js:194
+msgid "install progress: "
+msgstr ""
+
+#: client/assets/js/process.js:198 client/assets/js/process.js:204
 msgid "SORRY, INSTALLATION FAILS."
 msgstr ""
 
-#: client/assets/js/ad_part.js:200
-msgid "Please enter the number!"
-msgstr ""
-
-#: client/assets/js/ad_part.js:359
+#: client/assets/js/ad_part.js:371
 msgid "You need specify a root partition."
 msgstr ""
 
-#: client/assets/js/ad_part.js:362
+#: client/assets/js/ad_part.js:374
 msgid "The root partition requires at least 6 GB space!"
 msgstr ""
 
-#: client/assets/js/ad_part.js:374
+#: client/assets/js/ad_part.js:386
 msgid ""
 "<p class='warning'>This GPT partition label has no BIOS Boot Partition.You "
 "may fail to install.</p>"

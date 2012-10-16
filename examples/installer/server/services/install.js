@@ -106,13 +106,12 @@ var debug = (function() {
 module.exports = (function(){
     'use strict';
 
-    var errors  = {
-        ENOROOT: 'no install destination specified',
-        ECOPYBASE: 'copy base system failed',
-        EPOSTSCRIPT: 'postscript setup failed'
-    };
-
     // supporting routines
+    var errors = {
+        ENOROOT: 'ENOROOT',
+        ECOPYBASE: 'ECOPYBASE',
+        EPOSTSCRIPT: 'EPOSTSCRIPT'
+    };
 
     function error_wrapper(watcher, err_callback) {
         return function(err) {
@@ -125,8 +124,6 @@ module.exports = (function(){
             err_callback(err);
         };
     }
-
-
 
     function system(cmd) {
         return function(err_cb) {
@@ -350,8 +347,8 @@ function preprocessOptions(opts) {
                         cb(null, base_mnt, newroot_mnt);
 
                     } else {
-                        watcher({status: 'failure', reason: errors['ECOPYBASE']});
-                        cb({status: 'failure', reason: errors['ECOPYBASE']});
+                        watcher({status: 'failure', reason: 'ECOPYBASE'});
+                        cb({status: 'failure', reason:'ECOPYBASE'});
                     }
                 });
 
@@ -396,14 +393,14 @@ function preprocessOptions(opts) {
             function(newroot_mnt, cb) {
                 system('rmdir ' + newroot_mnt)(cb);
             }
-            ],
-            function(err) {
-                if (err) {
-                    debug(err);
-                    watcher({status: 'failure', reason: errors['ECOPYBASE']});
-                }
-                next(err);
-            });
+        ],
+        function(err) {
+            if (err) {
+                debug(err);
+                watcher({status: 'failure', reason:'ECOPYBASE'});
+            }
+            next(err);
+        });
     } //~ copyBaseSystem
 
     function postInstall(opts, watcher, next) {
@@ -736,22 +733,21 @@ function preprocessOptions(opts) {
             debug(options);
 
             if (!options.newroot) {
-                console.error( errors['ENOROOT'] );
-                reporter( {status: 'succes', err: errors['ENOROOT']} );
+                console.error( 'ENOROOT' );
+                reporter( {status: 'failure', err: 'ENOROOT'} );
                 return;
             }
-
             async.waterfall([
                 function(next) {
-                    reporter({status: 'formatting partitions'});
+                    reporter({status: 'Format'});
                     formatDirtyPartitions( options.disks, error_wrapper(reporter, next) );
                 },
                 function(next) {
-                    reporter({status: 'start copying data...'});
+                    reporter({status: 'COPY'});
                     copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
                 },
                 function(next) {
-                    reporter({status: 'do post install processing...'});
+                    reporter({status: 'POST'});
                     //FIXME: do I need to umount all partitions and then remount it?
                     postInstall(options, reporter, function(err) {
                         next( err, {status: 'success'} );
