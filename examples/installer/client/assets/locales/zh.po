@@ -132,7 +132,7 @@ msgstr "请选择一个分区。"
 
 #: client/views/easy_part.jade:12
 msgid "The swap partition will be used if there is one."
-msgstr "简易安装会自动挂载已经存在的swap分区。"
+msgstr "简单模式会自动挂载已经存在的swap分区。"
 
 #: client/views/fd_part.jade:3
 msgid "Select one disk: "
