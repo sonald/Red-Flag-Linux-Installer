@@ -137,7 +137,7 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
             this.$logs = $('#install-log');
 
             window.apis.services.install.loadExternalImages(function(res) {
-                self.setupPresentation(install_msgs[res.status]);
+                self.setupPresentation(res.status);
             });
 
             progressbar.init($('#install-progress'));

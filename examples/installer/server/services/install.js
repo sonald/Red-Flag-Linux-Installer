@@ -275,44 +275,52 @@ function preprocessOptions(opts) {
     function copyBaseSystem(options, watcher, next) {
         async.waterfall([
             function(cb) {
-                exec('losetup -f', {encoding: 'utf8'}, function(err, stdout, stderr) {
-                    if (err) {
-                        cb(err);
-                        return;
-                    }
-
-                    stdout = stdout.trim();
-                    cb(err, stdout);
-                });
-            },
-
-            function(loopdev, cb) {
-                var cmd = sprintf('losetup %1 /run/redflagiso/sfs/root-image/root-image.fs', loopdev);
-                system(cmd)(function(err) {
-                    cb(err, loopdev);
-                });
-            },
-
-            function(loopdev, cb) {
                 fsutil.mktempdir(function(dirname) {
-                    var cmd = sprintf('mount -o ro %1 %2', loopdev, dirname);
+                    var cmd = sprintf('mount -o ro /dev/loop0 %1', dirname);
                     system(cmd)(function(err) {
                         cb(err, dirname);
                     });
                 });
             },
 
-            function(base_mnt, cb) {
+            function(loop0_dirname, cb) {
+            exec('losetup -f', {encoding: 'utf8'}, function(err, stdout, stderr) {
+                if (err) {
+                    cb(err);
+                    return;
+                }
+                stdout = stdout.trim();
+                cb(err, loop0_dirname, stdout);
+            });
+        },
+
+        function(loop0_dirname, loopdev, cb) {
+            var cmd = sprintf('losetup %1 %2', loopdev, loop0_dirname+"/root-image.fs");
+            system(cmd)(function(err) {
+                cb(err,loop0_dirname,  loopdev);
+            });
+        },
+
+        function(loop0_dirname, loopdev, cb) {
+            fsutil.mktempdir(function(dirname) {
+                var cmd = sprintf('mount -o ro %1 %2', loopdev, dirname);
+                system(cmd)(function(err) {
+                    cb(err, loop0_dirname, loopdev, dirname);
+                });
+                });
+            },
+
+            function(loop0_dirname, loopdev, base_mnt, cb) {
                 fsutil.mktempdir(function(dirname) {
                     //TODO: we may need to mkdir -p before mounting
                     //sub-volumes such as /opt.
                     mountNeededPartitions(options.disks, dirname, function(err) {
-                        cb(err, base_mnt, dirname);
+                        cb(err, loop0_dirname, loopdev, base_mnt, dirname);
                     });
                 });
             },
 
-            function(base_mnt, newroot_mnt, cb) {
+            function(loop0_dirname, loopdev, base_mnt, newroot_mnt, cb) {
                 fsutil.getFileSystemInfo(base_mnt, function(err, info) {
                     if (err) {
                         debug(err);
@@ -321,11 +329,11 @@ function preprocessOptions(opts) {
                     }
 
                     var size = info['total'] - info['free'];
-                    cb(null, base_mnt, newroot_mnt, size);
+                    cb(null, loop0_dirname, loopdev, base_mnt, newroot_mnt, size);
                 });
             },
 
-            function(base_mnt, newroot_mnt, total_size, cb) {
+            function(loop0_dirname, loopdev, base_mnt, newroot_mnt, total_size, cb) {
                 var helper = sprintf('%1 %2 %3', pathlib.join(__dirname, 'copy_base_system.sh'),
                    base_mnt, newroot_mnt);
                 var child = exec(helper);
@@ -344,7 +352,7 @@ function preprocessOptions(opts) {
                     progId.stop();
                     if (code === 0) {
                         watcher({status: 'progress', data: 100});
-                        cb(null, base_mnt, newroot_mnt);
+                        cb(null, loop0_dirname, loopdev, base_mnt, newroot_mnt);
 
                     } else {
                         watcher({status: 'failure', reason: 'ECOPYBASE'});
@@ -372,26 +380,44 @@ function preprocessOptions(opts) {
             },
 
             // cleanup: umount newroot_mnt and rmdir it
-            function(base_mnt, newroot_mnt, cb) {
+            function(loop0_dirname, loopdev, base_mnt, newroot_mnt, cb) {
                 unmountNeededPartitions(options.disks, function(err) {
-                    cb(err, base_mnt, newroot_mnt);
+                    cb(err, loop0_dirname, loopdev, base_mnt, newroot_mnt);
                 });
             },
 
-            function(base_mnt, newroot_mnt, cb) {
+            function(loop0_dirname, loopdev, base_mnt, newroot_mnt, cb) {
                 system('umount ' + base_mnt)(function(err) {
-                    cb(err, base_mnt, newroot_mnt);
+                    cb(err, loop0_dirname, loopdev, base_mnt, newroot_mnt);
                 });
             },
 
-            function(base_mnt, newroot_mnt, cb) {
+            function(loop0_dirname, loopdev, base_mnt, newroot_mnt, cb) {
+                system('losetup -d ' + loopdev )(function(err) {
+                    cb(err, loop0_dirname, base_mnt, newroot_mnt);
+                });
+            },
+
+            function(loop0_dirname, base_mnt, newroot_mnt, cb) {
+                system('umount /dev/loop0' )(function(err) {
+                    cb(err, loop0_dirname, base_mnt, newroot_mnt);
+                });
+            },
+
+            function(loop0_dirname, base_mnt, newroot_mnt, cb) {
                 system('rmdir ' + base_mnt)(function(err) {
-                    cb(err, newroot_mnt);
+                    cb(err, loop0_dirname, newroot_mnt);
                 });
             },
 
-            function(newroot_mnt, cb) {
-                system('rmdir ' + newroot_mnt)(cb);
+            function(loop0_dirname, newroot_mnt, cb) {
+                system('rmdir ' + newroot_mnt)(function(err) {
+                    cb(err, loop0_dirname);
+                });
+            },
+
+            function(loop0_dirname, cb) {
+                system('rmdir ' + loop0_dirname)(cb);
             }
         ],
         function(err) {
