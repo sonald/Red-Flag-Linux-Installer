@@ -118,7 +118,7 @@ define(["system"],
       ],
       "The swap partition will be used if there is one.": [
          null,
-         "简易安装会自动挂载已经存在的swap分区。"
+         "简单模式会自动挂载已经存在的swap分区。"
       ],
       "Select one disk: ": [
          null,
