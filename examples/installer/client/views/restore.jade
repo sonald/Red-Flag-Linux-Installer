@@ -1,0 +1,12 @@
+script(type="text/template", id="restore_tmpl").
+    #finished
+        .hero-unit
+            h2= gettext("Welcome~")
+            p= gettext("Choose one method for restoring.")
+            p
+                label.label_radio.label_checked
+                    input(type="radio", name="restore", id="recover", value="later", checked)
+                    = gettext("Recovery Install")
+                label.label_radio
+                    input(type="radio", name="restore", id="overload", value="reboot")
+                    = gettext("Overload Install")

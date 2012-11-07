@@ -67,6 +67,7 @@ var app = {
             $alert.on('click','.js-close',callback);
         }
     },
+    auto: false,
 
     buttons: {
         get: function(btnid) {
@@ -161,6 +162,8 @@ var app = {
             var $li = (jade.compile(li_tmpl)) ({name:stage.name});
             $last_li.before($li);
         });
+        $('ol#breadcrumb-trail li').css("margin-left",90/this.stages.length+"%");
+        $('ol#breadcrumb-trail li:first-child').css("margin",0);
     },
 
     animateStage: function(stage) {
@@ -197,12 +200,13 @@ var app = {
     }
 };
 
-require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'],
-        function($, i18n,  pageLicense, pagePart, pageProcess, pageFinished, autoStart) {
-    app.stages.push(pageLicense);
-    app.stages.push(pagePart);
-    app.stages.push(pageProcess);
-    app.stages.push(pageFinished);
+require(['jquery', 'i18n', 'restore', 'license', 'part', 'process', 'finished'],
+    function($, i18n, pageRestore, pageLicense, pagePart, pageProcess, pageFinished) {
+    var pageSet = {
+        pageNormal: [pageLicense, pagePart, pageProcess, pageFinished],
+                pageAuto: [pageLicense, pageProcess, pageFinished],
+                pageRest: [pageRestore, pageProcess, pageFinished]
+        };
     app.i18n = i18n;
 
     DNode.connect(function (remote) {
@@ -210,16 +214,22 @@ require(['jquery', 'i18n', 'license', 'part', 'process', 'finished', 'autostart'
         window.apis = remote;
 
         $(function() {
-            app.init();
             var str = location.search.substr(1);
             var str_array = str.split("&");
-            if (_.indexOf(str_array, "sony=true") > -1 ) {
+
+            if (_.indexOf(str_array, "sony=true") > -1) {
                 app.options.sysflag = 'sony';
             }
 
             if (_.indexOf(str_array, "autorun=true") > -1 ) {
-                autoStart.run(app);
+                app.auto = true;
+                app.stages = pageSet.pageAuto;
+            }else if (_.indexOf(str_array, "restore=true") > -1 ) {
+                app.stages = pageSet.pageRest;
+            }else {
+                app.stages = pageSet.pageNormal;
             }
+            app.init();
         });
     });
 
