@@ -127,24 +127,16 @@ function startServer() {
 function tryLoadFrontend() {
     'use strict';
 
-    var options = {};
-    options.url = program.url || 'http://127.0.0.1:8080';
-    if (program.autorun) {
-        if (options.url.indexOf('?') > -1) {
-            options.url += '&autorun=true';
-        } else {
-            options.url += '?autorun=true';
-        }
-    }
-    if (program.sony) {
-        if (options.url.indexOf('?') > -1) {
-            options.url += '&sony=true';
-        } else {
-            options.url += '?sony=true';
-        }
-    }
+    var urllib = require('url');
 
-    console.log(options);
+    var urlObj = urllib.parse(program.url || 'http://127.0.0.1:8080', true);
+    urlObj.query.autorun = !!program.autorun;
+    urlObj.query.sony = !!program.sony;
+    urlObj.query.restore = !!program.restore;
+
+    var url = urllib.format(urlObj);
+    console.log(url);
+
     var candidates = [__dirname+ '/libs/run.py', 'chromium', 'google-chrome', 'firefox'];
 
     async.filter(candidates, testExists, function(results) {
@@ -153,7 +145,7 @@ function tryLoadFrontend() {
             console.log('no appropriate frontend found');
             process.exit(1);
         }
-        var fe = spawn(results[0], [options.url], {cwd: __dirname, env: process.env});
+        var fe = spawn(results[0], [url], {cwd: __dirname, env: process.env});
         fe.on('exit', function() {
            if (installer && !installer.exitCode) {
             console.log('try kill node');
@@ -217,6 +209,7 @@ program
     .option('-a, --autorun', 'initiate autorun mode of installer')
     .option('-s, --sony', 'initiate sony mode of installer')
     .option('-u, --url <url>', 'url of install server')
+    .option('-r, --restore', 'launch restore mode for OEM only')
     .parse(process.argv);
 
 sanityCheck();
