@@ -457,9 +457,6 @@ function preprocessOptions(opts) {
                         }
                         contents += sprintf('%1\t%2\t%3\t%4\t0\t%5\n', stdout,
                             part.mountpoint, part.fs, mnt_opts, pass);
-                        // contents += stdout + "\t" + part.mountpoint + "\t" +
-                        //     part.fs + "\t" + mnt_opts + "\t0\t" + pass + "\n";
-
                         callback(null);
                     }
                 });
@@ -606,7 +603,7 @@ function preprocessOptions(opts) {
     } // ~ postInstall
 
 
-    return {
+    var installer = {
         meminfo: function(cb) {
             cb( {
                 free: require('os').freemem(), // unit: bytes
@@ -615,87 +612,56 @@ function preprocessOptions(opts) {
         },
 
         installMedia: function(reporter) {
-            var res = {mode: 'cd'};
-            var cmd = 'cat /proc/mounts | awk \'$2 == "/run/redflagiso/bootmnt" { print $1 }\'';
-            exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
-                if (err) {
-                    reporter(res);
+            // the only safe mode to fallback
+            var res_mode = {mode: 'cd'};
+
+            function kern_cmdline_probe(condition, callback) {
+                var cmd = 'awk \'BEGIN{RS=" "; FS="="; found=0;} ' + condition + ' {if (!length($2)) $2=1; found=$2; } ' + 
+                    + 'END {print found;} \' /proc/cmdline';
+
+                exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
+                    stdout = stdout ? stdout.trim() : "";
+                    if (err) {
+                        stdout = false;
+                    } else if (!+stdout || stdout == false) {
+                        stdout = false;
+                    }
+
+                    callback(stdout);
+                });
+            }
+
+            kern_cmdline_probe('$1 == "rflive"', function(res) {
+                if (res) {
+                    reporter(res_mode);
                     return;
                 }
 
-                var iso_root_dev = stdout.trim();
-
-                var re_cd = /\/dev\/sr[0-9]*/;
-                var re_hd = /\/dev\/[sh]d[a-z]([0-9]*)/;
-                var re_loop = /\/dev\/loop[0-9]+/;
-                var re_usb_signature = /native-path:.*\/usb/;
-
-                function hd_probe() {
-                    debug('installMedia: hd_probe: ', iso_root_dev);
-                    function line_test(line) {
-                        return re_usb_signature.test(line);
+                var cmd = 'cat /proc/mounts | awk \'$2 == "/run/redflagiso/bootmnt" { print $1 }\'';
+                exec(cmd, {encoding: 'utf8'}, function(err, stdout, stderr) {
+                    if (err) {
+                        reporter(res_mode);
+                        return;
                     }
 
-                    // check if usb or disk
-                    exec('udisks --show-info ' + iso_root_dev, {encoding: 'utf8'},
-                     function(err, stdout) {
-                        var mode;
-                        var lines = stdout.split('\n');
-                        if (lines.some(line_test)) {
-                            mode = 'usb';
-                        } else {
-                            mode = 'hd';
-                        }
-                        reporter({"mode": mode, "device": iso_root_dev});
-                    });
-                }
+                    var iso_root_dev = stdout.trim();
 
-                function hdmap(num) {
-                    return 'abcdefghijklmnopqrstuvwxyz'.charAt(+num);
-                }
+                    var re_cd = /\/dev\/sr[0-9]*/;
+                    var re_usb = /\/dev\/[sh]d[a-z]([0-9]*)/;
 
-                function kern_cmdline_probe() {
-                    var cmd = 'awk \'BEGIN{RS=" "; FS="=";} ' +
-                    '$1 == "iso" {print $2}\' /proc/cmdline';
+                    if (re_cd.test(iso_root_dev)) {
+                        reporter(res_mode);
 
-                    exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
-                        if (err) {
-                            reporter(res);
-                            return;
-                        }
+                    } else if (re_usb.test(iso_root_dev)) {
+                        reporter({"mode": 'usb', "device": iso_root_dev});
 
-                        // format1: hd0,msdos1:/path/to/iso
-                        var matches = /\w+(\d+),\w+(\d+):/.exec(stdout);
-                        var part = "";
-                        if (matches) {
-                            part = sprintf("/dev/sd%1%2", hdmap(matches[1]), matches[2]);
-                        } else {
-                            // format2: /dev/sda2:/path/to/iso
-                            matches = /(\/dev\/\w+):/.exec(stdout);
-                            if (matches) {
-                                part = matches[1];
-                            }
-                        }
+                    } else {
+                        reporter({"mode": 'hd', "device": iso_root_dev});
+                    }
+                });
 
-                        if (pathlib.existsSync(part)) {
-                            reporter({"mode": 'hd', "device": part});
-
-                        } else {
-                            reporter(res);
-                        }
-                    });
-                }
-
-                if (re_hd.test(iso_root_dev)) {
-                    hd_probe();
-
-                } else if (re_loop.test(iso_root_dev)) {
-                    kern_cmdline_probe();
-
-                } else {
-                    reporter(res);
-                }
             });
+
         },
 
         // [ '/dev/sda', '/dev/sdb' ]
@@ -826,4 +792,5 @@ function preprocessOptions(opts) {
         }
     };
 
+    return installer;
 }());
