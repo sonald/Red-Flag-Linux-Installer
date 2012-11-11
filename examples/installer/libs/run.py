@@ -43,7 +43,10 @@ class Installer(QObject):
         else:
             proxy = bus.get_object('org.gnome.SessionManager','/org/gnome/SessionManager')
             if msg == "reboot" or msg == "shutdown":
-                proxy.Shutdown()
+                try:
+                    proxy.Shutdown(timeout=30)
+                except Exception, e:
+                    os.system(msg_tag[msg]['shell'])
         sys.exit(0)
 
 class Window(QWidget):
