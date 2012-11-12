@@ -99,13 +99,21 @@ function startServer() {
 
         installer = spawn(cmd[0], cmd.slice(1), {cwd: __dirname, env: process.env});
 
-        var fe_loaded = false;
+        var fe_loaded = false,
+            app_loaded = false,
+            socketio_loaded = false;
         installer.stdout.on('data', function(data) {
             var output = data.toString();
             if (!fe_loaded) {
                 if (output.indexOf('app started at') >= 0) {
+                    app_loaded = true;
+                }
+                if (output.indexOf('socketio connection') >= 0) {
+                    socketio_loaded = true;
+                }
+                fe_loaded = app_loaded && socketio_loaded;
+                if (fe_loaded) {
                     tryLoadFrontend();
-                    fe_loaded = true;
                 }
             }
             process.stdout.write(output);

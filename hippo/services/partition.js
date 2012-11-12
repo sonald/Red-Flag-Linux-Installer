@@ -53,7 +53,7 @@ module.exports = (function() {
                 process.nextTick(next);
             });
             sock.on('connect',function(){
-                console.log("connection");
+                console.log("socketio connection");
             });
         };
         process.nextTick(next);
