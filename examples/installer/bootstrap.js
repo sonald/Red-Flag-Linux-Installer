@@ -175,6 +175,22 @@ function tryLoadFrontend() {
     });
 }
 
+function kern_cmdline_probe(condition, callback) {
+    var cmd = 'awk \'BEGIN{RS=" "; FS="="; found=0;} ' + condition + ' {if (!length($2)) $2=1; found=$2; } ' + 
+        + 'END {print found;} \' /proc/cmdline';
+
+    exec(cmd, {encoding: 'utf8'}, function(err, stdout) {
+        stdout = stdout ? stdout.trim() : "";
+        if (err) {
+            stdout = false;
+        } else if (!+stdout || stdout == false) {
+            stdout = false;
+        }
+
+        callback(stdout);
+    });
+}
+
 function sanityCheck() {
     'use strict';
 
@@ -213,4 +229,7 @@ program
     .parse(process.argv);
 
 sanityCheck();
-startServer();
+kern_cmdline_probe('$1 == "rfrestore"', function(res) {
+    program.restore = !!res;
+    startServer();
+});
