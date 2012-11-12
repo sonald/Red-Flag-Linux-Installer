@@ -564,18 +564,18 @@ function preprocessOptions(opts) {
 
         async.waterfall(
             [
-            system("mkdir -p " + root_dir),
-            function(err_cb) {
-                mountNeededPartitions(opts.disks, root_dir, function(err) {
-                    err_cb(err);
-                });
-            },
-            // system("mount " + opts.newroot + " " + root_dir),
-            function(err_cb) {
-                generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
-            },
-            generatePostscript,
-            system("mount --bind /dev " + root_dir + "/dev"),
+                system("mkdir -p " + root_dir),
+                function(err_cb) {
+                    mountNeededPartitions(opts.disks, root_dir, function(err) {
+                        err_cb(err);
+                    });
+                },
+                // system("mount " + opts.newroot + " " + root_dir),
+                function(err_cb) {
+                    generateFstab(root_dir, enumMountPoints(opts.disks), err_cb);
+                },
+                generatePostscript,
+                system("mount --bind /dev " + root_dir + "/dev"),
                 // run postscript
                 system("chroot " + root_dir + " /postscript.sh &> " + root_dir + "/tmp/postscript.log"),
                 system("umount " + root_dir + "/proc"),
@@ -588,18 +588,25 @@ function preprocessOptions(opts) {
                         err_cb(err);
                     });
                 },
-                // system("umount " + root_dir),
-                system("bash /etc/postjobs &> /tmp/postjobs.log")
-                ],
+                function(err_cb) {
+                    installer.installMedia(function(media) {
+                        var cmd = "bash /etc/postjobs &> /tmp/postjobs.log";
+                        process.env["ISO_DEV"] = media.device;
+                        exec(cmd, {encoding: 'utf8', env: process.env}, function(err, stdout) {
+                            err_cb(err);
+                        });
+                    });
+                }
+            ],
 
-                function(err) {
-                    if (err) {
-                        watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
-                        console.error('postInstall failed: ', err);
-                    }
+            function(err) {
+                if (err) {
+                    watcher({status: 'failure', reason: errors['EPOSTSCRIPT']});
+                    console.error('postInstall failed: ', err);
+                }
 
-                    next(err);
-                });
+                next(err);
+            });
     } // ~ postInstall
 
 
@@ -648,15 +655,19 @@ function preprocessOptions(opts) {
 
                     var re_cd = /\/dev\/sr[0-9]*/;
                     var re_usb = /\/dev\/[sh]d[a-z]([0-9]*)/;
+                    var re_loop = /\/dev\/loop([0-9]*)/;
 
                     if (re_cd.test(iso_root_dev)) {
                         reporter(res_mode);
 
                     } else if (re_usb.test(iso_root_dev)) {
-                        reporter({"mode": 'usb', "device": iso_root_dev});
+                        reporter({"mode": 'usb', "device": iso_root_dev.replace(/[0-9]*/, '')});
+
+                    } else if (re_loop.test(iso_root_dev)) {
+                        reporter({"mode": 'hd', "device": iso_root_dev});
 
                     } else {
-                        reporter({"mode": 'hd', "device": iso_root_dev});
+                        reporter(res_mode);
                     }
                 });
 
