@@ -22,16 +22,13 @@ define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
                 });
                 part["mountpoint"] = "/";
             });
-            if (app.auto === true) { 
-                app.currentPage +=1;
-            }
-            return;
+            app.currentPage +=1;
         },
 
-        overload: function (app) {
+        overload: function (app, over) {
             var dpath = '/dev/sda';
             app.options.grubinstall = dpath;
-            app.options.installmode = 'fulldisk';
+            app.options.installmode = over ? 'overload' : 'recovery';
             Rpart.getparts(null, null, function (disks) {
                 app.options.disks = disks;
                 var need_number = app.options.sysflag === "sony" ? 2 : 1;
@@ -40,9 +37,10 @@ define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
                 });
                 need_number = disk.type === "gpt" ? need_number+1 : need_number;
                 var part = _.find(disk.table, function (el) {
-                    return (el.number = need_number) ;
+                    return (el.number === need_number) ;
                 });
                 part["mountpoint"] = "/";
+                part["dirty"] = !over;
             });
             return;
         },

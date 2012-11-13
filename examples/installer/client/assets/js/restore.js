@@ -35,7 +35,7 @@ define(['jquery', 'system', 'i18n', 'autostart'], function($, nil, i18n, autoSta
 
         validate: function (callback) {
             $('#finished').off('click', 'label.label_radio');
-            $('#finished').find("label.label_checked").attr("id") === "overload" ? autoStart.overload(app) : autoStart.auto(app);
+            $('#finished').find("label.label_checked").attr("id") === "overload" ? autoStart.overload(app, true) : autoStart.overload(app, false);
             callback();
         }
     };
