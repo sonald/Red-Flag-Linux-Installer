@@ -1,7 +1,7 @@
 define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
     'use strict';
     var autoStart = {
-        run: function (app) {
+        auto: function (app) {
             var dpath = '/dev/sda';
             app.options.grubinstall = dpath;
             app.options.installmode = 'fulldisk';
@@ -21,9 +21,28 @@ define(['jquery', 'system', 'remote_part'], function($, _system, Rpart) {
                     return (el.number === new_number);
                 });
                 part["mountpoint"] = "/";
-                app.currentPage = 2;
             });
+            app.currentPage +=1;
+        },
 
+        overload: function (app, over) {
+            var dpath = '/dev/sda';
+            app.options.grubinstall = dpath;
+            app.options.installmode = over ? 'overload' : 'recovery';
+            Rpart.getparts(null, null, function (disks) {
+                app.options.disks = disks;
+                var need_number = app.options.sysflag === "sony" ? 2 : 1;
+                var disk = _.find(disks, function(el){
+                    return el.path === dpath;
+                });
+                need_number = disk.type === "gpt" ? need_number+1 : need_number;
+                var part = _.find(disk.table, function (el) {
+                    return (el.number === need_number) ;
+                });
+                part["mountpoint"] = "/";
+                part["dirty"] = !over;
+            });
+            return;
         },
     };
     return autoStart;

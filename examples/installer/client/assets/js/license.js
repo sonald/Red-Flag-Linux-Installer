@@ -18,14 +18,14 @@
 /*jslint browser: true, devel: true*/
 /*global jade: false*/
 
-define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
+define(['jquery', 'system', 'i18n', 'autostart'], function($, nil, i18n, autoStart) {
     'use strict';
 
     var pageCache;
 
     console.log('load license');
     var page = {
-	      name: i18n.gettext('Welcome'),
+	    name: i18n.gettext('Welcome'),
         view: '#license_tmpl',
         app: null,
 
@@ -35,8 +35,12 @@ define(['jquery', 'system', 'i18n'], function($, nil, i18n) {
             this.app = app;
             this.view += '_' + locale;
 
-            callback();
-            console.log('license initialized');
+            if (app.auto === true) {
+                autoStart.auto(app);
+            }else {
+                callback();
+                console.log('license initialized');
+            }
         },
 
         // compile and return page partial
