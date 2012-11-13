@@ -71,23 +71,17 @@ def mkpart(dev, disk, parttype, start, size, end, fstype):
         start = 63L
     physector = dev.physicalSectorSize/512
     if size > 0:
-        new_geometry = parted.geometry.Geometry(dev, start, size, None)
+        new_geometry = parted.geometry.Geometry(dev, start, size, end)
     elif end > 0:
         new_geometry = parted.geometry.Geometry(dev, start, None, end)
     new_geo = adjust_geometry(disk,parttype,new_geometry)
-    start = int(new_geo.start)
-    if new_geo.start > start:
-        start = start + 1
-    if end == 0 and physector == 1:
+    start = int(new_geo.start)+1
+    if physector > 1 and start%physector > 0:
+        start = (start/physector + 1)*physector
+    if end == 0:
         new_geo = parted.geometry.Geometry(dev, start, size, None)
-
-    if physector > 1:
-        if start%physector > 0:
-            start = (start/physector + 1)*physector
-        if end == 0:
-            end = ((start + size)/physector + 1)*physector - 1
-        else:
-            end = int(new_geo.end)
+    else:
+        end = new_geo.end
         new_geo = parted.geometry.Geometry(dev, start, None, end)
 
     fs = None
