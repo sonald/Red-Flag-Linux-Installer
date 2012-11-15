@@ -51,14 +51,15 @@ define(['jquery', 'system', 'i18n', 'remote_part'], function($,_system,i18n, Rpa
                 that.myalert(i18n.gettext("Please select a partition to continue."));
                 return false;
             }
-            pnum = $("#part_content").find('ul.select').attr("pindex");//TODO
-            dnum = $("#part_content").find('ul.select').attr("dindex");//TODO
+            pnum = $("#part_content").find('ul.select').attr("pindex");//the position in the parts array, start with 0 
+            dnum = $("#part_content").find('ul.select').attr("dindex");//the position in the disks array, start with 0
             disk = this.options.disks[dnum];
             part = disk.table[pnum];
             if (part.size < 6) {
                 that.myalert(i18n.gettext("Select a partition of at least 6 GB"));
                 return false;
             }
+            // the last confirm before installation
             $('#myconfirm').modal();
             $('#myconfirm').on('click', '.js-confirm', function () {
                 var dpath = disk.path;

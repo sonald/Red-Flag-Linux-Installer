@@ -69,13 +69,13 @@ def mkpart(dev, disk, parttype, start, size, end, fstype):
 
     if start < 63L:
         start = 63L
-    physector = dev.physicalSectorSize/512
     if size > 0:
         new_geometry = parted.geometry.Geometry(dev, start, size, end)
     elif end > 0:
         new_geometry = parted.geometry.Geometry(dev, start, None, end)
     new_geo = adjust_geometry(disk,parttype,new_geometry)
     start = int(new_geo.start)+1
+    physector = dev.physicalSectorSize/512
     if physector > 1 and start%physector > 0:
         start = (start/physector + 1)*physector
     if end == 0:
@@ -107,11 +107,6 @@ def rmpart(disk, number):
         raise Exception, "Error arguments, no partition specified."
 
     part = parts[n]
-    if disk.type == 'msdos' and part.type & parted.PARTITION_EXTENDED:
-        for p in parts:
-            if (p.type & parted.PARTITION_LOGICAL) and part.geometry.contains(p.geometry):
-                disk.deletePartition(p)
-
     disk.deletePartition(part)
     return disk
 
