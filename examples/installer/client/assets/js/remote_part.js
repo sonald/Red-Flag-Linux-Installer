@@ -50,7 +50,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             func.apply(null, args); 
         },
 
-        //calc the precent the part occupies at the disk
+        //calc the percent the part occupies at the disk
         calc_percent: function (disks) {
             var new_disks = _.map(disks, function (disk) {
                 var dsize = disk.size;

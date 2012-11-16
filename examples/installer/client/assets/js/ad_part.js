@@ -10,7 +10,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         locals : null,
         options:null,
         record: null,
-        mp_tag: null,//when creating a part,the mp_tap will record the mp
+        mp_tag: null,//when creating a part,the mp_tap will record the mountpoint
         myalert: null,
         tmp_isoMedia:null,
 
@@ -18,7 +18,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             this.record = {
                 edit:[], //record the edited part
                 dirty:[],//record the parted need to format
-                mp:[],   //record all the mps used
+                mp:[],   //record all the mountpoints used
             };
             this.mp_tag = "";
             this.tmp_isoMedia = this.options.iso;
@@ -68,6 +68,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                     if (part.number > 0 && _.include(["ext4","Unknow", "bios_grub"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
                         //check out the fs supported or not
                         //supported fs:ext4, unknow, bios_grub, swap
+                        //mp means mountpoint
                         $modal.find("#fs").append("<option value=''>"+part.fs+"</option>");
                         $modal.find("#fs").val("");
                         $modal.find("#fs").attr("disabled","");
@@ -78,12 +79,12 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
 
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
-                        //if swap fs, disabled mp selection
+                        //if fs is swap, disabled mountpoint selection
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("swap");
                     };
                     if (part.number > 0 && part.fs === "bios_grub") {
-                        //if bios_grub fs, disabled mp selection
+                        //if fs is bios_grub, disabled mountpoint selection
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("bios_grub");
                         $modal.find("#fs").attr('fs', 'bios_grub');
@@ -104,6 +105,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         mp_conflict: function (path, number, fstype, mp) {
             //actually it is used to handle edit conflict
             //according the edit post, update record.edit and record.mp
+            //mp means mountpoint
             var that = this, has_mp;
             var mpset = ['/','/boot','/home','/opt','/root','/usr','/var']
             that.record.edit = _.reject(that.record.edit,function(el){
@@ -148,7 +150,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 Rpart.method('reset',that.tmp_isoMedia, [], $.proxy(that.partflesh, that));
             });
 
-            //if selecting the mp used, it will alert warning
+            //if selecting the mountpoint used, it will alert warning
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
@@ -167,7 +169,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             });
 
-            //if selecting extended, set mp and fs selection disabled
+            //if selecting extended, set mountpoint and fs selection disabled
             $('body').on('change', '.modal #parttype', function (){
                 var $this = $(this);
                 var value = $this.val();
@@ -183,7 +185,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 };
             });
 
-            //if selecting swap and bios_grub, set mp selection disabled
+            //if selecting swap and bios_grub, set mountpoint selection disabled
             $('body').on('change', '.modal #fs', function (){
                 var $this = $(this);
                 var fstype = $(this).attr("fs");
@@ -292,7 +294,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             that.options.disks = that.locals.disks = disks;
             if (result.handlepart){
                 //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
-                //update the record.mp and record.edit because of creating a part with mp
+                //update the record.mp and record.edit because of creating a part with mountpoint
                 that.parthandler(result.handlepart);
             }
             //reset the mp_tag
@@ -373,7 +375,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         validate: function(callback) {
             var that = this;
             var disks = that.options.disks;
-            //check out wheater having the root mp
+            //check out wheater having the root mountpoint
             var root_size = 0;
             _.each(that.record.edit, function (el) {
                 if (el.mp === "/") {
