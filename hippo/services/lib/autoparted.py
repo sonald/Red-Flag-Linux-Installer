@@ -14,7 +14,7 @@ partty_map = {
     'logical': parted.PARTITION_LOGICAL
 }
 
-def find_swap(mydev, disks):
+def find_swap(disks):
     has_swap = False
     for disk in disks.values():
         for p in disk.partitions:
@@ -26,12 +26,12 @@ def find_swap(mydev, disks):
     return has_swap
 
 def fdhandler(dev,mem, disks, sysflag):
-    DsizeL = dev.getLength()
+    DevEndSector = dev.getLength()##the last sector of the device
     Dsize = dev.getLength('GB')
     parttype = "primary"
     fs='ext4'
-    number = 0
-    boot_number = 0
+    number = 0 ##record the number of the part created
+    boot_number = 0 ##record the number of boot part
 
     disk = disks[dev.path]
     disk.deleteAllPartitions()
@@ -63,7 +63,7 @@ def fdhandler(dev,mem, disks, sysflag):
         size = parted.sizeToSectors(4, "GB", 512)
         disk = rfparted.mkpart(dev, disk, parttype, start, size, end, 'linux-swap(v1)')
     elif Dsize > 10:
-        if find_swap(dev, disks) is False:
+        if find_swap(disks) is False:
             number = number + 1
             size = parted.sizeToSectors(mem,'B',512)
             disk = rfparted.mkpart(dev, disk, parttype, start, size, end, 'linux-swap(v1)')
@@ -77,12 +77,12 @@ def fdhandler(dev,mem, disks, sysflag):
         number = number + 1
         if boot_number == 0:
             boot_number = number
-        end = DsizeL
+        end = DevEndSector
         disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
     elif Dsize >= 6:
         number = number + 1
         boot_number = number 
-        end = DsizeL
+        end = DevEndSector
         disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
     else:
         raise Exception, "Error, select a disk of at least 6 GB ."
@@ -117,17 +117,17 @@ def gpt_easyhandler(dev, disk, start, end, number):
     return [disk, number]
 
 def msdos_easyhandler(dev, disk, parttype, start, end):
+    # in this function, parttype must be free
     fs = "ext4"
-    if parttype == "free":
-        if disk.primaryPartitionCount == 4:
-            raise Exception, "Too many primary partitions."
-        elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
-            disk = rfparted.mkpart(dev, disk, "extended", start, 0, end, fs)
-            parttype = "logical"
-        elif disk.primaryPartitionCount < 4:
-            parttype = "primary"
-        ###elif parttype == "logical"
-        ### nothing changed
+    if disk.primaryPartitionCount == 4:
+        raise Exception, "Too many primary partitions."
+    elif disk.primaryPartitionCount == 3 and disk.getExtendedPartition() is None:
+        disk = rfparted.mkpart(dev, disk, "extended", start, 0, end, fs)
+        parttype = "logical"
+    elif disk.primaryPartitionCount < 4:
+        parttype = "primary"
+    ###elif parttype == "logical"
+    ### nothing changed
     partnumber = [ part.number for part in disk.partitions ]
     disk = rfparted.mkpart(dev, disk, parttype, start, 0, end, fs)
     number = 0
@@ -155,7 +155,7 @@ def test(str, list):
 def DevDisk():
     disks = {}
     disks_tag = {}
-    blacklist = ["mapper", "sr"]
+    blacklist = ["mapper", "sr"] ##the device type not supported
     for dev in parted.getAllDevices():
         if test(dev.path.split('/')[2], blacklist) is False:
             continue

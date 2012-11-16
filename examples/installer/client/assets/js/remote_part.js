@@ -50,6 +50,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             func.apply(null, args); 
         },
 
+        //calc the percent the part occupies at the disk
         calc_percent: function (disks) {
             var new_disks = _.map(disks, function (disk) {
                 var dsize = disk.size;
@@ -78,6 +79,7 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             return new_disks;
         },
 
+        //render easy and adcanced page
         render: function (disks, act, locals) {
             var that = this;
             var tys, pindex, $disk, tmpPage, actPage, dindex = 0;
@@ -126,6 +128,10 @@ define(['jquery', 'system', 'i18n'], function($,_system,i18n){
             });
         },
 
+        //adjust some properties needed for easy and advanced page
+        //eg:p.size=123.3444445 ===> p.size=123.34
+        //eg:p.fs=linux(1)-swap ===> p.fs=swap
+        //eg:add:ui_path='sda3',title='sda3 ext4 34.56GB'
         part_proper: function (path, unit, part){
             part.unit = unit;
             part.size = Number((part.size).toFixed(2));

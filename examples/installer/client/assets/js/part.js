@@ -25,6 +25,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
                 gettext:function(msgid){ return i18n.gettext(msgid);}
             };
             pageCache = undefined;
+            //checkout the type of installmedia:usb|cd|hd
             window.apis.services.install.installMedia(function(data){
                 that.app.options["iso"] = data;
                 that.locals["iso"] = data;
@@ -33,6 +34,7 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
             });
         },
 
+        //refresh the page when changing the method of parting
         getparts: function(load_parts){
             var that = this;
             Rpart.method('reset',that.app.options.iso, [], function (result, disks) {
@@ -60,8 +62,10 @@ define(['jquery','system', 'i18n', 'remote_part', 'easy_part', 'fd_part', 'ad_pa
                 var $this = $(this);
                 var partial_page = that.method[$this.attr("id")];
                 that.getparts(function () {
-                    $('#myconfirm').find('.modal-body p.warning').remove();
+                    //initialize the page of all three partting pages
+                    $('#myconfirm').find('.modal-body p.warning').remove();//initials the confirm page
                     $('#myconfirm').find('.modal-body p.format').remove();
+
                     partial_page.initialize(that.app.options, that.locals, that.app.myalert);
                     that.$el.html( partial_page.loadView() );
                     partial_page.postSetup && partial_page.postSetup();

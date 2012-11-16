@@ -10,15 +10,15 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         locals : null,
         options:null,
         record: null,
-        mp_tag: null,
+        mp_tag: null,//when creating a part,the mp_tap will record the mountpoint
         myalert: null,
         tmp_isoMedia:null,
 
         init_record: function () {
             this.record = {
-                edit:[],
-                dirty:[],
-                mp:[],
+                edit:[], //record the edited part
+                dirty:[],//record the parted need to format
+                mp:[],   //record all the mountpoints used
             };
             this.mp_tag = "";
             this.tmp_isoMedia = this.options.iso;
@@ -50,19 +50,25 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             var that = this;
             var pindex, $disk, dindex = 0;
 
+            //calculate the percent the part occupied in the disk
             var new_disks = Rpart.calc_percent(that.options.disks);
+            //render the new views according to the new datas
             Rpart.render(new_disks, true, that.locals);
 
             _.each(new_disks, function (disk) {
-                pindex = 0;
+                pindex = 0;//the position in array parts
                 $disk = $('ul.disk[dpath="'+disk.path+'"]');
                 _.each(disk.table, function (part){
                     var $modal = $disk.find('ul.selectable[pindex='+pindex+']').next('.modal');
                     if($modal) {
+                        //record the origin fs about part in the view
                         if (part.number > 0)$modal.find("#parttype").val(part.ty);
                         $modal.find("#fs").val(part.fs);
                     }
                     if (part.number > 0 && _.include(["ext4","Unknow", "bios_grub"],part.fs) === false && (part.fs).match(/swap/g) === null ) {
+                        //check out the fs supported or not
+                        //supported fs:ext4, unknow, bios_grub, swap
+                        //mp means mountpoint
                         $modal.find("#fs").append("<option value=''>"+part.fs+"</option>");
                         $modal.find("#fs").val("");
                         $modal.find("#fs").attr("disabled","");
@@ -73,15 +79,18 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
 
                     };
                     if (part.number > 0 && (part.fs).match(/swap/g)) {
+                        //if fs is swap, disabled mountpoint selection
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("swap");
                     };
                     if (part.number > 0 && part.fs === "bios_grub") {
+                        //if fs is bios_grub, disabled mountpoint selection
                         $modal.find("#mp").attr("disabled","");
                         $modal.find("#fs").val("bios_grub");
                         $modal.find("#fs").attr('fs', 'bios_grub');
                     };
                     if (part.number > 0 && part.ty === "logical") {
+                        //if having logical parts, remove the X tag in the view
                         $disk.find('ul.logicals').prev('button.close').remove();
                     }
                     pindex++;
@@ -94,6 +103,9 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         },
 
         mp_conflict: function (path, number, fstype, mp) {
+            //actually it is used to handle edit conflict
+            //according the edit post, update record.edit and record.mp
+            //mp means mountpoint
             var that = this, has_mp;
             var mpset = ['/','/boot','/home','/opt','/root','/usr','/var']
             that.record.edit = _.reject(that.record.edit,function(el){
@@ -138,6 +150,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 Rpart.method('reset',that.tmp_isoMedia, [], $.proxy(that.partflesh, that));
             });
 
+            //if selecting the mountpoint used, it will alert warning
             $('body').on('change', '.modal #mp', function (){
                 var value = $(this).val();
                 var mp = $(this).attr("mp");
@@ -156,6 +169,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             });
 
+            //if selecting extended, set mountpoint and fs selection disabled
             $('body').on('change', '.modal #parttype', function (){
                 var $this = $(this);
                 var value = $this.val();
@@ -171,6 +185,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 };
             });
 
+            //if selecting swap and bios_grub, set mountpoint selection disabled
             $('body').on('change', '.modal #fs', function (){
                 var $this = $(this);
                 var fstype = $(this).attr("fs");
@@ -192,6 +207,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             });
 
+            //can only input numbers
             $('body').on('keyup', '.modal #size', function () {
                 var str = $(this).val();
                 var num = Number(str);
@@ -205,6 +221,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 }
             });
 
+            //create form
             $('body').on('click','.js-create-submit',function () {
                 var size, parttype, fstype, start, end, path;
                 var $modal = $(this).parents('.modal');
@@ -224,6 +241,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                               $.proxy(that.partflesh, that));
             });
 
+            //edit form
             $('body').on('click','.js-edit-submit',function () {
                 if ($(this).hasClass("disabled")){
                     return;
@@ -276,8 +294,10 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             that.options.disks = that.locals.disks = disks;
             if (result.handlepart){
                 //result.handlepart ="add/dev/sda1" or "del/dev/sdb1"
+                //update the record.mp and record.edit because of creating a part with mountpoint
                 that.parthandler(result.handlepart);
             }
+            //reset the mp_tag
             that.mp_tag = "";
             that.renderParts();
 
@@ -304,6 +324,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             });
         },
 
+        //update the record after creating or removing a part
         parthandler: function(result) {
             var method, path, number, mp;
             var that = this;
@@ -312,6 +333,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             number = Number(result.substring(11));
             var disks = that.options.disks;
 
+            //return the new part
             var disk = _.find(disks, function (d) {
                 return d.path === path;
             });
@@ -321,7 +343,6 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
             var type = disk.type;
 
             if (method === "add" && part.ty !== "extended") {
-                //TODO ty==extended
                 that.record.dirty.push({"path":path,"number":number, "new":true});
                 if (that.mp_tag !== "") {
                     that.mp_conflict (path, number, "", that.mp_tag);
@@ -354,7 +375,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
         validate: function(callback) {
             var that = this;
             var disks = that.options.disks;
-            //validate~~
+            //check out wheater having the root mountpoint
             var root_size = 0;
             _.each(that.record.edit, function (el) {
                 if (el.mp === "/") {
@@ -374,28 +395,31 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 that.myalert(i18n.gettext('The root partition requires at least 6 GB space!'));
                 return;
             }
+            //more warnings for gpt
             $('#myconfirm').find('.modal-body p.warning').remove();
-            var disk = _.find(disks, function (disk) {
+            var disk, part, grub_msg;
+            disk = _.find(disks, function (disk) {
                 return disk.type === "gpt";
             });
             if (disk !== undefined) {
-                var part = _.find (disk.table, function (part) {
+                part = _.find (disk.table, function (part) {
                     return (part.fs === "bios_grub" && part.number > 0)
                 })
                 if(part === undefined) {
-                    var grub_msg = i18n.gettext("<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>");
+                    grub_msg = i18n.gettext("<p class='warning'>This GPT partition label has no BIOS Boot Partition.You may fail to install.</p>");
                     $('#myconfirm').find('.modal-body p').before(grub_msg);
                 }
             }
-            var format_parts = [];
+            //record the parts need to formatted
+            var format_parts = [], format_page;
             $('#myconfirm').find('.modal-body p.format').remove();
             _.each(that.record.dirty, function(el) {
                 format_parts.push(el.path.slice(5)+el.number);
             });
             if (format_parts.length > 0) {
                 format_parts.join(',');
-                var formatted = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
-                $('#myconfirm').find('.modal-body p.content').after(formatted);
+                format_page = (jade.compile($('#format_tmpl')[0].innerHTML)) (_.extend({format_parts:format_parts}, that.locals));
+                $('#myconfirm').find('.modal-body p.content').after(format_page);
             }
 
             $('#myconfirm').modal();
@@ -416,6 +440,7 @@ define(['jquery', 'system', 'i18n', 'remote_part'],
                 });
 
                 var grubinstall = $('#grub').val();
+                //add the label for part according record.edit
                 _.each(that.record.edit, function (el) {
                     var path = el.path;
                     var number = el.number;
