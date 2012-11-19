@@ -3,22 +3,6 @@
 var hippo = require('../../hippo');
 var fs = require('fs');
 var pathlib = require('path');
-var spawn = require('child_process').spawn;
-
-function processCheck() {
-    var pid = 0, mypid = process.pid;
-    var filename = '/var/run/qomo-installer.pid';
-    if (pathlib.existsSync(filename)) {
-        pid = Number(fs.readFileSync(filename, 'utf8'));
-    }
-    if (pid && pid > 0 && pathlib.existsSync ('/proc/'+pid+'/cmdline')) {
-        return false;
-        
-    }else {
-        fs.writeFileSync(filename, mypid, 'utf8');
-    }
-    return true;
-}
 
 function SysName() {
     var filename = '/etc/qomo-release';
@@ -26,11 +10,6 @@ function SysName() {
         return "Qomo";
     }
     return "Red Flag inWise";
-}
-
-if (processCheck() === false) {
-	console.error('process check');
-	process.exit(1);
 }
 
 // optional, all path here are relative to ./client/
@@ -42,11 +21,31 @@ var options = {
     assets: ['assets'], // static js and css
     localeDir: 'assets/locales'
 };
-
-
 var app = hippo(options).loadServices();
-app.start();
-app.server.helpers({
-    name: SysName()
-});
-console.log('app started at 127.0.0.1:%d', options.port);
+function processCheck() {
+    var test_server = require('net').createServer();
+    var result = true;
+    test_server.on('error', function(e) {
+        if (e.code == 'EADDRINUSE') {
+            console.log('process check:eaddrinuse');
+        }
+	    process.exit(1);
+    })
+    test_server.listen('/tmp/qomo_installer.sock', function(){;
+        var pid = 0, mypid = process.pid;
+        var filename = '/var/run/qomo-installer.pid';
+        if (pathlib.existsSync(filename)) {
+	        console.error('process check');
+            test_server.close();
+	        process.exit(1);
+        }
+        fs.writeFileSync(filename, mypid, 'utf8');
+        test_server.close();
+        app.start();
+        app.server.helpers({
+            name: SysName()
+        });
+        console.log('app started at 127.0.0.1:%d', options.port);
+    })
+}
+processCheck();
