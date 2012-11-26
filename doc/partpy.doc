@@ -1,0 +1,99 @@
+一共五个文件：
+    autoparted:主要处理是全磁盘和简易分区
+    partedprint:主要处理reset和getpartitions函数
+    preparted:主要为fdisk.py调用rfparted前做数据转换(未维护)
+    rfparted:基本的分区函数实现：mkparted，rmpart
+    fdisk：脚本调用的接口（未维护）
+
+details：
+    autoparted：
+        disks格式：{‘/dev/sda’:[disks格式见partedprint]}
+        disks_tag格式：{‘/dev/sda’:true|false}
+            true:disks有过变动，
+            false：没有变动
+        find_swap(disks):
+            查找当前所有磁盘上是否有swap分区，由全磁盘分区调用
+            返回true | false
+
+        fdhandler(dev,mem, disks, sysflag):
+            全磁盘分区
+            流程：
+                删除磁盘上所有分区
+                判断是否是GPT分区：true，创建标志位为bios_grub的1MB大小分区
+                判断sysflag是否是sony：true，创建10GB大小的主分区
+                判断是否大于54GB：true，创建50GB主分区和4GBswap分区
+                    else是否大于10GB：true，
+                            别的磁盘是否有swap分区：false，创建和内存（MEM）大小一样的swap分区
+                            是否大于30GB：true，创建30-mem大小的主分区
+                                         false，剩余空间创建主分区
+                    else是否大于6GB：true，所有空间创建为主分区
+                    else： 提示空间不足
+            返回：
+                数组：第一个是当前磁盘的数据，第二个是根分区的number
+
+        gpt_easyhandler(dev, disk, start, end, number):
+            gpt磁盘简易分区
+            流程：
+                判断该磁盘中是否有标志位为bios_grub的分区
+                若磁盘中有bios-grub分区且所给分区为非空闲分区：
+                    该分区则为根分区
+                若磁盘中没有BIOSGRUB分区且所给分区为非空闲分区：
+                    删除该分区后，创建biosgrub分区，再创建根分区
+                若磁盘中没有BIOSGRUB分区且所给分区为空闲分区：
+                    创建biosgrub分区，再创建根分区
+                若磁盘中有BIOSGRUB分区且所给分区为空闲分区：
+                    创建根分区
+            返回：
+                数组：第一个是当前磁盘的数据，第二个是根分区的number
+
+        msdos_easyhandler(dev, disk, parttype, start, end):
+            msdos磁盘简易分区(parttype正确情况下是free，所以不需讨论是否是空闲分区)
+            流程：
+                根据msdos当前磁盘的状况，创建合适的分区
+            返回：
+                数组：第一个是当前磁盘的数据，第二个是根分区的number
+
+        easyhandler(dev, disk, parttype, start, end, number):
+            简易分区
+            根据当前磁盘的类型，调用相应的函数
+
+        test（str，list）:
+            判断str是否在list中,DevDisk调用
+
+        DevDisk():
+            重置所有支持类型的磁盘
+
+partedprint:
+    parted_print(disks,isjson = False,free = False)：
+        isjson：输出是否是json格式
+        free：是否包涵空闲空间
+        json格式：
+            [{
+                type:"msdos" | "gpt",
+                size:123.90,
+                modal:"...",
+                path:"/dev/sda",
+                unit:'GB',
+                table:[{
+                    fs:"ext4",
+                    number:"3",
+                    size:12.12,
+                    start:(sector),
+                    end:(sector),
+                    ty:"primary",
+                },...]
+            },...]
+
+rfparted:
+    mkpart(dev, disk, parttype, start, size, end, fstype):
+        流程：
+            最后一个扇区号<=device的扇区数-1
+            如果是modos磁盘则判断创建分区的类型是否符合要求
+            磁盘前需要空出63个扇区个给MBR
+            if size>0：根据start,size创建geometry,(简易+高级)
+            else if end >0: 根据start,size创建geometry（全磁盘）
+            检测创建的Geometry和磁盘上的其他分区是否有冲突，返回与空闲分区重合的部分，即new_geo
+            若磁盘的物理扇区为4KB，检测new_geo是否4kb对齐，调整new_geo。
+            创建文件系统，注意：gpt磁盘中bios_grub分区是当文件系统处理的
+            根据限制创建分区。
+

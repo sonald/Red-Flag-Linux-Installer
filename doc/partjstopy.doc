@@ -1,0 +1,52 @@
+nodejs和partserver之间的API：
+    mkpart（devpath, parttype, start, size, end, fs）：//创建新分区
+        调用：
+            lib.rfparted.mkpart
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success", "handlepart": "add" + devpath + 新分区的number}
+
+    rmpart（devpath, partnumber)://删除分区
+        调用：
+            lib.rfparted.rmpart
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success"}
+
+    reset()://重置
+        调用：
+            lib.autoparted.DevDisk
+        返回：
+            成功：{"status":"success"}
+
+    commit()://提交
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success"}
+    
+    getpartitions()://获取分区信息
+        调用：
+            lib.partedprint.parted_print
+        返回:
+            成功：disks
+
+    setFlag(devpath, number, name, status)://设置标志位，status为true|false
+        调用：
+            lib.rfparted.setFlag
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success"}
+
+    fdhandler(devpath, mem, sysflag)://全磁盘处理，mem为内存大小，sysflag主要区分sony
+        调用：
+            lib.autoparted.fdhandler
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success"}
+
+    easyhandler(devpath, parttype, start, end, number)://简易安装
+        调用：
+            lib.autoparted.easyhandler
+        返回：
+            失败：{"status":"failure", "reason": "strings about reasons"}
+            成功：{"status":"success"}
