@@ -9,7 +9,7 @@ function SysName() {
     if (pathlib.existsSync(filename)) {
         return "Qomo";
     }
-    return "Red Flag inWise";
+    return "Red Flag inWise v8.0";
 }
 
 // optional, all path here are relative to ./client/
