@@ -113,7 +113,12 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
                 'install-019.png'
             ];
 
-            var location = useExternal ? 'theme/' : 'images/';
+            var localeMap = {
+                'zh': 'zh_CN',
+                'en': 'en_US'
+            };
+            var locale = localeMap[i18n.options.domain.slice(0,2)] || 'zh_CN';
+            var location = useExternal ? 'theme/' + locale + '/': 'images/';
             var items = '', active_set = false;
             imgs.forEach(function(img) {
                 if (!active_set) {
@@ -223,5 +228,3 @@ define(['jquery', 'system', 'progressbar', 'i18n'], function($, _system, progres
 
     return page;
 });
-
-
