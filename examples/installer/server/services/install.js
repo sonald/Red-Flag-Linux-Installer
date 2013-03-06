@@ -4,6 +4,8 @@ var pathlib = require('path');
 var fs = require('fs');
 var async = require('async');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
+var util = require('util');
 
 // simple sprintf stuff
 function sprintf(fmt) {
@@ -252,25 +254,105 @@ module.exports = (function(){
     //2. and record install device ( where / roots),
     //3. flag all swap partitions dirty (according to design.md, we need to
     //   clear and mount all swaps)
-function preprocessOptions(opts) {
-    opts.disks.map(function(disk) {
-        disk.table.map(function(part) {
-            part.path = part.path || disk.path + part.number;
+    function preprocessOptions(opts) {
+        opts.disks.map(function(disk) {
+            disk.table.map(function(part) {
+                part.path = part.path || disk.path + part.number;
 
-            if (part.mountpoint === '/') {
-                opts.installdevice = disk;
-            }
+                if (part.mountpoint === '/') {
+                    opts.installdevice = disk;
+                }
 
-            if (part.fs.toLowerCase().indexOf('swap') > -1) {
-                part.dirty = true;
-            }
+                if (part.fs.toLowerCase().indexOf('swap') > -1) {
+                    part.dirty = true;
+                }
+            });
         });
-    });
 
-    return opts;
-}
+        return opts;
+    }
 
     // install routines
+    // simplyCopyBaseSystem will skip mounting and all mount point handling,
+    // and used for fast dd installation ( for Bussiness installation ).
+    // and only activated at CD-mode.
+    function simplyCopyBaseSystem(options, watcher, next) {
+        async.waterfall([
+            function(cb) {
+                var loopfile = '/run/redflagiso/sfs/root-image/root-image.fs',
+                    stat = fs.statSync(loopfile),
+                    total_size = stat.size,
+                    percentage = 0,
+                    readed = 0,
+                    progId = null;
+        
+                var fin = fs.createReadStream(loopfile, {bufferSize: 1024*1024}),
+                    fout = fs.createWriteStream(options.newroot);
+
+                fin.on('data', function(data) {
+                    readed += data.length;
+                    percentage = Math.floor((readed / total_size) * 100);
+                    percentage = Math.min(percentage, 100);
+                    if (!fout.write(data)) {
+                        console.log('write buffer full, wait...')
+                    fin.pause();
+                    }
+                });
+
+                fin.on('end', function() {
+                    watcher({status: 'progress', data: 100});
+                    progId.stop();
+                    cb(null);
+                });
+
+                fin.on('error', function(err) {
+                    watcher({status: 'failure', reason: 'ECOPYBASE'});
+                    progId.stop();
+                    cb({status: 'failure', reason:'ECOPYBASE'});
+                });
+
+                fout.on('drain', function() {
+                    console.log('safe to write');
+                    fin.resume();
+                });
+
+                fout.on('error', function(err) {
+                    watcher({status: 'failure', reason: 'ECOPYBASE'});
+                    progId.stop();
+                    cb({status: 'failure', reason:'ECOPYBASE'});
+                });
+
+
+                function populateProgress() {
+                    watcher({status: 'progress', data: percentage});
+                }
+                progId = setInterval(populateProgress, 1000);
+            },
+            
+            function(cb) {
+                // esfck and resize
+                var cmd = "parted -m /dev/sda  unit s p | grep '^%d' | cut -d: -f4",
+                    cmd2 = 'resize2fs /dev/sda%d %s';
+                exec('esfsck -f ' + options.newroot, function(err) {
+                    var id = /\/dev\/sd[a-z](\d+)/.exec(options.newroot)[1];
+                    exec(util.format(cmd, id), function(err, stdout) {
+                        var sectors = stdout.trim();
+                        exec(util.format(cmd2, id, sectors), function(err, stdout) {
+                            cb(err);
+                        });
+                    });
+                });
+            }
+        ],
+
+        function(err) {
+            if (err) {
+                debug(err);
+                watcher({status: 'failure', reason:'ECOPYBASE'});
+            }
+            next(err);
+        });
+    } //~ simplyCopyBaseSystem 
 
     function copyBaseSystem(options, watcher, next) {
         async.waterfall([
@@ -797,7 +879,16 @@ function preprocessOptions(opts) {
                 },
                 function(next) {
                     reporter({status: 'COPY'});
-                    copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
+
+                    //HACK: check if runs in cdrom
+                    var check = exec('cat /proc/mounts |grep /dev/sr | grep redflagiso -q');
+                    check.on('exit', function(code) {
+                        if (options.installmode != 'advanced' && code == 0) {
+                            simplyCopyBaseSystem( options, reporter, error_wrapper(reporter, next) );
+                        } else {
+                            copyBaseSystem( options, reporter, error_wrapper(reporter, next) );
+                        } 
+                    });
                 },
                 function(next) {
                     reporter({status: 'POST'});
