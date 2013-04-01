@@ -622,8 +622,8 @@ module.exports = (function(){
 
                 if (opts.installmode === 'easy') {
                     swapsize = require('os').totalmem();
-                    if (swapsize > (4<<30)) {
-                        swapsize = 4<<30;
+                    if (swapsize > 4*(1<<30)) {
+                        swapsize = 4*(1<<30);
                     }
 
                 } else if (opts.installmode === 'fulldisk') {
