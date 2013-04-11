@@ -109,7 +109,7 @@ def main():
     url = QUrl(url)
     window.resize(1024,576)
     p = window.pos()
-    p.setY((screen.heigh()-window.heigh())/2)
+    p.setY((screen.height()-window.height())/2)
     p.setX((screen.width()-window.width())/2)
     window.move(p)
     window.show()
