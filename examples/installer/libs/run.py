@@ -105,9 +105,14 @@ class Window(QWidget):
 def main():
     app = QApplication(sys.argv)
     window = Window()
+    screen = QDesktopWidget().screenGeometry()
     url = sys.argv[1]
     url = QUrl(url)
     window.resize(1024,576)
+    p = window.pos()
+    p.setY((screen.heigh()-window.heigh())/2)
+    p.setX((screen.width()-window.width())/2)
+    window.move(p)
     window.show()
     window.view.setUrl(url)
     app.exec_()
