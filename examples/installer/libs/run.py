@@ -56,11 +56,11 @@ class Window(QWidget):
         #self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
         self.view = QWebView(self)
         self.view.page().settings().setAttribute(QWebSettings.JavascriptCanCloseWindows, True)
+        self.installer = Installer()
         QObject.connect(self.view.page().mainFrame(),SIGNAL("javaScriptWindowObjectCleared ()"), self.reload_js)
         self.setWindowIcon(QIcon("/usr/share/icons/installer-logo"))
 
-        installer = Installer()
-        self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
+        #self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
         self.setupInspector()
 
         self.splitter = QSplitter(self)
@@ -97,8 +97,7 @@ class Window(QWidget):
         self.webInspector.setVisible(not self.webInspector.isVisible())
 
     def reload_js(self):
-        installer = Installer()
-        self.view.page().mainFrame().addToJavaScriptWindowObject("installer", installer)
+        self.view.page().mainFrame().addToJavaScriptWindowObject("installer", self.installer)
         self.view.page().history().clear()#clear backspace 
 
 
