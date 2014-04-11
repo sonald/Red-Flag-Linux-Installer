@@ -18,6 +18,7 @@
 Hippo is a framework for writting desktop app by utilizing web tech, and a new installer based on hippo for Qomo resides in examples/installer. hippo can be installed and used as a normal npm module.
 
 
+
 Install and testing
 -----
 ```
@@ -33,7 +34,20 @@ and then generate a new project
 ./bin/hippo -b new a_new_project_name
 ```
 
-there are already a few projects maintained in the examples directory. *examples/installer* is actually the Qomo Installer based on hippo. see readme in [examples/installer][] for details of how to bootstrap installer itself.
+there are already a few projects maintained in the examples directory. *examples/installer* is actually the Qomo Installer based on hippo. see readme in [examples/installer](examples/installer) for details of how to bootstrap installer itself.
+
+### Installer dependencies for ArchLinux
+
+```
+sudo yaourt -S nodejs8 python2-gevent-socketio
+sudo pacman -S python2-gevent
+```
+if run into trouble, try 
+
+```
+sudo pkill node
+sudo rm /var/run/qomo-installer.pid
+```
 
 Roadmap
 -------
