@@ -11,14 +11,33 @@ Pangu Installer
 
 This is a rewritten installer for the new qomo systems.
 
+Setup
+===
+first install hippo
+
+```
+git clone http://github.com:sonald/Red-Flag-Linux-Installer.git
+cd Red-Flag-Linux-Installer
+npm install
+sudo npm link -g
+```
+then bootstrap installer
+
+```
+cd examples/installer
+npm link hippo
+npm install async
+./bootstrap.js
+```
+
 Usage
 ===
-Right now there is no simple way to package all thing together, so you need to do
+Right now there is no simple way to package all things together, so you need to do
 something yourself for using it.
 
 git clone the project, and
 run `node app.js` inside the installer project root.
-open up a modern web browser (by modern I means no IE6, and support basic html5),
+open up a modern web browser (by modern I means no IE6, and html5/CSS3 capable),
 and enter `http://127.0.0.1:8080/` in the url bar. there you go.
 
 For simplicity, you can also run `./bootstrap.js` which will try to sudo run app server and
@@ -26,7 +45,7 @@ launch a webkit frontend for you.
 
 Design
 ===
-The installer is completed rewritten with modern web technoledge, powered by [Nodejs][1].
+The installer is a completed rewritten with modern web technoledge, powered by [Nodejs][1].
 the whole logical is basically server side javascript. and UI is rendered using HTML.
 
 ### L10n
