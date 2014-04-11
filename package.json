@@ -2,11 +2,11 @@
   "author": "Sian Cao <sycao@redflag-linux.com> (http://sonald.github.com)",
   "name": "hippo",
   "description": "light-weight web app framework",
-  "version": "0.0.1",
-  "homepage": "http://sonald.github.com",
+  "version": "0.1.0",
+  "homepage": "http://sonald.me",
   "repository": {
     "type": "git",
-    "url": "git@172.16.82.249:hippo.git"
+    "url": "https://github.com/sonald/Red-Flag-Linux-Installer.git"
   },
   "main": "./hippo",
   "dependencies": {
@@ -31,6 +31,6 @@
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
-    "node": ">= 0.6.0"
+    "node": ">= 0.8.0"
   }
 }

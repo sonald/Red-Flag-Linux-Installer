@@ -15,20 +15,25 @@
 
 
 <br>
-Hippo is a new installer for Qomo, featuring HTML5 and tornado.
-By utilizing web tech, hippo will present user a whole new UX.
+Hippo is a framework for writting desktop app by utilizing web tech, and a new installer based on hippo for Qomo resides in examples/installer. hippo can be installed and used as a normal npm module.
+
 
 Install and testing
 -----
 ```
-git clone git@172.16.82.249:hippo.git 
+git clone https://github.com/sonald/Red-Flag-Linux-Installer.git 
 cd hippo
-./hippo.py
+npm install
 ```
-that will try to spawn server in the background and popup a 
-chromium web browser as frontend, right now 
-chromium is used as prototype usage, will be replaced later with own 
-webkit frontend.
+**Note:** right now it only works on node v0.8, node v10.0 is not supported yet.
+ 
+and then generate a new project
+
+```
+./bin/hippo -b new a_new_project_name
+```
+
+there are already a few projects maintained in the examples directory. *examples/installer* is actually the Qomo Installer based on hippo. see readme in [examples/installer]() for details of how to bootstrap installer itself.
 
 Roadmap
 -------
