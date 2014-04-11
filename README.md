@@ -33,7 +33,7 @@ and then generate a new project
 ./bin/hippo -b new a_new_project_name
 ```
 
-there are already a few projects maintained in the examples directory. *examples/installer* is actually the Qomo Installer based on hippo. see readme in [examples/installer]() for details of how to bootstrap installer itself.
+there are already a few projects maintained in the examples directory. *examples/installer* is actually the Qomo Installer based on hippo. see readme in [examples/installer][] for details of how to bootstrap installer itself.
 
 Roadmap
 -------
@@ -61,7 +61,7 @@ framework, and capable of extending.
 
 --
 if you got any problems with Hippo, 
-Contact Authors: [Sian Cao](mailto:sycao@redflag-linux.com),
+Contact Authors: [Sian Cao](mailto:yinshuiboy@gmail.com),
  [SSW](mailto:shensuwen@redflag-linux.com)
 
 [0]: https://github.com/facebook/tornado/
